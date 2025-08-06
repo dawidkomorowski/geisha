@@ -54,7 +54,7 @@ public class TransformInterpolationSystemTests
     }
 
     [Test]
-    public void Transform2DComponent_ShouldBeInterpolated_ByFactor_0_5_WhenInterpolationIsEnabled()
+    public void Transform2DComponent_ShouldBeInterpolated_ByAlpha_0_5_WhenInterpolationIsEnabled()
     {
         // Arrange
         var entity = _scene.CreateEntity();
@@ -83,7 +83,7 @@ public class TransformInterpolationSystemTests
     }
 
     [Test]
-    public void Transform2DComponent_ShouldBeInterpolated_ByFactor_0_25_WhenInterpolationIsEnabled()
+    public void Transform2DComponent_ShouldBeInterpolated_ByAlpha_0_25_WhenInterpolationIsEnabled()
     {
         // Arrange
         var entity = _scene.CreateEntity();

@@ -5,262 +5,261 @@ using Geisha.Engine.Core.GameLoop;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core.GameLoop
+namespace Geisha.Engine.UnitTests.Core.GameLoop;
+
+[TestFixture]
+public class GameLoopStepsTests
 {
-    [TestFixture]
-    public class GameLoopStepsTests
+    private IAnimationGameLoopStep _animationStep = null!;
+    private IAudioGameLoopStep _audioStep = null!;
+    private IBehaviorGameLoopStep _behaviorStep = null!;
+    private ICoroutineGameLoopStep _coroutineStep = null!;
+    private IInputGameLoopStep _inputStep = null!;
+    private IPhysicsGameLoopStep _physicsStep = null!;
+    private IRenderingGameLoopStep _renderingStep = null!;
+    private ITransformInterpolationGameLoopStep _transformInterpolationStep = null!;
+
+    [SetUp]
+    public void SetUp()
     {
-        private IAnimationGameLoopStep _animationStep = null!;
-        private IAudioGameLoopStep _audioStep = null!;
-        private IBehaviorGameLoopStep _behaviorStep = null!;
-        private ICoroutineGameLoopStep _coroutineStep = null!;
-        private IInputGameLoopStep _inputStep = null!;
-        private IPhysicsGameLoopStep _physicsStep = null!;
-        private IRenderingGameLoopStep _renderingStep = null!;
-        private ITransformInterpolationGameLoopStep _transformInterpolationStep = null!;
+        _animationStep = Substitute.For<IAnimationGameLoopStep>();
+        _audioStep = Substitute.For<IAudioGameLoopStep>();
+        _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
+        _coroutineStep = Substitute.For<ICoroutineGameLoopStep>();
+        _inputStep = Substitute.For<IInputGameLoopStep>();
+        _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
+        _renderingStep = Substitute.For<IRenderingGameLoopStep>();
+        _transformInterpolationStep = Substitute.For<ITransformInterpolationGameLoopStep>();
+    }
 
-        [SetUp]
-        public void SetUp()
+    [Test]
+    public void Constructor_ShouldThrowException_GivenConfigurationWithDuplicatedCustomStepsNames()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep2Name);
+
+        // Act
+        // Assert
+        Assert.That(() =>
         {
-            _animationStep = Substitute.For<IAnimationGameLoopStep>();
-            _audioStep = Substitute.For<IAudioGameLoopStep>();
-            _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
-            _coroutineStep = Substitute.For<ICoroutineGameLoopStep>();
-            _inputStep = Substitute.For<IInputGameLoopStep>();
-            _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
-            _renderingStep = Substitute.For<IRenderingGameLoopStep>();
-            _transformInterpolationStep = Substitute.For<ITransformInterpolationGameLoopStep>();
-        }
+            CreateGameLoopSteps(new[] { customStep1, customStep2 },
+                new[] { customStep1Name, customStep2Name, customStep1Name });
+        }, Throws.ArgumentException);
+    }
 
-        [Test]
-        public void Constructor_ShouldThrowException_GivenConfigurationWithDuplicatedCustomStepsNames()
+    [Test]
+    public void Constructor_ShouldThrowException_GivenCustomStepsWithDuplicatedNames()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep1Name);
+
+        // Act
+        // Assert
+        Assert.That(() =>
         {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
+            CreateGameLoopSteps(new[] { customStep1, customStep2 },
+                new[] { customStep1Name, customStep2Name });
+        }, Throws.ArgumentException);
+    }
 
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep2Name);
+    [Test]
+    public void Constructor_ShouldThrowException_GivenConfigurationThatSpecifiesCustomStepsThatAreNotProvided()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+        const string customStep3Name = "CustomStep3";
 
-            // Act
-            // Assert
-            Assert.That(() =>
-            {
-                CreateGameLoopSteps(new[] { customStep1, customStep2 },
-                    new[] { customStep1Name, customStep2Name, customStep1Name });
-            }, Throws.ArgumentException);
-        }
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep2Name);
 
-        [Test]
-        public void Constructor_ShouldThrowException_GivenCustomStepsWithDuplicatedNames()
+        // Act
+        // Assert
+        Assert.That(() =>
         {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
+            CreateGameLoopSteps(new[] { customStep1, customStep2 },
+                new[] { customStep1Name, customStep2Name, customStep3Name });
+        }, Throws.ArgumentException);
+    }
 
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep1Name);
+    [Test]
+    public void StepsNames_ShouldReturnAlphabeticalListOfNamesOfStandardSteps_GivenNoCustomSteps()
+    {
+        // Arrange
+        // Act
+        var gameLoopSteps = CreateGameLoopSteps();
 
-            // Act
-            // Assert
-            Assert.That(() =>
-            {
-                CreateGameLoopSteps(new[] { customStep1, customStep2 },
-                    new[] { customStep1Name, customStep2Name });
-            }, Throws.ArgumentException);
-        }
-
-        [Test]
-        public void Constructor_ShouldThrowException_GivenConfigurationThatSpecifiesCustomStepsThatAreNotProvided()
+        // Assert
+        Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
         {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
-            const string customStep3Name = "CustomStep3";
+            gameLoopSteps.AnimationStepName,
+            gameLoopSteps.AudioStepName,
+            gameLoopSteps.BehaviorStepName,
+            gameLoopSteps.CoroutineStepName,
+            gameLoopSteps.InputStepName,
+            gameLoopSteps.PhysicsStepName,
+            gameLoopSteps.RenderingStepName,
+            gameLoopSteps.TransformInterpolationStepName
+        }));
+    }
 
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep2Name);
+    [Test]
+    public void StepsNames_ShouldReturnAlphabeticalListOfNamesOfStandardStepsAndCustomSteps()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+        const string customStep3Name = "CustomStep3";
 
-            // Act
-            // Assert
-            Assert.That(() =>
-            {
-                CreateGameLoopSteps(new[] { customStep1, customStep2 },
-                    new[] { customStep1Name, customStep2Name, customStep3Name });
-            }, Throws.ArgumentException);
-        }
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep2Name);
+        var customStep3 = Substitute.For<ICustomGameLoopStep>();
+        customStep3.Name.Returns(customStep3Name);
 
-        [Test]
-        public void StepsNames_ShouldReturnAlphabeticalListOfNamesOfStandardSteps_GivenNoCustomSteps()
+        // Act
+        var gameLoopSteps = CreateGameLoopSteps(new[] { customStep3, customStep2, customStep1 },
+            new[] { customStep2Name, customStep3Name, customStep1Name });
+
+        // Assert
+        Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
         {
-            // Arrange
-            // Act
-            var gameLoopSteps = CreateGameLoopSteps();
+            gameLoopSteps.AnimationStepName,
+            gameLoopSteps.AudioStepName,
+            gameLoopSteps.BehaviorStepName,
+            gameLoopSteps.CoroutineStepName,
+            customStep1Name,
+            customStep2Name,
+            customStep3Name,
+            gameLoopSteps.InputStepName,
+            gameLoopSteps.PhysicsStepName,
+            gameLoopSteps.RenderingStepName,
+            gameLoopSteps.TransformInterpolationStepName
+        }));
+    }
 
-            // Assert
-            Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
-            {
-                gameLoopSteps.AnimationStepName,
-                gameLoopSteps.AudioStepName,
-                gameLoopSteps.BehaviorStepName,
-                gameLoopSteps.CoroutineStepName,
-                gameLoopSteps.InputStepName,
-                gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingStepName,
-                gameLoopSteps.TransformInterpolationStepName
-            }));
-        }
+    [Test]
+    public void StepsNames_ShouldNotReturnNamesOfCustomStepsThatAreNotSpecifiedByConfiguration()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+        const string customStep3Name = "CustomStep3";
 
-        [Test]
-        public void StepsNames_ShouldReturnAlphabeticalListOfNamesOfStandardStepsAndCustomSteps()
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep2Name);
+        var customStep3 = Substitute.For<ICustomGameLoopStep>();
+        customStep3.Name.Returns(customStep3Name);
+
+        // Act
+        var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
+            new[] { customStep1Name, customStep3Name });
+
+        // Assert
+        Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
         {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
-            const string customStep3Name = "CustomStep3";
+            gameLoopSteps.AnimationStepName,
+            gameLoopSteps.AudioStepName,
+            gameLoopSteps.BehaviorStepName,
+            gameLoopSteps.CoroutineStepName,
+            customStep1Name,
+            customStep3Name,
+            gameLoopSteps.InputStepName,
+            gameLoopSteps.PhysicsStepName,
+            gameLoopSteps.RenderingStepName,
+            gameLoopSteps.TransformInterpolationStepName
+        }));
+    }
 
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep2Name);
-            var customStep3 = Substitute.For<ICustomGameLoopStep>();
-            customStep3.Name.Returns(customStep3Name);
+    [Test]
+    public void CustomSteps_ShouldReturnCustomStepsInOrderSpecifiedByConfiguration()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+        const string customStep3Name = "CustomStep3";
 
-            // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep3, customStep2, customStep1 },
-                new[] { customStep2Name, customStep3Name, customStep1Name });
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep2Name);
+        var customStep3 = Substitute.For<ICustomGameLoopStep>();
+        customStep3.Name.Returns(customStep3Name);
 
-            // Assert
-            Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
-            {
-                gameLoopSteps.AnimationStepName,
-                gameLoopSteps.AudioStepName,
-                gameLoopSteps.BehaviorStepName,
-                gameLoopSteps.CoroutineStepName,
-                customStep1Name,
-                customStep2Name,
-                customStep3Name,
-                gameLoopSteps.InputStepName,
-                gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingStepName,
-                gameLoopSteps.TransformInterpolationStepName
-            }));
-        }
+        // Act
+        var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
+            new[] { customStep2Name, customStep3Name, customStep1Name });
 
-        [Test]
-        public void StepsNames_ShouldNotReturnNamesOfCustomStepsThatAreNotSpecifiedByConfiguration()
+        // Assert
+        Assert.That(gameLoopSteps.CustomSteps, Is.EqualTo(new[]
         {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
-            const string customStep3Name = "CustomStep3";
+            customStep2,
+            customStep3,
+            customStep1
+        }));
+    }
 
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep2Name);
-            var customStep3 = Substitute.For<ICustomGameLoopStep>();
-            customStep3.Name.Returns(customStep3Name);
+    [Test]
+    public void CustomSteps_ShouldNotReturnCustomStepsThatAreNotSpecifiedByConfiguration()
+    {
+        // Arrange
+        const string customStep1Name = "CustomStep1";
+        const string customStep2Name = "CustomStep2";
+        const string customStep3Name = "CustomStep3";
 
-            // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
-                new[] { customStep1Name, customStep3Name });
+        var customStep1 = Substitute.For<ICustomGameLoopStep>();
+        customStep1.Name.Returns(customStep1Name);
+        var customStep2 = Substitute.For<ICustomGameLoopStep>();
+        customStep2.Name.Returns(customStep2Name);
+        var customStep3 = Substitute.For<ICustomGameLoopStep>();
+        customStep3.Name.Returns(customStep3Name);
 
-            // Assert
-            Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
-            {
-                gameLoopSteps.AnimationStepName,
-                gameLoopSteps.AudioStepName,
-                gameLoopSteps.BehaviorStepName,
-                gameLoopSteps.CoroutineStepName,
-                customStep1Name,
-                customStep3Name,
-                gameLoopSteps.InputStepName,
-                gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingStepName,
-                gameLoopSteps.TransformInterpolationStepName
-            }));
-        }
+        // Act
+        var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
+            new[] { customStep1Name, customStep3Name });
 
-        [Test]
-        public void CustomSteps_ShouldReturnCustomStepsInOrderSpecifiedByConfiguration()
+        // Assert
+        Assert.That(gameLoopSteps.CustomSteps, Is.EqualTo(new[]
         {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
-            const string customStep3Name = "CustomStep3";
+            customStep1,
+            customStep3
+        }));
+    }
 
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep2Name);
-            var customStep3 = Substitute.For<ICustomGameLoopStep>();
-            customStep3.Name.Returns(customStep3Name);
+    private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomGameLoopStep>? customSteps = null, IEnumerable<string>? customGameLoopSteps = null)
+    {
+        customSteps ??= Enumerable.Empty<ICustomGameLoopStep>();
+        customGameLoopSteps ??= Enumerable.Empty<string>();
 
-            // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
-                new[] { customStep2Name, customStep3Name, customStep1Name });
+        var coreConfiguration = new CoreConfiguration { CustomGameLoopSteps = customGameLoopSteps.ToList() };
 
-            // Assert
-            Assert.That(gameLoopSteps.CustomSteps, Is.EqualTo(new[]
-            {
-                customStep2,
-                customStep3,
-                customStep1
-            }));
-        }
-
-        [Test]
-        public void CustomSteps_ShouldNotReturnCustomStepsThatAreNotSpecifiedByConfiguration()
-        {
-            // Arrange
-            const string customStep1Name = "CustomStep1";
-            const string customStep2Name = "CustomStep2";
-            const string customStep3Name = "CustomStep3";
-
-            var customStep1 = Substitute.For<ICustomGameLoopStep>();
-            customStep1.Name.Returns(customStep1Name);
-            var customStep2 = Substitute.For<ICustomGameLoopStep>();
-            customStep2.Name.Returns(customStep2Name);
-            var customStep3 = Substitute.For<ICustomGameLoopStep>();
-            customStep3.Name.Returns(customStep3Name);
-
-            // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
-                new[] { customStep1Name, customStep3Name });
-
-            // Assert
-            Assert.That(gameLoopSteps.CustomSteps, Is.EqualTo(new[]
-            {
-                customStep1,
-                customStep3
-            }));
-        }
-
-        private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomGameLoopStep>? customSteps = null, IEnumerable<string>? customGameLoopSteps = null)
-        {
-            customSteps ??= Enumerable.Empty<ICustomGameLoopStep>();
-            customGameLoopSteps ??= Enumerable.Empty<string>();
-
-            var coreConfiguration = new CoreConfiguration { CustomGameLoopSteps = customGameLoopSteps.ToList() };
-
-            return new GameLoopSteps(
-                _animationStep,
-                _audioStep,
-                _behaviorStep,
-                _coroutineStep,
-                _inputStep,
-                _physicsStep,
-                _renderingStep,
-                _transformInterpolationStep,
-                customSteps,
-                coreConfiguration);
-        }
+        return new GameLoopSteps(
+            _animationStep,
+            _audioStep,
+            _behaviorStep,
+            _coroutineStep,
+            _inputStep,
+            _physicsStep,
+            _renderingStep,
+            _transformInterpolationStep,
+            customSteps,
+            coreConfiguration);
     }
 }

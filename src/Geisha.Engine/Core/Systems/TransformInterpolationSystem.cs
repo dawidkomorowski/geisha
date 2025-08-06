@@ -90,11 +90,13 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
         }
     }
 
-    public void InterpolateTransforms(double interpolationFactor)
+    public void InterpolateTransforms(double alpha)
     {
+        Debug.Assert(alpha is >= 0.0 and <= 1.0, "Alpha must be in the range [0, 1].");
+
         foreach (ref var transformData in CollectionsMarshal.AsSpan(_transforms))
         {
-            transformData.InterpolatedTransform = Transform2D.Lerp(transformData.PreviousTransform, transformData.CurrentTransform, interpolationFactor);
+            transformData.InterpolatedTransform = Transform2D.Lerp(transformData.PreviousTransform, transformData.CurrentTransform, alpha);
         }
     }
 

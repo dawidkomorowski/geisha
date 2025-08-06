@@ -3,5 +3,5 @@
 internal interface ITransformInterpolationGameLoopStep
 {
     void SnapshotTransforms();
-    void InterpolateTransforms(double interpolationFactor);
+    void InterpolateTransforms(double alpha);
 }
