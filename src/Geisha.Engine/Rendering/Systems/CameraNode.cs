@@ -16,7 +16,7 @@ namespace Geisha.Engine.Rendering.Systems
         Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
         Vector2 World2DPointToScreenPoint(Vector2 worldPoint);
         Matrix3x3 CreateViewMatrix();
-        public Matrix3x3 CreateViewMatrixScaledToScreen();
+        Matrix3x3 CreateViewMatrixScaledToScreen();
         AxisAlignedRectangle GetBoundingRectangleOfView();
     }
 

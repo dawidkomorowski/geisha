@@ -3,6 +3,8 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Components
 {
+    // TODO Replace usage of this class with methods from Transform2DComponent. Then remove this class.
+    // TODO Consider reusing documentation of this class in Transform2DComponent.
     /// <summary>
     ///     Provides common methods for handling hierarchy of transform components. Hierarchy of transform components is
     ///     achieved by attaching transform components to entities organized hierarchically.
@@ -28,18 +30,6 @@ namespace Geisha.Engine.Core.Components
         {
             var transform = entity.HasComponent<Transform2DComponent>()
                 ? entity.GetComponent<Transform2DComponent>().ToMatrix()
-                : Matrix3x3.Identity;
-
-            if (entity.IsRoot)
-                return transform;
-
-            return Calculate2DTransformationMatrix(entity.Parent) * transform;
-        }
-
-        public static Matrix3x3 CalculateInterpolated2DTransformationMatrix(Entity entity)
-        {
-            var transform = entity.HasComponent<Transform2DComponent>()
-                ? entity.GetComponent<Transform2DComponent>().InterpolatedTransform.ToMatrix()
                 : Matrix3x3.Identity;
 
             if (entity.IsRoot)

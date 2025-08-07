@@ -118,7 +118,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             }
             else
             {
-                var finalMatrix = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+                var finalMatrix = Transform.ComputeWorldTransformMatrix();
                 var finalTransform = finalMatrix.ToTransform();
                 _body.Position = finalTransform.Translation;
                 _body.Rotation = finalTransform.Rotation;
