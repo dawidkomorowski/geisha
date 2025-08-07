@@ -5,7 +5,7 @@ permissions:
 
 on:
   push:
-    branches: [master]
+    branches: ["*"]
   pull_request:
     branches: [master]
 
@@ -125,6 +125,7 @@ jobs:
     name: Benchmark Performance
     needs: publish
     runs-on: windows-latest
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
