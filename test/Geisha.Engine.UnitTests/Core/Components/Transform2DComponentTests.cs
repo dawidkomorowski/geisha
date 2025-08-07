@@ -358,30 +358,18 @@ public class Transform2DComponentTests
         var grandChild = child.CreateChildEntity();
         var grandChildTransform = grandChild.CreateComponent<Transform2DComponent>();
         grandChildTransform.Translation = new Vector2(10, 20);
-        grandChildTransform.Rotation = 300;
+        grandChildTransform.Rotation = 30;
         grandChildTransform.Scale = new Vector2(40, 50);
 
         var expectedMatrix = parentTransform.ToMatrix() * grandChildTransform.ToMatrix();
+
+        // Assume
+        Assert.That(child.HasComponent<Transform2DComponent>(), Is.False);
 
         // Act
         var worldTransformMatrix = grandChildTransform.ComputeWorldTransformMatrix();
 
         // Assert
         Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
-    }
-
-    [Test]
-    public void ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenDefaultTransformOnRootEntity()
-    {
-        Assert.Fail("TODO Add tests for interpolated world transform.");
-
-        // Arrange
-        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
-
-        // Act
-        var worldTransformMatrix = transform2DComponent.ComputeInterpolatedWorldTransformMatrix();
-
-        // Assert
-        Assert.That(worldTransformMatrix, Is.EqualTo(Matrix3x3.Identity));
     }
 }

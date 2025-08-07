@@ -202,6 +202,295 @@ public class TransformInterpolationSystemTests
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
     }
 
+
+    [Test]
+    public void Transform2DComponent_ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenDefaultTransformOnRootEntity()
+    {
+        // Arrange
+        var entity = _scene.CreateEntity();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        // Assume
+        Assert.That(_transformInterpolationSystem.HasTransformData(transform2DComponent), Is.True);
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.EqualTo(Transform2D.Identity));
+
+        // Act
+        var worldTransformMatrix = transform2DComponent.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(Matrix3x3.Identity));
+    }
+
+    [Test]
+    public void Transform2DComponent_ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenNonDefaultTransformOnRootEntity()
+    {
+        // Arrange
+        var entity = _scene.CreateEntity();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        transform2DComponent.Translation = new Vector2(1, 2);
+        transform2DComponent.Rotation = 3;
+        transform2DComponent.Scale = new Vector2(4, 5);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(2, 4);
+        transform2DComponent.Rotation = 6;
+        transform2DComponent.Scale = new Vector2(8, 10);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        var expectedMatrix = transform2DComponent.InterpolatedTransform.ToMatrix();
+
+        // Assume
+        Assert.That(_transformInterpolationSystem.HasTransformData(transform2DComponent), Is.True);
+
+        Assert.That(transform2DComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(transform2DComponent.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
+        Assert.That(transform2DComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+
+        // Act
+        var worldTransformMatrix = transform2DComponent.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void
+        Transform2DComponent_ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenNonDefaultTransformOnChildEntity_AndParentEntityWithNoTransform()
+    {
+        // Arrange
+        var parent = _scene.CreateEntity();
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.IsInterpolated = true;
+
+        childTransform.Translation = new Vector2(1, 2);
+        childTransform.Rotation = 3;
+        childTransform.Scale = new Vector2(4, 5);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        childTransform.Translation = new Vector2(2, 4);
+        childTransform.Rotation = 6;
+        childTransform.Scale = new Vector2(8, 10);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        var expectedMatrix = childTransform.InterpolatedTransform.ToMatrix();
+
+        // Assume
+        Assert.That(parent.HasComponent<Transform2DComponent>(), Is.False);
+        Assert.That(_transformInterpolationSystem.HasTransformData(childTransform), Is.True);
+
+        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
+        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+
+        // Act
+        var worldTransformMatrix = childTransform.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void
+        Transform2DComponent_ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenNonDefaultTransformOnChildEntity_AndParentEntityWithNonDefaultTransform()
+    {
+        // Arrange
+        var parent = _scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.IsInterpolated = true;
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.IsInterpolated = true;
+
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 5);
+
+        childTransform.Translation = new Vector2(10, 20);
+        childTransform.Rotation = 30;
+        childTransform.Scale = new Vector2(40, 50);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        parentTransform.Translation = new Vector2(2, 4);
+        parentTransform.Rotation = 6;
+        parentTransform.Scale = new Vector2(8, 10);
+
+        childTransform.Translation = new Vector2(20, 40);
+        childTransform.Rotation = 60;
+        childTransform.Scale = new Vector2(80, 100);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        var expectedMatrix = parentTransform.InterpolatedTransform.ToMatrix() * childTransform.InterpolatedTransform.ToMatrix();
+
+        // Assume
+        Assert.That(_transformInterpolationSystem.HasTransformData(parentTransform), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(childTransform), Is.True);
+
+        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
+        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+
+        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
+        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using(Vector2Comparer));
+
+        // Act
+        var worldTransformMatrix = childTransform.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void
+        Transform2DComponent_ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenThreeLevelHierarchyOfNonDefaultTransforms()
+    {
+        // Arrange
+        var parent = _scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.IsInterpolated = true;
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.IsInterpolated = true;
+
+        var grandChild = child.CreateChildEntity();
+        var grandChildTransform = grandChild.CreateComponent<Transform2DComponent>();
+        grandChildTransform.IsInterpolated = true;
+
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 5);
+
+        childTransform.Translation = new Vector2(10, 20);
+        childTransform.Rotation = 30;
+        childTransform.Scale = new Vector2(40, 50);
+
+        grandChildTransform.Translation = new Vector2(100, 200);
+        grandChildTransform.Rotation = 300;
+        grandChildTransform.Scale = new Vector2(400, 500);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        parentTransform.Translation = new Vector2(2, 4);
+        parentTransform.Rotation = 6;
+        parentTransform.Scale = new Vector2(8, 10);
+
+        childTransform.Translation = new Vector2(20, 40);
+        childTransform.Rotation = 60;
+        childTransform.Scale = new Vector2(80, 100);
+
+        grandChildTransform.Translation = new Vector2(200, 400);
+        grandChildTransform.Rotation = 600;
+        grandChildTransform.Scale = new Vector2(800, 1000);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        var expectedMatrix = parentTransform.InterpolatedTransform.ToMatrix() * childTransform.InterpolatedTransform.ToMatrix() *
+                             grandChildTransform.InterpolatedTransform.ToMatrix();
+
+        // Assume
+        Assert.That(_transformInterpolationSystem.HasTransformData(parentTransform), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(childTransform), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(grandChildTransform), Is.True);
+
+        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
+        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+
+        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
+        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using(Vector2Comparer));
+
+        Assert.That(grandChildTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(150, 300)).Using(Vector2Comparer));
+        Assert.That(grandChildTransform.InterpolatedTransform.Rotation, Is.EqualTo(450).Within(Epsilon));
+        Assert.That(grandChildTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(600, 750)).Using(Vector2Comparer));
+
+        // Act
+        var worldTransformMatrix = grandChildTransform.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void
+        Transform2DComponent_ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenThreeLevelHierarchy_WhereMiddleEntityHasNoTransform()
+    {
+        // Arrange
+        var parent = _scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.IsInterpolated = true;
+
+        var child = parent.CreateChildEntity();
+
+        var grandChild = child.CreateChildEntity();
+        var grandChildTransform = grandChild.CreateComponent<Transform2DComponent>();
+        grandChildTransform.IsInterpolated = true;
+
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 5);
+
+        grandChildTransform.Translation = new Vector2(10, 20);
+        grandChildTransform.Rotation = 30;
+        grandChildTransform.Scale = new Vector2(40, 50);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        parentTransform.Translation = new Vector2(2, 4);
+        parentTransform.Rotation = 6;
+        parentTransform.Scale = new Vector2(8, 10);
+
+        grandChildTransform.Translation = new Vector2(20, 40);
+        grandChildTransform.Rotation = 60;
+        grandChildTransform.Scale = new Vector2(80, 100);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        var expectedMatrix = parentTransform.InterpolatedTransform.ToMatrix() * grandChildTransform.InterpolatedTransform.ToMatrix();
+
+        // Assume
+        Assert.That(child.HasComponent<Transform2DComponent>(), Is.False);
+        Assert.That(_transformInterpolationSystem.HasTransformData(parentTransform), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(grandChildTransform), Is.True);
+
+        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
+        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+
+        Assert.That(grandChildTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(grandChildTransform.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
+        Assert.That(grandChildTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using(Vector2Comparer));
+
+        // Act
+        var worldTransformMatrix = grandChildTransform.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
     [Test]
     public void AddingAndRemovingTransformInterpolationSystemAsSceneObserver_ShouldUpdateSystemState()
     {
