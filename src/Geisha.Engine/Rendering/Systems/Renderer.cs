@@ -84,7 +84,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+        var transformationMatrix = node.Transform.ComputeInterpolatedWorldTransformMatrix();
         transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
         var ellipse = new Ellipse(node.RadiusX, node.RadiusY);

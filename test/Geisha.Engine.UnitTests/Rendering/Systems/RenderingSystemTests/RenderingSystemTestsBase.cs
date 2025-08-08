@@ -40,6 +40,8 @@ public abstract class RenderingSystemTestsBase
         RenderingDiagnosticInfoProvider = Substitute.For<IRenderingDiagnosticInfoProvider>();
     }
 
+    // TODO Refactor this method to just return RenderingScene as it now contains RenderingSystem as well.
+    // TODO Refactor RenderingScene to more general concept as it is not only wrapper for Scene but also contains RenderingSystem and TransformInterpolationSystem.
     private protected (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
     {
         return GetRenderingSystem(new RenderingConfiguration());
