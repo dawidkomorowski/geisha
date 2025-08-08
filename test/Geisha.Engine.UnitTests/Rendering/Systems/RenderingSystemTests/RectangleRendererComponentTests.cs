@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
@@ -118,6 +119,40 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
             rectangleRenderer.FillInterior, entity.Get2DTransformationMatrix());
     }
+
+    [Test]
+    public void RenderScene_ShouldDrawRectangle_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+        var entity = renderingScene.AddRectangle(new Vector2(100, 200), new Vector2(10, 20), 30, new Vector2(1, 2));
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Rotation = 60;
+        transform2DComponent.Scale = new Vector2(2, 4);
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
+        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
+            rectangleRenderer.FillInterior, transform2DComponent.InterpolatedTransform.ToMatrix());
+    }
+
+    // TODO Add more tests for transform hierarchy. Currently, it is tested in CommonTests for only one type of render node.
 
     [Test]
     public void RectangleRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()

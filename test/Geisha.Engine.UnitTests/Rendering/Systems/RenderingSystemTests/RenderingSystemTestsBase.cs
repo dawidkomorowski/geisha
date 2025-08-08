@@ -4,6 +4,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
@@ -54,7 +55,7 @@ public abstract class RenderingSystemTestsBase
             RenderingDiagnosticInfoProvider
         );
 
-        var renderingScene = new RenderingScene(renderingSystem);
+        var renderingScene = new RenderingScene(renderingSystem, new TransformInterpolationSystem());
 
         return (renderingSystem, renderingScene);
     }
@@ -78,18 +79,21 @@ public abstract class RenderingSystemTestsBase
 
     protected sealed class RenderingScene
     {
-        private readonly Scene _scene = TestSceneFactory.Create();
-
-        public RenderingScene(ISceneObserver observer)
+        internal RenderingScene(RenderingSystem renderingSystem, TransformInterpolationSystem transformInterpolationSystem)
         {
-            _scene.AddObserver(observer);
+            RenderingSystem = renderingSystem;
+            TransformInterpolationSystem = transformInterpolationSystem;
+            Scene.AddObserver(RenderingSystem);
+            Scene.AddObserver(TransformInterpolationSystem);
         }
 
-        public Scene Scene => _scene;
+        public Scene Scene { get; } = TestSceneFactory.Create();
+        internal RenderingSystem RenderingSystem { get; }
+        internal TransformInterpolationSystem TransformInterpolationSystem { get; }
 
         public Entity AddCamera()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
             entity.CreateComponent<Transform2DComponent>();
 
             var cameraComponent = entity.CreateComponent<CameraComponent>();
@@ -109,7 +113,7 @@ public abstract class RenderingSystemTestsBase
 
         public Entity AddSpriteWithDefaultTransform()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
             entity.CreateComponent<Transform2DComponent>();
 
             var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
@@ -160,7 +164,7 @@ public abstract class RenderingSystemTestsBase
 
         public (Entity entity, TextRendererComponent textRendererComponent) AddText()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
 
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
             SetTransformInCameraView(transform2DComponent);
@@ -182,7 +186,7 @@ public abstract class RenderingSystemTestsBase
 
         public Entity AddRectangle()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
 
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
             SetTransformInCameraView(transform2DComponent);
@@ -210,7 +214,7 @@ public abstract class RenderingSystemTestsBase
 
         public Entity AddEllipse()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
             CreateEllipse(entity);
             return entity;
         }
@@ -231,7 +235,7 @@ public abstract class RenderingSystemTestsBase
 
         public (Entity parent, Entity child) AddParentEllipseWithChildEllipse()
         {
-            var parent = _scene.CreateEntity();
+            var parent = Scene.CreateEntity();
             CreateEllipse(parent);
 
             var child = parent.CreateChildEntity();
