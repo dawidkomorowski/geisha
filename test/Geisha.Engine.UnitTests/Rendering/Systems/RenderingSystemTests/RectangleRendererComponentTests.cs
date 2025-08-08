@@ -121,6 +121,33 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawRectangle_TransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var parent = renderingScene.Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Translation = new Vector2(10, 20);
+        parentTransform.Rotation = 30;
+        parentTransform.Scale = new Vector2(2, 4);
+
+        var child = renderingScene.AddRectangle();
+        child.Parent = parent;
+
+        var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        var rectangleRenderer = child.GetComponent<RectangleRendererComponent>();
+        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
+            rectangleRenderer.FillInterior, expectedTransform);
+    }
+
+    [Test]
     public void RenderScene_ShouldDrawRectangle_WhenTransformIsInterpolated()
     {
         // Arrange
@@ -152,7 +179,53 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
             rectangleRenderer.FillInterior, transform2DComponent.InterpolatedTransform.ToMatrix());
     }
 
-    // TODO Add more tests for transform hierarchy. Currently, it is tested in CommonTests for only one type of render node.
+    [Test]
+    public void RenderScene_ShouldDrawRectangle_TransformedWithParentTransform_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var parent = renderingScene.Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.IsInterpolated = true;
+        parentTransform.Translation = new Vector2(10, 20);
+        parentTransform.Rotation = 2;
+        parentTransform.Scale = new Vector2(1, 2);
+
+        var child = renderingScene.AddRectangle(new Vector2(100, 200), new Vector2(20, 30), 3, new Vector2(2, 3));
+        child.Parent = parent;
+        var childTransform = child.GetComponent<Transform2DComponent>();
+        childTransform.IsInterpolated = true;
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        parentTransform.Translation = new Vector2(20, 40);
+        parentTransform.Rotation = 4;
+        parentTransform.Scale = new Vector2(2, 4);
+
+        childTransform.Translation = new Vector2(30, 60);
+        childTransform.Rotation = 6;
+        childTransform.Scale = new Vector2(3, 6);
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(parentTransform.InterpolatedTransform, Is.Not.EqualTo(parentTransform.Transform));
+        Assert.That(childTransform.InterpolatedTransform, Is.Not.EqualTo(childTransform.Transform));
+
+        var expectedTransform = parentTransform.InterpolatedTransform.ToMatrix() * childTransform.InterpolatedTransform.ToMatrix();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        var rectangleRenderer = child.GetComponent<RectangleRendererComponent>();
+        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
+            rectangleRenderer.FillInterior, expectedTransform);
+    }
 
     [Test]
     public void RectangleRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
@@ -186,5 +259,35 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void RectangleRendererComponent_BoundingRectangle_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        var (_, renderingScene) = GetRenderingSystem();
+        var entity = renderingScene.AddRectangle(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Scale = new Vector2(4, 4);
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        var actual = rectangleRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
     }
 }

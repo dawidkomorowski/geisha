@@ -139,53 +139,6 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldRenderEntityTransformedWithParentIdentityTransform_WhenEntityHasParentWithoutTransform2DComponent()
-    {
-        // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var parentEntity = renderingScene.Scene.CreateEntity();
-        var childEntity = renderingScene.AddEllipse();
-        childEntity.Parent = parentEntity;
-
-        var childExpectedTransform = childEntity.Get2DTransformationMatrix();
-
-
-        // Act
-        renderingSystem.RenderScene();
-
-        // Assert
-        var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
-        RenderingContext2D.Received(1).DrawEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
-            childEllipseRenderer.FillInterior, childExpectedTransform);
-    }
-
-    [Test]
-    public void RenderScene_ShouldRenderEntityTransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
-    {
-        // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var (parentEntity, childEntity) = renderingScene.AddParentEllipseWithChildEllipse();
-
-        var parentExpectedTransform = parentEntity.Get2DTransformationMatrix();
-        var childExpectedTransform = parentExpectedTransform * childEntity.Get2DTransformationMatrix();
-
-
-        // Act
-        renderingSystem.RenderScene();
-
-        // Assert
-        var parentEllipseRenderer = parentEntity.GetComponent<EllipseRendererComponent>();
-        RenderingContext2D.Received(1).DrawEllipse(new Ellipse(parentEllipseRenderer.RadiusX, parentEllipseRenderer.RadiusY), parentEllipseRenderer.Color,
-            parentEllipseRenderer.FillInterior, parentExpectedTransform);
-
-        var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
-        RenderingContext2D.Received(1).DrawEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
-            childEllipseRenderer.FillInterior, childExpectedTransform);
-    }
-
-    [Test]
     public void RenderScene_ShouldDrawDebugInformation()
     {
         // Arrange

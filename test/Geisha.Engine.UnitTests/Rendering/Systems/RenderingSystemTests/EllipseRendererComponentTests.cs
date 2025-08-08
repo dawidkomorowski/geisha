@@ -125,6 +125,8 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
             ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
     }
 
+    // TODO Add tests for transform hierarchy.
+
     [Test]
     public void EllipseRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {

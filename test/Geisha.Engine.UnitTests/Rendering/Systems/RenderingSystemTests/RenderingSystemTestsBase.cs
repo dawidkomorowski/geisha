@@ -208,6 +208,8 @@ public abstract class RenderingSystemTestsBase
 
             var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
             rectangleRendererComponent.Dimensions = dimensions;
+            rectangleRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            rectangleRendererComponent.FillInterior = Utils.Random.NextBool();
 
             return entity;
         }
@@ -229,19 +231,10 @@ public abstract class RenderingSystemTestsBase
             var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
             ellipseRendererComponent.RadiusX = radiusX;
             ellipseRendererComponent.RadiusY = radiusY;
+            ellipseRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            ellipseRendererComponent.FillInterior = Utils.Random.NextBool();
 
             return entity;
-        }
-
-        public (Entity parent, Entity child) AddParentEllipseWithChildEllipse()
-        {
-            var parent = Scene.CreateEntity();
-            CreateEllipse(parent);
-
-            var child = parent.CreateChildEntity();
-            CreateEllipse(child);
-
-            return (parent, child);
         }
 
         private static void SetTransformInCameraView(Transform2DComponent transform2DComponent)

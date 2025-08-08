@@ -130,6 +130,8 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
     }
 
+    // TODO Add tests for transform hierarchy.
+
     [Test]
     public void RenderScene_ShouldDrawSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTexture()
     {
@@ -261,6 +263,8 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         RenderingContext2D.Received(2).DrawSpriteBatch(Arg.Any<SpriteBatch>());
     }
+
+    // TODO Add tests for transform hierarchy.
 
     [Test]
     public void RenderScene_ShouldNotDrawSpriteBatch_WhenOrderInLayerPreventsSpriteBatching()

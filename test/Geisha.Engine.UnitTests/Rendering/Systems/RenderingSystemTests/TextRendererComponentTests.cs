@@ -262,6 +262,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
     }
 
+    // TODO Add tests for transform hierarchy.
+
     [Test]
     public void TextRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
