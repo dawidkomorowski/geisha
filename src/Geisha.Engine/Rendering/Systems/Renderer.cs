@@ -104,28 +104,17 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     public void Visit(SpriteNode node)
     {
-        if (node.Sprite != null)
-        {
-            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        if (node.Sprite == null) return;
 
-            if (_spriteBatch.Count == 0)
-            {
-                _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
-            }
-            else
-            {
-                if (ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
-                {
-                    _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
-                }
-                else
-                {
-                    FlushSpriteBatch();
-                    _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
-                }
-            }
+        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+
+        if (_spriteBatch.Count != 0 && !ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
+        {
+            FlushSpriteBatch();
         }
+
+        _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
     }
 
     public void Visit(TextNode node)
