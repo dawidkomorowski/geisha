@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
+using System.Linq;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -130,7 +131,106 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
     }
 
-    // TODO Add tests for transform hierarchy.
+    [Test]
+    public void RenderScene_ShouldDrawSprite_TransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var parent = renderingScene.Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Translation = new Vector2(10, 20);
+        parentTransform.Rotation = 30;
+        parentTransform.Scale = new Vector2(2, 4);
+
+        var child = renderingScene.AddSprite();
+        child.Parent = parent;
+
+        var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(child.GetSprite(), expectedTransform);
+    }
+
+    [Test]
+    public void RenderScene_ShouldDrawSprite_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+        var entity = renderingScene.AddSprite(new Vector2(100, 200), new Vector2(10, 20), 30, new Vector2(1, 2));
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Rotation = 60;
+        transform2DComponent.Scale = new Vector2(2, 4);
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), transform2DComponent.InterpolatedTransform.ToMatrix());
+    }
+
+    [Test]
+    public void RenderScene_ShouldDrawSprite_TransformedWithParentTransform_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var parent = renderingScene.Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.IsInterpolated = true;
+        parentTransform.Translation = new Vector2(10, 20);
+        parentTransform.Rotation = 2;
+        parentTransform.Scale = new Vector2(1, 2);
+
+        var child = renderingScene.AddSprite(new Vector2(100, 200), new Vector2(20, 30), 3, new Vector2(2, 3));
+        child.Parent = parent;
+        var childTransform = child.GetComponent<Transform2DComponent>();
+        childTransform.IsInterpolated = true;
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        parentTransform.Translation = new Vector2(20, 40);
+        parentTransform.Rotation = 4;
+        parentTransform.Scale = new Vector2(2, 4);
+
+        childTransform.Translation = new Vector2(30, 60);
+        childTransform.Rotation = 6;
+        childTransform.Scale = new Vector2(3, 6);
+
+        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+
+        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(parentTransform.InterpolatedTransform, Is.Not.EqualTo(parentTransform.Transform));
+        Assert.That(childTransform.InterpolatedTransform, Is.Not.EqualTo(childTransform.Transform));
+
+        var expectedTransform = parentTransform.InterpolatedTransform.ToMatrix() * childTransform.InterpolatedTransform.ToMatrix();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(child.GetSprite(), expectedTransform);
+    }
 
     [Test]
     public void RenderScene_ShouldDrawSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTexture()
@@ -171,6 +271,62 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
     }
+
+    [Test]
+    public void RenderScene_ShouldDrawSpriteBatch_WithSpritesTransformedWithParentTransform_WhenEachEntityHasParentWithTransform2DComponent()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var texture = CreateTexture();
+
+        var parent1 = renderingScene.Scene.CreateEntity();
+        var parent1Transform = parent1.CreateComponent<Transform2DComponent>();
+        parent1Transform.Translation = new Vector2(1, 2);
+
+        var parent2 = renderingScene.Scene.CreateEntity();
+        var parent2Transform = parent2.CreateComponent<Transform2DComponent>();
+        parent2Transform.Translation = new Vector2(3, 4);
+
+        var child1 = renderingScene.AddSprite(translation: new Vector2(10, 20));
+        child1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+        child1.Parent = parent1;
+
+        var child2 = renderingScene.AddSprite(translation: new Vector2(30, 40));
+        child2.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+        child2.Parent = parent2;
+
+        var expectedTransform1 = parent1Transform.ToMatrix() * child1.Get2DTransformationMatrix();
+        var expectedTransform2 = parent2Transform.ToMatrix() * child2.Get2DTransformationMatrix();
+
+        RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
+        {
+            // Assert
+            var spriteBatch = x.Arg<SpriteBatch>();
+            Assert.That(spriteBatch.Count, Is.EqualTo(2));
+            Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
+
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
+            var spriteBatchElement1 = sprites.Single(s => s.Sprite == child1.GetSprite());
+            var spriteBatchElement2 = sprites.Single(s => s.Sprite == child2.GetSprite());
+
+            Assert.That(spriteBatchElement1.Transform, Is.EqualTo(expectedTransform1));
+            Assert.That(spriteBatchElement1.Opacity, Is.EqualTo(child1.GetOpacity()));
+
+            Assert.That(spriteBatchElement2.Transform, Is.EqualTo(expectedTransform2));
+            Assert.That(spriteBatchElement2.Opacity, Is.EqualTo(child2.GetOpacity()));
+        });
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
+    }
+
+    // TODO Add tests for transform interpolation.
+    // TODO Add tests for interpolated transform hierarchy.
 
     [Test]
     public void RenderScene_ShouldDrawSpriteBatchAndDrawSprite_WhenSceneContainsTwoSpritesWithTheSameTextureAndOneSpriteWithDifferentTexture()
@@ -264,8 +420,6 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(2).DrawSpriteBatch(Arg.Any<SpriteBatch>());
     }
 
-    // TODO Add tests for transform hierarchy.
-
     [Test]
     public void RenderScene_ShouldNotDrawSpriteBatch_WhenOrderInLayerPreventsSpriteBatching()
     {
@@ -324,4 +478,6 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
     }
+
+    // TODO Add tests for transform interpolation.
 }
