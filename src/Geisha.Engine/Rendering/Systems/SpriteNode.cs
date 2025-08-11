@@ -38,7 +38,7 @@ namespace Geisha.Engine.Rendering.Systems
                 return new AxisAlignedRectangle();
             }
 
-            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
             var quad = _spriteRendererComponent.Sprite.Rectangle.ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }

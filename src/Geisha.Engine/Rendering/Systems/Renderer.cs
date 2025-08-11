@@ -106,7 +106,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         if (node.Sprite == null) return;
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+        var transformationMatrix = node.Transform.ComputeInterpolatedWorldTransformMatrix();
         transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
         if (_spriteBatch.Count != 0 && !ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
