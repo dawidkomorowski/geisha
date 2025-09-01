@@ -98,6 +98,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public AxisAlignedRectangle GetBoundingRectangleOfView()
         {
+            // TODO : Review other transform dependent methods in this class to see if they should use interpolated transform.
             var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
             var quad = new AxisAlignedRectangle(_camera.ViewRectangle).ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();

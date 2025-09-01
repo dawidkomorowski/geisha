@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
@@ -84,8 +83,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = node.Transform.ComputeInterpolatedWorldTransformMatrix();
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         var ellipse = new Ellipse(node.RadiusX, node.RadiusY);
         _renderingContext2D.DrawEllipse(ellipse, node.Color, node.FillInterior, transformationMatrix);
@@ -95,8 +93,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = node.Transform.ComputeInterpolatedWorldTransformMatrix();
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         var rectangle = new AxisAlignedRectangle(node.Dimensions);
         _renderingContext2D.DrawRectangle(rectangle, node.Color, node.FillInterior, transformationMatrix);
@@ -106,8 +103,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         if (node.Sprite == null) return;
 
-        var transformationMatrix = node.Transform.ComputeInterpolatedWorldTransformMatrix();
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         if (_spriteBatch.Count != 0 && !ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
         {
@@ -121,8 +117,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         _renderingContext2D.DrawTextLayout(node.TextLayout, node.Color, node.Pivot, transformationMatrix, node.ClipToLayoutBox);
     }
@@ -217,5 +212,10 @@ internal sealed class Renderer : IRenderNodeVisitor
         }
 
         _spriteBatch.Clear();
+    }
+
+    private Matrix3x3 ComputeNodeTransform(RenderNode node)
+    {
+        return _cameraTransformationMatrix * node.Transform.ComputeInterpolatedWorldTransformMatrix();
     }
 }
