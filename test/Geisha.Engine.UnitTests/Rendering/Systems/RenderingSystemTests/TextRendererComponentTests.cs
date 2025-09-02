@@ -154,8 +154,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         // Arrange
         var getTextLayout = MockCreateTextLayout();
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var (entity, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        var (entity, textRendererComponent) = context.AddText();
         var textLayout = getTextLayout();
 
         textLayout.ClearReceivedCalls();
@@ -184,9 +184,9 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         var getTextLayout = MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var (entity, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var (entity, textRendererComponent) = context.AddText();
 
         textRendererComponent.FontFamilyName = fontFamilyName;
         textRendererComponent.FontSize = fontSize;
@@ -201,7 +201,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Text = text;
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var textLayout = getTextLayout();
@@ -227,9 +227,9 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         var getTextLayout = MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var (entity, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var (entity, textRendererComponent) = context.AddText();
 
         textRendererComponent.Text = text;
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -243,7 +243,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var textLayout = getTextLayout();
@@ -273,16 +273,16 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         var getTextLayout = MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         var parentTransform = parent.CreateComponent<Transform2DComponent>();
         parentTransform.Translation = new Vector2(10, 20);
         parentTransform.Rotation = 30;
         parentTransform.Scale = new Vector2(2, 4);
 
-        var (child, textRendererComponent) = renderingScene.AddText();
+        var (child, textRendererComponent) = context.AddText();
         child.Parent = parent;
 
         textRendererComponent.Text = text;
@@ -299,7 +299,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawTextLayout(getTextLayout(), color, pivot, expectedTransform, clipToLayoutBox);
@@ -322,10 +322,10 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         var getTextLayout = MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
-        var (entity, textRendererComponent) = renderingScene.AddText(new Vector2(10, 20), 30, new Vector2(1, 2));
+        var (entity, textRendererComponent) = context.AddText(new Vector2(10, 20), 30, new Vector2(1, 2));
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
         transform2DComponent.IsInterpolated = true;
 
@@ -340,21 +340,21 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Pivot = pivot;
         textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
         transform2DComponent.Translation = new Vector2(20, 40);
         transform2DComponent.Rotation = 60;
         transform2DComponent.Scale = new Vector2(2, 4);
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
-        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assume
         Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawTextLayout(getTextLayout(), color, pivot, transform2DComponent.InterpolatedTransform.ToMatrix(), clipToLayoutBox);
@@ -377,17 +377,17 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         var getTextLayout = MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         var parentTransform = parent.CreateComponent<Transform2DComponent>();
         parentTransform.IsInterpolated = true;
         parentTransform.Translation = new Vector2(10, 20);
         parentTransform.Rotation = 2;
         parentTransform.Scale = new Vector2(1, 2);
 
-        var (child, textRendererComponent) = renderingScene.AddText(new Vector2(20, 30), 3, new Vector2(2, 3));
+        var (child, textRendererComponent) = context.AddText(new Vector2(20, 30), 3, new Vector2(2, 3));
         child.Parent = parent;
         var childTransform = child.GetComponent<Transform2DComponent>();
         childTransform.IsInterpolated = true;
@@ -403,7 +403,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Pivot = pivot;
         textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
         parentTransform.Translation = new Vector2(20, 40);
         parentTransform.Rotation = 4;
@@ -413,9 +413,9 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         childTransform.Rotation = 6;
         childTransform.Scale = new Vector2(3, 6);
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
-        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assume
         Assert.That(parentTransform.InterpolatedTransform, Is.Not.EqualTo(parentTransform.Transform));
@@ -424,7 +424,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         var expectedTransform = parentTransform.InterpolatedTransform.ToMatrix() * childTransform.InterpolatedTransform.ToMatrix();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawTextLayout(getTextLayout(), color, pivot, expectedTransform, clipToLayoutBox);
@@ -450,9 +450,9 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        context.Scene.RemoveObserver(context.RenderingSystem);
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(50, 100);
@@ -485,8 +485,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(50, 100);
@@ -519,8 +519,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var (entity, textRendererComponent) = renderingScene.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var context = CreateRenderingTestContext();
+        var (entity, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(50, 100);
@@ -528,14 +528,14 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
         transform2DComponent.IsInterpolated = true;
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
         transform2DComponent.Translation = new Vector2(20, 40);
         transform2DComponent.Scale = new Vector2(4, 4);
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
-        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assume
         Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
@@ -562,9 +562,9 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText();
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = textRendererComponent.TextMetrics;
@@ -588,8 +588,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText();
 
         // Act
         var actual = textRendererComponent.TextMetrics;
@@ -619,13 +619,13 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText();
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(5, 15);
 
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = textRendererComponent.LayoutRectangle;
@@ -655,8 +655,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText();
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(5, 15);
@@ -689,13 +689,13 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText();
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(5, 15);
 
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = textRendererComponent.TextRectangle;
@@ -725,8 +725,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
             .Returns(textLayout);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText();
         textRendererComponent.MaxWidth = 150;
         textRendererComponent.MaxHeight = 250;
         textRendererComponent.Pivot = new Vector2(5, 15);

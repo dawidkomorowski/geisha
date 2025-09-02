@@ -35,15 +35,15 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
-        var entity = renderingScene.AddRectangle(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddRectangle(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         if (transformParent)
@@ -56,7 +56,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -92,15 +92,15 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
-        var entity = renderingScene.AddEllipse(radiusX, radiusY, Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddEllipse(radiusX, radiusY, Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         if (transformParent)
@@ -113,7 +113,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -149,15 +149,15 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
-        var entity = renderingScene.AddSprite(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddSprite(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         if (transformParent)
@@ -170,7 +170,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -224,16 +224,16 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         });
         RenderingContext2D.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight).Returns(textLayout);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
 
-        var (entity, textRendererComponent) = renderingScene.AddText(Vector2.Zero, 0, Vector2.One);
+        var (entity, textRendererComponent) = context.AddText(Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -256,7 +256,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -291,14 +291,14 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double ty, double r, double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var camera = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var context = CreateRenderingTestContext();
+        var camera = context.AddCamera(Vector2.Zero, 0, Vector2.One);
         var cameraComponent = camera.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(width, height);
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
         camera.Parent = parent;
@@ -312,10 +312,10 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             camera.GetComponent<Transform2DComponent>().Transform = transform;
         }
 
-        var rectangle = renderingScene.AddRectangle(new Vector2(ScreenWidth, ScreenHeight), Vector2.Zero, 0, Vector2.One);
+        var rectangle = context.AddRectangle(new Vector2(ScreenWidth, ScreenHeight), Vector2.Zero, 0, Vector2.One);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;

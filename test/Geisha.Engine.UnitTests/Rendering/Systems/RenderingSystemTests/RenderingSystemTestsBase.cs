@@ -40,22 +40,6 @@ public abstract class RenderingSystemTestsBase
         RenderingDiagnosticInfoProvider = Substitute.For<IRenderingDiagnosticInfoProvider>();
     }
 
-    // TODO Replace with CreateRenderingTestContext.
-    private protected (RenderingSystem renderingSystem, RenderingTestContext renderingScene) GetRenderingSystem()
-    {
-        var renderingSystem = new RenderingSystem(
-            RenderingBackend,
-            new RenderingConfiguration(),
-            AggregatedDiagnosticInfoProvider,
-            DebugRendererForRenderingSystem,
-            RenderingDiagnosticInfoProvider
-        );
-
-        var renderingScene = new RenderingTestContext(renderingSystem, new TransformInterpolationSystem());
-
-        return (renderingSystem, renderingScene);
-    }
-
     private protected RenderingTestContext CreateRenderingTestContext() => CreateRenderingTestContext(new RenderingConfiguration());
 
     private protected RenderingTestContext CreateRenderingTestContext(RenderingConfiguration configuration)

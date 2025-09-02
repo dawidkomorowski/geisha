@@ -17,9 +17,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         const AspectRatioBehavior aspectRatioBehavior = AspectRatioBehavior.Underscan;
         var viewRectangle = new Vector2(16, 9);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera();
+        var entity = context.AddCamera();
         var cameraComponent = entity.GetComponent<CameraComponent>();
 
         cameraComponent.AspectRatioBehavior = aspectRatioBehavior;
@@ -29,7 +29,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
@@ -44,10 +44,10 @@ public class CameraComponentTests : RenderingSystemTestsBase
         const AspectRatioBehavior aspectRatioBehavior = AspectRatioBehavior.Underscan;
         var viewRectangle = new Vector2(16, 9);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        var context = CreateRenderingTestContext();
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
-        var entity = renderingScene.AddCamera();
+        var entity = context.AddCamera();
         var cameraComponent = entity.GetComponent<CameraComponent>();
 
         cameraComponent.AspectRatioBehavior = aspectRatioBehavior;
@@ -57,7 +57,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
-        renderingScene.Scene.AddObserver(renderingSystem);
+        context.Scene.AddObserver(context.RenderingSystem);
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
@@ -69,13 +69,13 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
-        var entity = renderingScene.AddSpriteWithDefaultTransform();
+        context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
@@ -90,11 +90,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(screenWidth);
         RenderingContext2D.ScreenHeight.Returns(screenHeight);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var cameraEntity = renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        var cameraEntity = context.AddCamera();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -106,18 +106,18 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldApplyViewRectangleOfCamera_WhenSceneContainsEntityAndCamera()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var cameraEntity = context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
         var camera = cameraEntity.GetComponent<CameraComponent>();
 
         // Camera view rectangle is twice the screen resolution
         camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 2);
 
-        var entity = renderingScene.AddSpriteWithDefaultTransform();
+        var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
@@ -130,9 +130,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var cameraEntity = context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
@@ -140,10 +140,10 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
         camera.ViewRectangle = new Vector2(ScreenWidth * 4, ScreenHeight * 2);
 
-        var entity = renderingScene.AddSpriteWithDefaultTransform();
+        var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
@@ -156,9 +156,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var cameraEntity = context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
@@ -166,10 +166,10 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
         camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 4);
 
-        var entity = renderingScene.AddSpriteWithDefaultTransform();
+        var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
@@ -182,9 +182,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var cameraEntity = context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
@@ -192,10 +192,10 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
         camera.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight * 2);
 
-        var entity = renderingScene.AddSpriteWithDefaultTransform();
+        var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -216,9 +216,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var cameraEntity = context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
@@ -226,10 +226,10 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
         camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight);
 
-        var entity = renderingScene.AddSpriteWithDefaultTransform();
+        var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -250,11 +250,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera();
+        var entity = context.AddCamera();
         var cameraComponent = entity.GetComponent<CameraComponent>();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var screenWidth = cameraComponent.ScreenWidth;
@@ -273,9 +273,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (_, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera();
+        var entity = context.AddCamera();
         var cameraComponent = entity.GetComponent<CameraComponent>();
 
         // Act
@@ -292,12 +292,12 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_BoundingRectangleOfView_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
         var cameraComponent = entity.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(100, 200);
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = cameraComponent.BoundingRectangleOfView;
@@ -311,9 +311,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_BoundingRectangleOfView_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers()
     {
         // Arrange
-        var (_, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
         var cameraComponent = entity.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(100, 200);
 
@@ -332,11 +332,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddCamera(Vector2.Zero, 0, Vector2.One);
         var cameraComponent = entity.GetComponent<CameraComponent>();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(200, 100));
@@ -366,8 +366,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
         var cameraComponent = entity.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(vx, vy);
         cameraComponent.AspectRatioBehavior = arb;
@@ -387,11 +387,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddCamera(Vector2.Zero, 0, Vector2.One);
         var cameraComponent = entity.GetComponent<CameraComponent>();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(-760, 440));
@@ -421,8 +421,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
         var cameraComponent = entity.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(vx, vy);
         cameraComponent.AspectRatioBehavior = arb;
@@ -442,11 +442,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddCamera(Vector2.Zero, 0, Vector2.One);
         var cameraComponent = entity.GetComponent<CameraComponent>();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = cameraComponent.CreateViewMatrix();
@@ -474,8 +474,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
         var cameraComponent = entity.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(vx, vy);
         cameraComponent.AspectRatioBehavior = arb;
@@ -498,11 +498,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddCamera(Vector2.Zero, 0, Vector2.One);
         var cameraComponent = entity.GetComponent<CameraComponent>();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = cameraComponent.CreateViewMatrixScaledToScreen();
@@ -530,8 +530,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
         var cameraComponent = entity.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(vx, vy);
         cameraComponent.AspectRatioBehavior = arb;
