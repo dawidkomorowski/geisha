@@ -64,7 +64,11 @@ namespace Geisha.Engine.Rendering.Systems
             get => TextLayout.Text;
             set
             {
-                // TODO : Optimize to avoid recreating text layout if not necessary.
+                if (value == Text)
+                {
+                    return;
+                }
+
                 var newTextLayout = _renderingContext2D.CreateTextLayout(value, FontFamilyName, FontSize, MaxWidth, MaxHeight);
                 newTextLayout.TextAlignment = TextAlignment;
                 newTextLayout.ParagraphAlignment = ParagraphAlignment;
