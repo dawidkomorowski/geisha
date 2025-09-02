@@ -34,9 +34,9 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var (_, textRendererComponent) = context.AddText();
 
         // Renderer2DComponent
         textRendererComponent.Visible = visible;
@@ -58,7 +58,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent
@@ -101,11 +101,11 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
 
         MockCreateTextLayout();
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
-        var (_, textRendererComponent) = renderingScene.AddText();
+        var (_, textRendererComponent) = context.AddText();
 
         // Renderer2DComponent
         textRendererComponent.Visible = visible;
@@ -127,7 +127,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
-        renderingScene.Scene.AddObserver(renderingSystem);
+        context.Scene.AddObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent

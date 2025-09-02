@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core;
+﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -13,6 +12,7 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -40,14 +40,25 @@ public abstract class RenderingSystemTestsBase
         RenderingDiagnosticInfoProvider = Substitute.For<IRenderingDiagnosticInfoProvider>();
     }
 
-    // TODO Refactor this method to just return RenderingScene as it now contains RenderingSystem as well.
-    // TODO Refactor RenderingScene to more general concept as it is not only wrapper for Scene but also contains RenderingSystem and TransformInterpolationSystem.
-    private protected (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
+    // TODO Replace with CreateRenderingTestContext.
+    private protected (RenderingSystem renderingSystem, RenderingTestContext renderingScene) GetRenderingSystem()
     {
-        return GetRenderingSystem(new RenderingConfiguration());
+        var renderingSystem = new RenderingSystem(
+            RenderingBackend,
+            new RenderingConfiguration(),
+            AggregatedDiagnosticInfoProvider,
+            DebugRendererForRenderingSystem,
+            RenderingDiagnosticInfoProvider
+        );
+
+        var renderingScene = new RenderingTestContext(renderingSystem, new TransformInterpolationSystem());
+
+        return (renderingSystem, renderingScene);
     }
 
-    private protected (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem(RenderingConfiguration configuration)
+    private protected RenderingTestContext CreateRenderingTestContext() => CreateRenderingTestContext(new RenderingConfiguration());
+
+    private protected RenderingTestContext CreateRenderingTestContext(RenderingConfiguration configuration)
     {
         var renderingSystem = new RenderingSystem(
             RenderingBackend,
@@ -57,31 +68,31 @@ public abstract class RenderingSystemTestsBase
             RenderingDiagnosticInfoProvider
         );
 
-        var renderingScene = new RenderingScene(renderingSystem, new TransformInterpolationSystem());
+        var renderingTestContext = new RenderingTestContext(renderingSystem, new TransformInterpolationSystem());
 
-        return (renderingSystem, renderingScene);
+        return renderingTestContext;
     }
 
-    protected static DiagnosticInfo GetRandomDiagnosticInfo()
+    private protected static DiagnosticInfo GetRandomDiagnosticInfo()
     {
         return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
     }
 
-    protected static ITexture CreateTexture()
+    private protected static ITexture CreateTexture()
     {
         var texture = Substitute.For<ITexture>();
         texture.RuntimeId.Returns(RuntimeId.Next());
         return texture;
     }
 
-    protected static Sprite CreateSprite(ITexture texture)
+    private protected static Sprite CreateSprite(ITexture texture)
     {
         return new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
     }
 
-    protected sealed class RenderingScene
+    private protected sealed class RenderingTestContext
     {
-        internal RenderingScene(RenderingSystem renderingSystem, TransformInterpolationSystem transformInterpolationSystem)
+        internal RenderingTestContext(RenderingSystem renderingSystem, TransformInterpolationSystem transformInterpolationSystem)
         {
             RenderingSystem = renderingSystem;
             TransformInterpolationSystem = transformInterpolationSystem;

@@ -57,10 +57,10 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_Should_Present_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
     {
         // Arrange
-        var (renderingSystem, _) = GetRenderingSystem(new RenderingConfiguration { EnableVSync = enableVSync });
+        var context = CreateRenderingTestContext(new RenderingConfiguration { EnableVSync = enableVSync });
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingBackend.Received().Present(enableVSync);

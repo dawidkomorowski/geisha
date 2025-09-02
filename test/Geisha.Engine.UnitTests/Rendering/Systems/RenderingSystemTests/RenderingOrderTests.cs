@@ -15,14 +15,14 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         // Arrange
         const string otherSortingLayer = "Other";
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer } });
-        renderingScene.AddCamera();
-        var entity1 = renderingScene.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
-        var entity2 = renderingScene.AddSprite(orderInLayer: 1);
+        context.AddCamera();
+        var entity1 = context.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
+        var entity2 = context.AddSprite(orderInLayer: 1);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -61,15 +61,15 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         const string backgroundSortingLayerName = "Background";
         const string foregroundSortingLayerName = "Foreground";
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName } });
-        renderingScene.AddCamera();
-        var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
-        var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
-        var entity3 = renderingScene.AddSprite(sortingLayerName: backgroundSortingLayerName);
+        context.AddCamera();
+        var entity1 = context.AddSprite(sortingLayerName: foregroundSortingLayerName);
+        var entity2 = context.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+        var entity3 = context.AddSprite(sortingLayerName: backgroundSortingLayerName);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -87,15 +87,15 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         const string backgroundSortingLayerName = "Background";
         const string foregroundSortingLayerName = "Foreground";
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { foregroundSortingLayerName, backgroundSortingLayerName, RenderingConfiguration.DefaultSortingLayerName } });
-        renderingScene.AddCamera();
-        var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
-        var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
-        var entity3 = renderingScene.AddSprite(sortingLayerName: backgroundSortingLayerName);
+        context.AddCamera();
+        var entity1 = context.AddSprite(sortingLayerName: foregroundSortingLayerName);
+        var entity2 = context.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+        var entity3 = context.AddSprite(sortingLayerName: backgroundSortingLayerName);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -113,13 +113,13 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         const string backgroundSortingLayerName = "Background";
         const string foregroundSortingLayerName = "Foreground";
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
-        { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName } });
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName } });
+        context.AddCamera();
 
-        var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
-        var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
-        var entity3 = renderingScene.AddSprite(sortingLayerName: backgroundSortingLayerName);
+        var entity1 = context.AddSprite(sortingLayerName: foregroundSortingLayerName);
+        var entity2 = context.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+        var entity3 = context.AddSprite(sortingLayerName: backgroundSortingLayerName);
 
         var texture = CreateTexture();
         entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
@@ -141,7 +141,7 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         });
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
@@ -190,12 +190,12 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         // Arrange
         const string otherSortingLayer = "Other";
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer } });
-        renderingScene.AddCamera();
+        context.AddCamera();
 
-        var entity1 = renderingScene.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
-        var entity2 = renderingScene.AddSprite(orderInLayer: 1);
+        var entity1 = context.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
+        var entity2 = context.AddSprite(orderInLayer: 1);
 
         var texture = CreateTexture();
         entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
@@ -215,7 +215,7 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         });
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());

@@ -24,10 +24,10 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
 
-        var entity = renderingScene.AddEllipse();
+        var entity = context.AddEllipse();
         var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
 
         // Renderer2DComponent
@@ -44,7 +44,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         Assert.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent
@@ -73,11 +73,11 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
-        var entity = renderingScene.AddEllipse();
+        var entity = context.AddEllipse();
         var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
 
         // Renderer2DComponent
@@ -94,7 +94,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         Assert.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
-        renderingScene.Scene.AddObserver(renderingSystem);
+        context.Scene.AddObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent

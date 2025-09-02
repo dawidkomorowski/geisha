@@ -23,10 +23,10 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
 
-        var entity = renderingScene.AddRectangle();
+        var entity = context.AddRectangle();
         var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
 
         // Renderer2DComponent
@@ -42,7 +42,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent
@@ -69,11 +69,11 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
-        var entity = renderingScene.AddRectangle();
+        var entity = context.AddRectangle();
         var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
 
         // Renderer2DComponent
@@ -89,7 +89,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
-        renderingScene.Scene.AddObserver(renderingSystem);
+        context.Scene.AddObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent

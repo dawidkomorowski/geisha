@@ -24,10 +24,10 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
 
-        var entity = renderingScene.AddSprite();
+        var entity = context.AddSprite();
         var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
 
         // Renderer2DComponent
@@ -42,7 +42,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent
@@ -67,11 +67,11 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+        var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
-        var entity = renderingScene.AddSprite();
+        var entity = context.AddSprite();
         var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
 
         // Renderer2DComponent
@@ -86,7 +86,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
-        renderingScene.Scene.AddObserver(renderingSystem);
+        context.Scene.AddObserver(context.RenderingSystem);
 
         // Assert
         // Renderer2DComponent
