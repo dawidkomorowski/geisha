@@ -36,14 +36,14 @@ public class RenderingOrderTests : RenderingSystemTestsBase
     public void RenderScene_ShouldRenderInOrderOf_OrderInLayer_WhenEntitiesAreInTheSameSortingLayer()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity1 = renderingScene.AddSprite(orderInLayer: 1);
-        var entity2 = renderingScene.AddSprite(orderInLayer: -1);
-        var entity3 = renderingScene.AddSprite(orderInLayer: 0);
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity1 = context.AddSprite(orderInLayer: 1);
+        var entity2 = context.AddSprite(orderInLayer: -1);
+        var entity3 = context.AddSprite(orderInLayer: 0);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -151,12 +151,12 @@ public class RenderingOrderTests : RenderingSystemTestsBase
     public void RenderScene_ShouldDrawSpriteBatchWithSpritesSortedByOrderInLayer()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
-        var entity1 = renderingScene.AddSprite(orderInLayer: 1);
-        var entity2 = renderingScene.AddSprite(orderInLayer: -1);
-        var entity3 = renderingScene.AddSprite(orderInLayer: 0);
+        var entity1 = context.AddSprite(orderInLayer: 1);
+        var entity2 = context.AddSprite(orderInLayer: -1);
+        var entity3 = context.AddSprite(orderInLayer: 0);
 
         var texture = CreateTexture();
         entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
@@ -178,7 +178,7 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         });
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());

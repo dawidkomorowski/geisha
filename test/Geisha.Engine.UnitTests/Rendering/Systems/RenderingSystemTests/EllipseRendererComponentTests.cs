@@ -113,12 +113,12 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldDrawEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddEllipse();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddEllipse();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
@@ -130,22 +130,22 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldDrawEllipse_TransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         var parentTransform = parent.CreateComponent<Transform2DComponent>();
         parentTransform.Translation = new Vector2(10, 20);
         parentTransform.Rotation = 30;
         parentTransform.Scale = new Vector2(2, 4);
 
-        var child = renderingScene.AddEllipse();
+        var child = context.AddEllipse();
         child.Parent = parent;
 
         var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var ellipseRenderer = child.GetComponent<EllipseRendererComponent>();
@@ -157,27 +157,27 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldDrawEllipse_WhenTransformIsInterpolated()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddEllipse(50, 100, new Vector2(10, 20), 30, new Vector2(1, 2));
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddEllipse(50, 100, new Vector2(10, 20), 30, new Vector2(1, 2));
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
         transform2DComponent.IsInterpolated = true;
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
         transform2DComponent.Translation = new Vector2(20, 40);
         transform2DComponent.Rotation = 60;
         transform2DComponent.Scale = new Vector2(2, 4);
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
-        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assume
         Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
@@ -189,22 +189,22 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldDrawEllipse_TransformedWithParentTransform_WhenTransformIsInterpolated()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         var parentTransform = parent.CreateComponent<Transform2DComponent>();
         parentTransform.IsInterpolated = true;
         parentTransform.Translation = new Vector2(10, 20);
         parentTransform.Rotation = 2;
         parentTransform.Scale = new Vector2(1, 2);
 
-        var child = renderingScene.AddEllipse(50, 100, new Vector2(20, 30), 3, new Vector2(2, 3));
+        var child = context.AddEllipse(50, 100, new Vector2(20, 30), 3, new Vector2(2, 3));
         child.Parent = parent;
         var childTransform = child.GetComponent<Transform2DComponent>();
         childTransform.IsInterpolated = true;
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
         parentTransform.Translation = new Vector2(20, 40);
         parentTransform.Rotation = 4;
@@ -214,9 +214,9 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         childTransform.Rotation = 6;
         childTransform.Scale = new Vector2(3, 6);
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
-        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assume
         Assert.That(parentTransform.InterpolatedTransform, Is.Not.EqualTo(parentTransform.Transform));
@@ -225,7 +225,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         var expectedTransform = parentTransform.InterpolatedTransform.ToMatrix() * childTransform.InterpolatedTransform.ToMatrix();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var ellipseRenderer = child.GetComponent<EllipseRendererComponent>();
@@ -237,11 +237,11 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void EllipseRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
-        var entity = renderingScene.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
+        var entity = context.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
         var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
-        renderingScene.Scene.RemoveObserver(renderingSystem);
+        context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
         var actual = ellipseRendererComponent.BoundingRectangle;
@@ -255,8 +255,8 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void EllipseRendererComponent_BoundingRectangle_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers()
     {
         // Arrange
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
+        var context = CreateRenderingTestContext();
+        var entity = context.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
         var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
 
         // Act
@@ -271,20 +271,20 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     public void EllipseRendererComponent_BoundingRectangle_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
+        var context = CreateRenderingTestContext();
+        var entity = context.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
         var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
         transform2DComponent.IsInterpolated = true;
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
         transform2DComponent.Translation = new Vector2(20, 40);
         transform2DComponent.Scale = new Vector2(4, 4);
 
-        renderingScene.TransformInterpolationSystem.SnapshotTransforms();
+        context.TransformInterpolationSystem.SnapshotTransforms();
 
-        renderingScene.TransformInterpolationSystem.InterpolateTransforms(0.5);
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assume
         Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));

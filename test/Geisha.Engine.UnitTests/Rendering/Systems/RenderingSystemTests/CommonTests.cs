@@ -15,10 +15,10 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_EndDraw_Present_GivenAnEmptyScene()
     {
         // Arrange
-        var (renderingSystem, _) = GetRenderingSystem();
+        var context = CreateRenderingTestContext();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -34,12 +34,12 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_DrawSprite_EndDraw_Present_GivenSceneWithCameraAndSprite()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        context.AddSprite();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -70,11 +70,11 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldNotDrawRendererComponent_WhenSceneContainsEntityWithRendererComponentAndTransformButDoesNotContainCamera()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        context.AddSprite();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
@@ -90,11 +90,11 @@ public class CommonTests : RenderingSystemTestsBase
 
         AggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo().Returns(new[] { diagnosticInfo1, diagnosticInfo2, diagnosticInfo3 });
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity1 = renderingScene.AddSprite(orderInLayer: 0);
-        var entity2 = renderingScene.AddSprite(orderInLayer: 1);
-        var entity3 = renderingScene.AddSprite(orderInLayer: 2);
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity1 = context.AddSprite(orderInLayer: 0);
+        var entity2 = context.AddSprite(orderInLayer: 1);
+        var entity3 = context.AddSprite(orderInLayer: 2);
 
         var renderingStatistics = new RenderingStatistics
         {
@@ -104,7 +104,7 @@ public class CommonTests : RenderingSystemTestsBase
         RenderingBackend.Statistics.Returns(renderingStatistics);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -125,13 +125,13 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldRenderOnlyEntities_ThatHaveVisibleSpriteRenderer()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity1 = renderingScene.AddSprite(visible: true);
-        var entity2 = renderingScene.AddSprite(visible: false);
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity1 = context.AddSprite(visible: true);
+        var entity2 = context.AddSprite(visible: false);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
@@ -142,12 +142,12 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldDrawDebugInformation()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddSprite();
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         Received.InOrder(() =>
@@ -161,19 +161,19 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldNotDrawRendererComponent_WhenTransform2DComponentRemovedFromRendererEntity()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var rendererEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var rendererEntity = context.AddSprite();
 
         // Assume
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
         RenderingContext2D.Received(1).DrawSprite(rendererEntity.GetSprite(), rendererEntity.Get2DTransformationMatrix(), rendererEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
         // Act
         rendererEntity.RemoveComponent(rendererEntity.GetComponent<Transform2DComponent>());
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
@@ -183,19 +183,19 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldNotDrawRendererComponent_WhenTransform2DComponentRemovedFromCameraEntity()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var cameraEntity = renderingScene.AddCamera();
-        var spriteEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        var cameraEntity = context.AddCamera();
+        var spriteEntity = context.AddSprite();
 
         // Arrange
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
         RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
         // Act
         cameraEntity.RemoveComponent(cameraEntity.GetComponent<Transform2DComponent>());
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
@@ -205,19 +205,19 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldNotDrawRendererComponent_WhenRenderer2DComponentRemoved()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var spriteEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var spriteEntity = context.AddSprite();
 
         // Arrange
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
         RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
         // Act
         spriteEntity.RemoveComponent(spriteEntity.GetComponent<SpriteRendererComponent>());
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
@@ -227,19 +227,19 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderScene_ShouldNotDrawRendererComponent_WhenCameraComponentRemoved()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var cameraEntity = renderingScene.AddCamera();
-        var spriteEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        var cameraEntity = context.AddCamera();
+        var spriteEntity = context.AddSprite();
 
         // Arrange
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
         RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
         // Act
         cameraEntity.RemoveComponent(cameraEntity.GetComponent<CameraComponent>());
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
@@ -249,13 +249,13 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderingSystem_ShouldNotDuplicateRendererComponent_WhenCameraComponentIsAddedToEntity_AndEntityAlreadyHasRendererComponent()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var spriteEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        var spriteEntity = context.AddSprite();
 
         // Act
         var cameraComponent = spriteEntity.CreateComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight);
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), Arg.Any<Matrix3x3>(), spriteEntity.GetOpacity());
@@ -265,8 +265,8 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderingSystem_ShouldAllowToAddRendererComponentToEntity_WhenEntityAlreadyHasCameraComponent()
     {
         // Arrange
-        var (_, renderingScene) = GetRenderingSystem();
-        var entity = renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera();
 
         // Act
         entity.CreateComponent<SpriteRendererComponent>();
@@ -280,9 +280,9 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderingSystem_ShouldDrawRendererComponent_WhenRendererComponentRemovedFromEntity_AndThenAddedToEntity()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var spriteEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var spriteEntity = context.AddSprite();
 
         // Act
         var sprite = spriteEntity.GetSprite();
@@ -294,7 +294,7 @@ public class CommonTests : RenderingSystemTestsBase
         newSpriteRendererComponent.Sprite = sprite;
         newSpriteRendererComponent.Opacity = opacity;
 
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(sprite, spriteEntity.Get2DTransformationMatrix(), opacity);
@@ -304,9 +304,9 @@ public class CommonTests : RenderingSystemTestsBase
     public void RenderingSystem_ShouldDrawRendererComponent_WhenCameraComponentRemovedFromEntity_AndThenAddedToEntity()
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var cameraEntity = renderingScene.AddCamera();
-        var spriteEntity = renderingScene.AddSprite();
+        var context = CreateRenderingTestContext();
+        var cameraEntity = context.AddCamera();
+        var spriteEntity = context.AddSprite();
 
         // Act
         var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -317,7 +317,7 @@ public class CommonTests : RenderingSystemTestsBase
         var newCameraComponent = cameraEntity.CreateComponent<CameraComponent>();
         newCameraComponent.ViewRectangle = viewRectangle;
 
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
