@@ -109,9 +109,9 @@ public class CommonTests : RenderingSystemTestsBase
         // Assert
         Received.InOrder(() =>
         {
-            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
+            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
+            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.GetTransformMatrix(), entity3.GetOpacity());
 
             RenderingDiagnosticInfoProvider.UpdateDiagnostics(renderingStatistics);
 
@@ -134,8 +134,8 @@ public class CommonTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-        RenderingContext2D.DidNotReceive().DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
+        RenderingContext2D.DidNotReceive().DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
     }
 
     [Test]
@@ -152,7 +152,7 @@ public class CommonTests : RenderingSystemTestsBase
         // Assert
         Received.InOrder(() =>
         {
-            RenderingContext2D.DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
+            RenderingContext2D.DrawSprite(entity.GetSprite(), entity.GetTransformMatrix(), entity.GetOpacity());
             DebugRendererForRenderingSystem.Received(1).DrawDebugInformation(RenderingContext2D, Matrix3x3.Identity);
         });
     }
@@ -167,7 +167,7 @@ public class CommonTests : RenderingSystemTestsBase
 
         // Assume
         context.RenderingSystem.RenderScene();
-        RenderingContext2D.Received(1).DrawSprite(rendererEntity.GetSprite(), rendererEntity.Get2DTransformationMatrix(), rendererEntity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(rendererEntity.GetSprite(), rendererEntity.GetTransformMatrix(), rendererEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
@@ -189,7 +189,7 @@ public class CommonTests : RenderingSystemTestsBase
 
         // Arrange
         context.RenderingSystem.RenderScene();
-        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.GetTransformMatrix(), spriteEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
@@ -211,7 +211,7 @@ public class CommonTests : RenderingSystemTestsBase
 
         // Arrange
         context.RenderingSystem.RenderScene();
-        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.GetTransformMatrix(), spriteEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
@@ -233,7 +233,7 @@ public class CommonTests : RenderingSystemTestsBase
 
         // Arrange
         context.RenderingSystem.RenderScene();
-        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.GetTransformMatrix(), spriteEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
@@ -297,7 +297,7 @@ public class CommonTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        RenderingContext2D.Received(1).DrawSprite(sprite, spriteEntity.Get2DTransformationMatrix(), opacity);
+        RenderingContext2D.Received(1).DrawSprite(sprite, spriteEntity.GetTransformMatrix(), opacity);
     }
 
     [Test]
@@ -320,6 +320,6 @@ public class CommonTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.GetTransformMatrix(), spriteEntity.GetOpacity());
     }
 }

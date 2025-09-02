@@ -14,5 +14,5 @@ internal static class EntityExtensions
 
     public static double GetOpacity(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Opacity;
 
-    public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<Transform2DComponent>().ToMatrix();
+    public static Matrix3x3 GetTransformMatrix(this Entity entity) => entity.GetComponent<Transform2DComponent>().ToMatrix();
 }

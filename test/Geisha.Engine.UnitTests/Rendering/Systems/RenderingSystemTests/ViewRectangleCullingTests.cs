@@ -65,7 +65,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, TransformHierarchy.Calculate2DTransformationMatrix(entity));
+            rectangleRenderer.FillInterior, entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix());
     }
 
     [TestCase(50, 50, false, 0, 0, 0, 1, 1, true)]
@@ -122,7 +122,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
-            ellipseRenderer.FillInterior, TransformHierarchy.Calculate2DTransformationMatrix(entity));
+            ellipseRenderer.FillInterior, entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix());
     }
 
     [TestCase(100, 100, false, 0, 0, 0, 1, 1, true)]
@@ -177,7 +177,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         RenderingContext2D.ReceivedWithAnyArgs(expectedCalls).DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
 
         RenderingContext2D.Received(expectedCalls)
-            .DrawSprite(entity.GetSprite(), TransformHierarchy.Calculate2DTransformationMatrix(entity), entity.GetOpacity());
+            .DrawSprite(entity.GetSprite(), entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix(), entity.GetOpacity());
     }
 
     [TestCase(100, 100, false, 0, 0, 0, 1, 1, true)]
@@ -264,7 +264,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             .DrawTextLayout(Arg.Any<ITextLayout>(), Arg.Any<Color>(), Arg.Any<Vector2>(), Arg.Any<Matrix3x3>(), Arg.Any<bool>());
 
         RenderingContext2D.Received(expectedCalls)
-            .DrawTextLayout(textLayout, color, pivot, TransformHierarchy.Calculate2DTransformationMatrix(entity), clipToLayoutBox);
+            .DrawTextLayout(textLayout, color, pivot, entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix(), clipToLayoutBox);
     }
 
     [TestCase(100, 100, false, 0, 0, 0, 1, 1, true)]
@@ -324,6 +324,6 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var rectangleRenderer = rectangle.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.Get2DTransformationMatrix());
+            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.GetTransformMatrix());
     }
 }

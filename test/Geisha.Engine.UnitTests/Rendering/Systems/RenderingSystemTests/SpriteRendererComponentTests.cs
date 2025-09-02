@@ -111,7 +111,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.GetTransformMatrix(), entity.GetOpacity());
     }
 
     [Test]
@@ -128,7 +128,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.GetTransformMatrix(), 0.5);
     }
 
     [Test]
@@ -147,7 +147,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var child = context.AddSprite();
         child.Parent = parent;
 
-        var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
+        var expectedTransform = parentTransform.ToMatrix() * child.GetTransformMatrix();
 
         // Act
         context.RenderingSystem.RenderScene();
@@ -258,10 +258,10 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
             var spriteBatchElement1 = sprites.Single(s => s.Sprite == entity1.GetSprite());
             var spriteBatchElement2 = sprites.Single(s => s.Sprite == entity2.GetSprite());
 
-            Assert.That(spriteBatchElement1.Transform, Is.EqualTo(entity1.Get2DTransformationMatrix()));
+            Assert.That(spriteBatchElement1.Transform, Is.EqualTo(entity1.GetTransformMatrix()));
             Assert.That(spriteBatchElement1.Opacity, Is.EqualTo(entity1.GetOpacity()));
 
-            Assert.That(spriteBatchElement2.Transform, Is.EqualTo(entity2.Get2DTransformationMatrix()));
+            Assert.That(spriteBatchElement2.Transform, Is.EqualTo(entity2.GetTransformMatrix()));
             Assert.That(spriteBatchElement2.Opacity, Is.EqualTo(entity2.GetOpacity()));
         });
 
@@ -297,8 +297,8 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         child2.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
         child2.Parent = parent2;
 
-        var expectedTransform1 = parent1Transform.ToMatrix() * child1.Get2DTransformationMatrix();
-        var expectedTransform2 = parent2Transform.ToMatrix() * child2.Get2DTransformationMatrix();
+        var expectedTransform1 = parent1Transform.ToMatrix() * child1.GetTransformMatrix();
+        var expectedTransform2 = parent2Transform.ToMatrix() * child2.GetTransformMatrix();
 
         RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
         {
@@ -493,7 +493,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
 
         // Assert
         RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
-        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
     }
 
     [Test]
@@ -572,9 +572,9 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
 
         // Assert
         RenderingContext2D.DidNotReceive().DrawSpriteBatch(Arg.Any<SpriteBatch>());
-        RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-        RenderingContext2D.Received(1).DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity3.GetSprite(), entity3.GetTransformMatrix(), entity3.GetOpacity());
     }
 
     [Test]

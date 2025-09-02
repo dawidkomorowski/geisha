@@ -27,8 +27,8 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         // Assert
         Received.InOrder(() =>
         {
-            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
+            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
         });
     }
 
@@ -48,9 +48,9 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         // Assert
         Received.InOrder(() =>
         {
-            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
-            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
+            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.GetTransformMatrix(), entity3.GetOpacity());
+            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
         });
     }
 
@@ -74,9 +74,9 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         // Assert
         Received.InOrder(() =>
         {
-            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
-            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
+            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.GetTransformMatrix(), entity3.GetOpacity());
+            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
         });
     }
 
@@ -100,9 +100,9 @@ public class RenderingOrderTests : RenderingSystemTestsBase
         // Assert
         Received.InOrder(() =>
         {
-            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
-            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+            RenderingContext2D.DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
+            RenderingContext2D.DrawSprite(entity3.GetSprite(), entity3.GetTransformMatrix(), entity3.GetOpacity());
+            RenderingContext2D.DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
         });
     }
 

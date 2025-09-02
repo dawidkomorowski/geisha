@@ -207,7 +207,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         var textLayout = getTextLayout();
         textLayout.Received(1).TextAlignment = textAlignment;
         textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-        RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
+        RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.GetTransformMatrix(), clipToLayoutBox);
     }
 
     [Test]
@@ -253,7 +253,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textLayout.Received(1).MaxHeight = maxHeight;
         textLayout.Received(1).TextAlignment = textAlignment;
         textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-        RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
+        RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.GetTransformMatrix(), clipToLayoutBox);
     }
 
     [Test]
@@ -296,7 +296,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Pivot = pivot;
         textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
-        var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
+        var expectedTransform = parentTransform.ToMatrix() * child.GetTransformMatrix();
 
         // Act
         context.RenderingSystem.RenderScene();

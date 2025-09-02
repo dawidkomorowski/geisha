@@ -117,7 +117,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         // Assert
         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, entity.Get2DTransformationMatrix());
+            rectangleRenderer.FillInterior, entity.GetTransformMatrix());
     }
 
     [Test]
@@ -136,7 +136,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         var child = context.AddRectangle();
         child.Parent = parent;
 
-        var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
+        var expectedTransform = parentTransform.ToMatrix() * child.GetTransformMatrix();
 
         // Act
         context.RenderingSystem.RenderScene();

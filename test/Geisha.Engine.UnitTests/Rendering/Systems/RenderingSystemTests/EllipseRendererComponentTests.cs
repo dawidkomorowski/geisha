@@ -123,7 +123,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         // Assert
         var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
         RenderingContext2D.Received(1).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
-            ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
+            ellipseRenderer.FillInterior, entity.GetTransformMatrix());
     }
 
     [Test]
@@ -142,7 +142,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         var child = context.AddEllipse();
         child.Parent = parent;
 
-        var expectedTransform = parentTransform.ToMatrix() * child.Get2DTransformationMatrix();
+        var expectedTransform = parentTransform.ToMatrix() * child.GetTransformMatrix();
 
         // Act
         context.RenderingSystem.RenderScene();
