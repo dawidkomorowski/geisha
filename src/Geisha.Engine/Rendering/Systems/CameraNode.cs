@@ -61,10 +61,8 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint)
         {
-            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-
             var viewRectangleScale = GetViewRectangleScale();
-            var transformationMatrix = cameraTransform.ToMatrix() *
+            var transformationMatrix = _transform.ToMatrix() *
                                        Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
                                        Matrix3x3.CreateTranslation(new Vector2(-ScreenWidth / 2.0, -ScreenHeight / 2.0));
 
@@ -82,12 +80,11 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Matrix3x3 CreateViewMatrix()
         {
-            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-            var cameraScale = cameraTransform.Scale;
+            var cameraScale = _transform.Scale;
 
             return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
-                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
+                   Matrix3x3.CreateRotation(-_transform.Rotation) *
+                   Matrix3x3.CreateTranslation(-_transform.Translation) * Matrix3x3.Identity;
         }
 
         public Matrix3x3 CreateViewMatrixScaledToScreen()
@@ -99,7 +96,7 @@ namespace Geisha.Engine.Rendering.Systems
         public AxisAlignedRectangle GetBoundingRectangleOfView()
         {
             // TODO : Review other transform dependent methods in this class to see if they should use interpolated transform.
-            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var transform = _transform.ComputeWorldTransformMatrix();
             var quad = new AxisAlignedRectangle(_camera.ViewRectangle).ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }
