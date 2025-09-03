@@ -61,6 +61,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint)
         {
+            // TODO : Handle interpolated transform.
             var viewRectangleScale = GetViewRectangleScale();
             var transformationMatrix = _transform.ToMatrix() *
                                        Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
@@ -80,6 +81,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Matrix3x3 CreateViewMatrix()
         {
+            // TODO : Handle interpolated transform.
             var cameraScale = _transform.Scale;
 
             return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
@@ -95,8 +97,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public AxisAlignedRectangle GetBoundingRectangleOfView()
         {
-            // TODO : Review other transform dependent methods in this class to see if they should use interpolated transform.
-            var transform = _transform.ComputeWorldTransformMatrix();
+            var transform = _transform.ComputeInterpolatedWorldTransformMatrix();
             var quad = new AxisAlignedRectangle(_camera.ViewRectangle).ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }

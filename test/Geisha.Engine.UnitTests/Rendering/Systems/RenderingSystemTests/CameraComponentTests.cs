@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -323,6 +324,38 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void CameraComponent_BoundingRectangleOfView_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(100, 200);
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Scale = new Vector2(4, 4);
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        var actual = cameraComponent.BoundingRectangleOfView;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
     }
 
     [Test]
