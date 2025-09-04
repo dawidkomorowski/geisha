@@ -410,7 +410,41 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(wx, wy)).Using(CommonEqualityComparer.Vector2(0.000001)));
+        Assert.That(actual, Is.EqualTo(new Vector2(wx, wy)).Using(Vector2Comparer));
+    }
+
+    [Test]
+    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(1920, 1080);
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Scale = new Vector2(4, 4);
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(200, 100));
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new Vector2(-2265, 1350)).Using(Vector2Comparer));
     }
 
     [Test]
@@ -465,7 +499,41 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(px, py)).Using(CommonEqualityComparer.Vector2(0.000001)));
+        Assert.That(actual, Is.EqualTo(new Vector2(px, py)).Using(Vector2Comparer));
+    }
+
+    [Test]
+    public void CameraComponent_World2DPointToScreenPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(1920, 1080);
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Scale = new Vector2(4, 4);
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(-2265, 1350));
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using(Vector2Comparer));
     }
 
     [Test]
@@ -521,7 +589,44 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var viewPoint = (viewMatrix * worldPoint.Homogeneous).ToVector2();
 
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(CommonEqualityComparer.Vector2(0.000001)));
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(Vector2Comparer));
+    }
+
+    [Test]
+    public void CameraComponent_CreateViewMatrix_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(1920, 1080);
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Scale = new Vector2(4, 4);
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        var viewMatrix = cameraComponent.CreateViewMatrix();
+
+        // Assert
+        var worldPoint = new Vector2(615, 330);
+        var viewPoint = (viewMatrix * worldPoint.Homogeneous).ToVector2();
+
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(200, 100)).Using(Vector2Comparer));
     }
 
     [Test]
@@ -577,6 +682,43 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var viewPoint = (viewMatrixScaledToScreen * worldPoint.Homogeneous).ToVector2();
 
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(CommonEqualityComparer.Vector2(0.000001)));
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(Vector2Comparer));
+    }
+
+    [Test]
+    public void CameraComponent_CreateViewMatrixScaledToScreen_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var context = CreateRenderingTestContext();
+        var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(192, 108);
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        transform2DComponent.IsInterpolated = true;
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        transform2DComponent.Translation = new Vector2(20, 40);
+        transform2DComponent.Scale = new Vector2(4, 4);
+
+        context.TransformInterpolationSystem.SnapshotTransforms();
+
+        context.TransformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assume
+        Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
+
+        // Act
+        var viewMatrixScaledToScreen = cameraComponent.CreateViewMatrixScaledToScreen();
+
+        // Assert
+        var worldPoint = new Vector2(615, 330);
+        var viewPoint = (viewMatrixScaledToScreen * worldPoint.Homogeneous).ToVector2();
+
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(2000, 1000)).Using(Vector2Comparer));
     }
 }

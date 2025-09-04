@@ -13,11 +13,13 @@ using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
 public abstract class RenderingSystemTestsBase
 {
+    private const double Epsilon = 0.000001;
     protected const int ScreenWidth = 2000;
     protected const int ScreenHeight = 1000;
     protected IRenderingContext2D RenderingContext2D = null!;
@@ -25,6 +27,8 @@ public abstract class RenderingSystemTestsBase
     protected IAggregatedDiagnosticInfoProvider AggregatedDiagnosticInfoProvider = null!;
     private protected IDebugRendererForRenderingSystem DebugRendererForRenderingSystem = null!;
     private protected IRenderingDiagnosticInfoProvider RenderingDiagnosticInfoProvider = null!;
+
+    protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
     [SetUp]
     public void SetUp()

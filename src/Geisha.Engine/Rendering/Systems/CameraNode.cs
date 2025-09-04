@@ -61,9 +61,8 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint)
         {
-            // TODO : Handle interpolated transform.
             var viewRectangleScale = GetViewRectangleScale();
-            var transformationMatrix = _transform.ToMatrix() *
+            var transformationMatrix = _transform.InterpolatedTransform.ToMatrix() *
                                        Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
                                        Matrix3x3.CreateTranslation(new Vector2(-ScreenWidth / 2.0, -ScreenHeight / 2.0));
 
@@ -81,12 +80,11 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Matrix3x3 CreateViewMatrix()
         {
-            // TODO : Handle interpolated transform.
-            var cameraScale = _transform.Scale;
+            var transform = _transform.InterpolatedTransform;
 
-            return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-_transform.Rotation) *
-                   Matrix3x3.CreateTranslation(-_transform.Translation) * Matrix3x3.Identity;
+            return Matrix3x3.CreateScale(new Vector2(1 / transform.Scale.X, 1 / transform.Scale.Y)) *
+                   Matrix3x3.CreateRotation(-transform.Rotation) *
+                   Matrix3x3.CreateTranslation(-transform.Translation) * Matrix3x3.Identity;
         }
 
         public Matrix3x3 CreateViewMatrixScaledToScreen()
