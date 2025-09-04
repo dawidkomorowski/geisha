@@ -1,8 +1,5 @@
-﻿using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.Math;
-using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Rendering.Components;
 using Sandbox.Common;
 
 namespace Sandbox.Physics;
@@ -44,12 +41,6 @@ public sealed class PhysicsSandboxSceneBehaviorFactory : ISceneBehaviorFactory
             entity.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
             entity.RemoveComponent(entity.GetComponent<DynamicPhysicsEntityComponent>());
             entity.CreateComponent<EntityControllerComponent>();
-
-            // Test entity with interpolated transform
-            entity.GetComponent<Transform2DComponent>().IsInterpolated = true;
-            var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-            rectangleRendererComponent.Color = Color.Black;
-            rectangleRendererComponent.Dimensions = new Vector2(50, 50);
         }
     }
 }

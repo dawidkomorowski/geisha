@@ -9,7 +9,7 @@
     "CustomGameLoopSteps": [],
     "EnableGCLogging": false,
     "FixedUpdatesPerFrameLimit": 30,
-    "FixedUpdatesPerSecond": 10, // TODO Change to 60 once interpolation is implemented
+    "FixedUpdatesPerSecond": 60,
     "LogLevel": "Debug",
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
