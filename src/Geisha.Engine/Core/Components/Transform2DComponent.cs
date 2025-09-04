@@ -77,7 +77,36 @@ public sealed class Transform2DComponent : Component
         }
     }
 
-    // TODO Add documentation.
+    /// <summary>
+    ///     Gets or sets a value indicating whether the transform is interpolated. Default value is <see langword="false" />.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Setting this property to <see langword="true" /> enables interpolation of the transform. Setting it to
+    ///         <see langword="false" /> disables interpolation of the transform.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="InterpolatedTransform" /> to get current state of interpolated transform. Use
+    ///         <see cref="Transform" /> to get or set exact transform state. Use
+    ///         <see cref="SetTransformImmediate(Transform2D)" /> to set exact transform state and bypass interpolation.
+    ///     </para>
+    ///     <para>
+    ///         When interpolation is enabled the transform is smoothly interpolated between its previous and current state by
+    ///         the <see cref="Geisha.Engine.Core.Systems.TransformInterpolationSystem" />. The system takes snapshot of the
+    ///         transform after each fixed update. During each frame update the system interpolates the transform based on the
+    ///         remaining time to simulate (how close to the next fixed update). Rendering system use interpolated transforms
+    ///         to achieve smooth movement of objects even when they are updated in discrete time steps during fixed updates.
+    ///     </para>
+    ///     <para>
+    ///         <b>Note:</b> When interpolation is enabled, changes made to the transform during a frame may not be immediately
+    ///         reflected in the rendered position or orientation of the object. Instead, the rendered state is based on the
+    ///         interpolated values calculated between fixed updates. This can lead to situations where rapid or frequent
+    ///         changes to the transform appear delayed or smoothed out visually, which is intentional for achieving smooth
+    ///         movement. If you require immediate visual feedback for a transform change (for example, for teleportation or
+    ///         instant repositioning), use <see cref="SetTransformImmediate(Transform2D)" /> to bypass interpolation and
+    ///         update the transform instantly.
+    ///     </para>
+    /// </remarks>
     public bool IsInterpolated
     {
         get => _isInterpolated;
