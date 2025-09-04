@@ -94,8 +94,9 @@ public sealed class Transform2DComponent : Component
     ///         When interpolation is enabled the transform is smoothly interpolated between its previous and current state by
     ///         the <see cref="Geisha.Engine.Core.Systems.TransformInterpolationSystem" />. The system takes snapshot of the
     ///         transform after each fixed update. During each frame update the system interpolates the transform based on the
-    ///         remaining time to simulate (how close to the next fixed update). Rendering system use interpolated transforms
-    ///         to achieve smooth movement of objects even when they are updated in discrete time steps during fixed updates.
+    ///         time elapsed since the last fixed update (remaining time to simulate to get to the next fixed update).
+    ///         Rendering system use interpolated transforms to achieve smooth movement of objects even when they are updated
+    ///         in discrete time steps during fixed updates.
     ///     </para>
     ///     <para>
     ///         <b>Note:</b> When interpolation is enabled, changes made to the transform during a frame may not be immediately
@@ -131,7 +132,21 @@ public sealed class Transform2DComponent : Component
         }
     }
 
-    // TODO Add documentation.
+    /// <summary>
+    ///     Gets the current state of interpolated 2D transform.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         If interpolation is disabled or the interpolation system is unavailable, this property
+    ///         returns the current transform. Otherwise, it retrieves the interpolated transform using the associated
+    ///         interpolation system.
+    ///     </para>
+    ///     <para>
+    ///         <see cref="InterpolatedTransform" /> may return different values from frame to frame, even if
+    ///         <see cref="Transform" /> is not changed. This is because the interpolation system updates the interpolated
+    ///         transform based on the time elapsed since the last fixed update, providing smooth transitions.
+    ///     </para>
+    /// </remarks>
     public Transform2D InterpolatedTransform
     {
         get
@@ -174,7 +189,23 @@ public sealed class Transform2DComponent : Component
     /// </remarks>
     public Vector2 VectorY => (Matrix3x3.CreateRotation(Rotation) * Vector2.UnitY.Homogeneous).ToVector2();
 
-    // TODO Add documentation.
+    /// <summary>
+    ///     Sets the current transformation values immediately, bypassing any interpolation.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method directly updates the transformation properties, including <see cref="Translation" />,
+    ///         <see cref="Rotation" />, and <see cref="Scale" />, to the specified values. If interpolation is enabled, the
+    ///         method also updates the interpolation state to reflect the new transform immediately.
+    ///     </para>
+    ///     <para>
+    ///         Use this method when you need to apply a transformation instantly, such as for teleportation or instant
+    ///         repositioning.
+    ///     </para>
+    /// </remarks>
+    /// <param name="transform">
+    ///     The <see cref="Transform2D" /> instance containing the translation, rotation, and scale values to apply.
+    /// </param>
     public void SetTransformImmediate(Transform2D transform)
     {
         Translation = transform.Translation;
