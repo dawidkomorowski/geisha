@@ -10,6 +10,7 @@ namespace Geisha.Benchmark.Common
 {
     internal sealed class CannonBehaviorComponent : BehaviorComponent
     {
+        private Transform2DComponent _transform = null!;
         private Transform2DComponent _cannonRotorTransform = null!;
         private TimeSpan _fireTimer = TimeSpan.Zero;
 
@@ -21,8 +22,8 @@ namespace Geisha.Benchmark.Common
 
         public override void OnStart()
         {
+            _transform = Entity.GetComponent<Transform2DComponent>();
             Debug.Assert(Entity.Parent != null, "Entity.Parent != null");
-
             _cannonRotorTransform = Entity.Parent.GetComponent<Transform2DComponent>();
         }
 
@@ -42,7 +43,7 @@ namespace Geisha.Benchmark.Common
         {
             var entity = Scene.CreateEntity();
 
-            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var transform = _transform.ComputeWorldTransformMatrix();
 
             var transformComponent = entity.CreateComponent<Transform2DComponent>();
             transformComponent.Translation = (transform * new Vector2(0, 20).Homogeneous).ToVector2();

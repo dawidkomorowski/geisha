@@ -35,15 +35,15 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
-        var entity = renderingScene.AddRectangle(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddRectangle(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         if (transformParent)
@@ -56,7 +56,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -65,7 +65,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, TransformHierarchy.Calculate2DTransformationMatrix(entity));
+            rectangleRenderer.FillInterior, entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix());
     }
 
     [TestCase(50, 50, false, 0, 0, 0, 1, 1, true)]
@@ -92,15 +92,15 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
-        var entity = renderingScene.AddEllipse(radiusX, radiusY, Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddEllipse(radiusX, radiusY, Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         if (transformParent)
@@ -113,7 +113,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -122,7 +122,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
-            ellipseRenderer.FillInterior, TransformHierarchy.Calculate2DTransformationMatrix(entity));
+            ellipseRenderer.FillInterior, entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix());
     }
 
     [TestCase(100, 100, false, 0, 0, 0, 1, 1, true)]
@@ -149,15 +149,15 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
-        var entity = renderingScene.AddSprite(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
+        var entity = context.AddSprite(new Vector2(width, height), Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         if (transformParent)
@@ -170,14 +170,14 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
         RenderingContext2D.ReceivedWithAnyArgs(expectedCalls).DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
 
         RenderingContext2D.Received(expectedCalls)
-            .DrawSprite(entity.GetSprite(), TransformHierarchy.Calculate2DTransformationMatrix(entity), entity.GetOpacity());
+            .DrawSprite(entity.GetSprite(), entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix(), entity.GetOpacity());
     }
 
     [TestCase(100, 100, false, 0, 0, 0, 1, 1, true)]
@@ -224,16 +224,16 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         });
         RenderingContext2D.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight).Returns(textLayout);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
 
-        var (entity, textRendererComponent) = renderingScene.AddText(Vector2.Zero, 0, Vector2.One);
+        var (entity, textRendererComponent) = context.AddText(Vector2.Zero, 0, Vector2.One);
         entity.Parent = parent;
 
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -256,7 +256,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         }
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -264,7 +264,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             .DrawTextLayout(Arg.Any<ITextLayout>(), Arg.Any<Color>(), Arg.Any<Vector2>(), Arg.Any<Matrix3x3>(), Arg.Any<bool>());
 
         RenderingContext2D.Received(expectedCalls)
-            .DrawTextLayout(textLayout, color, pivot, TransformHierarchy.Calculate2DTransformationMatrix(entity), clipToLayoutBox);
+            .DrawTextLayout(textLayout, color, pivot, entity.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix(), clipToLayoutBox);
     }
 
     [TestCase(100, 100, false, 0, 0, 0, 1, 1, true)]
@@ -291,14 +291,14 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         double ty, double r, double sx, double sy, bool expectedIsRendered)
     {
         // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        var camera = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var context = CreateRenderingTestContext();
+        var camera = context.AddCamera(Vector2.Zero, 0, Vector2.One);
         var cameraComponent = camera.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(width, height);
 
         var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
 
-        var parent = renderingScene.Scene.CreateEntity();
+        var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
 
         camera.Parent = parent;
@@ -312,10 +312,10 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             camera.GetComponent<Transform2DComponent>().Transform = transform;
         }
 
-        var rectangle = renderingScene.AddRectangle(new Vector2(ScreenWidth, ScreenHeight), Vector2.Zero, 0, Vector2.One);
+        var rectangle = context.AddRectangle(new Vector2(ScreenWidth, ScreenHeight), Vector2.Zero, 0, Vector2.One);
 
         // Act
-        renderingSystem.RenderScene();
+        context.RenderingSystem.RenderScene();
 
         // Assert
         var expectedCalls = expectedIsRendered ? 1 : 0;
@@ -324,6 +324,6 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var rectangleRenderer = rectangle.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.Get2DTransformationMatrix());
+            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.GetTransformMatrix());
     }
 }

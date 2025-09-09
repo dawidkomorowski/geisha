@@ -29,7 +29,7 @@ namespace Geisha.Engine.Rendering.Components
         /// <remarks>
         ///     <para>
         ///         <see cref="CameraComponent" /> is managed by rendering system when it belongs to <see cref="Scene" /> that is
-        ///         managed by rendering system. It is true for components that are part of currently processed scene at runtime
+        ///         managed by rendering system. It is true for components that are part of currently processed scene at runtime,
         ///         but it may not be true during serialization or in context of some tools.
         ///     </para>
         ///     <para>
@@ -177,13 +177,13 @@ namespace Geisha.Engine.Rendering.Components
     {
         /// <summary>
         ///     Whole screen is used to present camera view while keeping aspect ratio. It may result in parts of the view being
-        ///     not visible as scaled outside of the screen. It is default <see cref="AspectRatioBehavior" />.
+        ///     not visible as scaled outside the screen. It is default <see cref="AspectRatioBehavior" />.
         /// </summary>
         Overscan,
 
         /// <summary>
-        ///     Whole camera view is visible on the screen and it is fit to match either width or height of the screen while
-        ///     keeping aspect ratio. It may result in some kind of windowboxed view with black bars filling the missing space.
+        ///     Whole camera view is visible on the screen, and it is fit to match either width or height of the screen while
+        ///     keeping aspect ratio. It may result in some kind of window-boxed view with black bars filling the missing space.
         /// </summary>
         Underscan
     }

@@ -64,6 +64,11 @@ namespace Geisha.Engine.Rendering.Systems
             get => TextLayout.Text;
             set
             {
+                if (value == Text)
+                {
+                    return;
+                }
+
                 var newTextLayout = _renderingContext2D.CreateTextLayout(value, FontFamilyName, FontSize, MaxWidth, MaxHeight);
                 newTextLayout.TextAlignment = TextAlignment;
                 newTextLayout.ParagraphAlignment = ParagraphAlignment;
@@ -132,7 +137,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
-            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
             var quad = TextRectangle.ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }

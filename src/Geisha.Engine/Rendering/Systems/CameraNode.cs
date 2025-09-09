@@ -16,7 +16,7 @@ namespace Geisha.Engine.Rendering.Systems
         Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
         Vector2 World2DPointToScreenPoint(Vector2 worldPoint);
         Matrix3x3 CreateViewMatrix();
-        public Matrix3x3 CreateViewMatrixScaledToScreen();
+        Matrix3x3 CreateViewMatrixScaledToScreen();
         AxisAlignedRectangle GetBoundingRectangleOfView();
     }
 
@@ -61,10 +61,8 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint)
         {
-            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-
             var viewRectangleScale = GetViewRectangleScale();
-            var transformationMatrix = cameraTransform.ToMatrix() *
+            var transformationMatrix = _transform.InterpolatedTransform.ToMatrix() *
                                        Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
                                        Matrix3x3.CreateTranslation(new Vector2(-ScreenWidth / 2.0, -ScreenHeight / 2.0));
 
@@ -82,12 +80,11 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Matrix3x3 CreateViewMatrix()
         {
-            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-            var cameraScale = cameraTransform.Scale;
+            var transform = _transform.InterpolatedTransform;
 
-            return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
-                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
+            return Matrix3x3.CreateScale(new Vector2(1 / transform.Scale.X, 1 / transform.Scale.Y)) *
+                   Matrix3x3.CreateRotation(-transform.Rotation) *
+                   Matrix3x3.CreateTranslation(-transform.Translation) * Matrix3x3.Identity;
         }
 
         public Matrix3x3 CreateViewMatrixScaledToScreen()
@@ -98,7 +95,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public AxisAlignedRectangle GetBoundingRectangleOfView()
         {
-            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var transform = _transform.ComputeInterpolatedWorldTransformMatrix();
             var quad = new AxisAlignedRectangle(_camera.ViewRectangle).ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }

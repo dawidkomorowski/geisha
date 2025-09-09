@@ -2,117 +2,125 @@
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Geisha.Engine.Core.GameLoop
+namespace Geisha.Engine.Core.GameLoop;
+
+internal interface IGameLoop
 {
-    internal interface IGameLoop
+    void Update();
+}
+
+internal sealed class GameLoop : IGameLoop
+{
+    private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
+    private readonly IGameTimeProvider _gameTimeProvider;
+    private readonly IGameLoopSteps _gameLoopSteps;
+    private readonly ISceneManagerInternal _sceneManager;
+    private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
+    private readonly int _fixedUpdatesPerFrameLimit;
+
+    private TimeSpan _timeToSimulate;
+
+    public GameLoop(
+        ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
+        IGameTimeProvider gameTimeProvider,
+        IGameLoopSteps gameLoopSteps,
+        ISceneManagerInternal sceneManager,
+        IPerformanceStatisticsRecorder performanceStatisticsRecorder,
+        CoreConfiguration configuration)
     {
-        void Update();
+        _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
+        _gameTimeProvider = gameTimeProvider;
+        _gameLoopSteps = gameLoopSteps;
+        _sceneManager = sceneManager;
+        _performanceStatisticsRecorder = performanceStatisticsRecorder;
+
+        _fixedUpdatesPerFrameLimit = configuration.FixedUpdatesPerFrameLimit;
     }
 
-    internal sealed class GameLoop : IGameLoop
+    public void Update()
     {
-        private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
-        private readonly IGameTimeProvider _gameTimeProvider;
-        private readonly IGameLoopSteps _gameLoopSteps;
-        private readonly ISceneManagerInternal _sceneManager;
-        private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
-        private readonly int _fixedUpdatesPerFrameLimit;
+        _sceneManager.OnNextFrame();
 
-        private TimeSpan _timeToSimulate;
+        var scene = _sceneManager.CurrentScene;
+        var gameTime = _gameTimeProvider.GetGameTime();
 
-        public GameLoop(
-            ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
-            IGameTimeProvider gameTimeProvider,
-            IGameLoopSteps gameLoopSteps,
-            ISceneManagerInternal sceneManager,
-            IPerformanceStatisticsRecorder performanceStatisticsRecorder,
-            CoreConfiguration configuration)
+        _timeToSimulate += gameTime.DeltaTime;
+        var fixedUpdatesPerFrame = 0;
+
+        while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
         {
-            _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
-            _gameTimeProvider = gameTimeProvider;
-            _gameLoopSteps = gameLoopSteps;
-            _sceneManager = sceneManager;
-            _performanceStatisticsRecorder = performanceStatisticsRecorder;
-
-            _fixedUpdatesPerFrameLimit = configuration.FixedUpdatesPerFrameLimit;
-        }
-
-        public void Update()
-        {
-            _sceneManager.OnNextFrame();
-
-            var scene = _sceneManager.CurrentScene;
-            var gameTime = _gameTimeProvider.GetGameTime();
-
-            _timeToSimulate += gameTime.DeltaTime;
-            var fixedUpdatesPerFrame = 0;
-
-            while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
-            {
-                _performanceStatisticsRecorder.BeginStepDuration();
-                _gameLoopSteps.InputStep.ProcessInput();
-                _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
-
-                _performanceStatisticsRecorder.BeginStepDuration();
-                _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
-                _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
-
-                _performanceStatisticsRecorder.BeginStepDuration();
-                _gameLoopSteps.CoroutineStep.ProcessCoroutines();
-                _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.CoroutineStepName);
-
-                foreach (var customStep in _gameLoopSteps.CustomSteps)
-                {
-                    _performanceStatisticsRecorder.BeginStepDuration();
-                    customStep.ProcessFixedUpdate();
-                    _performanceStatisticsRecorder.EndStepDuration(customStep.Name);
-                }
-
-                _performanceStatisticsRecorder.BeginStepDuration();
-                _gameLoopSteps.PhysicsStep.ProcessPhysics();
-                _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.PhysicsStepName);
-
-                scene.RemoveEntitiesAfterFixedTimeStep();
-
-                _timeToSimulate -= GameTime.FixedDeltaTime;
-                fixedUpdatesPerFrame++;
-            }
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _gameLoopSteps.InputStep.ProcessInput();
+            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
 
             _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
+            _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
             _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
 
             _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.CoroutineStep.ProcessCoroutines(gameTime);
+            _gameLoopSteps.CoroutineStep.ProcessCoroutines();
             _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.CoroutineStepName);
 
             foreach (var customStep in _gameLoopSteps.CustomSteps)
             {
                 _performanceStatisticsRecorder.BeginStepDuration();
-                customStep.ProcessUpdate(gameTime);
+                customStep.ProcessFixedUpdate();
                 _performanceStatisticsRecorder.EndStepDuration(customStep.Name);
             }
 
             _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.PhysicsStep.PreparePhysicsDebugInformation();
+            _gameLoopSteps.PhysicsStep.ProcessPhysics();
             _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.PhysicsStepName);
 
             _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.AudioStep.ProcessAudio();
-            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AudioStepName);
+            _gameLoopSteps.TransformInterpolationStep.SnapshotTransforms();
+            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
 
-            _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
-            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AnimationStepName);
+            scene.RemoveEntitiesAfterFixedTimeStep();
 
-            _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.RenderingStep.RenderScene();
-            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.RenderingStepName);
-
-            scene.RemoveEntitiesAfterFullFrame();
-
-            _performanceStatisticsRecorder.RecordFrame();
-            _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
+            _timeToSimulate -= GameTime.FixedDeltaTime;
+            fixedUpdatesPerFrame++;
         }
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        var alpha = System.Math.Min(_timeToSimulate.TotalSeconds / GameTime.FixedDeltaTime.TotalSeconds, 1d);
+        _gameLoopSteps.TransformInterpolationStep.InterpolateTransforms(alpha);
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.CoroutineStep.ProcessCoroutines(gameTime);
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.CoroutineStepName);
+
+        foreach (var customStep in _gameLoopSteps.CustomSteps)
+        {
+            _performanceStatisticsRecorder.BeginStepDuration();
+            customStep.ProcessUpdate(gameTime);
+            _performanceStatisticsRecorder.EndStepDuration(customStep.Name);
+        }
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.PhysicsStep.PreparePhysicsDebugInformation();
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.PhysicsStepName);
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.AudioStep.ProcessAudio();
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AudioStepName);
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AnimationStepName);
+
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.RenderingStep.RenderScene();
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.RenderingStepName);
+
+        scene.RemoveEntitiesAfterFullFrame();
+
+        _performanceStatisticsRecorder.RecordFrame();
+        _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
     }
 }

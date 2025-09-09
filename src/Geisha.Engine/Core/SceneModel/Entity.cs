@@ -185,6 +185,11 @@ namespace Geisha.Engine.Core.SceneModel
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
+            if (component.Entity != this)
+            {
+                throw new ArgumentException("Component is not attached to this entity.", nameof(component));
+            }
+
             _components.Remove(component);
 
             if (_componentsByType.TryGetValue(component.GetType(), out var componentsOfType))

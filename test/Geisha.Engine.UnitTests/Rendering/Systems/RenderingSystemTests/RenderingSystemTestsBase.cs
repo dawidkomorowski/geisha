@@ -1,9 +1,9 @@
-﻿using System;
-using Geisha.Engine.Core;
+﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
@@ -12,11 +12,14 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
 public abstract class RenderingSystemTestsBase
 {
+    private const double Epsilon = 0.000001;
     protected const int ScreenWidth = 2000;
     protected const int ScreenHeight = 1000;
     protected IRenderingContext2D RenderingContext2D = null!;
@@ -24,6 +27,8 @@ public abstract class RenderingSystemTestsBase
     protected IAggregatedDiagnosticInfoProvider AggregatedDiagnosticInfoProvider = null!;
     private protected IDebugRendererForRenderingSystem DebugRendererForRenderingSystem = null!;
     private protected IRenderingDiagnosticInfoProvider RenderingDiagnosticInfoProvider = null!;
+
+    protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
     [SetUp]
     public void SetUp()
@@ -39,12 +44,9 @@ public abstract class RenderingSystemTestsBase
         RenderingDiagnosticInfoProvider = Substitute.For<IRenderingDiagnosticInfoProvider>();
     }
 
-    private protected (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
-    {
-        return GetRenderingSystem(new RenderingConfiguration());
-    }
+    private protected RenderingTestContext CreateRenderingTestContext() => CreateRenderingTestContext(new RenderingConfiguration());
 
-    private protected (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem(RenderingConfiguration configuration)
+    private protected RenderingTestContext CreateRenderingTestContext(RenderingConfiguration configuration)
     {
         var renderingSystem = new RenderingSystem(
             RenderingBackend,
@@ -54,42 +56,45 @@ public abstract class RenderingSystemTestsBase
             RenderingDiagnosticInfoProvider
         );
 
-        var renderingScene = new RenderingScene(renderingSystem);
+        var renderingTestContext = new RenderingTestContext(renderingSystem, new TransformInterpolationSystem());
 
-        return (renderingSystem, renderingScene);
+        return renderingTestContext;
     }
 
-    protected static DiagnosticInfo GetRandomDiagnosticInfo()
+    private protected static DiagnosticInfo GetRandomDiagnosticInfo()
     {
         return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
     }
 
-    protected static ITexture CreateTexture()
+    private protected static ITexture CreateTexture()
     {
         var texture = Substitute.For<ITexture>();
         texture.RuntimeId.Returns(RuntimeId.Next());
         return texture;
     }
 
-    protected static Sprite CreateSprite(ITexture texture)
+    private protected static Sprite CreateSprite(ITexture texture)
     {
         return new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
     }
 
-    protected sealed class RenderingScene
+    private protected sealed class RenderingTestContext
     {
-        private readonly Scene _scene = TestSceneFactory.Create();
-
-        public RenderingScene(ISceneObserver observer)
+        internal RenderingTestContext(RenderingSystem renderingSystem, TransformInterpolationSystem transformInterpolationSystem)
         {
-            _scene.AddObserver(observer);
+            RenderingSystem = renderingSystem;
+            TransformInterpolationSystem = transformInterpolationSystem;
+            Scene.AddObserver(RenderingSystem);
+            Scene.AddObserver(TransformInterpolationSystem);
         }
 
-        public Scene Scene => _scene;
+        public Scene Scene { get; } = TestSceneFactory.Create();
+        internal RenderingSystem RenderingSystem { get; }
+        internal TransformInterpolationSystem TransformInterpolationSystem { get; }
 
         public Entity AddCamera()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
             entity.CreateComponent<Transform2DComponent>();
 
             var cameraComponent = entity.CreateComponent<CameraComponent>();
@@ -109,7 +114,7 @@ public abstract class RenderingSystemTestsBase
 
         public Entity AddSpriteWithDefaultTransform()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
             entity.CreateComponent<Transform2DComponent>();
 
             var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
@@ -123,7 +128,7 @@ public abstract class RenderingSystemTestsBase
             string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
             bool visible = true,
             double opacity = 1d,
-            Vector2? translation = default
+            Vector2? translation = null
         )
         {
             var entity = AddSpriteWithDefaultTransform();
@@ -160,7 +165,7 @@ public abstract class RenderingSystemTestsBase
 
         public (Entity entity, TextRendererComponent textRendererComponent) AddText()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
 
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
             SetTransformInCameraView(transform2DComponent);
@@ -182,7 +187,7 @@ public abstract class RenderingSystemTestsBase
 
         public Entity AddRectangle()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
 
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
             SetTransformInCameraView(transform2DComponent);
@@ -204,13 +209,15 @@ public abstract class RenderingSystemTestsBase
 
             var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
             rectangleRendererComponent.Dimensions = dimensions;
+            rectangleRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            rectangleRendererComponent.FillInterior = Utils.Random.NextBool();
 
             return entity;
         }
 
         public Entity AddEllipse()
         {
-            var entity = _scene.CreateEntity();
+            var entity = Scene.CreateEntity();
             CreateEllipse(entity);
             return entity;
         }
@@ -225,19 +232,10 @@ public abstract class RenderingSystemTestsBase
             var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
             ellipseRendererComponent.RadiusX = radiusX;
             ellipseRendererComponent.RadiusY = radiusY;
+            ellipseRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            ellipseRendererComponent.FillInterior = Utils.Random.NextBool();
 
             return entity;
-        }
-
-        public (Entity parent, Entity child) AddParentEllipseWithChildEllipse()
-        {
-            var parent = _scene.CreateEntity();
-            CreateEllipse(parent);
-
-            var child = parent.CreateChildEntity();
-            CreateEllipse(child);
-
-            return (parent, child);
         }
 
         private static void SetTransformInCameraView(Transform2DComponent transform2DComponent)

@@ -37,7 +37,7 @@ public sealed class SpriteBatch
     /// <param name="transform">Transformation of <see cref="Sprite" /> to apply when drawing.</param>
     /// <param name="opacity">Opacity of <see cref="Sprite" /> to apply when drawing.</param>
     /// <exception cref="ArgumentException">
-    ///     Thrown when <paramref name="sprite" /> is using texture different than sprites already present in the
+    ///     Thrown when <paramref name="sprite" /> is using texture different from sprites already present in the
     ///     <see cref="SpriteBatch" />.
     /// </exception>
     public void AddSprite(Sprite sprite, in Matrix3x3 transform, double opacity)

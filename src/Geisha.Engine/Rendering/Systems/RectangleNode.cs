@@ -32,7 +32,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
-            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
             var quad = new AxisAlignedRectangle(_rectangleRendererComponent.Dimensions).ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }

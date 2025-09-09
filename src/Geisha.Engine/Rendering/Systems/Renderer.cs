@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
@@ -84,8 +83,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         var ellipse = new Ellipse(node.RadiusX, node.RadiusY);
         _renderingContext2D.DrawEllipse(ellipse, node.Color, node.FillInterior, transformationMatrix);
@@ -95,8 +93,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         var rectangle = new AxisAlignedRectangle(node.Dimensions);
         _renderingContext2D.DrawRectangle(rectangle, node.Color, node.FillInterior, transformationMatrix);
@@ -104,36 +101,23 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     public void Visit(SpriteNode node)
     {
-        if (node.Sprite != null)
-        {
-            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        if (node.Sprite == null) return;
 
-            if (_spriteBatch.Count == 0)
-            {
-                _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
-            }
-            else
-            {
-                if (ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
-                {
-                    _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
-                }
-                else
-                {
-                    FlushSpriteBatch();
-                    _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
-                }
-            }
+        var transformationMatrix = ComputeNodeTransform(node);
+
+        if (_spriteBatch.Count != 0 && !ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
+        {
+            FlushSpriteBatch();
         }
+
+        _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
     }
 
     public void Visit(TextNode node)
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-        transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+        var transformationMatrix = ComputeNodeTransform(node);
 
         _renderingContext2D.DrawTextLayout(node.TextLayout, node.Color, node.Pivot, transformationMatrix, node.ClipToLayoutBox);
     }
@@ -228,5 +212,10 @@ internal sealed class Renderer : IRenderNodeVisitor
         }
 
         _spriteBatch.Clear();
+    }
+
+    private Matrix3x3 ComputeNodeTransform(RenderNode node)
+    {
+        return _cameraTransformationMatrix * node.Transform.ComputeInterpolatedWorldTransformMatrix();
     }
 }
