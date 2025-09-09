@@ -46,7 +46,7 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
         {
             _transforms[id.Id] = _transforms[^1]; // Move last transform to the deleted position.
             _transforms.RemoveAt(_transforms.Count - 1); // Remove last transform.
-            _transforms[id.Id].TransformComponent.TransformInterpolationId = id; // Update ID of the moved transform.    
+            _transforms[id.Id].TransformComponent.TransformInterpolationId = id; // Update ID of the moved transform.
         }
     }
 
