@@ -269,7 +269,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
 
     private void ResetPosition()
     {
-        Entity.GetComponent<Transform2DComponent>().SetTransformImmediate(Transform2D.Identity);
+        Entity.GetComponent<Transform2DComponent>().Transform = Transform2D.Identity;
         _kinematicBody.LinearVelocity = Vector2.Zero;
         _kinematicBody.AngularVelocity = 0;
     }
