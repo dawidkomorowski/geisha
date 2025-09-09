@@ -224,26 +224,19 @@ public sealed class Transform2DComponent : Component
     /// <returns>2D transformation matrix representing this transform component.</returns>
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
-    // TODO Add documentation. Below documentation is copied from TransformHierarchy class. Review if it is still valid.
-    // /// <summary>
-    // ///     Provides common methods for handling hierarchy of transform components. Hierarchy of transform components is
-    // ///     achieved by attaching transform components to entities organized hierarchically.
-    // /// </summary>
-    // /// <summary>
-    // ///     Calculates 2D transformation matrix in global coordinate space for specified <paramref name="entity" /> with
-    // ///     <see cref="Transform2DComponent" /> attached.
-    // /// </summary>
-    // /// <param name="entity">Entity with <see cref="Transform2DComponent" /> attached.</param>
-    // /// <returns>
-    // ///     2D transformation matrix in global coordinate space as defined by <see cref="Transform2DComponent" />
-    // ///     hierarchy.
-    // /// </returns>
-    // /// <remarks>
-    // ///     The resulting 2D transformation matrix defines transform in global coordinate space equivalent to application
-    // ///     of whole hierarchy of <see cref="Transform2DComponent" /> from root entity down the hierarchy to specified
-    // ///     <paramref name="entity" />. If specified <paramref name="entity" /> or any entity in hierarchy does not have
-    // ///     <see cref="Transform2DComponent" /> attached then identity transform is used for such entities.
-    // /// </remarks>
+    /// <summary>
+    ///     Computes the 2D transformation matrix in world (global) coordinate space for the current transform hierarchy.
+    /// </summary>
+    /// <remarks>
+    ///     This method traverses the hierarchy of entities from the root to the current entity, applying the transformations
+    ///     defined by <see cref="Transform2DComponent" />  at each level. If the current entity is the root, the
+    ///     transformation matrix is derived directly from the current entity's <see cref="Transform2DComponent" />. If the
+    ///     entity or any ancestor in the hierarchy does not have a <see cref="Transform2DComponent" />, an identity matrix is
+    ///     used for those entities.
+    /// </remarks>
+    /// <returns>
+    ///     A <see cref="Matrix3x3" /> representing the 2D transformation matrix in world (global) coordinate space.
+    /// </returns>
     public Matrix3x3 ComputeWorldTransformMatrix()
     {
         if (Entity.IsRoot)
@@ -264,26 +257,28 @@ public sealed class Transform2DComponent : Component
         return parentTransform * ToMatrix();
     }
 
-    // TODO Add documentation. Below documentation is copied from TransformHierarchy class. Review if it is still valid.
-    ///// <summary>
-    /////     Provides common methods for handling hierarchy of transform components. Hierarchy of transform components is
-    /////     achieved by attaching transform components to entities organized hierarchically.
-    ///// </summary>
-    ///// <summary>
-    /////     Calculates 2D transformation matrix in global coordinate space for specified <paramref name="entity" /> with
-    /////     <see cref="Transform2DComponent" /> attached.
-    ///// </summary>
-    ///// <param name="entity">Entity with <see cref="Transform2DComponent" /> attached.</param>
-    ///// <returns>
-    /////     2D transformation matrix in global coordinate space as defined by <see cref="Transform2DComponent" />
-    /////     hierarchy.
-    ///// </returns>
-    ///// <remarks>
-    /////     The resulting 2D transformation matrix defines transform in global coordinate space equivalent to application
-    /////     of whole hierarchy of <see cref="Transform2DComponent" /> from root entity down the hierarchy to specified
-    /////     <paramref name="entity" />. If specified <paramref name="entity" /> or any entity in hierarchy does not have
-    /////     <see cref="Transform2DComponent" /> attached then identity transform is used for such entities.
-    ///// </remarks>
+    /// <summary>
+    ///     Computes the 2D transformation matrix in world (global) coordinate space for the current transform hierarchy,
+    ///     using interpolated transforms.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method traverses the hierarchy of entities from the root to the current entity, applying the interpolated
+    ///         transformations defined by <see cref="Transform2DComponent" /> at each level. If the current entity is the
+    ///         root, the transformation matrix is derived directly from the current entity's interpolated transform. If the
+    ///         entity or any ancestor in the hierarchy does not have a <see cref="Transform2DComponent" />, an identity matrix
+    ///         is used for those entities.
+    ///     </para>
+    ///     <para>
+    ///         Unlike <see cref="ComputeWorldTransformMatrix" />, which uses the exact transform state, this method uses
+    ///         interpolated transform values, providing smooth transitions between discrete updates. This is particularly
+    ///         useful for rendering, where smooth movement and animation are desired.
+    ///     </para>
+    /// </remarks>
+    /// <returns>
+    ///     A <see cref="Matrix3x3" /> representing the 2D transformation matrix in world (global) coordinate space,
+    ///     computed from interpolated transforms.
+    /// </returns>
     public Matrix3x3 ComputeInterpolatedWorldTransformMatrix()
     {
         if (Entity.IsRoot)
