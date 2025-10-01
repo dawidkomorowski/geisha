@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-output
-          path: test/Geisha.Engine.IntegrationTests//Rendering/TestOutput/**
+          path: test/Geisha.Engine.IntegrationTests/bin/**/Rendering/TestOutput/**
 
   publish:
     name: Publish
