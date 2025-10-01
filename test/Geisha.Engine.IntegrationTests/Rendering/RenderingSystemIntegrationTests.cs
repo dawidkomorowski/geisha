@@ -43,7 +43,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         private const string Background = "Background";
         private const string Foreground = "Foreground";
 
-        private const bool SaveRenderedImages = false;
         protected override bool ShowDebugWindow => false;
 
         protected override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
@@ -982,19 +981,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             SystemUnderTest.RenderingBackend.Context2D.CaptureScreenShotAsPng(memoryStream);
             using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
 
-            if (SaveRenderedImages)
-#pragma warning disable CS0162
-                // ReSharper disable HeuristicUnreachableCode
-            {
-                var testOutputDirectory = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput"));
-                Directory.CreateDirectory(testOutputDirectory);
-                var outputImageFilePath = Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile);
-                File.WriteAllBytes(outputImageFilePath, memoryStream.ToArray());
-            }
-            // ReSharper restore HeuristicUnreachableCode
-#pragma warning restore CS0162
+            // Save output image for visual verification if needed.
+            var testOutputDirectory = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput"));
+            Directory.CreateDirectory(testOutputDirectory);
+            var outputImageFilePath = Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile);
+            File.WriteAllBytes(outputImageFilePath, memoryStream.ToArray());
 
-
+            // Load and compare with reference image.
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
             using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
 

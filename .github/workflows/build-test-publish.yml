@@ -70,6 +70,13 @@ jobs:
           path: test/**/test-results.trx
           reporter: dotnet-trx
 
+      - name: Upload test output as artifact
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output
+          path: test/Geisha.Engine.IntegrationTests//Rendering/TestOutput/**
+
   publish:
     name: Publish
     needs: build-and-test
