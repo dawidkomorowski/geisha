@@ -985,23 +985,114 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             SystemUnderTest.RenderingBackend.Context2D.CaptureScreenShotAsPng(memoryStream);
             using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
 
-            // Save output image for visual verification if needed.
-            var testOutputDirectory = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput"));
-            Directory.CreateDirectory(testOutputDirectory);
-            var outputImageFilePath = Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile);
-            File.WriteAllBytes(outputImageFilePath, memoryStream.ToArray());
-
-            // Load reference image.
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
             using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
 
-            // Use tolerant comparison
-            TolerantAssertImagesEqual(
-                referenceImage,
+            AssertImagesEqualWithinTolerance(
                 actualImage,
-                testOutputDirectory,
+                referenceImage,
+                3,
+                0.0005,
+                Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
                 Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
             );
+        }
+
+        private static void LogRenderingEnvironment()
+        {
+            // TODO: In real code, use D3D/DWrite interop to get actual info.
+            TestContext.WriteLine("Rendering Environment Info:");
+            TestContext.WriteLine($"OS: {RuntimeInformation.OSDescription}");
+            TestContext.WriteLine($"Adapter: Microsoft Basic Render Driver (stub)");
+            TestContext.WriteLine($"D3D Feature Level: 11_0 (stub)");
+            TestContext.WriteLine($"DirectWrite Version: (stub)");
+            TestContext.WriteLine($"Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
+        }
+
+        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, int channelTolerance, double maxDiffRatio,
+            string outputDir, string baseName)
+        {
+            // TODO: Investigate this environment variable for stricter testing in CI.
+            var strict = Environment.GetEnvironmentVariable("GEISHA_STRICT_IMAGE_COMPARE") == "1";
+
+            if (actual.Width != expected.Width || actual.Height != expected.Height)
+            {
+                Assert.Fail($"Image dimensions differ. Expected: {expected.Width}x{expected.Height}, Actual: {actual.Width}x{actual.Height}");
+            }
+
+            var width = expected.Width;
+            var height = expected.Height;
+            var totalPixels = width * height;
+            var differingPixels = 0;
+
+            // Prepare diff image
+            using var diffImage = new Image<Bgra32>(width, height);
+
+            for (var y = 0; y < height; y++)
+            {
+                var actualRow = new Bgra32[width];
+                var expectedRow = new Bgra32[width];
+                var diffRow = new Bgra32[width];
+
+                actual.ProcessPixelRows(accessor => { accessor.GetRowSpan(y).CopyTo(actualRow); });
+                expected.ProcessPixelRows(accessor => { accessor.GetRowSpan(y).CopyTo(expectedRow); });
+
+                for (var x = 0; x < width; x++)
+                {
+                    var actualPixel = actualRow[x];
+                    var expectedPixel = expectedRow[x];
+
+                    if (strict)
+                    {
+                        if (!actualPixel.Equals(expectedPixel))
+                        {
+                            differingPixels++;
+                            diffRow[x] = new Bgra32(255, 0, 255, 255); // Magenta for diff
+                        }
+                        else
+                        {
+                            diffRow[x] = actualPixel;
+                        }
+                    }
+                    else
+                    {
+                        var pixelDiffers =
+                            Math.Abs(expectedPixel.B - actualPixel.B) > channelTolerance ||
+                            Math.Abs(expectedPixel.G - actualPixel.G) > channelTolerance ||
+                            Math.Abs(expectedPixel.R - actualPixel.R) > channelTolerance ||
+                            Math.Abs(expectedPixel.A - actualPixel.A) > channelTolerance;
+
+                        if (pixelDiffers)
+                        {
+                            differingPixels++;
+                            diffRow[x] = new Bgra32(255, 0, 255, 255); // Magenta for diff
+                        }
+                        else
+                        {
+                            diffRow[x] = actualPixel;
+                        }
+                    }
+                }
+
+                diffImage.ProcessPixelRows(accessor => { diffRow.CopyTo(accessor.GetRowSpan(y)); });
+            }
+
+            var diffRatio = (double)differingPixels / totalPixels;
+
+            // Save actual and diff images
+            Directory.CreateDirectory(outputDir);
+            actual.SaveAsPng(Path.Combine(outputDir, $"{baseName}_actual.png"));
+            diffImage.SaveAsPng(Path.Combine(outputDir, $"{baseName}_diff.png"));
+
+            if (strict)
+            {
+                Assert.That(differingPixels, Is.EqualTo(0), $"Images differ in {differingPixels} pixels. See diff image: {baseName}_diff.png");
+            }
+            else
+            {
+                Assert.That(diffRatio, Is.LessThanOrEqualTo(maxDiffRatio),
+                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {baseName}_diff.png");
+            }
         }
 
         public sealed class EntityFactory
@@ -1101,117 +1192,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 textRendererComponent.Entity.Parent = root;
 
                 return root;
-            }
-        }
-
-        private static void LogRenderingEnvironment()
-        {
-            // TODO: In real code, use D3D/DWrite interop to get actual info.
-            TestContext.WriteLine("Rendering Environment Info:");
-            TestContext.WriteLine($"OS: {RuntimeInformation.OSDescription}");
-            TestContext.WriteLine($"Adapter: Microsoft Basic Render Driver (stub)");
-            TestContext.WriteLine($"D3D Feature Level: 11_0 (stub)");
-            TestContext.WriteLine($"DirectWrite Version: (stub)");
-            TestContext.WriteLine($"Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
-        }
-
-        // --- Tolerant image comparison helper ---
-        private static void TolerantAssertImagesEqual(
-            Image<Bgra32> expected,
-            Image<Bgra32> actual,
-            string outputDir,
-            string baseName,
-            int channelTolerance = 3,
-            double maxDiffRatio = 0.0005)
-        {
-            bool strict = Environment.GetEnvironmentVariable("GEISHA_STRICT_IMAGE_COMPARE") == "1";
-
-            if (expected.Width != actual.Width || expected.Height != actual.Height)
-            {
-                throw new AssertionException($"Image dimensions differ. Expected: {expected.Width}x{expected.Height}, Actual: {actual.Width}x{actual.Height}");
-            }
-
-            int width = expected.Width;
-            int height = expected.Height;
-            int totalPixels = width * height;
-            int differingPixels = 0;
-
-            // Prepare diff image
-            using var diffImage = new Image<Bgra32>(width, height);
-
-            for (int y = 0; y < height; y++)
-            {
-                var expectedRow = new Bgra32[width];
-                var actualRow = new Bgra32[width];
-                var diffRow = new Bgra32[width];
-
-                expected.ProcessPixelRows(accessor =>
-                {
-                    accessor.GetRowSpan(y).CopyTo(expectedRow);
-                });
-                actual.ProcessPixelRows(accessor =>
-                {
-                    accessor.GetRowSpan(y).CopyTo(actualRow);
-                });
-
-                for (int x = 0; x < width; x++)
-                {
-                    var e = expectedRow[x];
-                    var a = actualRow[x];
-
-                    bool pixelDiffers =
-                        Math.Abs(e.B - a.B) > channelTolerance ||
-                        Math.Abs(e.G - a.G) > channelTolerance ||
-                        Math.Abs(e.R - a.R) > channelTolerance ||
-                        Math.Abs(e.A - a.A) > channelTolerance;
-
-                    if (strict)
-                    {
-                        if (!e.Equals(a))
-                        {
-                            differingPixels++;
-                            diffRow[x] = new Bgra32(255, 0, 255, 255); // Magenta for diff
-                        }
-                        else
-                        {
-                            diffRow[x] = a;
-                        }
-                    }
-                    else
-                    {
-                        if (pixelDiffers)
-                        {
-                            differingPixels++;
-                            diffRow[x] = new Bgra32(255, 0, 255, 255); // Magenta for diff
-                        }
-                        else
-                        {
-                            diffRow[x] = a;
-                        }
-                    }
-                }
-
-                diffImage.ProcessPixelRows(accessor =>
-                {
-                    diffRow.CopyTo(accessor.GetRowSpan(y));
-                });
-            }
-
-            double diffRatio = (double)differingPixels / totalPixels;
-
-            // Save actual and diff images
-            Directory.CreateDirectory(outputDir);
-            actual.SaveAsPng(Path.Combine(outputDir, $"{baseName}_actual.png"));
-            diffImage.SaveAsPng(Path.Combine(outputDir, $"{baseName}_diff.png"));
-
-            if (strict)
-            {
-                Assert.That(differingPixels, Is.EqualTo(0), $"Images differ in {differingPixels} pixels. See diff image: {baseName}_diff.png");
-            }
-            else
-            {
-                Assert.That(diffRatio, Is.LessThanOrEqualTo(maxDiffRatio),
-                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {baseName}_diff.png");
             }
         }
     }
