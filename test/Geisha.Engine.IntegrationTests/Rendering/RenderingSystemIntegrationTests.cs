@@ -1025,14 +1025,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var totalPixels = width * height;
             var differingPixels = 0;
 
-            // Prepare diff image
+            // Prepare diff images
             using var diffImage = new Image<Bgra32>(width, height);
+            using var rawDiffImage = new Image<Bgra32>(width, height);
+            var diffColor = new Bgra32(255, 0, 255, 255); // Magenta for diff
+            var whiteColor = new Bgra32(255, 255, 255, 255); // White background
 
             for (var y = 0; y < height; y++)
             {
                 var actualRow = new Bgra32[width];
                 var expectedRow = new Bgra32[width];
                 var diffRow = new Bgra32[width];
+                var rawDiffRow = new Bgra32[width];
 
                 actual.ProcessPixelRows(accessor => { accessor.GetRowSpan(y).CopyTo(actualRow); });
                 expected.ProcessPixelRows(accessor => { accessor.GetRowSpan(y).CopyTo(expectedRow); });
@@ -1041,40 +1045,36 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     var actualPixel = actualRow[x];
                     var expectedPixel = expectedRow[x];
+                    bool isDiff;
 
                     if (strict)
                     {
-                        if (!actualPixel.Equals(expectedPixel))
-                        {
-                            differingPixels++;
-                            diffRow[x] = new Bgra32(255, 0, 255, 255); // Magenta for diff
-                        }
-                        else
-                        {
-                            diffRow[x] = actualPixel;
-                        }
+                        isDiff = !actualPixel.Equals(expectedPixel);
                     }
                     else
                     {
-                        var pixelDiffers =
+                        isDiff =
                             Math.Abs(expectedPixel.B - actualPixel.B) > channelTolerance ||
                             Math.Abs(expectedPixel.G - actualPixel.G) > channelTolerance ||
                             Math.Abs(expectedPixel.R - actualPixel.R) > channelTolerance ||
                             Math.Abs(expectedPixel.A - actualPixel.A) > channelTolerance;
+                    }
 
-                        if (pixelDiffers)
-                        {
-                            differingPixels++;
-                            diffRow[x] = new Bgra32(255, 0, 255, 255); // Magenta for diff
-                        }
-                        else
-                        {
-                            diffRow[x] = actualPixel;
-                        }
+                    if (isDiff)
+                    {
+                        differingPixels++;
+                        diffRow[x] = diffColor;
+                        rawDiffRow[x] = diffColor;
+                    }
+                    else
+                    {
+                        diffRow[x] = actualPixel;
+                        rawDiffRow[x] = whiteColor;
                     }
                 }
 
                 diffImage.ProcessPixelRows(accessor => { diffRow.CopyTo(accessor.GetRowSpan(y)); });
+                rawDiffImage.ProcessPixelRows(accessor => { rawDiffRow.CopyTo(accessor.GetRowSpan(y)); });
             }
 
             var diffRatio = (double)differingPixels / totalPixels;
@@ -1083,6 +1083,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             Directory.CreateDirectory(outputDir);
             actual.SaveAsPng(Path.Combine(outputDir, $"{baseName}_actual.png"));
             diffImage.SaveAsPng(Path.Combine(outputDir, $"{baseName}_diff.png"));
+            rawDiffImage.SaveAsPng(Path.Combine(outputDir, $"{baseName}_raw-diff.png"));
 
             if (strict)
             {
