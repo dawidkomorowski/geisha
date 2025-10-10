@@ -494,7 +494,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             new()
             {
                 Name = "21 Order in layer",
-                ExpectedReferenceImageFile = "21_SortingLayers.png",
+                ExpectedReferenceImageFile = "21_OrderInLayer.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
