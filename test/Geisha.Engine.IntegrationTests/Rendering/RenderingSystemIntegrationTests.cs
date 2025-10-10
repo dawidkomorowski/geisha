@@ -179,7 +179,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             new()
             {
                 Name = "05 Sprite batch rendering - opacity",
-                ExpectedReferenceImageFile = "05_Sprites_Opacity.png",
+                ExpectedReferenceImageFile = "05_SpriteBatch_Opacity.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
