@@ -79,8 +79,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         {
             new()
             {
-                Name = "Rectangle rendering",
-                ExpectedReferenceImageFile = "Rectangles.png",
+                Name = "01 Rectangle rendering",
+                ExpectedReferenceImageFile = "01_Rectangles.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -103,8 +103,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Ellipse rendering",
-                ExpectedReferenceImageFile = "Ellipses.png",
+                Name = "02 Ellipse rendering",
+                ExpectedReferenceImageFile = "02_Ellipses.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -127,8 +127,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite rendering",
-                ExpectedReferenceImageFile = "Sprites.png",
+                Name = "03 Sprite rendering",
+                ExpectedReferenceImageFile = "03_Sprites.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -157,8 +157,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite rendering - opacity",
-                ExpectedReferenceImageFile = "Sprites_Opacity.png",
+                Name = "04 Sprite rendering - opacity",
+                ExpectedReferenceImageFile = "04_Sprites_Opacity.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -178,8 +178,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite batch rendering - opacity",
-                ExpectedReferenceImageFile = "Sprites_Opacity.png",
+                Name = "05 Sprite batch rendering - opacity",
+                ExpectedReferenceImageFile = "05_Sprites_Opacity.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -199,8 +199,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite batch rendering - sorting",
-                ExpectedReferenceImageFile = "SpriteBatch_Sorting.png",
+                Name = "06 Sprite batch rendering - sorting",
+                ExpectedReferenceImageFile = "06_SpriteBatch_Sorting.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -217,8 +217,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering",
-                ExpectedReferenceImageFile = "TextRendering.png",
+                Name = "07 Text rendering",
+                ExpectedReferenceImageFile = "07_TextRendering.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -241,8 +241,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - font family name",
-                ExpectedReferenceImageFile = "TextRendering_FontFamilyName.png",
+                Name = "08 Text rendering - font family name",
+                ExpectedReferenceImageFile = "08_TextRendering_FontFamilyName.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -259,8 +259,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - wrapping to layout box",
-                ExpectedReferenceImageFile = "TextRendering_WrappingToLayoutBox.png",
+                Name = "09 Text rendering - wrapping to layout box",
+                ExpectedReferenceImageFile = "09_TextRendering_WrappingToLayoutBox.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -275,8 +275,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - clipping to layout box",
-                ExpectedReferenceImageFile = "TextRendering_ClippingToLayoutBox.png",
+                Name = "10 Text rendering - clipping to layout box",
+                ExpectedReferenceImageFile = "10_TextRendering_ClippingToLayoutBox.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -292,8 +292,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - leading",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Leading.png",
+                Name = "11 Text rendering - text alignment - leading",
+                ExpectedReferenceImageFile = "11_TextRendering_TextAlignment_Leading.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -309,8 +309,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - trailing",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Trailing.png",
+                Name = "12 Text rendering - text alignment - trailing",
+                ExpectedReferenceImageFile = "12_TextRendering_TextAlignment_Trailing.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -326,8 +326,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - center",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Center.png",
+                Name = "13 Text rendering - text alignment - center",
+                ExpectedReferenceImageFile = "13_TextRendering_TextAlignment_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -343,8 +343,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - justified",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Justified.png",
+                Name = "14 Text rendering - text alignment - justified",
+                ExpectedReferenceImageFile = "14_TextRendering_TextAlignment_Justified.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -360,8 +360,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - near",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Near.png",
+                Name = "15 Text rendering - paragraph alignment - near",
+                ExpectedReferenceImageFile = "15_TextRendering_ParagraphAlignment_Near.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -377,8 +377,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - far",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Far.png",
+                Name = "16 Text rendering - paragraph alignment - far",
+                ExpectedReferenceImageFile = "16_TextRendering_ParagraphAlignment_Far.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -394,8 +394,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - center",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Center.png",
+                Name = "17 Text rendering - paragraph alignment - center",
+                ExpectedReferenceImageFile = "17_TextRendering_ParagraphAlignment_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -411,8 +411,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - pivot - center",
-                ExpectedReferenceImageFile = "TextRendering_Pivot_Center.png",
+                Name = "18 Text rendering - pivot - center",
+                ExpectedReferenceImageFile = "18_TextRendering_Pivot_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -429,8 +429,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - pivot - arbitrary",
-                ExpectedReferenceImageFile = "TextRendering_Pivot_Arbitrary.png",
+                Name = "19 Text rendering - pivot - arbitrary",
+                ExpectedReferenceImageFile = "19_TextRendering_Pivot_Arbitrary.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -447,8 +447,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sorting layers",
-                ExpectedReferenceImageFile = "SortingLayers.png",
+                Name = "20 Sorting layers",
+                ExpectedReferenceImageFile = "20_SortingLayers.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -493,8 +493,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Order in layer",
-                ExpectedReferenceImageFile = "SortingLayers.png",
+                Name = "21 Order in layer",
+                ExpectedReferenceImageFile = "21_SortingLayers.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -539,8 +539,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera transformation",
-                ExpectedReferenceImageFile = "CameraTransformation.png",
+                Name = "22 Camera transformation",
+                ExpectedReferenceImageFile = "22_CameraTransformation.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -566,8 +566,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera overscan",
-                ExpectedReferenceImageFile = "CameraOverscan.png",
+                Name = "23 Camera overscan",
+                ExpectedReferenceImageFile = "23_CameraOverscan.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -592,8 +592,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera underscan",
-                ExpectedReferenceImageFile = "CameraUnderscan.png",
+                Name = "24 Camera underscan",
+                ExpectedReferenceImageFile = "24_CameraUnderscan.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -618,8 +618,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Transform hierarchy",
-                ExpectedReferenceImageFile = "TransformHierarchy.png",
+                Name = "25 Transform hierarchy",
+                ExpectedReferenceImageFile = "25_TransformHierarchy.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -667,8 +667,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Debug renderer",
-                ExpectedReferenceImageFile = "DebugRenderer.png",
+                Name = "26 Debug renderer",
+                ExpectedReferenceImageFile = "26_DebugRenderer.png",
                 SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -692,8 +692,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - rectangle",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Rectangle.png",
+                Name = "27 Camera view rectangle culling - straight - rectangle",
+                ExpectedReferenceImageFile = "27_CameraViewRectangleCulling_Straight_Rectangle.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -707,8 +707,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - ellipse",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Ellipse.png",
+                Name = "28 Camera view rectangle culling - straight - ellipse",
+                ExpectedReferenceImageFile = "28_CameraViewRectangleCulling_Straight_Ellipse.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -722,8 +722,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - sprite",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Sprite.png",
+                Name = "29 Camera view rectangle culling - straight - sprite",
+                ExpectedReferenceImageFile = "29_CameraViewRectangleCulling_Straight_Sprite.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -737,8 +737,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - text",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Text.png",
+                Name = "30 Camera view rectangle culling - straight - text",
+                ExpectedReferenceImageFile = "30_CameraViewRectangleCulling_Straight_Text.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -752,8 +752,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - rectangle",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Rectangle.png",
+                Name = "31 Camera view rectangle culling - rotated - rectangle",
+                ExpectedReferenceImageFile = "31_CameraViewRectangleCulling_Rotated_Rectangle.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -771,8 +771,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - ellipse",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Ellipse.png",
+                Name = "32 Camera view rectangle culling - rotated - ellipse",
+                ExpectedReferenceImageFile = "32_CameraViewRectangleCulling_Rotated_Ellipse.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -790,8 +790,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - sprite",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Sprite.png",
+                Name = "33 Camera view rectangle culling - rotated - sprite",
+                ExpectedReferenceImageFile = "33_CameraViewRectangleCulling_Rotated_Sprite.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -805,8 +805,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - text",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Text.png",
+                Name = "34 Camera view rectangle culling - rotated - text",
+                ExpectedReferenceImageFile = "34_CameraViewRectangleCulling_Rotated_Text.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -820,8 +820,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - rectangle",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Rectangle.png",
+                Name = "35 Camera view rectangle culling - skewed - rectangle",
+                ExpectedReferenceImageFile = "35_CameraViewRectangleCulling_Skewed_Rectangle.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -849,8 +849,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - ellipse",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Ellipse.png",
+                Name = "36 Camera view rectangle culling - skewed - ellipse",
+                ExpectedReferenceImageFile = "36_CameraViewRectangleCulling_Skewed_Ellipse.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -878,8 +878,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - sprite",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Sprite.png",
+                Name = "37 Camera view rectangle culling - skewed - sprite",
+                ExpectedReferenceImageFile = "37_CameraViewRectangleCulling_Skewed_Sprite.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -907,8 +907,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - text",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Text.png",
+                Name = "38 Camera view rectangle culling - skewed - text",
+                ExpectedReferenceImageFile = "38_CameraViewRectangleCulling_Skewed_Text.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -936,8 +936,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - camera - translated",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Camera_Translated.png",
+                Name = "39 Camera view rectangle culling - camera - translated",
+                ExpectedReferenceImageFile = "39_CameraViewRectangleCulling_Camera_Translated.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -952,8 +952,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - camera - rotated",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Camera_Rotated.png",
+                Name = "40 Camera view rectangle culling - camera - rotated",
+                ExpectedReferenceImageFile = "40_CameraViewRectangleCulling_Camera_Rotated.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
