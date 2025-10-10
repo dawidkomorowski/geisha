@@ -991,8 +991,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             AssertImagesEqualWithinTolerance(
                 actualImage,
                 referenceImage,
-                3,
-                0.0005,
+                0, // 3
+                0, // 0.0005
                 Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
                 Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
             );
