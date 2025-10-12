@@ -72,6 +72,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public string Name { get; set; } = string.Empty;
             public string ExpectedReferenceImageFile { get; set; } = string.Empty;
             public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; set; } = (_, _, _) => { };
+            
+            // Per-test image comparison tolerances (defaults to strict: 0)
+            public int ChannelTolerance { get; set; } = 0;
+            public double MaxDiffRatio { get; set; } = 0;
 
             public override string ToString() => Name;
         }
@@ -989,15 +993,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
             using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
 
-            // TODO: Allow setting tolerances per test case.
             var useTolerances = IsImageToleranceEnabled();
 
             AssertImagesEqualWithinTolerance(
                 actualImage,
                 referenceImage,
                 useTolerances,
-                0, // 3
-                0, // 0.0005
+                testCase.ChannelTolerance,
+                testCase.MaxDiffRatio,
                 Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
                 Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
             );
