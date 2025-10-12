@@ -69,15 +69,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
         public sealed class RenderingTestCase
         {
-            public string Name { get; set; } = string.Empty;
-            public string ExpectedReferenceImageFile { get; set; } = string.Empty;
-            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; set; } = (_, _, _) => { };
-            
-            // Per-test image comparison tolerances (defaults to strict: 0)
-            public int ChannelTolerance { get; set; } = 0;
-            public double MaxDiffRatio { get; set; } = 0;
+            public string Name { get; init; } = string.Empty;
+            public string ExpectedReferenceImageFile { get; init; } = string.Empty;
+            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; init; } = (_, _, _) => { };
+            public ImageTolerance Tolerance { get; init; } = ImageTolerance.Strict;
 
             public override string ToString() => Name;
+        }
+
+        public readonly record struct ImageTolerance(int ChannelTolerance, double MaxDiffRatio)
+        {
+            public static readonly ImageTolerance Strict = new(0, 0);
         }
 
         public static readonly RenderingTestCase[] RenderingTestCases =
@@ -263,8 +265,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 },
                 // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
                 // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
-                ChannelTolerance = 0,
-                MaxDiffRatio = 0.00005
+                Tolerance = new ImageTolerance(0, 0.00005)
             },
             new()
             {
@@ -675,8 +676,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 },
                 // CI drift observed: many 1-level channel deltas; max |Δ|=1 across 157 pixels (~0.3925%).
                 // Allow ±1 per-channel tolerance; keep ratio at 0 to stay strict on larger deviations.
-                ChannelTolerance = 1,
-                MaxDiffRatio = 0
+                Tolerance = new ImageTolerance(1, 0)
             },
             new()
             {
@@ -1007,8 +1007,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 actualImage,
                 referenceImage,
                 useTolerances,
-                testCase.ChannelTolerance,
-                testCase.MaxDiffRatio,
+                testCase.Tolerance,
                 Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
                 Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
             );
@@ -1039,8 +1038,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GEISHA_TEST_ENABLE_IMAGE_TOLERANCE"));
         }
 
-        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, bool useTolerances, int channelTolerance,
-            double maxDiffRatio, string outputDir, string baseName)
+        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, bool useTolerances, ImageTolerance tolerance,
+            string outputDir, string baseName)
         {
             if (actual.Width != expected.Width || actual.Height != expected.Height)
             {
@@ -1067,8 +1066,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             detailsBuilder.AppendLine($"Mode: {(useTolerances ? "tolerant" : "strict")}");
             if (useTolerances)
             {
-                detailsBuilder.AppendLine($"Channel tolerance: {channelTolerance}");
-                detailsBuilder.AppendLine($"Max diff ratio: {maxDiffRatio}");
+                detailsBuilder.AppendLine($"Channel tolerance: {tolerance.ChannelTolerance}");
+                detailsBuilder.AppendLine($"Max diff ratio: {tolerance.MaxDiffRatio}");
             }
 
             // Header with column labels and dynamic ruler aligned to field widths
@@ -1099,10 +1098,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     if (useTolerances)
                     {
                         isDiff =
-                            Math.Abs(expectedPixel.B - actualPixel.B) > channelTolerance ||
-                            Math.Abs(expectedPixel.G - actualPixel.G) > channelTolerance ||
-                            Math.Abs(expectedPixel.R - actualPixel.R) > channelTolerance ||
-                            Math.Abs(expectedPixel.A - actualPixel.A) > channelTolerance;
+                            Math.Abs(expectedPixel.B - actualPixel.B) > tolerance.ChannelTolerance ||
+                            Math.Abs(expectedPixel.G - actualPixel.G) > tolerance.ChannelTolerance ||
+                            Math.Abs(expectedPixel.R - actualPixel.R) > tolerance.ChannelTolerance ||
+                            Math.Abs(expectedPixel.A - actualPixel.A) > tolerance.ChannelTolerance;
                     }
                     else
                     {
@@ -1159,8 +1158,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Assert.That(
                     diffRatio,
-                    Is.LessThanOrEqualTo(maxDiffRatio),
-                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
+                    Is.LessThanOrEqualTo(tolerance.MaxDiffRatio),
+                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {tolerance.ChannelTolerance} per channel, max ratio: {tolerance.MaxDiffRatio:P}. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
                 );
             }
             else
