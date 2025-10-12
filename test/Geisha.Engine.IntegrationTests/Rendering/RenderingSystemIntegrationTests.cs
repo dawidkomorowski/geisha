@@ -63,8 +63,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
 
-            // Log DirectX / font info TODO (stubbed)
-            LogRenderingEnvironment();
+            LogRenderingEnvironment(SystemUnderTest.RenderingBackend.Info);
         }
 
         public sealed class RenderingTestCase
@@ -1013,15 +1012,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             );
         }
 
-        private static void LogRenderingEnvironment()
+        private static void LogRenderingEnvironment(RenderingBackendInfo info)
         {
-            // TODO: In real code, use D3D/DWrite interop to get actual info.
             TestContext.WriteLine("Rendering Environment Info:");
             TestContext.WriteLine($"OS: {RuntimeInformation.OSDescription}");
-            TestContext.WriteLine($"Adapter: Microsoft Basic Render Driver (stub)");
-            TestContext.WriteLine($"D3D Feature Level: 11_0 (stub)");
-            TestContext.WriteLine($"DirectWrite Version: (stub)");
-            TestContext.WriteLine($"Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
+            TestContext.WriteLine($"Rendering Backend: {info.Name}");
+            TestContext.WriteLine($"Adapter: {info.GraphicsAdapterName}");
+            TestContext.WriteLine($"D3D Feature Level: {info.FeatureLevel}");
+            TestContext.WriteLine("Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
         }
 
         /// <summary>
