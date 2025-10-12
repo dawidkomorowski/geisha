@@ -1040,6 +1040,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var height = expected.Height;
             var totalPixels = width * height;
             var differingPixels = 0;
+            // Determine coordinate column width for aligned output (based on max of width/height)
+            var coordWidth = Math.Max(width.ToString().Length, height.ToString().Length);
 
             // Prepare diff images
             using var diffImage = new Image<Bgra32>(width, height);
@@ -1057,6 +1059,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 detailsBuilder.AppendLine($"Channel tolerance: {channelTolerance}");
                 detailsBuilder.AppendLine($"Max diff ratio: {maxDiffRatio}");
             }
+
             detailsBuilder.AppendLine("Format: x,y | expected(B,G,R,A) | actual(B,G,R,A) | delta(B,G,R,A) | absDelta(B,G,R,A)");
             detailsBuilder.AppendLine();
 
@@ -1095,13 +1098,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         diffRow[x] = diffColor;
                         rawDiffRow[x] = diffColor;
 
-                        // Capture detailed info for this pixel
+                        // Capture detailed info for this pixel (aligned columns)
                         var dB = expectedPixel.B - actualPixel.B;
                         var dG = expectedPixel.G - actualPixel.G;
                         var dR = expectedPixel.R - actualPixel.R;
                         var dA = expectedPixel.A - actualPixel.A;
                         detailsBuilder.AppendLine(
-                            $"{x},{y} | E=({expectedPixel.B},{expectedPixel.G},{expectedPixel.R},{expectedPixel.A}) | A=({actualPixel.B},{actualPixel.G},{actualPixel.R},{actualPixel.A}) | Δ=({dB},{dG},{dR},{dA}) | |Δ|=({Math.Abs(dB)},{Math.Abs(dG)},{Math.Abs(dR)},{Math.Abs(dA)})");
+                            $"{x.ToString().PadLeft(coordWidth)},{y.ToString().PadLeft(coordWidth)} | E=({(int)expectedPixel.B,3},{(int)expectedPixel.G,3},{(int)expectedPixel.R,3},{(int)expectedPixel.A,3}) | A=({(int)actualPixel.B,3},{(int)actualPixel.G,3},{(int)actualPixel.R,3},{(int)actualPixel.A,3}) | Δ=({dB,4},{dG,4},{dR,4},{dA,4}) | |Δ|=({Math.Abs(dB),3},{Math.Abs(dG),3},{Math.Abs(dR),3},{Math.Abs(dA),3})");
                     }
                     else
                     {
