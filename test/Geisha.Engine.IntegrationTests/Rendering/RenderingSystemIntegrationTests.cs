@@ -11,6 +11,7 @@ using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.IO;
@@ -1077,20 +1078,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             detailsBuilder.AppendLine($"{coordRuler} | E={channels3} | A={channels3} | Δ={channels4} | |Δ|={channels3}");
             detailsBuilder.AppendLine();
 
+            // Single-pass processing using direct row spans to avoid intermediate arrays and repeated accessors
             for (var y = 0; y < height; y++)
             {
-                var actualRow = new Bgra32[width];
-                var expectedRow = new Bgra32[width];
-                var diffRow = new Bgra32[width];
-                var rawDiffRow = new Bgra32[width];
-
-                actual.ProcessPixelRows(accessor => { accessor.GetRowSpan(y).CopyTo(actualRow); });
-                expected.ProcessPixelRows(accessor => { accessor.GetRowSpan(y).CopyTo(expectedRow); });
+                var actualSpan = actual.DangerousGetPixelRowMemory(y).Span;
+                var expectedSpan = expected.DangerousGetPixelRowMemory(y).Span;
+                var diffSpan = diffImage.DangerousGetPixelRowMemory(y).Span;
+                var rawDiffSpan = rawDiffImage.DangerousGetPixelRowMemory(y).Span;
 
                 for (var x = 0; x < width; x++)
                 {
-                    var actualPixel = actualRow[x];
-                    var expectedPixel = expectedRow[x];
+                    var actualPixel = actualSpan[x];
+                    var expectedPixel = expectedSpan[x];
                     bool isDiff;
 
                     if (useTolerances)
@@ -1109,8 +1108,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     if (isDiff)
                     {
                         differingPixels++;
-                        diffRow[x] = diffColor;
-                        rawDiffRow[x] = diffColor;
+                        diffSpan[x] = diffColor;
+                        rawDiffSpan[x] = diffColor;
 
                         // Capture detailed info for this pixel (aligned columns)
                         var dB = expectedPixel.B - actualPixel.B;
@@ -1122,13 +1121,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     }
                     else
                     {
-                        diffRow[x] = actualPixel;
-                        rawDiffRow[x] = whiteColor;
+                        diffSpan[x] = actualPixel;
+                        rawDiffSpan[x] = whiteColor;
                     }
                 }
-
-                diffImage.ProcessPixelRows(accessor => { diffRow.CopyTo(accessor.GetRowSpan(y)); });
-                rawDiffImage.ProcessPixelRows(accessor => { rawDiffRow.CopyTo(accessor.GetRowSpan(y)); });
             }
 
             var diffRatio = (double)differingPixels / totalPixels;
