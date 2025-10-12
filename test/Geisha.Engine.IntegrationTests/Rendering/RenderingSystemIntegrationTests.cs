@@ -260,7 +260,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, -30));
                     t3.FontFamilyName = "Comic Sans MS";
-                }
+                },
+                // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
+                // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
+                ChannelTolerance = 0,
+                MaxDiffRatio = 0.00005
             },
             new()
             {
@@ -668,7 +672,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                             watermark.Entity.Parent = colorBackground;
                         }
                     }
-                }
+                },
+                // CI drift observed: many 1-level channel deltas; max |Δ|=1 across 157 pixels (~0.3925%).
+                // Allow ±1 per-channel tolerance; keep ratio at 0 to stay strict on larger deviations.
+                ChannelTolerance = 1,
+                MaxDiffRatio = 0
             },
             new()
             {
