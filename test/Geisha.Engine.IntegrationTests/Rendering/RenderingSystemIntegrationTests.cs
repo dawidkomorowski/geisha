@@ -15,6 +15,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using Color = Geisha.Engine.Core.Math.Color;
 
 namespace Geisha.Engine.IntegrationTests.Rendering
@@ -1046,6 +1047,19 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var diffColor = new Bgra32(255, 0, 255, 255); // Magenta for diff
             var whiteColor = new Bgra32(255, 255, 255, 255); // White background
 
+            // Prepare textual diff details
+            var detailsBuilder = new StringBuilder();
+            detailsBuilder.AppendLine($"Image diff details for '{baseName}'");
+            detailsBuilder.AppendLine($"Dimensions: {width}x{height}");
+            detailsBuilder.AppendLine($"Mode: {(useTolerances ? "tolerant" : "strict")}");
+            if (useTolerances)
+            {
+                detailsBuilder.AppendLine($"Channel tolerance: {channelTolerance}");
+                detailsBuilder.AppendLine($"Max diff ratio: {maxDiffRatio}");
+            }
+            detailsBuilder.AppendLine("Format: x,y | expected(B,G,R,A) | actual(B,G,R,A) | delta(B,G,R,A) | absDelta(B,G,R,A)");
+            detailsBuilder.AppendLine();
+
             for (var y = 0; y < height; y++)
             {
                 var actualRow = new Bgra32[width];
@@ -1080,6 +1094,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         differingPixels++;
                         diffRow[x] = diffColor;
                         rawDiffRow[x] = diffColor;
+
+                        // Capture detailed info for this pixel
+                        var dB = expectedPixel.B - actualPixel.B;
+                        var dG = expectedPixel.G - actualPixel.G;
+                        var dR = expectedPixel.R - actualPixel.R;
+                        var dA = expectedPixel.A - actualPixel.A;
+                        detailsBuilder.AppendLine(
+                            $"{x},{y} | E=({expectedPixel.B},{expectedPixel.G},{expectedPixel.R},{expectedPixel.A}) | A=({actualPixel.B},{actualPixel.G},{actualPixel.R},{actualPixel.A}) | Δ=({dB},{dG},{dR},{dA}) | |Δ|=({Math.Abs(dB)},{Math.Abs(dG)},{Math.Abs(dR)},{Math.Abs(dA)})");
                     }
                     else
                     {
@@ -1093,29 +1115,32 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             }
 
             var diffRatio = (double)differingPixels / totalPixels;
+            detailsBuilder.AppendLine();
+            detailsBuilder.AppendLine($"Total differing pixels: {differingPixels} ({diffRatio:P}) out of {totalPixels}");
 
             // Save actual and diff images
             Directory.CreateDirectory(outputDir);
             var actualFileName = $"{baseName}_actual.png";
             var diffFileName = $"{baseName}_diff.png";
             var rawDiffFileName = $"{baseName}_raw-diff.png";
+            var detailsFileName = $"{baseName}_diff-details.txt";
 
             var actualFilePath = Path.Combine(outputDir, actualFileName);
             var diffFilePath = Path.Combine(outputDir, diffFileName);
             var rawDiffFilePath = Path.Combine(outputDir, rawDiffFileName);
+            var detailsFilePath = Path.Combine(outputDir, detailsFileName);
 
             actual.SaveAsPng(actualFilePath);
             diffImage.SaveAsPng(diffFilePath);
             rawDiffImage.SaveAsPng(rawDiffFilePath);
-
-            // TODO List numeric values of differing pixels?
+            File.WriteAllText(detailsFilePath, detailsBuilder.ToString());
 
             if (useTolerances)
             {
                 Assert.That(
                     diffRatio,
                     Is.LessThanOrEqualTo(maxDiffRatio),
-                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
+                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
                 );
             }
             else
@@ -1123,7 +1148,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 Assert.That(
                     differingPixels,
                     Is.EqualTo(0),
-                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
+                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
                 );
             }
         }
