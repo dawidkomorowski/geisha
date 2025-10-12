@@ -1081,18 +1081,33 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             // Save actual and diff images
             Directory.CreateDirectory(outputDir);
-            actual.SaveAsPng(Path.Combine(outputDir, $"{baseName}_actual.png"));
-            diffImage.SaveAsPng(Path.Combine(outputDir, $"{baseName}_diff.png"));
-            rawDiffImage.SaveAsPng(Path.Combine(outputDir, $"{baseName}_raw-diff.png"));
+            var actualFileName = $"{baseName}_actual.png";
+            var diffFileName = $"{baseName}_diff.png";
+            var rawDiffFileName = $"{baseName}_raw-diff.png";
+
+            var actualFilePath = Path.Combine(outputDir, actualFileName);
+            var diffFilePath = Path.Combine(outputDir, diffFileName);
+            var rawDiffFilePath = Path.Combine(outputDir, rawDiffFileName);
+
+            actual.SaveAsPng(actualFilePath);
+            diffImage.SaveAsPng(diffFilePath);
+            rawDiffImage.SaveAsPng(rawDiffFilePath);
 
             if (strict)
             {
-                Assert.That(differingPixels, Is.EqualTo(0), $"Images differ in {differingPixels} pixels. See diff image: {baseName}_diff.png");
+                Assert.That(
+                    differingPixels,
+                    Is.EqualTo(0),
+                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
+                );
             }
             else
             {
-                Assert.That(diffRatio, Is.LessThanOrEqualTo(maxDiffRatio),
-                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {baseName}_diff.png");
+                Assert.That(
+                    diffRatio,
+                    Is.LessThanOrEqualTo(maxDiffRatio),
+                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
+                );
             }
         }
 
