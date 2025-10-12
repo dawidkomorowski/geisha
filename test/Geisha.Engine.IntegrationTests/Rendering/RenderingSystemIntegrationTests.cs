@@ -1108,6 +1108,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             diffImage.SaveAsPng(diffFilePath);
             rawDiffImage.SaveAsPng(rawDiffFilePath);
 
+            // TODO List numeric values of differing pixels?
+
             if (useTolerances)
             {
                 Assert.That(

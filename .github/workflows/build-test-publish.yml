@@ -60,6 +60,8 @@ jobs:
         uses: ./.github/actions/install-virtual-audio-device
 
       - name: Execute tests
+        env:
+          GEISHA_TEST_ENABLE_IMAGE_TOLERANCE: "1"
         run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
