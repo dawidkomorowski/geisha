@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using NUnit.Framework;

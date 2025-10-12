@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Autofac;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
@@ -60,6 +61,8 @@ namespace Geisha.Engine
             {
                 GCEventListener.Start();
             }
+
+            LogEnvironmentInfo(renderingBackend.Info);
 
             var containerBuilder = new ContainerBuilder();
 
@@ -144,6 +147,24 @@ namespace Geisha.Engine
             {
                 sceneManager.LoadEmptyScene(_configuration.Core.StartUpSceneBehavior);
             }
+        }
+
+        private static void LogEnvironmentInfo(RenderingBackendInfo renderingBackendInfo)
+        {
+            Logger.Info("Environment Info:");
+            Logger.Info("  {0,-22} {1}", "Operating System:", Environment.OSVersion);
+            Logger.Info("  {0,-22} {1}", ".NET Version:", Environment.Version);
+            Logger.Info("  {0,-22} {1}", "Machine Name:", Environment.MachineName);
+            Logger.Info("  {0,-22} {1}", "OS Architecture:", RuntimeInformation.OSArchitecture);
+            Logger.Info("  {0,-22} {1}", "Process Architecture:", RuntimeInformation.ProcessArchitecture);
+            Logger.Info("  {0,-22} {1}", "Processor Count:", Environment.ProcessorCount);
+            Logger.Info("  {0,-22} {1}", "64-bit OS:", Environment.Is64BitOperatingSystem);
+            Logger.Info("  {0,-22} {1}", "64-bit Process:", Environment.Is64BitProcess);
+            Logger.Info("  {0,-22} {1}", "Rendering Backend:", renderingBackendInfo.Name);
+            Logger.Info("  {0,-22} {1}", "Adapter:", renderingBackendInfo.GraphicsAdapterName);
+            Logger.Info("  {0,-22} {1}", "VideoMemorySize:", renderingBackendInfo.VideoMemorySize);
+            Logger.Info("  {0,-22} {1}", "VideoMemorySizeGB:", renderingBackendInfo.VideoMemorySizeGB);
+            Logger.Info("  {0,-22} {1}", "Feature Level:", renderingBackendInfo.FeatureLevel);
         }
     }
 }

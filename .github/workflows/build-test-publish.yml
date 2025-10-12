@@ -60,6 +60,8 @@ jobs:
         uses: ./.github/actions/install-virtual-audio-device
 
       - name: Execute tests
+        env:
+          GEISHA_TEST_ENABLE_IMAGE_TOLERANCE: "1"
         run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
@@ -69,6 +71,13 @@ jobs:
           name: Test Results
           path: test/**/test-results.trx
           reporter: dotnet-trx
+
+      - name: Upload test output as artifact
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output
+          path: test/Geisha.Engine.IntegrationTests/bin/**/Rendering/TestOutput/**
 
   publish:
     name: Publish

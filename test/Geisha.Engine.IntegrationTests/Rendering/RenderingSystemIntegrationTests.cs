@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Geisha.Engine.Core.Assets;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
@@ -13,7 +11,12 @@ using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using Color = Geisha.Engine.Core.Math.Color;
 
 namespace Geisha.Engine.IntegrationTests.Rendering
@@ -43,7 +46,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         private const string Background = "Background";
         private const string Foreground = "Foreground";
 
-        private const bool SaveRenderedImages = false;
         protected override bool ShowDebugWindow => false;
 
         protected override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
@@ -61,23 +63,31 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             base.SetUp();
 
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
+
+            LogRenderingEnvironment(SystemUnderTest.RenderingBackend.Info);
         }
 
         public sealed class RenderingTestCase
         {
-            public string Name { get; set; } = string.Empty;
-            public string ExpectedReferenceImageFile { get; set; } = string.Empty;
-            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; set; } = (_, _, _) => { };
+            public string Name { get; init; } = string.Empty;
+            public string ExpectedReferenceImageFile { get; init; } = string.Empty;
+            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; init; } = (_, _, _) => { };
+            public ImageTolerance Tolerance { get; init; } = ImageTolerance.Strict;
 
             public override string ToString() => Name;
+        }
+
+        public readonly record struct ImageTolerance(int ChannelTolerance, double MaxDiffRatio)
+        {
+            public static readonly ImageTolerance Strict = new(0, 0);
         }
 
         public static readonly RenderingTestCase[] RenderingTestCases =
         {
             new()
             {
-                Name = "Rectangle rendering",
-                ExpectedReferenceImageFile = "Rectangles.png",
+                Name = "01 Rectangle rendering",
+                ExpectedReferenceImageFile = "01_Rectangles.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -100,8 +110,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Ellipse rendering",
-                ExpectedReferenceImageFile = "Ellipses.png",
+                Name = "02 Ellipse rendering",
+                ExpectedReferenceImageFile = "02_Ellipses.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -124,8 +134,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite rendering",
-                ExpectedReferenceImageFile = "Sprites.png",
+                Name = "03 Sprite rendering",
+                ExpectedReferenceImageFile = "03_Sprites.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -154,8 +164,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite rendering - opacity",
-                ExpectedReferenceImageFile = "Sprites_Opacity.png",
+                Name = "04 Sprite rendering - opacity",
+                ExpectedReferenceImageFile = "04_Sprites_Opacity.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -175,8 +185,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite batch rendering - opacity",
-                ExpectedReferenceImageFile = "Sprites_Opacity.png",
+                Name = "05 Sprite batch rendering - opacity",
+                ExpectedReferenceImageFile = "05_SpriteBatch_Opacity.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -196,8 +206,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sprite batch rendering - sorting",
-                ExpectedReferenceImageFile = "SpriteBatch_Sorting.png",
+                Name = "06 Sprite batch rendering - sorting",
+                ExpectedReferenceImageFile = "06_SpriteBatch_Sorting.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -214,8 +224,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering",
-                ExpectedReferenceImageFile = "TextRendering.png",
+                Name = "07 Text rendering",
+                ExpectedReferenceImageFile = "07_TextRendering.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -238,8 +248,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - font family name",
-                ExpectedReferenceImageFile = "TextRendering_FontFamilyName.png",
+                Name = "08 Text rendering - font family name",
+                ExpectedReferenceImageFile = "08_TextRendering_FontFamilyName.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -252,12 +262,15 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, -30));
                     t3.FontFamilyName = "Comic Sans MS";
-                }
+                },
+                // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
+                // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
+                Tolerance = new ImageTolerance(0, 0.00005)
             },
             new()
             {
-                Name = "Text rendering - wrapping to layout box",
-                ExpectedReferenceImageFile = "TextRendering_WrappingToLayoutBox.png",
+                Name = "09 Text rendering - wrapping to layout box",
+                ExpectedReferenceImageFile = "09_TextRendering_WrappingToLayoutBox.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -272,8 +285,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - clipping to layout box",
-                ExpectedReferenceImageFile = "TextRendering_ClippingToLayoutBox.png",
+                Name = "10 Text rendering - clipping to layout box",
+                ExpectedReferenceImageFile = "10_TextRendering_ClippingToLayoutBox.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -289,8 +302,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - leading",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Leading.png",
+                Name = "11 Text rendering - text alignment - leading",
+                ExpectedReferenceImageFile = "11_TextRendering_TextAlignment_Leading.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -306,8 +319,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - trailing",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Trailing.png",
+                Name = "12 Text rendering - text alignment - trailing",
+                ExpectedReferenceImageFile = "12_TextRendering_TextAlignment_Trailing.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -323,8 +336,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - center",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Center.png",
+                Name = "13 Text rendering - text alignment - center",
+                ExpectedReferenceImageFile = "13_TextRendering_TextAlignment_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -340,8 +353,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - text alignment - justified",
-                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Justified.png",
+                Name = "14 Text rendering - text alignment - justified",
+                ExpectedReferenceImageFile = "14_TextRendering_TextAlignment_Justified.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -357,8 +370,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - near",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Near.png",
+                Name = "15 Text rendering - paragraph alignment - near",
+                ExpectedReferenceImageFile = "15_TextRendering_ParagraphAlignment_Near.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -374,8 +387,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - far",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Far.png",
+                Name = "16 Text rendering - paragraph alignment - far",
+                ExpectedReferenceImageFile = "16_TextRendering_ParagraphAlignment_Far.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -391,8 +404,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - center",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Center.png",
+                Name = "17 Text rendering - paragraph alignment - center",
+                ExpectedReferenceImageFile = "17_TextRendering_ParagraphAlignment_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -408,8 +421,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - pivot - center",
-                ExpectedReferenceImageFile = "TextRendering_Pivot_Center.png",
+                Name = "18 Text rendering - pivot - center",
+                ExpectedReferenceImageFile = "18_TextRendering_Pivot_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -426,8 +439,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - pivot - arbitrary",
-                ExpectedReferenceImageFile = "TextRendering_Pivot_Arbitrary.png",
+                Name = "19 Text rendering - pivot - arbitrary",
+                ExpectedReferenceImageFile = "19_TextRendering_Pivot_Arbitrary.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -444,8 +457,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Sorting layers",
-                ExpectedReferenceImageFile = "SortingLayers.png",
+                Name = "20 Sorting layers",
+                ExpectedReferenceImageFile = "20_SortingLayers.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -490,8 +503,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Order in layer",
-                ExpectedReferenceImageFile = "SortingLayers.png",
+                Name = "21 Order in layer",
+                ExpectedReferenceImageFile = "21_OrderInLayer.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -536,8 +549,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera transformation",
-                ExpectedReferenceImageFile = "CameraTransformation.png",
+                Name = "22 Camera transformation",
+                ExpectedReferenceImageFile = "22_CameraTransformation.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -563,8 +576,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera overscan",
-                ExpectedReferenceImageFile = "CameraOverscan.png",
+                Name = "23 Camera overscan",
+                ExpectedReferenceImageFile = "23_CameraOverscan.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -589,8 +602,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera underscan",
-                ExpectedReferenceImageFile = "CameraUnderscan.png",
+                Name = "24 Camera underscan",
+                ExpectedReferenceImageFile = "24_CameraUnderscan.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -615,8 +628,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Transform hierarchy",
-                ExpectedReferenceImageFile = "TransformHierarchy.png",
+                Name = "25 Transform hierarchy",
+                ExpectedReferenceImageFile = "25_TransformHierarchy.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -660,12 +673,15 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                             watermark.Entity.Parent = colorBackground;
                         }
                     }
-                }
+                },
+                // CI drift observed: many 1-level channel deltas; max |Δ|=1 across 157 pixels (~0.3925%).
+                // Allow ±1 per-channel tolerance; keep ratio at 0 to stay strict on larger deviations.
+                Tolerance = new ImageTolerance(1, 0)
             },
             new()
             {
-                Name = "Debug renderer",
-                ExpectedReferenceImageFile = "DebugRenderer.png",
+                Name = "26 Debug renderer",
+                ExpectedReferenceImageFile = "26_DebugRenderer.png",
                 SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -689,8 +705,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - rectangle",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Rectangle.png",
+                Name = "27 Camera view rectangle culling - straight - rectangle",
+                ExpectedReferenceImageFile = "27_CameraViewRectangleCulling_Straight_Rectangle.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -704,8 +720,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - ellipse",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Ellipse.png",
+                Name = "28 Camera view rectangle culling - straight - ellipse",
+                ExpectedReferenceImageFile = "28_CameraViewRectangleCulling_Straight_Ellipse.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -719,8 +735,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - sprite",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Sprite.png",
+                Name = "29 Camera view rectangle culling - straight - sprite",
+                ExpectedReferenceImageFile = "29_CameraViewRectangleCulling_Straight_Sprite.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -734,8 +750,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - straight - text",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Text.png",
+                Name = "30 Camera view rectangle culling - straight - text",
+                ExpectedReferenceImageFile = "30_CameraViewRectangleCulling_Straight_Text.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -749,8 +765,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - rectangle",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Rectangle.png",
+                Name = "31 Camera view rectangle culling - rotated - rectangle",
+                ExpectedReferenceImageFile = "31_CameraViewRectangleCulling_Rotated_Rectangle.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -768,8 +784,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - ellipse",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Ellipse.png",
+                Name = "32 Camera view rectangle culling - rotated - ellipse",
+                ExpectedReferenceImageFile = "32_CameraViewRectangleCulling_Rotated_Ellipse.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -787,8 +803,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - sprite",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Sprite.png",
+                Name = "33 Camera view rectangle culling - rotated - sprite",
+                ExpectedReferenceImageFile = "33_CameraViewRectangleCulling_Rotated_Sprite.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -802,8 +818,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - rotated - text",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Text.png",
+                Name = "34 Camera view rectangle culling - rotated - text",
+                ExpectedReferenceImageFile = "34_CameraViewRectangleCulling_Rotated_Text.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -817,8 +833,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - rectangle",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Rectangle.png",
+                Name = "35 Camera view rectangle culling - skewed - rectangle",
+                ExpectedReferenceImageFile = "35_CameraViewRectangleCulling_Skewed_Rectangle.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -846,8 +862,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - ellipse",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Ellipse.png",
+                Name = "36 Camera view rectangle culling - skewed - ellipse",
+                ExpectedReferenceImageFile = "36_CameraViewRectangleCulling_Skewed_Ellipse.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -875,8 +891,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - sprite",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Sprite.png",
+                Name = "37 Camera view rectangle culling - skewed - sprite",
+                ExpectedReferenceImageFile = "37_CameraViewRectangleCulling_Skewed_Sprite.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -904,8 +920,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - skewed - text",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Text.png",
+                Name = "38 Camera view rectangle culling - skewed - text",
+                ExpectedReferenceImageFile = "38_CameraViewRectangleCulling_Skewed_Text.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -933,8 +949,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - camera - translated",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Camera_Translated.png",
+                Name = "39 Camera view rectangle culling - camera - translated",
+                ExpectedReferenceImageFile = "39_CameraViewRectangleCulling_Camera_Translated.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -949,8 +965,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Camera view rectangle culling - camera - rotated",
-                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Camera_Rotated.png",
+                Name = "40 Camera view rectangle culling - camera - rotated",
+                ExpectedReferenceImageFile = "40_CameraViewRectangleCulling_Camera_Rotated.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
@@ -982,31 +998,171 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             SystemUnderTest.RenderingBackend.Context2D.CaptureScreenShotAsPng(memoryStream);
             using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
 
-            if (SaveRenderedImages)
-#pragma warning disable CS0162
-                // ReSharper disable HeuristicUnreachableCode
-            {
-                var testOutputDirectory = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput"));
-                Directory.CreateDirectory(testOutputDirectory);
-                var outputImageFilePath = Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile);
-                File.WriteAllBytes(outputImageFilePath, memoryStream.ToArray());
-            }
-            // ReSharper restore HeuristicUnreachableCode
-#pragma warning restore CS0162
-
-
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
             using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
 
-            Assert.That(actualImage.Width, Is.EqualTo(referenceImage.Width));
-            Assert.That(actualImage.Height, Is.EqualTo(referenceImage.Height));
+            var useTolerances = IsImageToleranceEnabled();
 
-            for (var y = 0; y < referenceImage.Height; y++)
+            AssertImagesEqualWithinTolerance(
+                actualImage,
+                referenceImage,
+                useTolerances,
+                testCase.Tolerance,
+                Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
+                Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
+            );
+        }
+
+        private static void LogRenderingEnvironment(RenderingBackendInfo info)
+        {
+            TestContext.WriteLine("Rendering Environment Info:");
+            TestContext.WriteLine($"OS: {RuntimeInformation.OSDescription}");
+            TestContext.WriteLine($"Rendering Backend: {info.Name}");
+            TestContext.WriteLine($"Adapter: {info.GraphicsAdapterName}");
+            TestContext.WriteLine($"D3D Feature Level: {info.FeatureLevel}");
+            TestContext.WriteLine("Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
+        }
+
+        /// <summary>
+        ///     Determines whether tolerant image comparison is enabled via a test-only environment switch.
+        ///     <br />
+        ///     The environment variable <c>GEISHA_TEST_ENABLE_IMAGE_TOLERANCE</c>, when set to any non-empty value (e.g. "1",
+        ///     "true"), enables tolerant comparison that ignores minor pixel differences due to environment or driver variability.
+        /// </summary>
+        /// <remarks>
+        ///     This setting is intended for tests only and should not be used in production code paths.
+        /// </remarks>
+        private static bool IsImageToleranceEnabled()
+        {
+            return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GEISHA_TEST_ENABLE_IMAGE_TOLERANCE"));
+        }
+
+        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, bool useTolerances, ImageTolerance tolerance,
+            string outputDir, string baseName)
+        {
+            if (actual.Width != expected.Width || actual.Height != expected.Height)
             {
-                for (var x = 0; x < referenceImage.Width; x++)
+                Assert.Fail($"Image dimensions differ. Expected: {expected.Width}x{expected.Height}, Actual: {actual.Width}x{actual.Height}");
+            }
+
+            var width = expected.Width;
+            var height = expected.Height;
+            var totalPixels = width * height;
+            var differingPixels = 0;
+            // Determine coordinate column width for aligned output (based on max of width/height)
+            var coordWidth = Math.Max(width.ToString().Length, height.ToString().Length);
+
+            // Prepare diff images
+            using var diffImage = new Image<Bgra32>(width, height);
+            using var rawDiffImage = new Image<Bgra32>(width, height);
+            var diffColor = new Bgra32(255, 0, 255, 255); // Magenta for diff
+            var whiteColor = new Bgra32(255, 255, 255, 255); // White background
+
+            // Prepare textual diff details
+            var detailsBuilder = new StringBuilder();
+            detailsBuilder.AppendLine($"Image diff details for '{baseName}'");
+            detailsBuilder.AppendLine($"Dimensions: {width}x{height}");
+            detailsBuilder.AppendLine($"Mode: {(useTolerances ? "tolerant" : "strict")}");
+            if (useTolerances)
+            {
+                detailsBuilder.AppendLine($"Channel tolerance: {tolerance.ChannelTolerance}");
+                detailsBuilder.AppendLine($"Max diff ratio: {tolerance.MaxDiffRatio}");
+            }
+
+            // Header with column labels and dynamic ruler aligned to field widths
+            detailsBuilder.AppendLine("Columns: x,y | E=(B,G,R,A) | A=(B,G,R,A) | Δ=(B,G,R,A) | |Δ|=(B,G,R,A)");
+            var coordRuler = $"{new string('-', coordWidth)},{new string('-', coordWidth)}";
+            var channels3 = $"({new string('-', 3)},{new string('-', 3)},{new string('-', 3)},{new string('-', 3)})";
+            var channels4 = $"({new string('-', 4)},{new string('-', 4)},{new string('-', 4)},{new string('-', 4)})";
+            detailsBuilder.AppendLine();
+            detailsBuilder.AppendLine($"{coordRuler} | E={channels3} | A={channels3} | Δ={channels4} | |Δ|={channels3}");
+            detailsBuilder.AppendLine();
+
+            // Single-pass processing using direct row spans to avoid intermediate arrays and repeated accessors
+            for (var y = 0; y < height; y++)
+            {
+                var actualSpan = actual.DangerousGetPixelRowMemory(y).Span;
+                var expectedSpan = expected.DangerousGetPixelRowMemory(y).Span;
+                var diffSpan = diffImage.DangerousGetPixelRowMemory(y).Span;
+                var rawDiffSpan = rawDiffImage.DangerousGetPixelRowMemory(y).Span;
+
+                for (var x = 0; x < width; x++)
                 {
-                    Assert.That(actualImage[x, y], Is.EqualTo(referenceImage[x, y]), $"Images differ at (x,y) = ({x},{y}).");
+                    var actualPixel = actualSpan[x];
+                    var expectedPixel = expectedSpan[x];
+                    bool isDiff;
+
+                    if (useTolerances)
+                    {
+                        isDiff =
+                            Math.Abs(expectedPixel.B - actualPixel.B) > tolerance.ChannelTolerance ||
+                            Math.Abs(expectedPixel.G - actualPixel.G) > tolerance.ChannelTolerance ||
+                            Math.Abs(expectedPixel.R - actualPixel.R) > tolerance.ChannelTolerance ||
+                            Math.Abs(expectedPixel.A - actualPixel.A) > tolerance.ChannelTolerance;
+                    }
+                    else
+                    {
+                        isDiff = !actualPixel.Equals(expectedPixel);
+                    }
+
+                    if (isDiff)
+                    {
+                        differingPixels++;
+                        diffSpan[x] = diffColor;
+                        rawDiffSpan[x] = diffColor;
+
+                        // Capture detailed info for this pixel (aligned columns)
+                        var dB = expectedPixel.B - actualPixel.B;
+                        var dG = expectedPixel.G - actualPixel.G;
+                        var dR = expectedPixel.R - actualPixel.R;
+                        var dA = expectedPixel.A - actualPixel.A;
+                        detailsBuilder.AppendLine(
+                            $"{x.ToString().PadLeft(coordWidth)},{y.ToString().PadLeft(coordWidth)} | E=({(int)expectedPixel.B,3},{(int)expectedPixel.G,3},{(int)expectedPixel.R,3},{(int)expectedPixel.A,3}) | A=({(int)actualPixel.B,3},{(int)actualPixel.G,3},{(int)actualPixel.R,3},{(int)actualPixel.A,3}) | Δ=({dB,4},{dG,4},{dR,4},{dA,4}) | |Δ|=({Math.Abs(dB),3},{Math.Abs(dG),3},{Math.Abs(dR),3},{Math.Abs(dA),3})");
+                    }
+                    else
+                    {
+                        diffSpan[x] = actualPixel;
+                        rawDiffSpan[x] = whiteColor;
+                    }
                 }
+            }
+
+            var diffRatio = (double)differingPixels / totalPixels;
+            detailsBuilder.AppendLine();
+            detailsBuilder.AppendLine($"Total differing pixels: {differingPixels} ({diffRatio:P}) out of {totalPixels}");
+
+            // Save actual and diff images
+            Directory.CreateDirectory(outputDir);
+            var actualFileName = $"{baseName}_actual.png";
+            var diffFileName = $"{baseName}_diff.png";
+            var rawDiffFileName = $"{baseName}_raw-diff.png";
+            var detailsFileName = $"{baseName}_diff-details.txt";
+
+            var actualFilePath = Path.Combine(outputDir, actualFileName);
+            var diffFilePath = Path.Combine(outputDir, diffFileName);
+            var rawDiffFilePath = Path.Combine(outputDir, rawDiffFileName);
+            var detailsFilePath = Path.Combine(outputDir, detailsFileName);
+
+            actual.SaveAsPng(actualFilePath);
+            diffImage.SaveAsPng(diffFilePath);
+            rawDiffImage.SaveAsPng(rawDiffFilePath);
+            File.WriteAllText(detailsFilePath, detailsBuilder.ToString());
+
+            if (useTolerances)
+            {
+                Assert.That(
+                    diffRatio,
+                    Is.LessThanOrEqualTo(tolerance.MaxDiffRatio),
+                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {tolerance.ChannelTolerance} per channel, max ratio: {tolerance.MaxDiffRatio:P}. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
+                );
+            }
+            else
+            {
+                Assert.That(
+                    differingPixels,
+                    Is.EqualTo(0),
+                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
+                );
             }
         }
 

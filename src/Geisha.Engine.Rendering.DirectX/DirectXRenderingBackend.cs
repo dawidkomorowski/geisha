@@ -58,7 +58,8 @@ namespace Geisha.Engine.Rendering.DirectX
                 new[] { FeatureLevel.Level_11_0 },
                 swapChainDescription,
                 out _d3D11Device,
-                out _dxgiSwapChain);
+                out _dxgiSwapChain
+            );
 
             using var dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
             dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
@@ -75,6 +76,13 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.AntialiasMode = AntialiasMode.Aliased;
 
             _renderingContext2D = new RenderingContext2D(form, _d2D1DeviceContext, _statistics);
+
+            Info = new RenderingBackendInfo(
+                Name: "DirectX 11",
+                GraphicsAdapterName: dxgiDevice.Adapter.Description.Description,
+                VideoMemorySize: dxgiDevice.Adapter.Description.DedicatedVideoMemory,
+                FeatureLevel: _d3D11Device.FeatureLevel.ToString()
+            );
         }
 
         /// <summary>
@@ -91,6 +99,9 @@ namespace Geisha.Engine.Rendering.DirectX
 
         /// <inheritdoc />
         public RenderingStatistics Statistics => _statistics.LastFrameStats;
+
+        /// <inheritdoc />
+        public RenderingBackendInfo Info { get; }
 
         /// <inheritdoc />
         public void Present(bool waitForVSync)
