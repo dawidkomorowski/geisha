@@ -988,9 +988,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
             using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
 
+            // TODO: Allow setting tolerances per test case.
+            var useTolerances = IsImageToleranceEnabled();
+
             AssertImagesEqualWithinTolerance(
                 actualImage,
                 referenceImage,
+                useTolerances,
                 0, // 3
                 0, // 0.0005
                 Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
@@ -1009,12 +1013,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             TestContext.WriteLine($"Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
         }
 
-        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, int channelTolerance, double maxDiffRatio,
-            string outputDir, string baseName)
+        /// <summary>
+        ///     Determines whether tolerant image comparison is enabled via a test-only environment switch.
+        ///     <br />
+        ///     The environment variable <c>GEISHA_TEST_ENABLE_IMAGE_TOLERANCE</c>, when set to any non-empty value (e.g. "1",
+        ///     "true"), enables tolerant comparison that ignores minor pixel differences due to environment or driver variability.
+        /// </summary>
+        /// <remarks>
+        ///     This setting is intended for tests only and should not be used in production code paths.
+        /// </remarks>
+        private static bool IsImageToleranceEnabled()
         {
-            // TODO: Investigate this environment variable for stricter testing in CI.
-            var strict = Environment.GetEnvironmentVariable("GEISHA_STRICT_IMAGE_COMPARE") == "1";
+            return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GEISHA_TEST_ENABLE_IMAGE_TOLERANCE"));
+        }
 
+        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, bool useTolerances, int channelTolerance,
+            double maxDiffRatio, string outputDir, string baseName)
+        {
             if (actual.Width != expected.Width || actual.Height != expected.Height)
             {
                 Assert.Fail($"Image dimensions differ. Expected: {expected.Width}x{expected.Height}, Actual: {actual.Width}x{actual.Height}");
@@ -1047,17 +1062,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     var expectedPixel = expectedRow[x];
                     bool isDiff;
 
-                    if (strict)
-                    {
-                        isDiff = !actualPixel.Equals(expectedPixel);
-                    }
-                    else
+                    if (useTolerances)
                     {
                         isDiff =
                             Math.Abs(expectedPixel.B - actualPixel.B) > channelTolerance ||
                             Math.Abs(expectedPixel.G - actualPixel.G) > channelTolerance ||
                             Math.Abs(expectedPixel.R - actualPixel.R) > channelTolerance ||
                             Math.Abs(expectedPixel.A - actualPixel.A) > channelTolerance;
+                    }
+                    else
+                    {
+                        isDiff = !actualPixel.Equals(expectedPixel);
                     }
 
                     if (isDiff)
@@ -1093,20 +1108,20 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             diffImage.SaveAsPng(diffFilePath);
             rawDiffImage.SaveAsPng(rawDiffFilePath);
 
-            if (strict)
-            {
-                Assert.That(
-                    differingPixels,
-                    Is.EqualTo(0),
-                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
-                );
-            }
-            else
+            if (useTolerances)
             {
                 Assert.That(
                     diffRatio,
                     Is.LessThanOrEqualTo(maxDiffRatio),
                     $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {channelTolerance} per channel, max ratio: {maxDiffRatio:P}. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
+                );
+            }
+            else
+            {
+                Assert.That(
+                    differingPixels,
+                    Is.EqualTo(0),
+                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName} and raw diff image: {rawDiffFileName}"
                 );
             }
         }
