@@ -1060,7 +1060,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 detailsBuilder.AppendLine($"Max diff ratio: {maxDiffRatio}");
             }
 
-            detailsBuilder.AppendLine("Format: x,y | expected(B,G,R,A) | actual(B,G,R,A) | delta(B,G,R,A) | absDelta(B,G,R,A)");
+            // Header with column labels and dynamic ruler aligned to field widths
+            detailsBuilder.AppendLine("Columns: x,y | E=(B,G,R,A) | A=(B,G,R,A) | Δ=(B,G,R,A) | |Δ|=(B,G,R,A)");
+            var coordRuler = $"{new string('-', coordWidth)},{new string('-', coordWidth)}";
+            var channels3 = $"({new string('-', 3)},{new string('-', 3)},{new string('-', 3)},{new string('-', 3)})";
+            var channels4 = $"({new string('-', 4)},{new string('-', 4)},{new string('-', 4)},{new string('-', 4)})";
+            detailsBuilder.AppendLine();
+            detailsBuilder.AppendLine($"{coordRuler} | E={channels3} | A={channels3} | Δ={channels4} | |Δ|={channels3}");
             detailsBuilder.AppendLine();
 
             for (var y = 0; y < height; y++)
