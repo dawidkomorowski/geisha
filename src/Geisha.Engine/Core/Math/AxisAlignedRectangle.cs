@@ -53,6 +53,11 @@ namespace Geisha.Engine.Core.Math
             Dimensions = dimensions;
         }
 
+        // TODO: Add XML comment.
+        public AxisAlignedRectangle(in Vector2 center, in SizeD size) : this(center, new Vector2(size.Width, size.Height))
+        {
+        }
+
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified center and
