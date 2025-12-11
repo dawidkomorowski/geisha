@@ -343,7 +343,7 @@ public readonly struct Vector2 : IEquatable<Vector2>
     ///     width and height values.
     /// </summary>
     /// <returns>
-    ///     A <see cref="SizeD" /> structure that has <see cref="Size.Width" /> and <see cref="Size.Height" /> set to the
+    ///     A <see cref="SizeD" /> structure that has <see cref="SizeD.Width" /> and <see cref="SizeD.Height" /> set to the
     ///     values of the <see cref="X" /> and <see cref="Y" /> components, respectively.
     /// </returns>
     public SizeD ToSizeD() => new(X, Y);
