@@ -32,4 +32,14 @@ public readonly record struct SizeD
     ///     Gets the height component of this <see cref="SizeD" />.
     /// </summary>
     public double Height { get; init; }
+
+    /// <summary>
+    ///     Converts the <see cref="SizeD" /> instance to a <see cref="Size" /> structure with integer width and height.
+    /// </summary>
+    /// <remarks>Fractional values are truncated when converting to <see cref="Size" />.</remarks>
+    /// <returns>
+    ///     A <see cref="Size" /> structure that has <see cref="Size.Width" /> and <see cref="Size.Height" /> set to the
+    ///     integer values of the of <see cref="Width" /> and <see cref="Height" />.
+    /// </returns>
+    public Size ToSize() => new((int)Width, (int)Height);
 }
