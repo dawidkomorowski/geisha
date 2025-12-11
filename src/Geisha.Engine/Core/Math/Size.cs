@@ -31,4 +31,10 @@ public readonly record struct Size
     ///     Gets the height component of this <see cref="Size" />.
     /// </summary>
     public int Height { get; init; }
+
+    /// <summary>
+    ///     Converts the <see cref="Size" /> instance to a <see cref="SizeD" /> structure.
+    /// </summary>
+    /// <returns>A <see cref="SizeD" /> representing the width and height of this instance.</returns>
+    public SizeD ToSizeD() => new(Width, Height);
 }
