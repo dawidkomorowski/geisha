@@ -42,4 +42,13 @@ public readonly record struct SizeD
     ///     integer values of the of <see cref="Width" /> and <see cref="Height" />.
     /// </returns>
     public Size ToSize() => new((int)Width, (int)Height);
+
+    /// <summary>
+    ///     Converts the <see cref="SizeD" /> instance to a <see cref="Vector2" /> structure.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="Vector2" /> that has <see cref="Vector2.X" /> and <see cref="Vector2.Y" /> components set to the
+    ///     <see cref="Width" /> and <see cref="Height" /> values, respectively.
+    /// </returns>
+    public Vector2 ToVector2() => new(Width, Height);
 }
