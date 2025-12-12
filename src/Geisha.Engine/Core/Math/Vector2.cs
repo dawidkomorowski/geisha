@@ -325,11 +325,26 @@ public readonly struct Vector2 : IEquatable<Vector2>
     public Vector4 ToVector4() => new(X, Y, 0, 0);
 
     /// <summary>
-    ///     Converts the <see cref="Vector2" /> instance to a <see cref="SizeD" /> structure.
+    ///     Converts the <see cref="Vector2" /> instance to a <see cref="Size" /> structure using the X and Y components as
+    ///     width and height values.
+    /// </summary>
+    /// <remarks>
+    ///     This method casts the X and Y components to integers before assigning them to the <see cref="Size" />. Fractional
+    ///     values will be truncated.
+    /// </remarks>
+    /// <returns>
+    ///     A <see cref="Size" /> structure that has <see cref="Size.Width" /> and <see cref="Size.Height" /> set to the
+    ///     integer values of the <see cref="X" /> and <see cref="Y" /> components, respectively.
+    /// </returns>
+    public Size ToSize() => new Size((int)X, (int)Y);
+
+    /// <summary>
+    ///     Converts the <see cref="Vector2" /> instance to a <see cref="SizeD" /> structure using the X and Y components as
+    ///     width and height values.
     /// </summary>
     /// <returns>
-    ///     A <see cref="SizeD" /> structure with its width and height set to the values of <c>X</c> and <c>Y</c>,
-    ///     respectively.
+    ///     A <see cref="SizeD" /> structure that has <see cref="SizeD.Width" /> and <see cref="SizeD.Height" /> set to the
+    ///     values of the <see cref="X" /> and <see cref="Y" /> components, respectively.
     /// </returns>
     public SizeD ToSizeD() => new(X, Y);
 

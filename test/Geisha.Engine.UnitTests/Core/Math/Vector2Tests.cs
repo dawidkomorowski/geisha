@@ -673,9 +673,24 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(vector4.W, Is.Zero);
         }
 
+        [TestCase(1, 2, 1, 2)]
+        [TestCase(91.3376, 63.2359, 91, 63)]
+        public void ToSize_Test(double x, double y, int ex, int ey)
+        {
+            // Arrange
+            var vector2 = new Vector2(x, y);
+
+            // Act
+            var size = vector2.ToSize();
+
+            // Assert
+            Assert.That(size.Width, Is.EqualTo(ex));
+            Assert.That(size.Height, Is.EqualTo(ey));
+        }
+
         [TestCase(1, 2)]
         [TestCase(91.3376, 63.2359)]
-        public void ToSizeD(double x, double y)
+        public void ToSizeD_Test(double x, double y)
         {
             // Arrange
             var vector2 = new Vector2(x, y);

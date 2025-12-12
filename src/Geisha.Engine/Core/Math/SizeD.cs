@@ -32,4 +32,23 @@ public readonly record struct SizeD
     ///     Gets the height component of this <see cref="SizeD" />.
     /// </summary>
     public double Height { get; init; }
+
+    /// <summary>
+    ///     Converts the <see cref="SizeD" /> instance to a <see cref="Size" /> structure with integer width and height.
+    /// </summary>
+    /// <remarks>Fractional values are truncated when converting to <see cref="Size" />.</remarks>
+    /// <returns>
+    ///     A <see cref="Size" /> structure that has <see cref="Size.Width" /> and <see cref="Size.Height" /> set to the
+    ///     integer values of <see cref="Width" /> and <see cref="Height" />.
+    /// </returns>
+    public Size ToSize() => new((int)Width, (int)Height);
+
+    /// <summary>
+    ///     Converts the <see cref="SizeD" /> instance to a <see cref="Vector2" /> structure.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="Vector2" /> that has <see cref="Vector2.X" /> and <see cref="Vector2.Y" /> components set to the
+    ///     <see cref="Width" /> and <see cref="Height" /> values, respectively.
+    /// </returns>
+    public Vector2 ToVector2() => new(Width, Height);
 }
