@@ -122,10 +122,8 @@ namespace Geisha.Engine
             var renderingConfiguration = new RenderingConfiguration();
             if (fileContent.Rendering?.EnableVSync != null)
                 renderingConfiguration = renderingConfiguration with { EnableVSync = fileContent.Rendering.EnableVSync.Value };
-            if (fileContent.Rendering?.ScreenHeight != null)
-                renderingConfiguration = renderingConfiguration with { ScreenHeight = fileContent.Rendering.ScreenHeight.Value };
-            if (fileContent.Rendering?.ScreenWidth != null)
-                renderingConfiguration = renderingConfiguration with { ScreenWidth = fileContent.Rendering.ScreenWidth.Value };
+            if (fileContent.Rendering?.ScreenSize != null)
+                renderingConfiguration = renderingConfiguration with { ScreenSize = fileContent.Rendering.ScreenSize.Value };
             if (fileContent.Rendering?.ShowRenderingStatistics != null)
                 renderingConfiguration = renderingConfiguration with { ShowRenderingStatistics = fileContent.Rendering.ShowRenderingStatistics.Value };
             if (fileContent.Rendering?.SortingLayersOrder != null)
@@ -208,8 +206,7 @@ namespace Geisha.Engine
         private sealed record RenderingSection
         {
             public bool? EnableVSync { get; init; }
-            public int? ScreenHeight { get; init; }
-            public int? ScreenWidth { get; init; }
+            public Size? ScreenSize { get; init; }
             public bool? ShowRenderingStatistics { get; init; }
             public string[]? SortingLayersOrder { get; init; }
         }

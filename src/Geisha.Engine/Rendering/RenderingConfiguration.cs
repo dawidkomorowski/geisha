@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering;
 
@@ -17,6 +18,11 @@ public sealed record RenderingConfiguration
     ///     Therefore, frame rate is limited to refresh rate of display.
     /// </summary>
     public bool EnableVSync { get; init; } = false;
+
+    /// <summary>
+    ///     Size of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+    /// </summary>
+    public Size ScreenSize { get; init; } = new(1280, 720);
 
     /// <summary>
     ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.

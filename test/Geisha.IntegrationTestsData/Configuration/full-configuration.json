@@ -33,8 +33,10 @@
   },
   "Rendering": {
     "EnableVSync": true,
-    "ScreenWidth": 3840,
-    "ScreenHeight": 2160,
+    "ScreenSize": {
+      "Width": 3840,
+      "Height": 2160
+    },
     "ShowRenderingStatistics": true,
     "SortingLayersOrder": [ "Layer1", "Layer2", "Layer3" ]
   }
