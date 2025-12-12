@@ -5,7 +5,11 @@
   },
   "Core": {
     "AssetsRootDirectoryPath": "Path to directory with assets",
-    "CustomGameLoopSteps": [ "CustomStep1", "CustomStep2", "CustomStep3" ],
+    "CustomGameLoopSteps": [
+      "CustomStep1",
+      "CustomStep2",
+      "CustomStep3"
+    ],
     "EnableGCLogging": true,
     "FixedUpdatesPerFrameLimit": 123,
     "FixedUpdatesPerSecond": 456,
@@ -38,6 +42,10 @@
       "Height": 2160
     },
     "ShowRenderingStatistics": true,
-    "SortingLayersOrder": [ "Layer1", "Layer2", "Layer3" ]
+    "SortingLayersOrder": [
+      "Layer1",
+      "Layer2",
+      "Layer3"
+    ]
   }
 }

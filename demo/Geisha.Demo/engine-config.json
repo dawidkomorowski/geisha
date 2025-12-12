@@ -32,8 +32,10 @@
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenWidth": 1600,
-    "ScreenHeight": 900,
+    "ScreenSize": {
+      "Width": 1600,
+      "Height": 900
+    },
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "BackgroundGrid",
