@@ -63,7 +63,8 @@ namespace Geisha.Engine.Windows
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle))
             {
-                form.ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight);
+                var screenSize = configuration.Rendering.ScreenSize;
+                form.ClientSize = new Size(screenSize.Width, screenSize.Height);
                 form.AllowUserResizing = false;
                 form.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
