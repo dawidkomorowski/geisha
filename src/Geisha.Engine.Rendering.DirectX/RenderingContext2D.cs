@@ -51,7 +51,7 @@ namespace Geisha.Engine.Rendering.DirectX
         public int ScreenWidth => _form.ClientSize.Width;
         public int ScreenHeight => _form.ClientSize.Height;
 
-        // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
+        // TODO: It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)
         {
             using var cpuBitmap = Image.Load<Bgra32>(stream);

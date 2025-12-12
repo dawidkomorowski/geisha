@@ -27,8 +27,11 @@ namespace Geisha.Engine.IntegrationTests
         {
             var renderingConfiguration = ConfigureRendering(new RenderingConfiguration());
 
+            var screenSize = renderingConfiguration.ScreenSize;
             _renderForm = new RenderForm("IntegrationTestsWindow")
-                { ClientSize = new Size(renderingConfiguration.ScreenWidth, renderingConfiguration.ScreenWidth) };
+            {
+                ClientSize = new Size(screenSize.Width, screenSize.Height)
+            };
 
             if (ShowDebugWindow) _renderForm.Show();
 
