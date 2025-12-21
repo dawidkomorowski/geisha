@@ -1,7 +1,6 @@
 ﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
-using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 using System;
@@ -272,6 +271,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnActualValue_WhenRenderingSystemIsAddedToSceneObservers()
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
@@ -397,6 +397,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double px, double py, double wx, double wy)
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
@@ -418,6 +419,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
@@ -486,6 +488,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double px, double py, double wx, double wy)
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
@@ -507,6 +510,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_World2DPointToScreenPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
@@ -666,6 +670,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         double r, double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double wx, double wy, double vpx, double vpy)
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 
@@ -690,6 +695,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_CreateViewMatrixScaledToScreen_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
         RenderingContext2D.ScreenWidth.Returns(1920);
         RenderingContext2D.ScreenHeight.Returns(1080);
 

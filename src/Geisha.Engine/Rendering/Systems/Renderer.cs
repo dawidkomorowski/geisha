@@ -184,11 +184,10 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     private void RenderDiagnosticInfo()
     {
-        var width = _renderingContext2D.ScreenWidth;
-        var height = _renderingContext2D.ScreenHeight;
+        var screenSize = _renderingContext2D.ScreenSize;
         var color = Color.Green;
 
-        var translation = new Vector2(-(width / 2d) + 1, height / 2d - 1);
+        var translation = new Vector2(-(screenSize.Width / 2d) + 1, screenSize.Height / 2d - 1);
 
         foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
         {

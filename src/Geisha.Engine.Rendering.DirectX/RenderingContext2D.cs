@@ -47,7 +47,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);
         }
 
-        private Vector2 WindowCenter => new(ScreenWidth / 2d, ScreenHeight / 2d);
+        private Vector2 WindowCenter => ScreenSize.ToVector2() / 2d;
 
         public Size ScreenSize => new(_form.ClientSize.Width, _form.ClientSize.Height);
         public int ScreenWidth => _form.ClientSize.Width;
