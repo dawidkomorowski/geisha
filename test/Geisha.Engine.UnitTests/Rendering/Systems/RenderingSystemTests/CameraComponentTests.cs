@@ -88,6 +88,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Arrange
         const int screenWidth = 123;
         const int screenHeight = 456;
+        RenderingContext2D.ScreenSize.Returns(new Size(screenWidth, screenHeight));
         RenderingContext2D.ScreenWidth.Returns(screenWidth);
         RenderingContext2D.ScreenHeight.Returns(screenHeight);
 

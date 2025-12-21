@@ -20,6 +20,7 @@ using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using Size = Geisha.Engine.Core.Math.Size;
 using SpriteBatch = Geisha.Engine.Rendering.Backend.SpriteBatch;
 
 namespace Geisha.Engine.Rendering.DirectX
@@ -48,6 +49,7 @@ namespace Geisha.Engine.Rendering.DirectX
 
         private Vector2 WindowCenter => new(ScreenWidth / 2d, ScreenHeight / 2d);
 
+        public Size ScreenSize => new(_form.ClientSize.Width, _form.ClientSize.Height);
         public int ScreenWidth => _form.ClientSize.Width;
         public int ScreenHeight => _form.ClientSize.Height;
 
