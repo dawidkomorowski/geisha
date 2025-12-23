@@ -49,12 +49,6 @@ function Publish-CheckRun {
     Write-Host "Headers: $($headers | ConvertTo-Json -Depth 3)"
     Write-Host "Body: $($body | ConvertTo-Json -Depth 5)"
 
-    Invoke-WebRequest -Uri "https://google.com" -UseBasicParsing
-    Test-Connection google.com
-
-    Test-Connection github.com
-    Invoke-WebRequest -Uri "https://github.com" -UseBasicParsing
-
     Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json) -UseBasicParsing
 }
 
