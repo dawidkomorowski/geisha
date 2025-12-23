@@ -45,11 +45,13 @@ function Publish-CheckRun {
     Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json)
 }
 
-$currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"
-$masterResults = Import-Results -Path "..\..\benchmark-app\master\Geisha.Benchmark.*\"
+# $currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"
+# $masterResults = Import-Results -Path "..\..\benchmark-app\master\Geisha.Benchmark.*\"
 
-$finalResults = Merge-Results -CurrentResults $currentResults -MasterResults $masterResults
+# $finalResults = Merge-Results -CurrentResults $currentResults -MasterResults $masterResults
 
-$outputText = Format-Results -Results $finalResults
+# $outputText = Format-Results -Results $finalResults
+
+$outputText = "Benchmark results publishing is currently disabled."
 
 Publish-CheckRun -GitHubToken $githubToken -HeadSha $headSha -Name "Benchmark Results" -Summary "Total benchmarks executed: $($finalResults.Count)" -Text $outputText
