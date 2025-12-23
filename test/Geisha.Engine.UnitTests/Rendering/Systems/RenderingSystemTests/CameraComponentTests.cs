@@ -85,11 +85,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void RenderScene_ShouldSetScreenWidthAndScreenHeightOnCameraComponent()
     {
         // Arrange
-        const int screenWidth = 123;
-        const int screenHeight = 456;
-        RenderingContext2D.ScreenSize.Returns(new Size(screenWidth, screenHeight));
-        RenderingContext2D.ScreenWidth.Returns(screenWidth);
-        RenderingContext2D.ScreenHeight.Returns(screenHeight);
+        var screenSize = new Size(123, 456);
+        RenderingContext2D.ScreenSize.Returns(screenSize);
 
         var context = CreateRenderingTestContext();
         var cameraEntity = context.AddCamera();
@@ -99,8 +96,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-        Assert.That(cameraComponent.ScreenWidth, Is.EqualTo(screenWidth));
-        Assert.That(cameraComponent.ScreenHeight, Is.EqualTo(screenHeight));
+        Assert.That(cameraComponent.ScreenWidth, Is.EqualTo(screenSize.Width));
+        Assert.That(cameraComponent.ScreenHeight, Is.EqualTo(screenSize.Height));
     }
 
     [Test]
@@ -272,8 +269,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
 
@@ -363,8 +358,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
 
         var context = CreateRenderingTestContext();
 
@@ -398,8 +392,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
@@ -420,8 +412,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
@@ -454,8 +444,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_World2DPointToScreenPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
 
         var context = CreateRenderingTestContext();
 
@@ -489,8 +478,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
@@ -511,8 +498,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
@@ -545,8 +530,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_CreateViewMatrix_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
 
         var context = CreateRenderingTestContext();
 
@@ -577,8 +561,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double wx, double wy, double vpx, double vpy)
     {
         // Arrange
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
@@ -601,8 +584,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_CreateViewMatrix_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
@@ -638,8 +620,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     public void CameraComponent_CreateViewMatrixScaledToScreen_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
 
         var context = CreateRenderingTestContext();
 
@@ -671,8 +652,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
@@ -696,8 +675,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
-        RenderingContext2D.ScreenWidth.Returns(1920);
-        RenderingContext2D.ScreenHeight.Returns(1080);
 
         var context = CreateRenderingTestContext();
         var entity = context.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));

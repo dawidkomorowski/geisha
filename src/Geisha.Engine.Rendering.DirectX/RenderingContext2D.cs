@@ -50,8 +50,6 @@ namespace Geisha.Engine.Rendering.DirectX
         private Vector2 WindowCenter => ScreenSize.ToVector2() / 2d;
 
         public Size ScreenSize => new(_form.ClientSize.Width, _form.ClientSize.Height);
-        public int ScreenWidth => _form.ClientSize.Width;
-        public int ScreenHeight => _form.ClientSize.Height;
 
         // TODO: It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)

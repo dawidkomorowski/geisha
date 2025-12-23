@@ -18,18 +18,6 @@ namespace Geisha.Engine.Rendering.Backend
         /// </summary>
         Size ScreenSize { get; }
 
-        // TODO: Remove these two properties in favor of ScreenSize.
-        /// <summary>
-        ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
-        /// </summary>
-        int ScreenWidth { get; }
-
-        // TODO: Remove these two properties in favor of ScreenSize.
-        /// <summary>
-        ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
-        /// </summary>
-        int ScreenHeight { get; }
-
         /// <summary>
         ///     Creates new instance of <see cref="ITexture" /> object out of data given in a <see cref="Stream" />.
         /// </summary>
