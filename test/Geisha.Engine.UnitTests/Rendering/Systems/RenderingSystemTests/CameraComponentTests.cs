@@ -82,7 +82,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldSetScreenWidthAndScreenHeightOnCameraComponent()
+    public void RenderScene_ShouldSetScreenSizeOnCameraComponent()
     {
         // Arrange
         var screenSize = new Size(123, 456);
@@ -96,8 +96,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-        Assert.That(cameraComponent.ScreenWidth, Is.EqualTo(screenSize.Width));
-        Assert.That(cameraComponent.ScreenHeight, Is.EqualTo(screenSize.Height));
+        Assert.That(cameraComponent.ScreenSize, Is.EqualTo(screenSize));
     }
 
     [Test]
@@ -245,7 +244,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    public void CameraComponent_ScreenSize_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
         var context = CreateRenderingTestContext();
@@ -255,20 +254,19 @@ public class CameraComponentTests : RenderingSystemTestsBase
         context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
-        var screenWidth = cameraComponent.ScreenWidth;
-        var screenHeight = cameraComponent.ScreenHeight;
+        var screenSize = cameraComponent.ScreenSize;
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
-        Assert.That(screenWidth, Is.Zero);
-        Assert.That(screenHeight, Is.Zero);
+        Assert.That(screenSize, Is.EqualTo(Size.Empty));
     }
 
     [Test]
-    public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnActualValue_WhenRenderingSystemIsAddedToSceneObservers()
+    public void CameraComponent_ScreenSize_ShouldReturnActualValue_WhenRenderingSystemIsAddedToSceneObservers()
     {
         // Arrange
-        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
+        var expected = new Size(1920, 1080);
+        RenderingContext2D.ScreenSize.Returns(expected);
 
         var context = CreateRenderingTestContext();
 
@@ -276,13 +274,11 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var cameraComponent = entity.GetComponent<CameraComponent>();
 
         // Act
-        var screenWidth = cameraComponent.ScreenWidth;
-        var screenHeight = cameraComponent.ScreenHeight;
+        var actual = cameraComponent.ScreenSize;
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(screenWidth, Is.EqualTo(1920));
-        Assert.That(screenHeight, Is.EqualTo(1080));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
