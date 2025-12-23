@@ -42,6 +42,13 @@ function Publish-CheckRun {
             text    = $outputText
         }
     }
+
+    # Echo all parameters for debugging purposes
+    Write-Host "Publishing check run with the following parameters:"
+    Write-Host "URL: $url"
+    Write-Host "Headers: $($headers | ConvertTo-Json -Depth 3)"
+    Write-Host "Body: $($body | ConvertTo-Json -Depth 5)"
+
     Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json)
 }
 
