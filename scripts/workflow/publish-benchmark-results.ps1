@@ -42,7 +42,7 @@ function Publish-CheckRun {
             text    = $outputText
         }
     }
-    Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
+    Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json)
 }
 
 $currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"

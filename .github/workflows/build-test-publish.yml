@@ -174,25 +174,25 @@ jobs:
       - name: Install Scream virtual audio device
         uses: ./.github/actions/install-virtual-audio-device
 
-      - name: Execute performance benchmarks (current 1)
-        run: |
-          cd benchmark-app\current\Geisha.Benchmark.*\
-          .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      # - name: Execute performance benchmarks (current 1)
+      #   run: |
+      #     cd benchmark-app\current\Geisha.Benchmark.*\
+      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
-      - name: Execute performance benchmarks (master 1)
-        run: |
-          cd benchmark-app\master\Geisha.Benchmark.*\
-          .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      # - name: Execute performance benchmarks (master 1)
+      #   run: |
+      #     cd benchmark-app\master\Geisha.Benchmark.*\
+      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
-      - name: Execute performance benchmarks (current 2)
-        run: |
-          cd benchmark-app\current\Geisha.Benchmark.*\
-          .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      # - name: Execute performance benchmarks (current 2)
+      #   run: |
+      #     cd benchmark-app\current\Geisha.Benchmark.*\
+      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
-      - name: Execute performance benchmarks (master 2)
-        run: |
-          cd benchmark-app\master\Geisha.Benchmark.*\
-          .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      # - name: Execute performance benchmarks (master 2)
+      #   run: |
+      #     cd benchmark-app\master\Geisha.Benchmark.*\
+      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
         run: |
