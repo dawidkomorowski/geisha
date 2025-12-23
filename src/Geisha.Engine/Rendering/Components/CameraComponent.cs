@@ -50,7 +50,19 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+        ///     Gets the size of the screen (full screen) or the window client area (excluding window frame) in pixels.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This property returns <see cref="Size.Empty" /> when <see cref="CameraComponent" /> is not managed by rendering
+        ///         system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public Size ScreenSize => new(CameraNode.ScreenWidth, CameraNode.ScreenHeight);
+
+        /// <summary>
+        ///     Width of the screen (full screen) or the window client area (excluding window frame) in pixels.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -61,7 +73,7 @@ namespace Geisha.Engine.Rendering.Components
         public int ScreenWidth => CameraNode.ScreenWidth;
 
         /// <summary>
-        ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+        ///     Height of the screen (full screen) or the window client area (excluding window frame) in pixels.
         /// </summary>
         /// <remarks>
         ///     <para>

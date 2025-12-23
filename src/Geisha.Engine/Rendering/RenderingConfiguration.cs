@@ -20,7 +20,7 @@ public sealed record RenderingConfiguration
     public bool EnableVSync { get; init; } = false;
 
     /// <summary>
-    ///     Size of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+    ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels.
     /// </summary>
     public Size ScreenSize { get; init; } = new(1280, 720);
 

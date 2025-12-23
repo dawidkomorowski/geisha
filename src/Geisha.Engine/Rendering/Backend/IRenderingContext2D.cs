@@ -14,7 +14,7 @@ namespace Geisha.Engine.Rendering.Backend
     public interface IRenderingContext2D
     {
         /// <summary>
-        ///     Gets the size of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+        ///     Gets the size of the screen (full screen) or the window client area (excluding window frame) in pixels.
         /// </summary>
         Size ScreenSize { get; }
 
