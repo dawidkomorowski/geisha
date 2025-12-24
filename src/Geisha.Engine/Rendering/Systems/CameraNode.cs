@@ -93,7 +93,8 @@ internal sealed class CameraNode : ICameraNode, IDisposable
     public AxisAlignedRectangle GetBoundingRectangleOfView()
     {
         var transform = _transform.ComputeInterpolatedWorldTransformMatrix();
-        var quad = new AxisAlignedRectangle(_camera.ViewRectangle).ToQuad();
+        var effectiveViewRectangle = GetEffectiveViewRectangle();
+        var quad = new AxisAlignedRectangle(effectiveViewRectangle).ToQuad();
         return quad.Transform(transform).GetBoundingRectangle();
     }
 
@@ -108,57 +109,70 @@ internal sealed class CameraNode : ICameraNode, IDisposable
 
     public AxisAlignedRectangle GetClippingRectangle()
     {
-        if (CameraIsWiderThanScreen())
+        var effectiveViewRectangle = GetEffectiveViewRectangle();
+        if (CameraIsWiderThanScreen(effectiveViewRectangle))
         {
-            var scaleFactor = ScreenSize.Width / ViewRectangle.X;
-            return new AxisAlignedRectangle(new Vector2(ScreenSize.Width, ViewRectangle.Y * scaleFactor));
+            var scaleFactor = ScreenSize.Width / effectiveViewRectangle.X;
+            return new AxisAlignedRectangle(new Vector2(ScreenSize.Width, effectiveViewRectangle.Y * scaleFactor));
         }
         else
         {
-            var scaleFactor = ScreenSize.Height / ViewRectangle.Y;
-            return new AxisAlignedRectangle(new Vector2(ViewRectangle.X * scaleFactor, ScreenSize.Height));
+            var scaleFactor = ScreenSize.Height / effectiveViewRectangle.Y;
+            return new AxisAlignedRectangle(new Vector2(effectiveViewRectangle.X * scaleFactor, ScreenSize.Height));
         }
+    }
+
+    private Vector2 GetEffectiveViewRectangle()
+    {
+        // When ViewRectangle is 0x0 (or any non-positive value), use ScreenSize as the effective view rectangle
+        if (ViewRectangle.X <= 0 || ViewRectangle.Y <= 0)
+        {
+            return ScreenSize.ToVector2();
+        }
+
+        return ViewRectangle;
     }
 
     private Vector2 GetViewRectangleScale()
     {
+        var effectiveViewRectangle = GetEffectiveViewRectangle();
         var viewRectangleScale = AspectRatioBehavior switch
         {
-            AspectRatioBehavior.Overscan => ComputeOverscan(),
-            AspectRatioBehavior.Underscan => ComputeUnderscan(),
+            AspectRatioBehavior.Overscan => ComputeOverscan(effectiveViewRectangle),
+            AspectRatioBehavior.Underscan => ComputeUnderscan(effectiveViewRectangle),
             _ => throw new ArgumentOutOfRangeException()
         };
 
         return viewRectangleScale;
     }
 
-    private Vector2 ComputeOverscan()
+    private Vector2 ComputeOverscan(Vector2 effectiveViewRectangle)
     {
-        if (CameraIsWiderThanScreen())
+        if (CameraIsWiderThanScreen(effectiveViewRectangle))
         {
-            var scaleForHeight = ViewRectangle.Y / ScreenSize.Height;
+            var scaleForHeight = effectiveViewRectangle.Y / ScreenSize.Height;
             return new Vector2(scaleForHeight, scaleForHeight);
         }
 
-        var scaleForWidth = ViewRectangle.X / ScreenSize.Width;
+        var scaleForWidth = effectiveViewRectangle.X / ScreenSize.Width;
         return new Vector2(scaleForWidth, scaleForWidth);
     }
 
-    private Vector2 ComputeUnderscan()
+    private Vector2 ComputeUnderscan(Vector2 effectiveViewRectangle)
     {
-        if (CameraIsWiderThanScreen())
+        if (CameraIsWiderThanScreen(effectiveViewRectangle))
         {
-            var scaleForWidth = ViewRectangle.X / ScreenSize.Width;
+            var scaleForWidth = effectiveViewRectangle.X / ScreenSize.Width;
             return new Vector2(scaleForWidth, scaleForWidth);
         }
 
-        var scaleForHeight = ViewRectangle.Y / ScreenSize.Height;
+        var scaleForHeight = effectiveViewRectangle.Y / ScreenSize.Height;
         return new Vector2(scaleForHeight, scaleForHeight);
     }
 
-    private bool CameraIsWiderThanScreen()
+    private bool CameraIsWiderThanScreen(Vector2 effectiveViewRectangle)
     {
-        var cameraAspectRatio = ViewRectangle.X / ViewRectangle.Y;
+        var cameraAspectRatio = effectiveViewRectangle.X / effectiveViewRectangle.Y;
         var screenAspectRatio = (double)ScreenSize.Width / ScreenSize.Height;
 
         return cameraAspectRatio > screenAspectRatio;

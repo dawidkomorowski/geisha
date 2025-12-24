@@ -701,4 +701,145 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(viewPoint, Is.EqualTo(new Vector2(2000, 1000)).Using(Vector2Comparer));
     }
+
+    #region Default ViewRectangle (0x0) Behavior Tests
+
+    [Test]
+    public void RenderScene_ShouldUseScreenSizeAsEffectiveViewRectangle_WhenViewRectangleIsDefault()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+
+        var cameraEntity = context.Scene.CreateEntity();
+        cameraEntity.CreateComponent<Transform2DComponent>();
+        var camera = cameraEntity.CreateComponent<CameraComponent>();
+        // Leave ViewRectangle at default (0, 0)
+
+        var entity = context.AddSpriteWithDefaultTransform();
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        // With default ViewRectangle and ScreenSize 2000x1000, effective view rectangle should be 2000x1000
+        // Scale should be 1:1 (no scaling)
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.Identity, entity.GetOpacity());
+    }
+
+    [Test]
+    public void RenderScene_ShouldNotMutateViewRectangle_WhenViewRectangleIsDefault()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+
+        var cameraEntity = context.Scene.CreateEntity();
+        cameraEntity.CreateComponent<Transform2DComponent>();
+        var camera = cameraEntity.CreateComponent<CameraComponent>();
+        // Leave ViewRectangle at default (0, 0)
+
+        // Assume
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero), "ViewRectangle should remain at default after rendering");
+    }
+
+    [Test]
+    public void CameraComponent_BoundingRectangleOfView_ShouldUseScreenSize_WhenViewRectangleIsDefault()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+
+        var cameraEntity = context.Scene.CreateEntity();
+        cameraEntity.CreateComponent<Transform2DComponent>();
+        var camera = cameraEntity.CreateComponent<CameraComponent>();
+        // Leave ViewRectangle at default (0, 0)
+
+        var transform = cameraEntity.GetComponent<Transform2DComponent>();
+        transform.Translation = new Vector2(10, 20);
+        transform.Scale = new Vector2(2, 2);
+
+        // Act
+        var actual = camera.BoundingRectangleOfView;
+
+        // Assert
+        // ScreenSize is 2000x1000, so effective view rectangle should be based on that
+        Assert.That(camera.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 4000, 2000)));
+    }
+
+    [Test]
+    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldUseScreenSize_WhenViewRectangleIsDefault()
+    {
+        // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
+
+        var context = CreateRenderingTestContext();
+
+        var cameraEntity = context.Scene.CreateEntity();
+        cameraEntity.CreateComponent<Transform2DComponent>();
+        var camera = cameraEntity.CreateComponent<CameraComponent>();
+        // Leave ViewRectangle at default (0, 0)
+
+        // Act
+        var actual = camera.ScreenPointToWorld2DPoint(new Vector2(200, 100));
+
+        // Assert
+        // With default ViewRectangle, should behave as if ViewRectangle = ScreenSize (1920, 1080)
+        Assert.That(camera.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new Vector2(-760, 440)).Using(Vector2Comparer));
+    }
+
+    [Test]
+    public void CameraComponent_World2DPointToScreenPoint_ShouldUseScreenSize_WhenViewRectangleIsDefault()
+    {
+        // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
+
+        var context = CreateRenderingTestContext();
+
+        var cameraEntity = context.Scene.CreateEntity();
+        cameraEntity.CreateComponent<Transform2DComponent>();
+        var camera = cameraEntity.CreateComponent<CameraComponent>();
+        // Leave ViewRectangle at default (0, 0)
+
+        // Act
+        var actual = camera.World2DPointToScreenPoint(new Vector2(-760, 440));
+
+        // Assert
+        // With default ViewRectangle, should behave as if ViewRectangle = ScreenSize (1920, 1080)
+        Assert.That(camera.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using(Vector2Comparer));
+    }
+
+    [Test]
+    public void RenderScene_ShouldApplyAspectRatioBehaviorWithDefaultViewRectangle_WhenScreenAspectRatioDiffers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenSize.Returns(new Size(1920, 1080));
+
+        var context = CreateRenderingTestContext();
+
+        var cameraEntity = context.Scene.CreateEntity();
+        var transform = cameraEntity.CreateComponent<Transform2DComponent>();
+        transform.Translation = new Vector2(10, -10);
+        var camera = cameraEntity.CreateComponent<CameraComponent>();
+        camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+        // Leave ViewRectangle at default (0, 0)
+
+        var entity = context.AddSpriteWithDefaultTransform();
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        // With default ViewRectangle (0, 0), effective view rectangle should be ScreenSize (1920, 1080)
+        // Since effective view rectangle equals screen size, scale should be 1:1 with camera translation applied
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
+    }
+
+    #endregion
 }

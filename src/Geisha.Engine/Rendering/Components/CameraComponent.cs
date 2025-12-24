@@ -65,6 +65,23 @@ public sealed class CameraComponent : Component
     ///     Dimensions of rectangle that defines fragment of space visible for camera using logical units that are independent
     ///     of window size or screen resolution.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         When <see cref="ViewRectangle" /> is set to (0, 0) or any non-positive value, and the
+    ///         <see cref="CameraComponent" /> is managed by the rendering system, the engine automatically uses
+    ///         <see cref="ScreenSize" /> as the effective view rectangle for all camera computations. This allows the camera
+    ///         to adapt to the current screen resolution without requiring explicit configuration.
+    ///     </para>
+    ///     <para>
+    ///         The stored value of <see cref="ViewRectangle" /> is never mutated by the rendering system. If left at the
+    ///         default (0, 0), it remains (0, 0) even during rendering and serialization, ensuring that scenes saved with
+    ///         default settings will adapt to any screen resolution when loaded.
+    ///     </para>
+    ///     <para>
+    ///         Setting an explicit non-zero <see cref="ViewRectangle" /> enables logical scaling independent of screen
+    ///         resolution, which is useful for achieving consistent game world dimensions across different display sizes.
+    ///     </para>
+    /// </remarks>
     public Vector2 ViewRectangle
     {
         get => CameraNode.ViewRectangle;
