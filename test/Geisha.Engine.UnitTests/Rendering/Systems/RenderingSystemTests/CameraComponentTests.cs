@@ -715,6 +715,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.CreateComponent<CameraComponent>();
         // Leave ViewRectangle at default (0, 0)
 
+        // Assume
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
+
         var entity = context.AddSpriteWithDefaultTransform();
 
         // Act
@@ -758,6 +761,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.CreateComponent<CameraComponent>();
         // Leave ViewRectangle at default (0, 0)
 
+        // Assume
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
+
         var transform = cameraEntity.GetComponent<Transform2DComponent>();
         transform.Translation = new Vector2(10, 20);
         transform.Scale = new Vector2(2, 2);
@@ -784,6 +790,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.CreateComponent<CameraComponent>();
         // Leave ViewRectangle at default (0, 0)
 
+        // Assume
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
+
         // Act
         var actual = camera.ScreenPointToWorld2DPoint(new Vector2(200, 100));
 
@@ -805,6 +814,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         cameraEntity.CreateComponent<Transform2DComponent>();
         var camera = cameraEntity.CreateComponent<CameraComponent>();
         // Leave ViewRectangle at default (0, 0)
+
+        // Assume
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
 
         // Act
         var actual = camera.World2DPointToScreenPoint(new Vector2(-760, 440));
@@ -829,6 +841,9 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.CreateComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
         // Leave ViewRectangle at default (0, 0)
+
+        // Assume
+        Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
 
         var entity = context.AddSpriteWithDefaultTransform();
 
