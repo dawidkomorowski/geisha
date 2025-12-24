@@ -43,6 +43,7 @@ function Publish-CheckRun {
         }
     }
 
+    # UseBasicParsing to workaround following issue: https://github.com/actions/runner-images/issues/13461
     Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json) -UseBasicParsing
 }
 
