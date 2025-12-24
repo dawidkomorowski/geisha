@@ -5,7 +5,9 @@
   },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
-    "CustomGameLoopSteps": [ "BenchmarkSystem" ],
+    "CustomGameLoopSteps": [
+      "BenchmarkSystem"
+    ],
     "EnableGCLogging": false,
     "FixedUpdatesPerFrameLimit": 0,
     "FixedUpdatesPerSecond": 60,
@@ -32,8 +34,10 @@
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenWidth": 1280,
-    "ScreenHeight": 720,
+    "ScreenSize": {
+      "Width": 1280,
+      "Height": 720
+    },
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "Default",

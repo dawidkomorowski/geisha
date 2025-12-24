@@ -48,8 +48,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.RenderCollisionGeometry, Is.False);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
-        Assert.That(configuration.Rendering.ScreenHeight, Is.EqualTo(720));
-        Assert.That(configuration.Rendering.ScreenWidth, Is.EqualTo(1280));
+        Assert.That(configuration.Rendering.ScreenSize, Is.EqualTo(new Size(1280, 720)));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.False);
         Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] { RenderingConfiguration.DefaultSortingLayerName }));
     }
@@ -91,8 +90,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.RenderCollisionGeometry, Is.True);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.True);
-        Assert.That(configuration.Rendering.ScreenHeight, Is.EqualTo(2160));
-        Assert.That(configuration.Rendering.ScreenWidth, Is.EqualTo(3840));
+        Assert.That(configuration.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
     }

@@ -49,8 +49,7 @@ internal sealed class Renderer : IRenderNodeVisitor
         if (_renderingState.CameraNode != null)
         {
             var cameraNode = _renderingState.CameraNode;
-            cameraNode.ScreenWidth = _renderingContext2D.ScreenWidth;
-            cameraNode.ScreenHeight = _renderingContext2D.ScreenHeight;
+            cameraNode.ScreenSize = _renderingContext2D.ScreenSize;
             _cameraTransformationMatrix = _renderingState.CameraNode.CreateViewMatrixScaledToScreen();
 
             EnableAspectRatio(cameraNode);
@@ -184,11 +183,10 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     private void RenderDiagnosticInfo()
     {
-        var width = _renderingContext2D.ScreenWidth;
-        var height = _renderingContext2D.ScreenHeight;
+        var screenSize = _renderingContext2D.ScreenSize;
         var color = Color.Green;
 
-        var translation = new Vector2(-(width / 2d) + 1, height / 2d - 1);
+        var translation = new Vector2(-(screenSize.Width / 2d) + 1, screenSize.Height / 2d - 1);
 
         foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
         {

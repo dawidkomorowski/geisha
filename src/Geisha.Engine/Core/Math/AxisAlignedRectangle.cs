@@ -32,6 +32,15 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified size and center
+        ///     at point (0,0).
+        /// </summary>
+        /// <param name="size">The size of the rectangle, specifying its width and height.</param>
+        public AxisAlignedRectangle(in Size size) : this(size.Width, size.Height)
+        {
+        }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified width and
         ///     height, and center at point (0,0).
         /// </summary>
@@ -58,10 +67,18 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="center">Position of the rectangle's center.</param>
         /// <param name="size">The size of the rectangle, specifying its width and height.</param>
-        public AxisAlignedRectangle(in Vector2 center, in SizeD size) : this(center, new Vector2(size.Width, size.Height))
+        public AxisAlignedRectangle(in Vector2 center, in SizeD size) : this(center, size.ToVector2())
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified center and size.
+        /// </summary>
+        /// <param name="center">Position of the rectangle's center.</param>
+        /// <param name="size">The size of the rectangle, specifying its width and height.</param>
+        public AxisAlignedRectangle(in Vector2 center, in Size size) : this(center, size.ToVector2())
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified center and

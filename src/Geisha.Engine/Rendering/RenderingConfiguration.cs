@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering;
 
@@ -19,14 +20,9 @@ public sealed record RenderingConfiguration
     public bool EnableVSync { get; init; } = false;
 
     /// <summary>
-    ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+    ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels.
     /// </summary>
-    public int ScreenWidth { get; init; } = 1280;
-
-    /// <summary>
-    ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
-    /// </summary>
-    public int ScreenHeight { get; init; } = 720;
+    public Size ScreenSize { get; init; } = new(1280, 720);
 
     /// <summary>
     ///     Specifies whether to display rendering statistics. Default is <c>false</c>.

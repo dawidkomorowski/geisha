@@ -34,8 +34,10 @@
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenWidth": 1920,
-    "ScreenHeight": 1080,
+    "ScreenSize": {
+      "Width": 1920,
+      "Height": 1080
+    },
     "ShowRenderingStatistics": true,
     "SortingLayersOrder": [
       "Default",

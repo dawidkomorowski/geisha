@@ -20,6 +20,7 @@ using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using Size = Geisha.Engine.Core.Math.Size;
 using SpriteBatch = Geisha.Engine.Rendering.Backend.SpriteBatch;
 
 namespace Geisha.Engine.Rendering.DirectX
@@ -46,12 +47,11 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);
         }
 
-        private Vector2 WindowCenter => new(ScreenWidth / 2d, ScreenHeight / 2d);
+        private Vector2 WindowCenter => ScreenSize.ToVector2() / 2d;
 
-        public int ScreenWidth => _form.ClientSize.Width;
-        public int ScreenHeight => _form.ClientSize.Height;
+        public Size ScreenSize => new(_form.ClientSize.Width, _form.ClientSize.Height);
 
-        // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
+        // TODO: It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)
         {
             using var cpuBitmap = Image.Load<Bgra32>(stream);

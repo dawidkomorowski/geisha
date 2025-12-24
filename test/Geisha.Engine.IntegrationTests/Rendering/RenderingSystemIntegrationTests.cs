@@ -18,6 +18,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Color = Geisha.Engine.Core.Math.Color;
+using Size = Geisha.Engine.Core.Math.Size;
 
 namespace Geisha.Engine.IntegrationTests.Rendering
 {
@@ -52,8 +53,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         {
             return base.ConfigureRendering(configuration) with
             {
-                ScreenWidth = 200,
-                ScreenHeight = 200,
+                ScreenSize = new Size(200, 200),
                 SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
             };
         }

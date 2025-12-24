@@ -42,7 +42,9 @@ function Publish-CheckRun {
             text    = $outputText
         }
     }
-    Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
+
+    # UseBasicParsing to workaround following issue: https://github.com/actions/runner-images/issues/13461
+    Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json) -UseBasicParsing
 }
 
 $currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"

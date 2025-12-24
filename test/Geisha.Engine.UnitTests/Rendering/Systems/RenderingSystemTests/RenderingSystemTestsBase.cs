@@ -20,8 +20,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 public abstract class RenderingSystemTestsBase
 {
     private const double Epsilon = 0.000001;
-    protected const int ScreenWidth = 2000;
-    protected const int ScreenHeight = 1000;
+    protected static readonly Size ScreenSize = new(2000, 1000);
     protected IRenderingContext2D RenderingContext2D = null!;
     protected IRenderingBackend RenderingBackend = null!;
     protected IAggregatedDiagnosticInfoProvider AggregatedDiagnosticInfoProvider = null!;
@@ -34,8 +33,7 @@ public abstract class RenderingSystemTestsBase
     public void SetUp()
     {
         RenderingContext2D = Substitute.For<IRenderingContext2D>();
-        RenderingContext2D.ScreenWidth.Returns(ScreenWidth);
-        RenderingContext2D.ScreenHeight.Returns(ScreenHeight);
+        RenderingContext2D.ScreenSize.Returns(ScreenSize);
 
         RenderingBackend = Substitute.For<IRenderingBackend>();
         RenderingBackend.Context2D.Returns(RenderingContext2D);
@@ -98,7 +96,7 @@ public abstract class RenderingSystemTestsBase
             entity.CreateComponent<Transform2DComponent>();
 
             var cameraComponent = entity.CreateComponent<CameraComponent>();
-            cameraComponent.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight);
+            cameraComponent.ViewRectangle = ScreenSize.ToVector2();
 
             return entity;
         }

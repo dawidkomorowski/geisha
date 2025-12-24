@@ -312,7 +312,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             camera.GetComponent<Transform2DComponent>().Transform = transform;
         }
 
-        var rectangle = context.AddRectangle(new Vector2(ScreenWidth, ScreenHeight), Vector2.Zero, 0, Vector2.One);
+        var rectangle = context.AddRectangle(ScreenSize.ToVector2(), Vector2.Zero, 0, Vector2.One);
 
         // Act
         context.RenderingSystem.RenderScene();
