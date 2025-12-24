@@ -43,22 +43,14 @@ function Publish-CheckRun {
         }
     }
 
-    # Echo all parameters for debugging purposes
-    Write-Host "Publishing check run with the following parameters:"
-    Write-Host "URL: $url"
-    Write-Host "Headers: $($headers | ConvertTo-Json -Depth 3)"
-    Write-Host "Body: $($body | ConvertTo-Json -Depth 5)"
-
     Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body ($body | ConvertTo-Json) -UseBasicParsing
 }
 
-# $currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"
-# $masterResults = Import-Results -Path "..\..\benchmark-app\master\Geisha.Benchmark.*\"
+$currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"
+$masterResults = Import-Results -Path "..\..\benchmark-app\master\Geisha.Benchmark.*\"
 
-# $finalResults = Merge-Results -CurrentResults $currentResults -MasterResults $masterResults
+$finalResults = Merge-Results -CurrentResults $currentResults -MasterResults $masterResults
 
-# $outputText = Format-Results -Results $finalResults
-
-$outputText = "Benchmark results publishing is currently disabled."
+$outputText = Format-Results -Results $finalResults
 
 Publish-CheckRun -GitHubToken $githubToken -HeadSha $headSha -Name "Benchmark Results" -Summary "Total benchmarks executed: $($finalResults.Count)" -Text $outputText

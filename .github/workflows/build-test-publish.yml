@@ -48,36 +48,36 @@ jobs:
           lfs: true
           fetch-depth: 0
 
-      # - name: Set up .NET SDK
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: 6.0.x
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
 
-      # - name: Build solution
-      #   run: dotnet build Geisha.sln --configuration Debug
+      - name: Build solution
+        run: dotnet build Geisha.sln --configuration Debug
 
-      # - name: Install Scream virtual audio device
-      #   uses: ./.github/actions/install-virtual-audio-device
+      - name: Install Scream virtual audio device
+        uses: ./.github/actions/install-virtual-audio-device
 
-      # - name: Execute tests
-      #   env:
-      #     GEISHA_TEST_ENABLE_IMAGE_TOLERANCE: "1"
-      #   run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
+      - name: Execute tests
+        env:
+          GEISHA_TEST_ENABLE_IMAGE_TOLERANCE: "1"
+        run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
-      # - name: Publish test results
-      #   uses: dorny/test-reporter@v1
-      #   if: success() || failure()
-      #   with:
-      #     name: Test Results
-      #     path: test/**/test-results.trx
-      #     reporter: dotnet-trx
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Test Results
+          path: test/**/test-results.trx
+          reporter: dotnet-trx
 
-      # - name: Upload test output as artifact
-      #   if: success() || failure()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: test-output
-      #     path: test/Geisha.Engine.IntegrationTests/bin/**/Rendering/TestOutput/**
+      - name: Upload test output as artifact
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output
+          path: test/Geisha.Engine.IntegrationTests/bin/**/Rendering/TestOutput/**
 
   publish:
     name: Publish
@@ -174,25 +174,25 @@ jobs:
       - name: Install Scream virtual audio device
         uses: ./.github/actions/install-virtual-audio-device
 
-      # - name: Execute performance benchmarks (current 1)
-      #   run: |
-      #     cd benchmark-app\current\Geisha.Benchmark.*\
-      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      - name: Execute performance benchmarks (current 1)
+        run: |
+          cd benchmark-app\current\Geisha.Benchmark.*\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
-      # - name: Execute performance benchmarks (master 1)
-      #   run: |
-      #     cd benchmark-app\master\Geisha.Benchmark.*\
-      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      - name: Execute performance benchmarks (master 1)
+        run: |
+          cd benchmark-app\master\Geisha.Benchmark.*\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
-      # - name: Execute performance benchmarks (current 2)
-      #   run: |
-      #     cd benchmark-app\current\Geisha.Benchmark.*\
-      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      - name: Execute performance benchmarks (current 2)
+        run: |
+          cd benchmark-app\current\Geisha.Benchmark.*\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
-      # - name: Execute performance benchmarks (master 2)
-      #   run: |
-      #     cd benchmark-app\master\Geisha.Benchmark.*\
-      #     .\Geisha.Benchmark.exe 2>&1 | Out-Default
+      - name: Execute performance benchmarks (master 2)
+        run: |
+          cd benchmark-app\master\Geisha.Benchmark.*\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
         run: |
