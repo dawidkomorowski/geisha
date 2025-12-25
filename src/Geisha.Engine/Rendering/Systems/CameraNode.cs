@@ -12,8 +12,8 @@ internal interface ICameraNode
     AspectRatioBehavior AspectRatioBehavior { get; set; }
     Size ScreenSize { get; }
     Vector2 ViewRectangle { get; set; }
-    Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
-    Vector2 World2DPointToScreenPoint(Vector2 worldPoint);
+    Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint);
+    Vector2 World2DPointToScreenPoint(in Vector2 worldPoint);
     Matrix3x3 CreateViewMatrix();
     Matrix3x3 CreateViewMatrixScaledToScreen();
     AxisAlignedRectangle GetBoundingRectangleOfView();
@@ -25,8 +25,8 @@ internal sealed class DetachedCameraNode : ICameraNode
     public AspectRatioBehavior AspectRatioBehavior { get; set; }
     public Size ScreenSize => Size.Empty;
     public Vector2 ViewRectangle { get; set; }
-    public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => default;
-    public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => default;
+    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => default;
+    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => default;
     public Matrix3x3 CreateViewMatrix() => default;
     public Matrix3x3 CreateViewMatrixScaledToScreen() => default;
 
@@ -56,7 +56,7 @@ internal sealed class CameraNode : ICameraNode, IDisposable
     public Size ScreenSize { get; set; }
     public Vector2 ViewRectangle { get; set; }
 
-    public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint)
+    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint)
     {
         var viewRectangleScale = GetViewRectangleScale();
         var transformationMatrix = _transform.InterpolatedTransform.ToMatrix() *
@@ -66,7 +66,7 @@ internal sealed class CameraNode : ICameraNode, IDisposable
         return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
     }
 
-    public Vector2 World2DPointToScreenPoint(Vector2 worldPoint)
+    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint)
     {
         var transformationMatrix = Matrix3x3.CreateTranslation(ScreenSize.ToVector2() / 2d) *
                                    Matrix3x3.CreateScale(new Vector2(1, -1)) *
@@ -146,7 +146,7 @@ internal sealed class CameraNode : ICameraNode, IDisposable
         return viewRectangleScale;
     }
 
-    private Vector2 ComputeOverscan(Vector2 effectiveViewRectangle)
+    private Vector2 ComputeOverscan(in Vector2 effectiveViewRectangle)
     {
         if (CameraIsWiderThanScreen(effectiveViewRectangle))
         {
@@ -158,7 +158,7 @@ internal sealed class CameraNode : ICameraNode, IDisposable
         return new Vector2(scaleForWidth, scaleForWidth);
     }
 
-    private Vector2 ComputeUnderscan(Vector2 effectiveViewRectangle)
+    private Vector2 ComputeUnderscan(in Vector2 effectiveViewRectangle)
     {
         if (CameraIsWiderThanScreen(effectiveViewRectangle))
         {
@@ -170,7 +170,7 @@ internal sealed class CameraNode : ICameraNode, IDisposable
         return new Vector2(scaleForHeight, scaleForHeight);
     }
 
-    private bool CameraIsWiderThanScreen(Vector2 effectiveViewRectangle)
+    private bool CameraIsWiderThanScreen(in Vector2 effectiveViewRectangle)
     {
         var cameraAspectRatio = effectiveViewRectangle.X / effectiveViewRectangle.Y;
         var screenAspectRatio = (double)ScreenSize.Width / ScreenSize.Height;

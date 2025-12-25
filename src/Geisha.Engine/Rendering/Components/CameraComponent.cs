@@ -116,7 +116,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
+    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
 
     /// <summary>
     ///     Transforms point in 2D world space to point in screen space as seen by camera.
@@ -130,7 +130,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
+    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
 
     /// <summary>
     ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the
