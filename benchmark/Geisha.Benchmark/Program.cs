@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Geisha.Engine.Windows;
 
 namespace Geisha.Benchmark
@@ -11,6 +12,10 @@ namespace Geisha.Benchmark
         [STAThread]
         private static void Main()
         {
+            var p = Process.GetCurrentProcess();
+            p.PriorityClass = ProcessPriorityClass.High; // elevate scheduling priority
+            p.ProcessorAffinity = (IntPtr)0b_0011; // pin to CPU 0-1; adjust if needed
+
             WindowsApplication.UnhandledExceptionHandler = UnhandledExceptionHandler;
             WindowsApplication.Run(new BenchmarkApp());
         }
