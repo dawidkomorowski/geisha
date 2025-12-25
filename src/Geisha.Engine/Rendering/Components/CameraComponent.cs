@@ -65,6 +65,23 @@ public sealed class CameraComponent : Component
     ///     Dimensions of rectangle that defines fragment of space visible for camera using logical units that are independent
     ///     of window size or screen resolution.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         When <see cref="ViewRectangle" /> is set to (0, 0) or any non-positive value, and the
+    ///         <see cref="CameraComponent" /> is managed by the rendering system, the engine automatically uses
+    ///         <see cref="ScreenSize" /> as the effective view rectangle for all camera computations. This allows the camera
+    ///         to adapt to the current screen resolution without requiring explicit configuration.
+    ///     </para>
+    ///     <para>
+    ///         The stored value of <see cref="ViewRectangle" /> is never mutated by the rendering system. If left at the
+    ///         default (0, 0), it remains (0, 0) even during rendering and serialization, ensuring that scenes saved with
+    ///         default settings will adapt to any screen resolution when loaded.
+    ///     </para>
+    ///     <para>
+    ///         Setting an explicit non-zero <see cref="ViewRectangle" /> enables logical scaling independent of screen
+    ///         resolution, which is useful for achieving consistent game world dimensions across different display sizes.
+    ///     </para>
+    /// </remarks>
     public Vector2 ViewRectangle
     {
         get => CameraNode.ViewRectangle;
@@ -99,7 +116,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
+    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
 
     /// <summary>
     ///     Transforms point in 2D world space to point in screen space as seen by camera.
@@ -113,7 +130,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
+    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
 
     /// <summary>
     ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the

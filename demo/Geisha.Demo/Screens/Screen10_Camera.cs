@@ -49,6 +49,8 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
             // Add CameraComponent to entity so we can control what is visible on the screen.
             var cameraComponent = camera.CreateComponent<CameraComponent>();
             // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
+            // Note: Leaving ViewRectangle at default (0, 0) would automatically use screen size as the effective view rectangle,
+            // adapting to any resolution. Setting an explicit value enables logical scaling independent of screen resolution.
             cameraComponent.ViewRectangle = new Vector2(1600, 900);
             // Make menu a child of camera so it sticks to camera (is not affected by camera transformations).
             var menu = Scene.AllEntities.Single(e => e.Name == "Menu");
