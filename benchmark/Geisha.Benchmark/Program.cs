@@ -14,7 +14,7 @@ namespace Geisha.Benchmark
         {
             var p = Process.GetCurrentProcess();
             p.PriorityClass = ProcessPriorityClass.High; // elevate scheduling priority
-            p.ProcessorAffinity = (IntPtr)0b_0011; // pin to CPU 0-1; adjust if needed
+            p.ProcessorAffinity = (IntPtr)0b_0101; // pin to CPU cores
 
             WindowsApplication.UnhandledExceptionHandler = UnhandledExceptionHandler;
             WindowsApplication.Run(new BenchmarkApp());
