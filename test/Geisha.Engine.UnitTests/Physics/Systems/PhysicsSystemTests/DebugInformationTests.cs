@@ -16,13 +16,29 @@ public class DebugInformationTests : PhysicsSystemTestsBase
     private readonly Color _contactPointColor = Color.FromArgb(255, 255, 165, 0);
     private readonly Color _contactNormalColor = Color.Black;
 
-    [TestCase(false, 0)]
-    [TestCase(true, 1)]
-    public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleStaticBody_WhenCollisionGeometryRenderingIsEnabled(
-        bool renderCollisionGeometry, int expectedDrawCallsCount)
+    [TestCase(false)]
+    [TestCase(true)]
+    public void EnableCollisionGeometryRendering_ShouldBeInitializedFromConfiguration(bool renderCollisionGeometry)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
+
+        // Act
+        var actual = physicsSystem.EnableCollisionGeometryRendering;
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(renderCollisionGeometry));
+    }
+
+    [TestCase(false, 0)]
+    [TestCase(true, 1)]
+    public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleStaticBody_WhenCollisionGeometryRenderingIsEnabled(
+        bool enableCollisionGeometryRendering, int expectedDrawCallsCount)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        physicsSystem.EnableCollisionGeometryRendering = enableCollisionGeometryRendering;
+        // TODO: Refactor other tests to use EnableCollisionGeometryRendering property instead of PhysicsConfiguration.RenderCollisionGeometry
 
         var circle = new Circle(new Vector2(10, 20), 30);
         CreateCircleStaticBody(circle, Angle.Deg2Rad(30));
