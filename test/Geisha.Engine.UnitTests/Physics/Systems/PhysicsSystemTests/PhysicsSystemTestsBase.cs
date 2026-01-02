@@ -46,7 +46,7 @@ public abstract class PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             PenetrationTolerance = 0d,
-            RenderCollisionGeometry = EnableVisualOutput
+            EnableDebugRendering = EnableVisualOutput
         };
         return GetPhysicsSystem(physicsConfiguration);
     }

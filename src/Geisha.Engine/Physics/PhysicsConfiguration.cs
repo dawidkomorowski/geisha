@@ -82,9 +82,10 @@ public sealed record PhysicsConfiguration
     /// <seealso cref="Components.TileColliderComponent" />
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
+    // TODO: Update documentation to reflect rename in PhysicsSystem.
     /// <summary>
     ///     Indicates whether collision geometry should be visually rendered over the standard graphics output to assist with
     ///     debugging physics interactions.
     /// </summary>
-    public bool RenderCollisionGeometry { get; init; } = false;
+    public bool EnableDebugRendering { get; init; } = false;
 }

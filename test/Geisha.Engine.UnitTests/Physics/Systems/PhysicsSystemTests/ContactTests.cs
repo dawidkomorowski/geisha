@@ -1421,7 +1421,7 @@ public class ContactTests : PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(testCase.Tile.Width, testCase.Tile.Height),
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
         var kinematicBody = CreateRectangleKinematicBody(testCase.Rectangle, testCase.RectangleRotation);
@@ -1623,7 +1623,7 @@ public class ContactTests : PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(testCase.Tile.Width, testCase.Tile.Height),
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
         var kinematicBody = CreateCircleKinematicBody(testCase.Circle, testCase.CircleRotation);

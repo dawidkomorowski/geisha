@@ -46,7 +46,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                 nameof(physicsConfiguration));
         }
 
-        EnableDebugRendering = physicsConfiguration.RenderCollisionGeometry;
+        EnableDebugRendering = physicsConfiguration.EnableDebugRendering;
 
         _debugRenderer = debugRenderer;
 

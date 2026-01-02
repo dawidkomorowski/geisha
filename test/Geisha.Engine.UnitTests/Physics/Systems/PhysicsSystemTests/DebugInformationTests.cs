@@ -18,16 +18,16 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false)]
     [TestCase(true)]
-    public void EnableDebugRendering_ShouldBeInitializedFromConfiguration(bool renderCollisionGeometry)
+    public void EnableDebugRendering_ShouldBeInitializedFromConfiguration(bool enableDebugRendering)
     {
         // Arrange
-        var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
+        var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { EnableDebugRendering = enableDebugRendering });
 
         // Act
         var actual = physicsSystem.EnableDebugRendering;
 
         // Assert
-        Assert.That(actual, Is.EqualTo(renderCollisionGeometry));
+        Assert.That(actual, Is.EqualTo(enableDebugRendering));
     }
 
     [TestCase(false, 0)]

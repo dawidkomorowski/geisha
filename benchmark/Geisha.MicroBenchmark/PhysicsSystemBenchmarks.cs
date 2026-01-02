@@ -30,7 +30,7 @@ public class PhysicsSystemBenchmarks
         _debugRenderer = TestKit.CreateDebugRenderer();
         var physicsConfiguration = new PhysicsConfiguration
         {
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         _physicsSystem = new PhysicsSystem(physicsConfiguration, _debugRenderer);
         _scene.AddObserver(_physicsSystem);

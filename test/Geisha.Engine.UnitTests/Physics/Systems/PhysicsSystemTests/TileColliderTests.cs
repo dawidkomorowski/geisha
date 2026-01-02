@@ -503,7 +503,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -534,7 +534,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -565,7 +565,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -596,7 +596,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -627,7 +627,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -658,7 +658,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -689,7 +689,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -720,7 +720,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -752,7 +752,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(10, 10),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
@@ -786,7 +786,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(50, 50),
             PenetrationTolerance = 1,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 

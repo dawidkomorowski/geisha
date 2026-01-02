@@ -31,7 +31,7 @@
       "Width": 1,
       "Height": 1
     },
-    "RenderCollisionGeometry": true
+    "EnableDebugRendering": true
   },
   "Rendering": {
     "EnableVSync": false,

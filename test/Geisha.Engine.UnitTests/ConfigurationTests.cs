@@ -42,7 +42,7 @@ public class ConfigurationTests
         Assert.That(actual.Physics.PositionIterations, Is.EqualTo(56));
         Assert.That(actual.Physics.PenetrationTolerance, Is.EqualTo(1.23));
         Assert.That(actual.Physics.TileSize, Is.EqualTo(new SizeD(1.2, 3.4)));
-        Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
+        Assert.That(actual.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(actual.Rendering.EnableVSync, Is.True);
         Assert.That(actual.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
@@ -84,7 +84,7 @@ public class ConfigurationTests
                 PositionIterations = 56,
                 PenetrationTolerance = 1.23,
                 TileSize = new SizeD(1.2, 3.4),
-                RenderCollisionGeometry = true
+                EnableDebugRendering = true
             },
             Rendering = configuration.Rendering with
             {
