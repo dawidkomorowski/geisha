@@ -5,5 +5,5 @@ public interface IPhysicsSystem
 {
     // TODO: Add XML documentation.
     // TODO: Consider renaming corresponding property in PhysicsConfiguration.
-    bool EnableCollisionGeometryRendering { get; set; }
+    bool EnableDebugRendering { get; set; }
 }

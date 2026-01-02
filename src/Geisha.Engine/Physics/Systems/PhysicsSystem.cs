@@ -46,7 +46,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                 nameof(physicsConfiguration));
         }
 
-        EnableCollisionGeometryRendering = physicsConfiguration.RenderCollisionGeometry;
+        EnableDebugRendering = physicsConfiguration.RenderCollisionGeometry;
 
         _debugRenderer = debugRenderer;
 
@@ -65,7 +65,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     #region Implementation of IPhysicsSystem
 
-    public bool EnableCollisionGeometryRendering { get; set; }
+    public bool EnableDebugRendering { get; set; }
 
     #endregion
 
@@ -92,7 +92,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public void PreparePhysicsDebugInformation()
     {
-        if (!EnableCollisionGeometryRendering) return;
+        if (!EnableDebugRendering) return;
 
         Span<Vector2> points = stackalloc Vector2[2];
 

@@ -18,13 +18,13 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false)]
     [TestCase(true)]
-    public void EnableCollisionGeometryRendering_ShouldBeInitializedFromConfiguration(bool renderCollisionGeometry)
+    public void EnableDebugRendering_ShouldBeInitializedFromConfiguration(bool renderCollisionGeometry)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
 
         // Act
-        var actual = physicsSystem.EnableCollisionGeometryRendering;
+        var actual = physicsSystem.EnableDebugRendering;
 
         // Assert
         Assert.That(actual, Is.EqualTo(renderCollisionGeometry));
@@ -32,12 +32,12 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
-    public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleStaticBody_WhenCollisionGeometryRenderingIsEnabled(
-        bool enableCollisionGeometryRendering, int expectedDrawCallsCount)
+    public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleStaticBody_WhenDebugRenderingIsEnabled(
+        bool enableDebugRendering, int expectedDrawCallsCount)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        physicsSystem.EnableCollisionGeometryRendering = enableCollisionGeometryRendering;
+        physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         var circle = new Circle(new Vector2(10, 20), 30);
         CreateCircleStaticBody(circle, Angle.Deg2Rad(30));
@@ -60,12 +60,12 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
-    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForRectangleStaticBody_WhenCollisionGeometryRenderingIsEnabled(
-        bool enableCollisionGeometryRendering, int expectedDrawCallsCount)
+    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForRectangleStaticBody_WhenDebugRenderingIsEnabled(
+        bool enableDebugRendering, int expectedDrawCallsCount)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        physicsSystem.EnableCollisionGeometryRendering = enableCollisionGeometryRendering;
+        physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         var entity = CreateRectangleStaticBody(10, 20, 200, 100, Angle.Deg2Rad(30));
 
@@ -85,15 +85,15 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
-    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForTileStaticBody_WhenCollisionGeometryRenderingIsEnabled(
-        bool enableCollisionGeometryRendering, int expectedDrawCallsCount)
+    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForTileStaticBody_WhenDebugRenderingIsEnabled(
+        bool enableDebugRendering, int expectedDrawCallsCount)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration
         {
             TileSize = new SizeD(200, 100)
         });
-        physicsSystem.EnableCollisionGeometryRendering = enableCollisionGeometryRendering;
+        physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         CreateTileStaticBody(400, -100);
 
@@ -113,12 +113,12 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
-    public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleKinematicBody_WhenCollisionGeometryRenderingIsEnabled(
-        bool enableCollisionGeometryRendering, int expectedDrawCallsCount)
+    public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleKinematicBody_WhenDebugRenderingIsEnabled(
+        bool enableDebugRendering, int expectedDrawCallsCount)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        physicsSystem.EnableCollisionGeometryRendering = enableCollisionGeometryRendering;
+        physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         var circle = new Circle(new Vector2(10, 20), 30);
         CreateCircleKinematicBody(circle, Angle.Deg2Rad(30));
@@ -141,12 +141,12 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
-    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForRectangleKinematicBody_WhenCollisionGeometryRenderingIsEnabled(
-        bool enableCollisionGeometryRendering, int expectedDrawCallsCount)
+    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForRectangleKinematicBody_WhenDebugRenderingIsEnabled(
+        bool enableDebugRendering, int expectedDrawCallsCount)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        physicsSystem.EnableCollisionGeometryRendering = enableCollisionGeometryRendering;
+        physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         var entity = CreateRectangleKinematicBody(10, 20, 200, 100, Angle.Deg2Rad(30));
 
@@ -169,7 +169,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        physicsSystem.EnableCollisionGeometryRendering = true;
+        physicsSystem.EnableDebugRendering = true;
 
         var circleEntity = CreateCircleKinematicBody(-40, 40, 30, Angle.Deg2Rad(30));
         var rectangleEntity = CreateRectangleStaticBody(-20, -30, 200, 50, Angle.Deg2Rad(-30));
