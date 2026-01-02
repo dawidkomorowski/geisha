@@ -10,7 +10,7 @@ namespace Geisha.Engine.E2EApp
         {
             componentsRegistry.RegisterComponentFactory<ExitTestAppComponentFactory>();
 
-            EngineApiCanBeInjectedToCustomGameCodeModule.RegisterComponents(componentsRegistry);
+            TestModule.RegisterComponents(componentsRegistry);
         }
     }
 }

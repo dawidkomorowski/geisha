@@ -46,7 +46,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         {
             Substeps = substeps,
             PenetrationTolerance = 0,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
 
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
@@ -102,7 +102,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             VelocityIterations = velocityIterations,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
 
         // Scenario: Kinematic body is moving towards two other kinematic bodies and one static body.
@@ -169,7 +169,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         {
             PositionIterations = positionIterations,
             PenetrationTolerance = 0,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
 
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
@@ -224,7 +224,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             PenetrationTolerance = penetrationTolerance,
-            RenderCollisionGeometry = true
+            EnableDebugRendering = true
         };
 
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);

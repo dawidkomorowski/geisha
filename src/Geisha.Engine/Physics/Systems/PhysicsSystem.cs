@@ -10,9 +10,8 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
-internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
+internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISceneObserver
 {
-    private readonly PhysicsConfiguration _physicsConfiguration;
     private readonly IDebugRenderer _debugRenderer;
     private readonly PhysicsSystemState _physicsSystemState;
 
@@ -47,21 +46,28 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 nameof(physicsConfiguration));
         }
 
-        _physicsConfiguration = physicsConfiguration;
+        EnableDebugRendering = physicsConfiguration.EnableDebugRendering;
+
         _debugRenderer = debugRenderer;
 
-        PhysicsScene2D = new PhysicsScene2D(_physicsConfiguration.TileSize)
+        PhysicsScene2D = new PhysicsScene2D(physicsConfiguration.TileSize)
         {
-            Substeps = _physicsConfiguration.Substeps,
-            VelocityIterations = _physicsConfiguration.VelocityIterations,
-            PositionIterations = _physicsConfiguration.PositionIterations,
-            PenetrationTolerance = _physicsConfiguration.PenetrationTolerance
+            Substeps = physicsConfiguration.Substeps,
+            VelocityIterations = physicsConfiguration.VelocityIterations,
+            PositionIterations = physicsConfiguration.PositionIterations,
+            PenetrationTolerance = physicsConfiguration.PenetrationTolerance
         };
 
         _physicsSystemState = new PhysicsSystemState(PhysicsScene2D);
     }
 
     public PhysicsScene2D PhysicsScene2D { get; }
+
+    #region Implementation of IPhysicsSystem
+
+    public bool EnableDebugRendering { get; set; }
+
+    #endregion
 
     #region Implementation of IPhysicsGameLoopStep
 
@@ -86,7 +92,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     public void PreparePhysicsDebugInformation()
     {
-        if (!_physicsConfiguration.RenderCollisionGeometry) return;
+        if (!EnableDebugRendering) return;
 
         Span<Vector2> points = stackalloc Vector2[2];
 

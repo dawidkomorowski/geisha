@@ -116,8 +116,8 @@ namespace Geisha.Engine
                 physicsConfiguration = physicsConfiguration with { PenetrationTolerance = fileContent.Physics.PenetrationTolerance.Value };
             if (fileContent.Physics?.TileSize != null)
                 physicsConfiguration = physicsConfiguration with { TileSize = fileContent.Physics.TileSize.Value };
-            if (fileContent.Physics?.RenderCollisionGeometry != null)
-                physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
+            if (fileContent.Physics?.EnableDebugRendering != null)
+                physicsConfiguration = physicsConfiguration with { EnableDebugRendering = fileContent.Physics.EnableDebugRendering.Value };
 
             var renderingConfiguration = new RenderingConfiguration();
             if (fileContent.Rendering?.EnableVSync != null)
@@ -198,7 +198,7 @@ namespace Geisha.Engine
             public int? PositionIterations { get; init; }
             public double? PenetrationTolerance { get; init; }
             public SizeD? TileSize { get; init; }
-            public bool? RenderCollisionGeometry { get; init; }
+            public bool? EnableDebugRendering { get; init; }
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local

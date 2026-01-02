@@ -17,7 +17,11 @@ namespace Geisha.Engine.Physics
             builder.RegisterType<KinematicRigidBody2DComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<PhysicsSystem>().As<IPhysicsGameLoopStep>().As<ISceneObserver>().SingleInstance();
+            builder.RegisterType<PhysicsSystem>()
+                .As<IPhysicsSystem>()
+                .As<IPhysicsGameLoopStep>()
+                .As<ISceneObserver>()
+                .SingleInstance();
         }
     }
 }
