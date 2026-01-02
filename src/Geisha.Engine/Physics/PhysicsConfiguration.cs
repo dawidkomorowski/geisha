@@ -82,10 +82,18 @@ public sealed record PhysicsConfiguration
     /// <seealso cref="Components.TileColliderComponent" />
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
-    // TODO: Update documentation to reflect rename in PhysicsSystem.
     /// <summary>
-    ///     Indicates whether collision geometry should be visually rendered over the standard graphics output to assist with
-    ///     debugging physics interactions.
+    ///     Indicates whether physics debug rendering is enabled.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         When enabled, the physics system renders debug visualizations (for example, collision geometry) on top of the
+    ///         standard graphics output to assist with debugging.
+    ///     </para>
+    ///     <para>
+    ///         This configuration sets the initial state and can be toggled at runtime via the physics system API.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Systems.IPhysicsSystem" />
     public bool EnableDebugRendering { get; init; } = false;
 }
