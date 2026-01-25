@@ -1,5 +1,7 @@
 ﻿using System;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.Components;
@@ -40,6 +42,12 @@ public abstract class Collider2DComponent : Component
         }
     }
 
+    // TODO: Add XML documentation.
+    // TODO: Add functional tests.
+    // TODO: Test Tile colliders for CollisionNormalFilter.
+    // TODO: Add microbenchmark for enabled/disabled colliders?
+    public bool Enabled { get; set; } = true;
+
     /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
     /// </summary>
@@ -62,4 +70,16 @@ public abstract class Collider2DComponent : Component
     ///     </para>
     /// </remarks>
     public Contact2D[] GetContacts() => PhysicsBodyProxy?.GetContacts() ?? Array.Empty<Contact2D>();
+
+    protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+    {
+        base.Serialize(writer, assetStore);
+        writer.WriteBool("Enabled", Enabled);
+    }
+
+    protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+    {
+        base.Deserialize(reader, assetStore);
+        Enabled = reader.ReadBool("Enabled");
+    }
 }

@@ -13,13 +13,19 @@ public class RectangleColliderComponentSerializationTests : ComponentSerializati
     {
         // Arrange
         var dimensions = new Vector2(12.34, 56.78);
+        const bool enabled = false;
 
         // Act
-        var actual = SerializeAndDeserialize<RectangleColliderComponent>(component => { component.Dimensions = dimensions; });
+        var actual = SerializeAndDeserialize<RectangleColliderComponent>(component =>
+        {
+            component.Dimensions = dimensions;
+            component.Enabled = enabled;
+        });
 
         // Assert
         Assert.That(actual.Dimensions, Is.EqualTo(dimensions));
         Assert.That(actual.IsColliding, Is.False);
         Assert.That(actual.GetContacts(), Is.Empty);
+        Assert.That(actual.Enabled, Is.EqualTo(enabled));
     }
 }
