@@ -80,6 +80,7 @@ internal static class ContactSolver
                     contact.Body2.Type is BodyType.Kinematic && contact.Body2.EnableCollisionResponse)
                 {
                     // TODO As both kinematic bodies share the same contact it is solved twice. This is not optimal.
+                    // TODO Both bodies are moved but only one has recomputed collider. This is inconsistent.
                     translation *= 0.5;
                     contact.Body1.Position += translation;
                     contact.Body2.Position -= translation;
