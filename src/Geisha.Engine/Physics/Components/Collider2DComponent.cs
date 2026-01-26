@@ -43,8 +43,9 @@ public abstract class Collider2DComponent : Component
     }
 
     // TODO: Add XML documentation.
-    // TODO: Add functional tests.
-    // TODO: Test Tile colliders for CollisionNormalFilter.
+    // TODO: Test Tile colliders for update of position when enabled/disabled.
+    // TODO: Test Tile collider SetTileCollider when enabled/disabled.
+    // TODO: Add test cases for enabled/disabled colliders in StateSynchronizationTests.
     // TODO: Add microbenchmark for enabled/disabled colliders?
     public bool Enabled { get; set; } = true;
 
