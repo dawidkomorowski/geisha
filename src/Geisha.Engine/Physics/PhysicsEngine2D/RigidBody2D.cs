@@ -12,6 +12,7 @@ internal sealed class RigidBody2D
     private double _rotation;
     private Vector2 _linearVelocity;
     private double _angularVelocity;
+    private bool _enableCollisionDetection = true;
 
     public RigidBody2D(PhysicsScene2D scene)
     {
@@ -80,7 +81,27 @@ internal sealed class RigidBody2D
         }
     }
 
-    public bool EnableCollisionDetection { get; set; } = true;
+    public bool EnableCollisionDetection
+    {
+        get => _enableCollisionDetection;
+        set
+        {
+            if (_enableCollisionDetection != value && ColliderType is ColliderType.Tile)
+            {
+                if (value)
+                {
+                    Scene.TileMap.CreateTile(this);
+                }
+                else
+                {
+                    Scene.TileMap.RemoveTile(this);
+                }
+            }
+
+            _enableCollisionDetection = value;
+        }
+    }
+
     public bool EnableCollisionResponse { get; set; }
 
     public double CircleColliderRadius { get; private set; }
