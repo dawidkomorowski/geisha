@@ -36,6 +36,11 @@ internal static class CollisionDetection
             {
                 var kinematicBody2 = kinematicBodies[j];
 
+                if (kinematicBody1.EnableCollisionDetection is false || kinematicBody2.EnableCollisionDetection is false)
+                {
+                    continue;
+                }
+
                 if (!TestAABB(kinematicBody1, kinematicBody2))
                 {
                     continue;
@@ -64,6 +69,11 @@ internal static class CollisionDetection
             for (var j = 0; j < staticBodies.Count; j++)
             {
                 var staticBody = staticBodies[j];
+
+                if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
+                {
+                    continue;
+                }
 
                 if (!TestAABB(kinematicBody, staticBody))
                 {

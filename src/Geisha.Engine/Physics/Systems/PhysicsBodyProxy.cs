@@ -132,6 +132,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
             }
         }
 
+        _body.EnableCollisionDetection = Collider.Enabled;
+
         switch (Collider)
         {
             case CircleColliderComponent circleColliderComponent:

@@ -80,6 +80,7 @@ internal sealed class RigidBody2D
         }
     }
 
+    public bool EnableCollisionDetection { get; set; } = true;
     public bool EnableCollisionResponse { get; set; }
 
     public double CircleColliderRadius { get; private set; }
