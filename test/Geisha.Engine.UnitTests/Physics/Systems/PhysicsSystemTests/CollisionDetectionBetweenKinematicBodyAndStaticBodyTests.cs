@@ -475,4 +475,40 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
     }
 
     #endregion
+
+    #region Collider component is disabled
+
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(false, false)]
+    public void ProcessPhysics_KinematicBodyShouldNotCollideWithStaticBody_WhenColliderComponentIsDisabled(bool kinematicColliderEnabled,
+        bool staticColliderEnabled)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
+
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
+        kinematicBodyCollider.Enabled = kinematicColliderEnabled;
+        staticBodyCollider.Enabled = staticColliderEnabled;
+
+        // Assume
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.GetContacts(), Has.Length.Zero);
+
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.GetContacts(), Has.Length.Zero);
+    }
+
+    #endregion
 }

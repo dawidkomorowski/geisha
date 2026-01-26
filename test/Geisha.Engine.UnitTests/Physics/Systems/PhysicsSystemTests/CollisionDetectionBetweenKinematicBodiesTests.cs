@@ -32,7 +32,10 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         // Assert
         Assert.That(rectangle1Collider.IsColliding, Is.False);
+        Assert.That(rectangle1Collider.GetContacts(), Has.Length.Zero);
+
         Assert.That(rectangle2Collider.IsColliding, Is.False);
+        Assert.That(rectangle2Collider.GetContacts(), Has.Length.Zero);
     }
 
     [Test]
@@ -61,7 +64,10 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         // Assert
         Assert.That(rectangle1Collider.IsColliding, Is.False);
+        Assert.That(rectangle1Collider.GetContacts(), Has.Length.Zero);
+
         Assert.That(rectangle2Collider.IsColliding, Is.False);
+        Assert.That(rectangle2Collider.GetContacts(), Has.Length.Zero);
     }
 
     [Test]
@@ -209,6 +215,37 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         Assert.That(r2Contacts[0].OtherCollider, Is.EqualTo(circle3Collider));
 
         Assert.That(rectangle3Collider.IsColliding, Is.False);
-        Assert.That(rectangle3Collider.GetContacts(), Has.Length.EqualTo(0));
+        Assert.That(rectangle3Collider.GetContacts(), Has.Length.Zero);
+    }
+
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(false, false)]
+    public void ProcessPhysics_KinematicBodiesShouldNotCollide_WhenColliderComponentIsDisabled(bool collider1Enabled, bool collider2Enabled)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var rectangle2 = CreateRectangleKinematicBody(5, 0, 10, 5);
+
+        var rectangle1Collider = rectangle1.GetComponent<RectangleColliderComponent>();
+        var rectangle2Collider = rectangle2.GetComponent<RectangleColliderComponent>();
+
+        rectangle1Collider.Enabled = collider1Enabled;
+        rectangle2Collider.Enabled = collider2Enabled;
+
+        // Assume
+        Assert.That(rectangle1Collider.IsColliding, Is.False);
+        Assert.That(rectangle2Collider.IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(rectangle1Collider.IsColliding, Is.False);
+        Assert.That(rectangle1Collider.GetContacts(), Has.Length.Zero);
+
+        Assert.That(rectangle2Collider.IsColliding, Is.False);
+        Assert.That(rectangle2Collider.GetContacts(), Has.Length.Zero);
     }
 }
