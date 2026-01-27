@@ -642,6 +642,37 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
     }
 
+    [Test]
+    public void TileBody_CollisionNormalFilterIsNotUpdated_WhenTileColliderIsDisabledAndItsPositionIsChanged()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var enabledTile = CreateTileStaticBody(0, 0);
+        var disabledTile = CreateTileStaticBody(-1, 0);
+
+        disabledTile.GetComponent<TileColliderComponent>().Enabled = false;
+        var disabledTransform = disabledTile.GetComponent<Transform2DComponent>();
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var enabledBody = GetBodyForEntity(physicsSystem, enabledTile);
+        Assert.That(enabledBody.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+
+        // Act
+        disabledTransform.Translation = new Vector2(1, 0);
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(disabledTransform.Translation, Is.EqualTo(new Vector2(1, 0)));
+        Assert.That(enabledBody.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+    }
+
     private (List<Entity> LayoutEntities, List<Entity> ComplementEntities) CreateTileLayout(TileLayout.Flag layout, SizeD tileSize, Vector2 centerTilePosition,
         bool complementLayout = false)
     {
