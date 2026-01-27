@@ -44,7 +44,24 @@ internal sealed class RigidBody2D
     public Vector2 Position
     {
         get => _position;
-        set => _position = ColliderType is ColliderType.Tile && EnableCollisionDetection ? Scene.TileMap.UpdateTile(this, _position, value) : value;
+        set
+        {
+            if (ColliderType is ColliderType.Tile)
+            {
+                if (EnableCollisionDetection)
+                {
+                    _position = Scene.TileMap.UpdateTile(this, _position, value);
+                }
+                else
+                {
+                    _position = Scene.TileMap.AlignPosition(value);
+                }
+            }
+            else
+            {
+                _position = value;
+            }
+        }
     }
 
     public double Rotation

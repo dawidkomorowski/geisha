@@ -1027,4 +1027,30 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(contacts[1].CollisionNormal, Is.EqualTo(Vector2.UnitY));
         Assert.That(contacts[1].PenetrationDepth, Is.EqualTo(0.99051547947736651d));
     }
+
+    [Test]
+    public void TileBody_ShouldHavePositionAlignedToTileGrid_WhenTileColliderIsDisabled()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var entity = CreateTileStaticBody(0, 0);
+
+        entity.GetComponent<TileColliderComponent>().Enabled = false;
+        var transform = entity.GetComponent<Transform2DComponent>();
+
+        // Process physics to ensure initial alignment and synchronization of Enabled = false state
+        physicsSystem.ProcessPhysics();
+
+        // Act
+        transform.Translation = new Vector2(0.1, 0.2);
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(transform.Translation, Is.EqualTo(new Vector2(0, 0)));
+    }
 }

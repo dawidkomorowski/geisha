@@ -15,6 +15,8 @@ internal sealed class TileMap
         _tileSize = tileSize;
     }
 
+    public Vector2 AlignPosition(in Vector2 position) => GetTileWorldPosition(GetTilePosition(position));
+
     public void CreateTile(RigidBody2D body)
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
@@ -31,9 +33,10 @@ internal sealed class TileMap
         UpdateTileCluster(tilePosition);
     }
 
-    public Vector2 UpdateTile(RigidBody2D body, Vector2 oldPosition, Vector2 newPosition)
+    public Vector2 UpdateTile(RigidBody2D body, in Vector2 oldPosition, in Vector2 newPosition)
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
+        Debug.Assert(body.EnableCollisionDetection, "body.EnableCollisionDetection");
 
         var oldTilePosition = GetTilePosition(oldPosition);
         var newTilePosition = GetTilePosition(newPosition);
@@ -62,7 +65,7 @@ internal sealed class TileMap
         }
 
 
-        return new Vector2(newTilePosition.X * _tileSize.Width, newTilePosition.Y * _tileSize.Height);
+        return GetTileWorldPosition(newTilePosition);
     }
 
     public void RemoveTile(RigidBody2D body)
@@ -79,7 +82,7 @@ internal sealed class TileMap
         UpdateTileCluster(tilePosition);
     }
 
-    private void UpdateTileCluster(TilePosition centerTilePosition)
+    private void UpdateTileCluster(in TilePosition centerTilePosition)
     {
         UpdateCollisionNormalFilter(centerTilePosition);
         UpdateCollisionNormalFilter(centerTilePosition with { X = centerTilePosition.X - 1 });
@@ -88,7 +91,7 @@ internal sealed class TileMap
         UpdateCollisionNormalFilter(centerTilePosition with { Y = centerTilePosition.Y + 1 });
     }
 
-    private void UpdateCollisionNormalFilter(TilePosition tilePosition)
+    private void UpdateCollisionNormalFilter(in TilePosition tilePosition)
     {
         if (!_tiles.TryGetValue(tilePosition, out var bodiesInThisTile) || bodiesInThisTile.Count == 0)
         {
@@ -133,11 +136,16 @@ internal sealed class TileMap
         }
     }
 
-    private TilePosition GetTilePosition(Vector2 position)
+    private TilePosition GetTilePosition(in Vector2 position)
     {
         var x = (int)Math.Round(position.X / _tileSize.Width);
         var y = (int)Math.Round(position.Y / _tileSize.Height);
         return new TilePosition(x, y);
+    }
+
+    private Vector2 GetTileWorldPosition(in TilePosition tilePosition)
+    {
+        return new Vector2(tilePosition.X * _tileSize.Width, tilePosition.Y * _tileSize.Height);
     }
 
     private readonly record struct TilePosition(int X, int Y);
