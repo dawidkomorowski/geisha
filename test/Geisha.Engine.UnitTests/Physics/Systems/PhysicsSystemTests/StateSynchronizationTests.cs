@@ -32,6 +32,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(20, 10)));
+        Assert.That(body.EnableCollisionDetection, Is.True);
 
         // Act
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
@@ -42,6 +43,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent.Scale = Vector2.One;
 
         rectangleColliderComponent.Dimensions = new Vector2(30, 20);
+        rectangleColliderComponent.Enabled = false;
 
         physicsSystem.ProcessPhysics();
 
@@ -54,6 +56,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(30, 20)));
+        Assert.That(body.EnableCollisionDetection, Is.False);
     }
 
     [Test]
@@ -75,6 +78,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(10));
+        Assert.That(body.EnableCollisionDetection, Is.True);
 
         // Act
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
@@ -85,6 +89,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent.Scale = Vector2.One;
 
         circleColliderComponent.Radius = 20;
+        circleColliderComponent.Enabled = false;
 
         physicsSystem.ProcessPhysics();
 
@@ -97,6 +102,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(20));
+        Assert.That(body.EnableCollisionDetection, Is.False);
     }
 
     [TestCase(1, 1, 0, 0, 0, 0)]
@@ -144,13 +150,17 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.LinearVelocity, Is.EqualTo(Vector2.Zero));
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
+        Assert.That(body.EnableCollisionDetection, Is.True);
 
         // Act
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+        var tileColliderComponent = entity.GetComponent<TileColliderComponent>();
 
         transform2DComponent.Translation = new Vector2(x, y);
         transform2DComponent.Rotation = Angle.Deg2Rad(30);
         transform2DComponent.Scale = new Vector2(2, 3);
+
+        tileColliderComponent.Enabled = false;
 
         physicsSystem.ProcessPhysics();
 
@@ -162,6 +172,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.LinearVelocity, Is.EqualTo(Vector2.Zero));
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
+        Assert.That(body.EnableCollisionDetection, Is.False);
 
         Assert.That(transform2DComponent.Translation, Is.EqualTo(new Vector2(ex, ey)));
         Assert.That(transform2DComponent.Rotation, Is.Zero);
@@ -296,6 +307,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(20, 10)));
+        Assert.That(body.EnableCollisionDetection, Is.True);
 
         // Act
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
@@ -307,6 +319,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent.Scale = Vector2.One;
 
         rectangleColliderComponent.Dimensions = new Vector2(30, 20);
+        rectangleColliderComponent.Enabled = false;
 
         kinematicRigidBody2DComponent.LinearVelocity = new Vector2(1, 2);
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
@@ -324,6 +337,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0.5d));
         Assert.That(body.EnableCollisionResponse, Is.True);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(30, 20)));
+        Assert.That(body.EnableCollisionDetection, Is.False);
     }
 
     [Test]
@@ -345,6 +359,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(10));
+        Assert.That(body.EnableCollisionDetection, Is.True);
 
         // Act
         var transform2DComponent = entity.GetComponent<Transform2DComponent>();
@@ -356,6 +371,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent.Scale = Vector2.One;
 
         circleColliderComponent.Radius = 20;
+        circleColliderComponent.Enabled = false;
 
         kinematicRigidBody2DComponent.LinearVelocity = new Vector2(1, 2);
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
@@ -373,5 +389,6 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0.5d));
         Assert.That(body.EnableCollisionResponse, Is.True);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(20));
+        Assert.That(body.EnableCollisionDetection, Is.False);
     }
 }

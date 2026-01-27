@@ -45,7 +45,6 @@ public abstract class Collider2DComponent : Component
     // TODO: Add XML documentation.
     // TODO: Test Tile collider SetTileCollider when enabled/disabled.
     // TODO: Should SetTileCollider align position of body?
-    // TODO: Add test cases for enabled/disabled colliders in StateSynchronizationTests.
     // TODO: Add microbenchmark for enabled/disabled colliders?
     // TODO: Should disabled colliders be rendered in debug view?
     public bool Enabled { get; set; } = true;
