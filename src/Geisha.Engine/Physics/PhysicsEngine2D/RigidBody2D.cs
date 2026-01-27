@@ -133,6 +133,7 @@ internal sealed class RigidBody2D
 
     public PhysicsBodyProxy? Proxy { get; set; }
 
+    // TODO: When collider is changed from Tile to something else, should we remove tile from TileMap?
     public void SetCircleCollider(double radius)
     {
         ColliderType = ColliderType.Circle;
