@@ -20,6 +20,7 @@ internal sealed class TileMap
     public void CreateTile(RigidBody2D body)
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
+        Debug.Assert(!BodyIsPresentInTileMap(body), "!BodyIsPresentInTileMap(body)");
 
         var tilePosition = GetTilePosition(body.Position);
         if (!_tiles.TryGetValue(tilePosition, out var bodiesInTile))
@@ -37,6 +38,7 @@ internal sealed class TileMap
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
         Debug.Assert(body.EnableCollisionDetection, "body.EnableCollisionDetection");
+        Debug.Assert(BodyIsPresentInTileMap(body), "BodyIsPresentInTileMap(body)");
 
         var oldTilePosition = GetTilePosition(oldPosition);
         var newTilePosition = GetTilePosition(newPosition);
@@ -71,6 +73,7 @@ internal sealed class TileMap
     public void RemoveTile(RigidBody2D body)
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
+        Debug.Assert(BodyIsPresentInTileMap(body), "BodyIsPresentInTileMap(body)");
 
         var tilePosition = GetTilePosition(body.Position);
         if (!_tiles.TryGetValue(tilePosition, out var bodiesInTile)) return;
@@ -146,6 +149,12 @@ internal sealed class TileMap
     private Vector2 GetTileWorldPosition(in TilePosition tilePosition)
     {
         return new Vector2(tilePosition.X * _tileSize.Width, tilePosition.Y * _tileSize.Height);
+    }
+
+    private bool BodyIsPresentInTileMap(RigidBody2D body)
+    {
+        var tilePosition = GetTilePosition(body.Position);
+        return _tiles.TryGetValue(tilePosition, out var bodiesInTile) && bodiesInTile.Contains(body);
     }
 
     private readonly record struct TilePosition(int X, int Y);
