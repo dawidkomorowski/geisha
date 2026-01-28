@@ -49,7 +49,7 @@ internal sealed class PhysicsScene2D
 
     public void RemoveBody(RigidBody2D body)
     {
-        if (body.ColliderType is ColliderType.Tile)
+        if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
         {
             TileMap.RemoveTile(body);
         }

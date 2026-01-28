@@ -1053,4 +1053,29 @@ public class TileColliderTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(transform.Translation, Is.EqualTo(new Vector2(0, 0)));
     }
+
+    [Test]
+    public void TileBody_ShouldNotThrow_WhenDisabledTileColliderIsRemoved()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var entity = CreateTileStaticBody(0, 0);
+        var tileCollider = entity.GetComponent<TileColliderComponent>();
+        tileCollider.Enabled = false;
+
+        // Ensure physics system processes the disabled state before removal
+        physicsSystem.ProcessPhysics();
+
+        // Act & Assert
+        Assert.That(() =>
+        {
+            Scene.RemoveEntity(entity);
+            physicsSystem.ProcessPhysics();
+        }, Throws.Nothing);
+    }
 }
