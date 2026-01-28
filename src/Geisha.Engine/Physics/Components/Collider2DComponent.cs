@@ -43,7 +43,6 @@ public abstract class Collider2DComponent : Component
     }
 
     // TODO: Add XML documentation.
-    // TODO: Should SetTileCollider align position of body?
     // TODO: Add microbenchmark for enabled/disabled colliders?
     // TODO: Should disabled colliders be rendered in debug view?
     public bool Enabled { get; set; } = true;

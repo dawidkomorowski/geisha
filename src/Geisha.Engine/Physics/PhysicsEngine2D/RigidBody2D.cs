@@ -169,6 +169,7 @@ internal sealed class RigidBody2D
         if (ColliderType is not ColliderType.Tile)
         {
             ColliderType = ColliderType.Tile;
+            _position = Scene.TileMap.AlignPosition(_position);
 
             if (EnableCollisionDetection)
             {
