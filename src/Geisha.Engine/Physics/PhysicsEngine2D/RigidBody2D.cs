@@ -133,9 +133,13 @@ internal sealed class RigidBody2D
 
     public PhysicsBodyProxy? Proxy { get; set; }
 
-    // TODO: When collider is changed from Tile to something else, should we remove tile from TileMap?
     public void SetCircleCollider(double radius)
     {
+        if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
+        {
+            Scene.TileMap.RemoveTile(this);
+        }
+
         ColliderType = ColliderType.Circle;
         CircleColliderRadius = radius;
         RectangleColliderSize = default;
@@ -144,6 +148,11 @@ internal sealed class RigidBody2D
 
     public void SetRectangleCollider(in SizeD size)
     {
+        if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
+        {
+            Scene.TileMap.RemoveTile(this);
+        }
+
         ColliderType = ColliderType.Rectangle;
         CircleColliderRadius = 0;
         RectangleColliderSize = size;
@@ -160,7 +169,11 @@ internal sealed class RigidBody2D
         if (ColliderType is not ColliderType.Tile)
         {
             ColliderType = ColliderType.Tile;
-            Scene.TileMap.CreateTile(this);
+
+            if (EnableCollisionDetection)
+            {
+                Scene.TileMap.CreateTile(this);
+            }
         }
 
         CircleColliderRadius = 0;
