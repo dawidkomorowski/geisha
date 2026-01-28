@@ -44,7 +44,6 @@ public abstract class Collider2DComponent : Component
 
     // TODO: Add XML documentation.
     // TODO: Add microbenchmark for enabled/disabled colliders?
-    // TODO: Should disabled colliders be rendered in debug view?
     public bool Enabled { get; set; } = true;
 
     /// <summary>
