@@ -94,6 +94,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     {
         if (!EnableDebugRendering) return;
 
+        var staticBodyColor = Color.Green;
+        var kinematicBodyColor = Color.Blue;
+        var contactPointColor = Color.FromArgb(255, 255, 165, 0);
+        var contactNormalColor = Color.Black;
+
         Span<Vector2> points = stackalloc Vector2[2];
 
         for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
@@ -101,8 +106,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             var body = PhysicsScene2D.Bodies[i];
             var color = body.Type switch
             {
-                BodyType.Static => Color.Green,
-                BodyType.Kinematic => Color.Blue,
+                BodyType.Static => staticBodyColor,
+                BodyType.Kinematic => kinematicBodyColor,
                 _ => throw new InvalidOperationException("Unsupported body type.")
             };
 
@@ -153,13 +158,13 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                     // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
                     // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
                     _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
-                        Color.FromArgb(255, 255, 165, 0));
+                        contactPointColor);
 
                     var normalLen = body.BoundingRectangle.Width / 2d;
                     var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
                     var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
                     var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
-                    _debugRenderer.DrawRectangle(normalRect, Color.Black,
+                    _debugRenderer.DrawRectangle(normalRect, contactNormalColor,
                         Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
                 }
             }
