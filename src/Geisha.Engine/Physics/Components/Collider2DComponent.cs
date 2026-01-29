@@ -42,7 +42,19 @@ public abstract class Collider2DComponent : Component
         }
     }
 
-    // TODO: Add XML documentation.
+    /// <summary>
+    ///     Gets or sets a value indicating whether this collider participates in physics simulation.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         When set to <see langword="true"/>, the collider is active and participates in collision detection and
+    ///         contact generation. When set to <see langword="false"/>, the collider is ignored by the physics system and
+    ///         does not produce contacts.
+    ///     </para>
+    ///     <para>
+    ///         The default value is <see langword="true"/>.
+    ///     </para>
+    /// </remarks>
     public bool Enabled { get; set; } = true;
 
     /// <summary>
