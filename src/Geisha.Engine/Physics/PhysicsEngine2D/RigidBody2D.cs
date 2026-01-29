@@ -48,14 +48,9 @@ internal sealed class RigidBody2D
         {
             if (ColliderType is ColliderType.Tile)
             {
-                if (EnableCollisionDetection)
-                {
-                    _position = Scene.TileMap.UpdateTile(this, _position, value);
-                }
-                else
-                {
-                    _position = Scene.TileMap.AlignPosition(value);
-                }
+                _position = EnableCollisionDetection
+                    ? Scene.TileMap.UpdateTile(this, _position, value)
+                    : Scene.TileMap.AlignPosition(value);
             }
             else
             {
