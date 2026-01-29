@@ -43,7 +43,6 @@ public abstract class Collider2DComponent : Component
     }
 
     // TODO: Add XML documentation.
-    // TODO: Add microbenchmark for enabled/disabled colliders?
     public bool Enabled { get; set; } = true;
 
     /// <summary>
