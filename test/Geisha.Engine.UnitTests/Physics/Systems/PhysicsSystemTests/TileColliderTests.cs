@@ -69,7 +69,10 @@ public class TileColliderTests : PhysicsSystemTestsBase
     {
         public Flag Layout { get; init; }
         internal CollisionNormalFilter Expected { get; init; }
-        public object ExpectedFilter => Expected; // It allows to have Expected in the name of the test case.
+
+        // ExpectedFilter allows to have Expected in the name of the test case, as Expected property is inaccessible to test runner.
+        // ReSharper disable once UnusedMember.Global
+        public object ExpectedFilter => Expected;
 
         [Flags]
         public enum Flag
@@ -454,6 +457,222 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
     }
 
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenTileColliderBecomesEnabled(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        var tileCollider = entity.GetComponent<TileColliderComponent>();
+        tileCollider.Enabled = false;
+        physicsSystem.ProcessPhysics();
+
+        // Act
+        tileCollider.Enabled = true;
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+    }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenNeighbouringTileColliderBecomesEnabled(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        var (layoutEntities, _) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition);
+        foreach (var layoutEntity in layoutEntities)
+        {
+            layoutEntity.GetComponent<TileColliderComponent>().Enabled = false;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+
+        // Act
+        foreach (var layoutEntity in layoutEntities)
+        {
+            layoutEntity.GetComponent<TileColliderComponent>().Enabled = true;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+    }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenNeighbouringTileColliderBecomesDisabled(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        var (_, complementEntities) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act
+        foreach (var complementEntity in complementEntities)
+        {
+            complementEntity.GetComponent<TileColliderComponent>().Enabled = false;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+    }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenMultipleBodiesShareATileAndLastNeighbouringTileColliderBecomesDisabled(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        var (layoutEntities1, complementEntities1) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+        var (layoutEntities2, complementEntities2) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 1
+        foreach (var complementEntity in complementEntities1)
+        {
+            complementEntity.GetComponent<TileColliderComponent>().Enabled = false;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 1
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 2
+        foreach (var layoutEntity in layoutEntities1)
+        {
+            layoutEntity.GetComponent<TileColliderComponent>().Enabled = false;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 2
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 3
+        foreach (var complementEntity in complementEntities2)
+        {
+            complementEntity.GetComponent<TileColliderComponent>().Enabled = false;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 3
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+
+        // Act 4
+        foreach (var layoutEntity in layoutEntities2)
+        {
+            layoutEntity.GetComponent<TileColliderComponent>().Enabled = false;
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 4
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+    }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsNotUpdated_WhenTileColliderIsDisabledAndItsPositionIsChanged()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var enabledTile = CreateTileStaticBody(0, 0);
+        var disabledTile = CreateTileStaticBody(-1, 0);
+
+        disabledTile.GetComponent<TileColliderComponent>().Enabled = false;
+        var disabledTransform = disabledTile.GetComponent<Transform2DComponent>();
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var enabledBody = GetBodyForEntity(physicsSystem, enabledTile);
+        Assert.That(enabledBody.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+
+        // Act
+        disabledTransform.Translation = new Vector2(1, 0);
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(disabledTransform.Translation, Is.EqualTo(new Vector2(1, 0)));
+        Assert.That(enabledBody.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+    }
+
     private (List<Entity> LayoutEntities, List<Entity> ComplementEntities) CreateTileLayout(TileLayout.Flag layout, SizeD tileSize, Vector2 centerTilePosition,
         bool complementLayout = false)
     {
@@ -807,5 +1026,56 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(contacts[0].PenetrationDepth, Is.EqualTo(5.2279470461191693d));
         Assert.That(contacts[1].CollisionNormal, Is.EqualTo(Vector2.UnitY));
         Assert.That(contacts[1].PenetrationDepth, Is.EqualTo(0.99051547947736651d));
+    }
+
+    [Test]
+    public void TileBody_ShouldHavePositionAlignedToTileGrid_WhenTileColliderIsDisabled()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var entity = CreateTileStaticBody(0, 0);
+
+        entity.GetComponent<TileColliderComponent>().Enabled = false;
+        var transform = entity.GetComponent<Transform2DComponent>();
+
+        // Process physics to ensure initial alignment and synchronization of Enabled = false state
+        physicsSystem.ProcessPhysics();
+
+        // Act
+        transform.Translation = new Vector2(0.1, 0.2);
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(transform.Translation, Is.EqualTo(new Vector2(0, 0)));
+    }
+
+    [Test]
+    public void TileBody_ShouldNotThrow_WhenDisabledTileColliderIsRemoved()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var entity = CreateTileStaticBody(0, 0);
+        var tileCollider = entity.GetComponent<TileColliderComponent>();
+        tileCollider.Enabled = false;
+
+        // Ensure physics system processes the disabled state before removal
+        physicsSystem.ProcessPhysics();
+
+        // Act & Assert
+        Assert.That(() =>
+        {
+            Scene.RemoveEntity(entity);
+            physicsSystem.ProcessPhysics();
+        }, Throws.Nothing);
     }
 }

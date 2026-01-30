@@ -313,6 +313,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var entity = CreateNewEntityWithRandomName(scene);
             var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
             circleColliderComponent.Radius = Utils.Random.NextDouble();
+            circleColliderComponent.Enabled = Utils.Random.NextBool();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -323,6 +324,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
             var loadedComponent = loadedScene.RootEntities.Single().GetComponent<CircleColliderComponent>();
             Assert.That(loadedComponent.Radius, Is.EqualTo(circleColliderComponent.Radius));
+            Assert.That(loadedComponent.Enabled, Is.EqualTo(circleColliderComponent.Enabled));
         }
 
         [Test]
@@ -334,6 +336,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var entity = CreateNewEntityWithRandomName(scene);
             var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
             rectangleColliderComponent.Dimensions = Utils.RandomVector2();
+            rectangleColliderComponent.Enabled = Utils.Random.NextBool();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -344,6 +347,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
             var loadedComponent = loadedScene.RootEntities.Single().GetComponent<RectangleColliderComponent>();
             Assert.That(loadedComponent.Dimensions, Is.EqualTo(rectangleColliderComponent.Dimensions));
+            Assert.That(loadedComponent.Enabled, Is.EqualTo(rectangleColliderComponent.Enabled));
         }
 
         [Test]
@@ -353,7 +357,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entity = CreateNewEntityWithRandomName(scene);
-            entity.CreateComponent<TileColliderComponent>();
+            var tileColliderComponent = entity.CreateComponent<TileColliderComponent>();
+            tileColliderComponent.Enabled = Utils.Random.NextBool();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -362,7 +367,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
-            Assert.That(loadedScene.RootEntities.Single().HasComponent<TileColliderComponent>(), Is.True);
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<TileColliderComponent>();
+            Assert.That(loadedComponent.Enabled, Is.EqualTo(tileColliderComponent.Enabled));
         }
 
         [Test]

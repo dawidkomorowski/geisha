@@ -15,6 +15,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
     private readonly Color _kinematicBodyColor = Color.Blue;
     private readonly Color _contactPointColor = Color.FromArgb(255, 255, 165, 0);
     private readonly Color _contactNormalColor = Color.Black;
+    private readonly Color _disabledCollisionDetectionBodyColor = Color.FromArgb(255, 128, 128, 128);
 
     [TestCase(false)]
     [TestCase(true)]
@@ -210,5 +211,67 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         // Total calls
         Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(5));
+    }
+
+    [Test]
+    public void PreparePhysicsDebugInformation_ShouldDrawStaticBody_WhenColliderDisabled()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        physicsSystem.EnableDebugRendering = true;
+
+        var circle = new Circle(new Vector2(10, 20), 30);
+        var entity = CreateCircleStaticBody(circle);
+        entity.GetComponent<CircleColliderComponent>().Enabled = false;
+
+        SaveVisualOutput(physicsSystem);
+        physicsSystem.ProcessPhysics();
+
+        // Act
+        physicsSystem.PreparePhysicsDebugInformation();
+
+        // Assert
+        DebugRenderer.Received(1).DrawCircle(circle, _disabledCollisionDetectionBodyColor);
+
+        var rectangle = new AxisAlignedRectangle(15, 0, 30, 0);
+        DebugRenderer.Received(1)
+            .DrawRectangle(
+                rectangle,
+                _disabledCollisionDetectionBodyColor,
+                Matrix3x3.CreateTRS(new Vector2(10, 20), 0, Vector2.One)
+            );
+
+        Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(2));
+    }
+
+    [Test]
+    public void PreparePhysicsDebugInformation_ShouldDrawKinematicBody_WhenColliderDisabled()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        physicsSystem.EnableDebugRendering = true;
+
+        var circle = new Circle(new Vector2(10, 20), 30);
+        var entity = CreateCircleKinematicBody(circle);
+        entity.GetComponent<CircleColliderComponent>().Enabled = false;
+
+        SaveVisualOutput(physicsSystem);
+        physicsSystem.ProcessPhysics();
+
+        // Act
+        physicsSystem.PreparePhysicsDebugInformation();
+
+        // Assert
+        DebugRenderer.Received(1).DrawCircle(circle, _disabledCollisionDetectionBodyColor);
+
+        var rectangle = new AxisAlignedRectangle(15, 0, 30, 0);
+        DebugRenderer.Received(1)
+            .DrawRectangle(
+                rectangle,
+                _disabledCollisionDetectionBodyColor,
+                Matrix3x3.CreateTRS(new Vector2(10, 20), 0, Vector2.One)
+            );
+
+        Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(2));
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.Components;
@@ -41,6 +43,21 @@ public abstract class Collider2DComponent : Component
     }
 
     /// <summary>
+    ///     Gets or sets a value indicating whether this collider participates in physics simulation.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         When set to <see langword="true"/>, the collider is active and participates in collision detection and
+    ///         contact generation. When set to <see langword="false"/>, the collider is ignored by the physics system and
+    ///         does not produce contacts.
+    ///     </para>
+    ///     <para>
+    ///         The default value is <see langword="true"/>.
+    ///     </para>
+    /// </remarks>
+    public bool Enabled { get; set; } = true;
+
+    /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
     /// </summary>
     public bool IsColliding => PhysicsBodyProxy?.IsColliding ?? false;
@@ -62,4 +79,16 @@ public abstract class Collider2DComponent : Component
     ///     </para>
     /// </remarks>
     public Contact2D[] GetContacts() => PhysicsBodyProxy?.GetContacts() ?? Array.Empty<Contact2D>();
+
+    protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+    {
+        base.Serialize(writer, assetStore);
+        writer.WriteBool("Enabled", Enabled);
+    }
+
+    protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+    {
+        base.Deserialize(reader, assetStore);
+        Enabled = reader.ReadBool("Enabled");
+    }
 }

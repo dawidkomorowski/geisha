@@ -113,6 +113,7 @@ F1                  Spawn square
 F2                  Spawn circle
 F3                  Spawn wide rectangle
 F4                  Spawn tall rectangle
+LMB                 Toggle collision detection
 RMB                 Delete entity
 Scroll              Change spawn size factor
 F9                  Save layout

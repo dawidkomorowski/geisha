@@ -12,6 +12,7 @@ internal sealed class RigidBody2D
     private double _rotation;
     private Vector2 _linearVelocity;
     private double _angularVelocity;
+    private bool _enableCollisionDetection = true;
 
     public RigidBody2D(PhysicsScene2D scene)
     {
@@ -43,7 +44,19 @@ internal sealed class RigidBody2D
     public Vector2 Position
     {
         get => _position;
-        set => _position = ColliderType is ColliderType.Tile ? Scene.TileMap.UpdateTile(this, _position, value) : value;
+        set
+        {
+            if (ColliderType is ColliderType.Tile)
+            {
+                _position = EnableCollisionDetection
+                    ? Scene.TileMap.UpdateTile(this, _position, value)
+                    : Scene.TileMap.AlignPosition(value);
+            }
+            else
+            {
+                _position = value;
+            }
+        }
     }
 
     public double Rotation
@@ -80,6 +93,27 @@ internal sealed class RigidBody2D
         }
     }
 
+    public bool EnableCollisionDetection
+    {
+        get => _enableCollisionDetection;
+        set
+        {
+            if (_enableCollisionDetection != value && ColliderType is ColliderType.Tile)
+            {
+                if (value)
+                {
+                    Scene.TileMap.CreateTile(this);
+                }
+                else
+                {
+                    Scene.TileMap.RemoveTile(this);
+                }
+            }
+
+            _enableCollisionDetection = value;
+        }
+    }
+
     public bool EnableCollisionResponse { get; set; }
 
     public double CircleColliderRadius { get; private set; }
@@ -96,6 +130,11 @@ internal sealed class RigidBody2D
 
     public void SetCircleCollider(double radius)
     {
+        if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
+        {
+            Scene.TileMap.RemoveTile(this);
+        }
+
         ColliderType = ColliderType.Circle;
         CircleColliderRadius = radius;
         RectangleColliderSize = default;
@@ -104,6 +143,11 @@ internal sealed class RigidBody2D
 
     public void SetRectangleCollider(in SizeD size)
     {
+        if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
+        {
+            Scene.TileMap.RemoveTile(this);
+        }
+
         ColliderType = ColliderType.Rectangle;
         CircleColliderRadius = 0;
         RectangleColliderSize = size;
@@ -120,7 +164,12 @@ internal sealed class RigidBody2D
         if (ColliderType is not ColliderType.Tile)
         {
             ColliderType = ColliderType.Tile;
-            Scene.TileMap.CreateTile(this);
+            _position = Scene.TileMap.AlignPosition(_position);
+
+            if (EnableCollisionDetection)
+            {
+                Scene.TileMap.CreateTile(this);
+            }
         }
 
         CircleColliderRadius = 0;

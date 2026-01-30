@@ -31,6 +31,17 @@ public class Collider2DComponentTests
     }
 
     [Test]
+    public void Constructor_ShouldCreateColliderThatIsEnabled()
+    {
+        // Arrange
+        // Act
+        var collider = _entity.CreateComponent<RectangleColliderComponent>();
+
+        // Assert
+        Assert.That(collider.Enabled, Is.True);
+    }
+
+    [Test]
     public void Constructor_ShouldThrowException_WhenColliderIsAddedToEntityTwice()
     {
         // Arrange

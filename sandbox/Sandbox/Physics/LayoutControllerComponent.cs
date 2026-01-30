@@ -80,6 +80,17 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                     },
                     new ActionMapping
                     {
+                        ActionName = "ToggleCollisionDetection",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
                         ActionName = "DeleteEntity",
                         HardwareActions =
                         {
@@ -161,6 +172,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
             inputComponent.BindAction("SetLayout3", () => SetLayout(3));
             inputComponent.BindAction("SetLayout4", () => SetLayout(4));
+            inputComponent.BindAction("ToggleCollisionDetection", ToggleCollisionDetection);
             inputComponent.BindAction("DeleteEntity", DeleteEntity);
             inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 100 * _spawnSizeFactor));
             inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50 * _spawnSizeFactor));
@@ -211,6 +223,50 @@ public sealed class LayoutControllerComponent : BehaviorComponent
         }
     }
 
+    private void ToggleCollisionDetection()
+    {
+        var mousePosition = GetMousePosition();
+
+        foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
+        {
+            if (entity.HasComponent<RectangleColliderComponent>())
+            {
+                var rectangleColliderComponent = entity.GetComponent<RectangleColliderComponent>();
+                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+                var rectangle = new Rectangle(rectangleColliderComponent.Dimensions).Transform(transform2DComponent.ToMatrix());
+
+                if (rectangle.Contains(mousePosition))
+                {
+                    rectangleColliderComponent.Enabled = !rectangleColliderComponent.Enabled;
+                }
+            }
+
+            if (entity.HasComponent<CircleColliderComponent>())
+            {
+                var circleColliderComponent = entity.GetComponent<CircleColliderComponent>();
+                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+                var circle = new Circle(circleColliderComponent.Radius).Transform(transform2DComponent.ToMatrix());
+
+                if (circle.Contains(mousePosition))
+                {
+                    circleColliderComponent.Enabled = !circleColliderComponent.Enabled;
+                }
+            }
+
+            if (entity.HasComponent<TileColliderComponent>())
+            {
+                var tileColliderComponent = entity.GetComponent<TileColliderComponent>();
+                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+                var rectangle = new Rectangle(new SizeD(50, 50)).Transform(transform2DComponent.ToMatrix());
+
+                if (rectangle.Contains(mousePosition))
+                {
+                    tileColliderComponent.Enabled = !tileColliderComponent.Enabled;
+                }
+            }
+        }
+    }
+
     private void DeleteEntity()
     {
         var mousePosition = GetMousePosition();
@@ -236,6 +292,17 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 var circle = new Circle(circleColliderComponent.Radius).Transform(transform2DComponent.ToMatrix());
 
                 if (circle.Contains(mousePosition))
+                {
+                    entity.RemoveAfterFixedTimeStep();
+                }
+            }
+
+            if (entity.HasComponent<TileColliderComponent>())
+            {
+                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+                var rectangle = new Rectangle(new SizeD(50, 50)).Transform(transform2DComponent.ToMatrix());
+
+                if (rectangle.Contains(mousePosition))
                 {
                     entity.RemoveAfterFixedTimeStep();
                 }

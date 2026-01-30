@@ -20,17 +20,20 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
         var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
@@ -52,17 +55,20 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
         var staticBody = CreateCircleStaticBody(5, 0, 10);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
@@ -84,17 +90,20 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateCircleKinematicBody(0, 0, 10);
         var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
-        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
@@ -116,17 +125,20 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateCircleKinematicBody(0, 0, 10);
         var staticBody = CreateCircleStaticBody(5, 0, 10);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
-        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
@@ -152,19 +164,23 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
         var staticBody = CreateRectangleStaticBody(11, 0, 10, 5);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
         Assert.That(kinematicBodyCollider.IsColliding, Is.False);
         Assert.That(kinematicBodyCollider.GetContacts(), Has.Length.Zero);
 
-        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBodyCollider.IsColliding, Is.False);
         Assert.That(staticBodyCollider.GetContacts(), Has.Length.Zero);
     }
@@ -177,19 +193,23 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
         var staticBody = CreateCircleStaticBody(16, 0, 10);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
         Assert.That(kinematicBodyCollider.IsColliding, Is.False);
         Assert.That(kinematicBodyCollider.GetContacts(), Has.Length.Zero);
 
-        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
         Assert.That(staticBodyCollider.IsColliding, Is.False);
         Assert.That(staticBodyCollider.GetContacts(), Has.Length.Zero);
     }
@@ -202,19 +222,23 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateCircleKinematicBody(0, 0, 10);
         var staticBody = CreateRectangleStaticBody(16, 0, 10, 5);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
         Assert.That(kinematicBodyCollider.IsColliding, Is.False);
         Assert.That(kinematicBodyCollider.GetContacts(), Has.Length.Zero);
 
-        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBodyCollider.IsColliding, Is.False);
         Assert.That(staticBodyCollider.GetContacts(), Has.Length.Zero);
     }
@@ -227,19 +251,23 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var kinematicBody = CreateCircleKinematicBody(0, 0, 10);
         var staticBody = CreateCircleStaticBody(21, 0, 10);
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
+
         // Assume
-        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
         Assert.That(kinematicBodyCollider.IsColliding, Is.False);
         Assert.That(kinematicBodyCollider.GetContacts(), Has.Length.Zero);
 
-        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
         Assert.That(staticBodyCollider.IsColliding, Is.False);
         Assert.That(staticBodyCollider.GetContacts(), Has.Length.Zero);
     }
@@ -264,11 +292,17 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var staticBody = CreateRectangleStaticBody(-20, -12.5, 10, 5);
         staticBody.Parent = parent;
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
         physicsSystem.ProcessPhysics();
 
         // Assume
         Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
         Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         Debug.Assert(staticBody.Parent != null, "staticBody.Parent != null");
@@ -277,9 +311,6 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
@@ -310,11 +341,17 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var staticBody = CreateRectangleStaticBody(5, 2.5, 10, 5);
         staticBody.Parent = parent;
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
-        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.True);
+        Assert.That(staticBodyCollider.IsColliding, Is.True);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(staticBodyCollider.Enabled, Is.True);
 
         // Act
         Debug.Assert(staticBody.Parent != null, "staticBody.Parent != null");
@@ -323,8 +360,8 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         physicsSystem.ProcessPhysics();
 
         // Assert
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
     }
 
     [Test]
@@ -338,12 +375,20 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         var childStaticBody = CreateRectangleStaticBody(0, -6, 10, 6);
         childStaticBody.Parent = parentStaticBody;
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var parentStaticBodyCollider = parentStaticBody.GetComponent<RectangleColliderComponent>();
+        var childStaticBodyCollider = childStaticBody.GetComponent<RectangleColliderComponent>();
+
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(parentStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(childStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(parentStaticBodyCollider.IsColliding, Is.False);
+        Assert.That(childStaticBodyCollider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(parentStaticBodyCollider.Enabled, Is.True);
+        Assert.That(childStaticBodyCollider.Enabled, Is.True);
 
         // Act
         parentStaticBody.GetComponent<Transform2DComponent>().Translation = new Vector2(9, 5);
@@ -351,10 +396,6 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-        var parentStaticBodyCollider = parentStaticBody.GetComponent<RectangleColliderComponent>();
-        var childStaticBodyCollider = childStaticBody.GetComponent<RectangleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(2));
@@ -391,12 +432,20 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         childStaticBody1.Parent = parent;
         childStaticBody2.Parent = parent;
 
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var childStaticBody1Collider = childStaticBody1.GetComponent<RectangleColliderComponent>();
+        var childStaticBody2Collider = childStaticBody2.GetComponent<RectangleColliderComponent>();
+
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(childStaticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assert.That(childStaticBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(childStaticBody1Collider.IsColliding, Is.False);
+        Assert.That(childStaticBody2Collider.IsColliding, Is.False);
+
+        Assert.That(kinematicBodyCollider.Enabled, Is.True);
+        Assert.That(childStaticBody1Collider.Enabled, Is.True);
+        Assert.That(childStaticBody2Collider.Enabled, Is.True);
 
         // Act
         parent.GetComponent<Transform2DComponent>().Translation = new Vector2(0, 0);
@@ -404,29 +453,61 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-        var childStaticBodyCollider1 = childStaticBody1.GetComponent<RectangleColliderComponent>();
-        var childStaticBodyCollider2 = childStaticBody2.GetComponent<RectangleColliderComponent>();
-
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(2));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[1].ThisCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(kinematicBodyContacts.Any(c => c.OtherCollider == childStaticBodyCollider1));
-        Assert.That(kinematicBodyContacts.Any(c => c.OtherCollider == childStaticBodyCollider2));
+        Assert.That(kinematicBodyContacts.Any(c => c.OtherCollider == childStaticBody1Collider));
+        Assert.That(kinematicBodyContacts.Any(c => c.OtherCollider == childStaticBody2Collider));
 
-        Assert.That(childStaticBodyCollider1.IsColliding, Is.True);
-        var childStaticBody1Contacts = childStaticBodyCollider1.GetContacts();
+        Assert.That(childStaticBody1Collider.IsColliding, Is.True);
+        var childStaticBody1Contacts = childStaticBody1Collider.GetContacts();
         Assert.That(childStaticBody1Contacts, Has.Length.EqualTo(1));
-        Assert.That(childStaticBody1Contacts[0].ThisCollider, Is.EqualTo(childStaticBodyCollider1));
+        Assert.That(childStaticBody1Contacts[0].ThisCollider, Is.EqualTo(childStaticBody1Collider));
         Assert.That(childStaticBody1Contacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
 
-        Assert.That(childStaticBodyCollider2.IsColliding, Is.True);
-        var childStaticBody2Contacts = childStaticBodyCollider2.GetContacts();
+        Assert.That(childStaticBody2Collider.IsColliding, Is.True);
+        var childStaticBody2Contacts = childStaticBody2Collider.GetContacts();
         Assert.That(childStaticBody2Contacts, Has.Length.EqualTo(1));
-        Assert.That(childStaticBody2Contacts[0].ThisCollider, Is.EqualTo(childStaticBodyCollider2));
+        Assert.That(childStaticBody2Contacts[0].ThisCollider, Is.EqualTo(childStaticBody2Collider));
         Assert.That(childStaticBody2Contacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
+    }
+
+    #endregion
+
+    #region Collider component is disabled
+
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(false, false)]
+    public void ProcessPhysics_KinematicBodyShouldNotCollideWithStaticBody_WhenColliderComponentIsDisabled(bool kinematicColliderEnabled,
+        bool staticColliderEnabled)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
+
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
+        kinematicBodyCollider.Enabled = kinematicColliderEnabled;
+        staticBodyCollider.Enabled = staticColliderEnabled;
+
+        // Assume
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(kinematicBodyCollider.GetContacts(), Has.Length.Zero);
+
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.GetContacts(), Has.Length.Zero);
     }
 
     #endregion
