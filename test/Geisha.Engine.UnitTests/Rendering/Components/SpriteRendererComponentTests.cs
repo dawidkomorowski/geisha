@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -15,6 +16,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
         {
             var scene = TestSceneFactory.Create();
             Entity = scene.CreateEntity();
+        }
+
+        [Test]
+        public void Constructor_ShouldInitializeDefaultValues()
+        {
+            // Act
+            var spriteRendererComponent = Entity.CreateComponent<SpriteRendererComponent>();
+
+            // Assert
+            Assert.That(spriteRendererComponent.Opacity, Is.EqualTo(1d));
+            Assert.That(spriteRendererComponent.BitmapInterpolationMode, Is.EqualTo(BitmapInterpolationMode.Linear));
         }
 
         [TestCase(1d, 1d)]

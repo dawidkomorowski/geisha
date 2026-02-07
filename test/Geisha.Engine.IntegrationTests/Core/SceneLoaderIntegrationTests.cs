@@ -16,6 +16,7 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
@@ -478,6 +479,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var entityWithSpriteRenderer = CreateNewEntityWithRandomName(scene);
             var spriteRendererComponent = entityWithSpriteRenderer.CreateComponent<SpriteRendererComponent>();
             spriteRendererComponent.Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite);
+            spriteRendererComponent.Opacity = Utils.Random.NextDouble();
+            spriteRendererComponent.BitmapInterpolationMode = Utils.Random.NextEnum<BitmapInterpolationMode>();
             spriteRendererComponent.Visible = Utils.Random.NextBool();
             spriteRendererComponent.SortingLayerName = Utils.Random.GetString();
             spriteRendererComponent.OrderInLayer = Utils.Random.Next();
@@ -494,6 +497,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var loadedComponent = loadedScene.RootEntities.Single().GetComponent<SpriteRendererComponent>();
             Debug.Assert(loadedComponent.Sprite != null, "loadedComponent.Sprite != null");
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sprite), Is.EqualTo(AssetsIds.TestSprite));
+            Assert.That(loadedComponent.Opacity, Is.EqualTo(spriteRendererComponent.Opacity));
+            Assert.That(loadedComponent.BitmapInterpolationMode, Is.EqualTo(spriteRendererComponent.BitmapInterpolationMode));
             Assert.That(loadedComponent.Visible, Is.EqualTo(spriteRendererComponent.Visible));
             Assert.That(loadedComponent.SortingLayerName, Is.EqualTo(spriteRendererComponent.SortingLayerName));
             Assert.That(loadedComponent.OrderInLayer, Is.EqualTo(spriteRendererComponent.OrderInLayer));

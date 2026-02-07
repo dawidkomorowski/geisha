@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
@@ -15,6 +16,7 @@ namespace Geisha.Engine.Rendering.Components
         internal SpriteRendererComponent(Entity entity) : base(entity, new DetachedSpriteNode())
         {
             Opacity = 1d;
+            BitmapInterpolationMode = BitmapInterpolationMode.Linear;
         }
 
         internal ISpriteNode SpriteNode
@@ -42,6 +44,12 @@ namespace Geisha.Engine.Rendering.Components
             set => SpriteNode.Opacity = Math.Clamp(value, 0d, 1d);
         }
 
+        // TODO: Add xml documentation.
+        // TODO: Add this property to SpriteNode and test it is correctly copied to SpriteNode in SpriteRendererSystem.
+        // TODO: Add tests for this property in SpriteRendererSystem to verify it is correctly applied to rendering context.
+        // TODO: Add integration test to verify that changing this property at runtime causes expected change in rendered image.
+        public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
+
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -53,6 +61,9 @@ namespace Geisha.Engine.Rendering.Components
             {
                 writer.WriteAssetId("Sprite", assetStore.GetAssetId(Sprite));
             }
+
+            writer.WriteDouble("Opacity", Opacity);
+            writer.WriteEnum("BitmapInterpolationMode", BitmapInterpolationMode);
         }
 
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
@@ -61,6 +72,8 @@ namespace Geisha.Engine.Rendering.Components
             Sprite = reader.IsNull("Sprite")
                 ? null
                 : assetStore.GetAsset<Sprite>(reader.ReadAssetId("Sprite"));
+            Opacity = reader.ReadDouble("Opacity");
+            BitmapInterpolationMode = reader.ReadEnum<BitmapInterpolationMode>("BitmapInterpolationMode");
         }
     }
 

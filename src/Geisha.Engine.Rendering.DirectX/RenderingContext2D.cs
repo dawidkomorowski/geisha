@@ -13,7 +13,7 @@ using SharpDX.Mathematics.Interop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
-using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
+using BitmapInterpolationMode = Geisha.Engine.Rendering.Backend.BitmapInterpolationMode;
 using Color = Geisha.Engine.Core.Math.Color;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
@@ -160,7 +160,12 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.Clear(color.ToRawColor4());
         }
 
-        public void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d)
+        public void DrawSprite(
+            Sprite sprite,
+            in Matrix3x3 transform,
+            double opacity = 1d,
+            BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.Linear
+        )
         {
             var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
 
@@ -171,7 +176,8 @@ namespace Geisha.Engine.Rendering.DirectX
                 (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, SharpDX.Direct2D1.BitmapInterpolationMode.Linear,
+                sourceRawRectangleF);
 
             _statistics.IncrementDrawCalls();
         }
@@ -217,7 +223,8 @@ namespace Geisha.Engine.Rendering.DirectX
                     Marshal.SizeOf<RawMatrix3x2>()
                 );
 
-                _d2D1DeviceContext.DrawSpriteBatch(_d2D1SpriteBatch, 0, _d2D1SpriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear,
+                _d2D1DeviceContext.DrawSpriteBatch(_d2D1SpriteBatch, 0, _d2D1SpriteBatch.SpriteCount, d2D1Bitmap,
+                    SharpDX.Direct2D1.BitmapInterpolationMode.Linear,
                     SpriteOptions.None);
             }
             finally
