@@ -137,6 +137,24 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.GetTransformMatrix(), 0.5);
     }
 
+    [TestCase(BitmapInterpolationMode.NearestNeighbor)]
+    [TestCase(BitmapInterpolationMode.Linear)]
+    public void RenderScene_ShouldDrawSprite_WithBitmapInterpolationMode(BitmapInterpolationMode bitmapInterpolationMode)
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddSprite();
+        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+        spriteRendererComponent.BitmapInterpolationMode = bitmapInterpolationMode;
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.GetTransformMatrix(), entity.GetOpacity(), bitmapInterpolationMode);
+    }
+
     [Test]
     public void RenderScene_ShouldDrawSprite_TransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
     {
@@ -481,7 +499,6 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
         entity3.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
 
-
         RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
         {
             // Assert
@@ -520,7 +537,6 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         entity2.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture2);
         entity3.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture1);
         entity4.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture2);
-
 
         RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
         {
@@ -581,6 +597,86 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity());
         RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity());
         RenderingContext2D.Received(1).DrawSprite(entity3.GetSprite(), entity3.GetTransformMatrix(), entity3.GetOpacity());
+    }
+
+    [TestCase(BitmapInterpolationMode.NearestNeighbor, BitmapInterpolationMode.Linear)]
+    [TestCase(BitmapInterpolationMode.Linear, BitmapInterpolationMode.NearestNeighbor)]
+    public void RenderScene_ShouldDrawSpriteBatch_WhenCanBeBatchedByBitmapInterpolationMode(BitmapInterpolationMode bitmapInterpolationMode1,
+        BitmapInterpolationMode bitmapInterpolationMode2)
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+
+        var entity1 = context.AddSprite();
+        var entity2 = context.AddSprite();
+        var entity3 = context.AddSprite();
+
+        var spriteRenderer1 = entity1.GetComponent<SpriteRendererComponent>();
+        var spriteRenderer2 = entity2.GetComponent<SpriteRendererComponent>();
+        var spriteRenderer3 = entity3.GetComponent<SpriteRendererComponent>();
+
+        var texture = CreateTexture();
+
+        spriteRenderer1.Sprite = CreateSprite(texture);
+        spriteRenderer1.BitmapInterpolationMode = bitmapInterpolationMode1;
+
+        spriteRenderer2.Sprite = CreateSprite(texture);
+        spriteRenderer2.BitmapInterpolationMode = bitmapInterpolationMode2;
+
+        spriteRenderer3.Sprite = CreateSprite(texture);
+        spriteRenderer3.BitmapInterpolationMode = bitmapInterpolationMode1;
+
+        RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
+        {
+            // Assert
+            var spriteBatch = x.Arg<SpriteBatch>();
+            Assert.That(spriteBatch.Count, Is.EqualTo(2));
+            Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
+            Assert.That(spriteBatch.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode1));
+
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
+            Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity1.GetSprite()));
+            Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity3.GetSprite()));
+        });
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
+        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity(), bitmapInterpolationMode2);
+    }
+
+    [Test]
+    public void RenderScene_ShouldNotDrawSpriteBatch_WhenBitmapInterpolationModePreventsSpriteBatching()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+
+        var entity1 = context.AddSprite();
+        var entity2 = context.AddSprite();
+
+        var spriteRenderer1 = entity1.GetComponent<SpriteRendererComponent>();
+        var spriteRenderer2 = entity2.GetComponent<SpriteRendererComponent>();
+
+        var texture = CreateTexture();
+
+        spriteRenderer1.Sprite = CreateSprite(texture);
+        spriteRenderer1.BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+
+        spriteRenderer2.Sprite = CreateSprite(texture);
+        spriteRenderer2.BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.DidNotReceive().DrawSpriteBatch(Arg.Any<SpriteBatch>());
+        RenderingContext2D.Received(1)
+            .DrawSprite(entity1.GetSprite(), entity1.GetTransformMatrix(), entity1.GetOpacity(), BitmapInterpolationMode.NearestNeighbor);
+        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.GetTransformMatrix(), entity2.GetOpacity(), BitmapInterpolationMode.Linear);
     }
 
     [Test]

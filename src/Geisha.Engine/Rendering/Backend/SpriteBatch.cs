@@ -30,6 +30,8 @@ public sealed class SpriteBatch
     /// </summary>
     public ITexture? Texture => _sprites.Count == 0 ? null : _sprites[0].Sprite.SourceTexture;
 
+    public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
+
     /// <summary>
     ///     Adds a <paramref name="sprite" /> to the end of the <see cref="SpriteBatch" />.
     /// </summary>

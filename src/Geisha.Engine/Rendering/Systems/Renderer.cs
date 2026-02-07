@@ -104,12 +104,21 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         var transformationMatrix = ComputeNodeTransform(node);
 
-        if (_spriteBatch.Count != 0 && !ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
+        if (!_spriteBatch.IsEmpty)
         {
-            FlushSpriteBatch();
+            var flushRequired = false;
+
+            flushRequired = flushRequired || !ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture);
+            flushRequired = flushRequired || _spriteBatch.BitmapInterpolationMode != node.BitmapInterpolationMode;
+
+            if (flushRequired)
+            {
+                FlushSpriteBatch();
+            }
         }
 
         _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
+        _spriteBatch.BitmapInterpolationMode = node.BitmapInterpolationMode;
     }
 
     public void Visit(TextNode node)
@@ -202,7 +211,7 @@ internal sealed class Renderer : IRenderNodeVisitor
         if (_spriteBatch.Count == 1)
         {
             var sprites = _spriteBatch.GetSpritesSpan();
-            _renderingContext2D.DrawSprite(sprites[0].Sprite, sprites[0].Transform, sprites[0].Opacity);
+            _renderingContext2D.DrawSprite(sprites[0].Sprite, sprites[0].Transform, sprites[0].Opacity, _spriteBatch.BitmapInterpolationMode);
         }
         else
         {
