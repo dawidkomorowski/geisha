@@ -23,6 +23,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // SpriteRendererComponent
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
+        const BitmapInterpolationMode bitmapInterpolationMode = BitmapInterpolationMode.Linear;
 
         var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
@@ -37,6 +38,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // SpriteRendererComponent
         spriteRendererComponent.Sprite = sprite;
         spriteRendererComponent.Opacity = opacity;
+        spriteRendererComponent.BitmapInterpolationMode = bitmapInterpolationMode;
 
         // Assume
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
@@ -53,6 +55,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // SpriteRendererComponent
         Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(sprite));
         Assert.That(spriteRendererComponent.Opacity, Is.EqualTo(opacity));
+        Assert.That(spriteRendererComponent.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode));
     }
 
     [Test]
@@ -66,6 +69,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // SpriteRendererComponent
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
+        const BitmapInterpolationMode bitmapInterpolationMode = BitmapInterpolationMode.Linear;
 
         var context = CreateRenderingTestContext(new RenderingConfiguration
             { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
@@ -81,6 +85,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // SpriteRendererComponent
         spriteRendererComponent.Sprite = sprite;
         spriteRendererComponent.Opacity = opacity;
+        spriteRendererComponent.BitmapInterpolationMode = bitmapInterpolationMode;
 
         // Assume
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.False);
@@ -97,6 +102,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // SpriteRendererComponent
         Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(sprite));
         Assert.That(spriteRendererComponent.Opacity, Is.EqualTo(opacity));
+        Assert.That(spriteRendererComponent.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode));
     }
 
     [Test]

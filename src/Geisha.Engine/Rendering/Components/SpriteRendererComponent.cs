@@ -45,10 +45,13 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         // TODO: Add xml documentation.
-        // TODO: Add this property to SpriteNode and test it is correctly copied to SpriteNode in SpriteRendererSystem.
         // TODO: Add tests for this property in SpriteRendererSystem to verify it is correctly applied to rendering context.
         // TODO: Add integration test to verify that changing this property at runtime causes expected change in rendered image.
-        public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
+        public BitmapInterpolationMode BitmapInterpolationMode
+        {
+            get => SpriteNode.BitmapInterpolationMode;
+            set => SpriteNode.BitmapInterpolationMode = value;
+        }
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {

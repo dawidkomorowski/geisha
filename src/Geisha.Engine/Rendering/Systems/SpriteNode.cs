@@ -1,6 +1,7 @@
 ﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
@@ -9,12 +10,14 @@ namespace Geisha.Engine.Rendering.Systems
     {
         Sprite? Sprite { get; set; }
         double Opacity { get; set; }
+        BitmapInterpolationMode BitmapInterpolationMode { get; set; }
     }
 
     internal sealed class DetachedSpriteNode : DetachedRenderNode, ISpriteNode
     {
         public Sprite? Sprite { get; set; }
         public double Opacity { get; set; }
+        public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
     }
 
     internal sealed class SpriteNode : RenderNode, ISpriteNode
@@ -54,6 +57,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Sprite? Sprite { get; set; }
         public double Opacity { get; set; }
+        public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
 
         #endregion
 
@@ -78,6 +82,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             targetSpriteNode.Sprite = sourceSpriteNode.Sprite;
             targetSpriteNode.Opacity = sourceSpriteNode.Opacity;
+            targetSpriteNode.BitmapInterpolationMode = sourceSpriteNode.BitmapInterpolationMode;
         }
     }
 }
