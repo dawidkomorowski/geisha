@@ -171,9 +171,7 @@ internal sealed class Renderer : IRenderNodeVisitor
             _sortingBuffer.Sort((renderNode1, renderNode2) =>
             {
                 var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
-                if (orderInLayerComparison != 0) return orderInLayerComparison;
-
-                return renderNode1.BatchId.CompareTo(renderNode2.BatchId);
+                return orderInLayerComparison != 0 ? orderInLayerComparison : renderNode1.BatchId.CompareTo(renderNode2.BatchId);
             });
 
             _renderList.AddRange(_sortingBuffer);

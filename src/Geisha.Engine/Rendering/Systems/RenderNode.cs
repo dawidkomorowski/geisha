@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -40,7 +39,7 @@ namespace Geisha.Engine.Rendering.Systems
         public Entity Entity => Transform.Entity;
         public Transform2DComponent Transform { get; }
         public Renderer2DComponent Renderer2DComponent { get; }
-        public virtual RuntimeId BatchId => RuntimeId.Invalid;
+        public virtual BatchId BatchId => BatchId.Empty;
         public SortingLayerNameChangedCallbackDelegate? SortingLayerNameChangedCallback { get; set; }
 
         #region Implementation of IRenderNode

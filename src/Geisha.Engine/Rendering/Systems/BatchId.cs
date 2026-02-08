@@ -3,8 +3,8 @@ using Geisha.Engine.Core;
 
 namespace Geisha.Engine.Rendering.Systems;
 
-// TODO: Use in Renderer.
 // TODO: Convert RuntimeId to record struct and use compiler generated comparison and equality members if possible.
+// TODO: Add documentation to SpriteBatch for BitmapInterpolationMode.
 internal readonly record struct BatchId(RuntimeId ResourceId, byte Flags) : IComparable<BatchId>
 {
     public static readonly BatchId Empty = new(RuntimeId.Invalid, 0);
