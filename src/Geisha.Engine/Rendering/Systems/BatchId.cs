@@ -3,7 +3,6 @@ using Geisha.Engine.Core;
 
 namespace Geisha.Engine.Rendering.Systems;
 
-// TODO: Add documentation to SpriteBatch for BitmapInterpolationMode.
 internal readonly record struct BatchId(RuntimeId ResourceId, byte Flags) : IComparable<BatchId>
 {
     public static readonly BatchId Empty = new(RuntimeId.Invalid, 0);

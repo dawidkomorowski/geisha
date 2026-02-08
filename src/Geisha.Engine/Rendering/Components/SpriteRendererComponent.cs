@@ -44,9 +44,11 @@ namespace Geisha.Engine.Rendering.Components
             set => SpriteNode.Opacity = Math.Clamp(value, 0d, 1d);
         }
 
+        // TODO: Add integration tests to verify that changing this property at runtime causes expected change in rendered image (for DrawSprite and for DrawSpriteBatch).
         // TODO: Add xml documentation.
-        // TODO: Add tests for this property in SpriteRendererSystem to verify it is correctly applied to rendering context.
-        // TODO: Add integration test to verify that changing this property at runtime causes expected change in rendered image.
+        // TODO: Add xml documentation to BitmapInterpolationMode enum.
+        // TODO: Add xml documentation to IRenderingContext2D interface about interpolation mode (especially for DrawSprite method).
+        // TODO: Add xml documentation to SpriteBatch for BitmapInterpolationMode property.
         public BitmapInterpolationMode BitmapInterpolationMode
         {
             get => SpriteNode.BitmapInterpolationMode;
