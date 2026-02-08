@@ -3,30 +3,25 @@ using Geisha.Engine.Core;
 
 namespace Geisha.Engine.Rendering.Systems;
 
-// TODO: Add unit tests.
-// TODO: Refine implementation.
 // TODO: Use in Renderer.
-internal readonly record struct BatchId : IComparable<BatchId>
+// TODO: Convert RuntimeId to record struct and use compiler generated comparison and equality members if possible.
+internal readonly record struct BatchId(RuntimeId ResourceId, byte Flags) : IComparable<BatchId>
 {
-    public static readonly BatchId Invalid = new(RuntimeId.Invalid, 0);
-
-    public BatchId(RuntimeId id, byte flags)
-    {
-        Id = id;
-        Flags = flags;
-    }
-
-    public RuntimeId Id { get; init; }
-    public byte Flags { get; init; }
+    public static readonly BatchId Empty = new(RuntimeId.Invalid, 0);
 
     public BatchId WithFlag(int index, bool value)
     {
-        return this with { Flags = (byte)(Flags | (value ? (1 << index) : 0)) };
+        if (index is < 0 or > 7)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), "Index must be between 0 and 7.");
+        }
+
+        return this with { Flags = (byte)(value ? Flags | (1 << index) : Flags & ~(1 << index)) };
     }
 
     public int CompareTo(BatchId other)
     {
-        var idComparison = Id.CompareTo(other.Id);
+        var idComparison = ResourceId.CompareTo(other.ResourceId);
         return idComparison != 0 ? idComparison : Flags.CompareTo(other.Flags);
     }
 }
