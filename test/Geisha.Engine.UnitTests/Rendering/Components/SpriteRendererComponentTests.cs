@@ -1,5 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;
 using NUnit.Framework;

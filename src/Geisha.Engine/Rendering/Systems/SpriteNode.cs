@@ -2,7 +2,6 @@
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems

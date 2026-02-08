@@ -1,16 +1,16 @@
-﻿using Geisha.Demo.Common;
+﻿using System;
+using Geisha.Demo.Common;
+using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Engine.Core.Assets;
-using System;
-using Geisha.Engine.Animation;
 
 namespace Geisha.Demo.Screens;
 
@@ -62,7 +62,9 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
             var characterTransform = character.CreateComponent<Transform2DComponent>();
             characterTransform.Scale = new Vector2(10, 10);
             // Add SpriteRendererComponent to entity so it can show character sprites on the screen controlled by SpriteAnimationComponent.
-            character.CreateComponent<SpriteRendererComponent>();
+            var spriteRendererComponent = character.CreateComponent<SpriteRendererComponent>();
+            // Set BitmapInterpolationMode to NearestNeighbor to preserve pixel art style of the sprites when they are scaled.
+            spriteRendererComponent.BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
             // Add SpriteAnimationComponent to entity so it can be animated.
             var spriteAnimationComponent = character.CreateComponent<SpriteAnimationComponent>();
             // Add animations to SpriteAnimationComponent from asset files.

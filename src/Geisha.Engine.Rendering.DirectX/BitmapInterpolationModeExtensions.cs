@@ -1,6 +1,4 @@
-﻿using Geisha.Engine.Rendering.Backend;
-
-namespace Geisha.Engine.Rendering.DirectX;
+﻿namespace Geisha.Engine.Rendering.DirectX;
 
 internal static class BitmapInterpolationModeExtensions
 {

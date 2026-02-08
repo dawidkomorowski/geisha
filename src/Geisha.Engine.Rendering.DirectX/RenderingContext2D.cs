@@ -13,7 +13,6 @@ using SharpDX.Mathematics.Interop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
-using BitmapInterpolationMode = Geisha.Engine.Rendering.Backend.BitmapInterpolationMode;
 using Color = Geisha.Engine.Core.Math.Color;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;

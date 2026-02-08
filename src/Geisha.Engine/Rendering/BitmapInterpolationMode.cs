@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Rendering.Backend;
+﻿namespace Geisha.Engine.Rendering;
 
 public enum BitmapInterpolationMode
 {
