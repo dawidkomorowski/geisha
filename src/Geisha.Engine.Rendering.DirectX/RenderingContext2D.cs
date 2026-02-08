@@ -176,7 +176,7 @@ namespace Geisha.Engine.Rendering.DirectX
                 (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, SharpDX.Direct2D1.BitmapInterpolationMode.Linear,
+            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, interpolationMode.ToDirectXBitmapInterpolationMode(),
                 sourceRawRectangleF);
 
             _statistics.IncrementDrawCalls();
@@ -224,7 +224,7 @@ namespace Geisha.Engine.Rendering.DirectX
                 );
 
                 _d2D1DeviceContext.DrawSpriteBatch(_d2D1SpriteBatch, 0, _d2D1SpriteBatch.SpriteCount, d2D1Bitmap,
-                    SharpDX.Direct2D1.BitmapInterpolationMode.Linear,
+                    spriteBatch.BitmapInterpolationMode.ToDirectXBitmapInterpolationMode(),
                     SpriteOptions.None);
             }
             finally
