@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
 [TestFixture]
-public class BatchIdTest
+public class BatchIdTests
 {
     [Test]
     public void Constructor_ShouldCreateEmptyBatchId()
