@@ -66,14 +66,10 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 _sprite = value;
 
-                if (value is not null)
+                _batchId = _batchId with
                 {
-                    _batchId = _batchId with { ResourceId = value.SourceTexture.RuntimeId };
-                }
-                else
-                {
-                    _batchId = _batchId with { ResourceId = RuntimeId.Invalid };
-                }
+                    ResourceId = value is not null ? value.SourceTexture.RuntimeId : RuntimeId.Invalid
+                };
             }
         }
 
