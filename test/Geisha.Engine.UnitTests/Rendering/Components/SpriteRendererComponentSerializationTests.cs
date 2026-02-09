@@ -18,6 +18,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const bool visible = false;
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
+            const double opacity = 0.5;
+            const BitmapInterpolationMode bitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
 
             var texture = Substitute.For<ITexture>();
             var sprite = new Sprite(texture, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
@@ -33,6 +35,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
                 component.Sprite = sprite;
+                component.Opacity = opacity;
+                component.BitmapInterpolationMode = bitmapInterpolationMode;
             });
 
             // Assert
@@ -40,6 +44,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
             Assert.That(actual.Sprite, Is.EqualTo(sprite));
+            Assert.That(actual.Opacity, Is.EqualTo(opacity));
+            Assert.That(actual.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode));
         }
 
         [Test]
@@ -49,6 +55,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const bool visible = false;
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
+            const double opacity = 0.5;
+            const BitmapInterpolationMode bitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
 
             // Act
             var actual = SerializeAndDeserialize<SpriteRendererComponent>(component =>
@@ -57,6 +65,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
                 component.Sprite = null;
+                component.Opacity = opacity;
+                component.BitmapInterpolationMode = bitmapInterpolationMode;
             });
 
             // Assert
@@ -64,6 +74,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
             Assert.That(actual.Sprite, Is.Null);
+            Assert.That(actual.Opacity, Is.EqualTo(opacity));
+            Assert.That(actual.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode));
         }
     }
 }

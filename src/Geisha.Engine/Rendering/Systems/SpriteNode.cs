@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
@@ -9,17 +10,23 @@ namespace Geisha.Engine.Rendering.Systems
     {
         Sprite? Sprite { get; set; }
         double Opacity { get; set; }
+        BitmapInterpolationMode BitmapInterpolationMode { get; set; }
     }
 
     internal sealed class DetachedSpriteNode : DetachedRenderNode, ISpriteNode
     {
         public Sprite? Sprite { get; set; }
         public double Opacity { get; set; }
+        public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
     }
 
     internal sealed class SpriteNode : RenderNode, ISpriteNode
     {
+        private const int BitmapInterpolationModeFlagIndex = 0;
         private readonly SpriteRendererComponent _spriteRendererComponent;
+        private BatchId _batchId = BatchId.Empty;
+        private Sprite? _sprite;
+        private BitmapInterpolationMode _bitmapInterpolationMode;
 
         public SpriteNode(Transform2DComponent transform, SpriteRendererComponent spriteRendererComponent)
             : base(transform, spriteRendererComponent)
@@ -29,7 +36,7 @@ namespace Geisha.Engine.Rendering.Systems
             _spriteRendererComponent.SpriteNode = this;
         }
 
-        public override RuntimeId BatchId => Sprite is null ? RuntimeId.Invalid : Sprite.SourceTexture.RuntimeId;
+        public override BatchId BatchId => _batchId;
 
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
@@ -52,8 +59,36 @@ namespace Geisha.Engine.Rendering.Systems
 
         #region Implementaion of ISpriteNode
 
-        public Sprite? Sprite { get; set; }
+        public Sprite? Sprite
+        {
+            get => _sprite;
+            set
+            {
+                _sprite = value;
+
+                _batchId = _batchId with
+                {
+                    ResourceId = value is not null ? value.SourceTexture.RuntimeId : RuntimeId.Invalid
+                };
+            }
+        }
+
         public double Opacity { get; set; }
+
+        public BitmapInterpolationMode BitmapInterpolationMode
+        {
+            get => _bitmapInterpolationMode;
+            set
+            {
+                _bitmapInterpolationMode = value;
+                _batchId = value switch
+                {
+                    BitmapInterpolationMode.NearestNeighbor => _batchId.WithFlag(BitmapInterpolationModeFlagIndex, false),
+                    BitmapInterpolationMode.Linear => _batchId.WithFlag(BitmapInterpolationModeFlagIndex, true),
+                    _ => throw new ArgumentOutOfRangeException(nameof(value), "Unsupported BitmapInterpolationMode value.")
+                };
+            }
+        }
 
         #endregion
 
@@ -78,6 +113,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             targetSpriteNode.Sprite = sourceSpriteNode.Sprite;
             targetSpriteNode.Opacity = sourceSpriteNode.Opacity;
+            targetSpriteNode.BitmapInterpolationMode = sourceSpriteNode.BitmapInterpolationMode;
         }
     }
 }

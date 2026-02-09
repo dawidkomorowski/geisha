@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core.Math;
+﻿using Geisha.Engine.Core.Math;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Math

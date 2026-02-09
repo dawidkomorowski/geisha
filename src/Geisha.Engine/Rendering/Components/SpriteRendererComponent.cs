@@ -15,6 +15,7 @@ namespace Geisha.Engine.Rendering.Components
         internal SpriteRendererComponent(Entity entity) : base(entity, new DetachedSpriteNode())
         {
             Opacity = 1d;
+            BitmapInterpolationMode = BitmapInterpolationMode.Linear;
         }
 
         internal ISpriteNode SpriteNode
@@ -42,6 +43,16 @@ namespace Geisha.Engine.Rendering.Components
             set => SpriteNode.Opacity = Math.Clamp(value, 0d, 1d);
         }
 
+        /// <summary>
+        ///     Gets or sets bitmap interpolation mode used when sampling sprite texture (e.g. when scaling or rotating).
+        ///     Default value is <see cref="BitmapInterpolationMode.Linear" />.
+        /// </summary>
+        public BitmapInterpolationMode BitmapInterpolationMode
+        {
+            get => SpriteNode.BitmapInterpolationMode;
+            set => SpriteNode.BitmapInterpolationMode = value;
+        }
+
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -53,6 +64,9 @@ namespace Geisha.Engine.Rendering.Components
             {
                 writer.WriteAssetId("Sprite", assetStore.GetAssetId(Sprite));
             }
+
+            writer.WriteDouble("Opacity", Opacity);
+            writer.WriteEnum("BitmapInterpolationMode", BitmapInterpolationMode);
         }
 
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
@@ -61,6 +75,8 @@ namespace Geisha.Engine.Rendering.Components
             Sprite = reader.IsNull("Sprite")
                 ? null
                 : assetStore.GetAsset<Sprite>(reader.ReadAssetId("Sprite"));
+            Opacity = reader.ReadDouble("Opacity");
+            BitmapInterpolationMode = reader.ReadEnum<BitmapInterpolationMode>("BitmapInterpolationMode");
         }
     }
 

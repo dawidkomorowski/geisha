@@ -978,6 +978,44 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
                 }
+            },
+            new()
+            {
+                Name = "41 Sprite rendering - bitmap interpolation mode",
+                ExpectedReferenceImageFile = "41_Sprites_BitmapInterpolationMode.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(-39, 0), scale: new Vector2(3, 3));
+                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(39, 0), scale: new Vector2(3, 3));
+
+                    // Set interpolation mode to NearestNeighbor for entity1, resulting in sharper pixels
+                    entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                    // Set interpolation mode to Linear for entity2, resulting in smoother pixels
+                    entity2.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+                }
+            },
+            new()
+            {
+                Name = "42 Sprite batch rendering - bitmap interpolation mode",
+                ExpectedReferenceImageFile = "42_SpriteBatch_BitmapInterpolationMode.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(-39, 39), scale: new Vector2(3, 3));
+                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(39, 39), scale: new Vector2(3, 3));
+                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(-39, -39), scale: new Vector2(3, 3));
+                    var entity4 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(39, -39), scale: new Vector2(3, 3));
+
+                    // Set interpolation mode to NearestNeighbor for entity1 and entity2, resulting in sharper pixels
+                    entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                    entity2.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                    // Set interpolation mode to Linear for entity3 and entity4, resulting in smoother pixels
+                    entity3.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+                    entity4.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+                }
             }
         };
 

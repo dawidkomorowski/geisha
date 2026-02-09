@@ -7,7 +7,8 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal sealed class RigidBody2D
 {
-    // TODO This could be replaced with field keyword in .NET 10 (C# 14).
+    // TODO: This could be replaced with field keyword in .NET 10 (C# 14).
+    // TODO: When field keyword is used, consider searching for other places in the codebase where it could be used as well.
     private Vector2 _position;
     private double _rotation;
     private Vector2 _linearVelocity;

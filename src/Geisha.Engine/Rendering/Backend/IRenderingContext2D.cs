@@ -74,7 +74,11 @@ public interface IRenderingContext2D
     ///     Opacity of drawn sprite. Valid range is from 0.0 meaning fully transparent to 1.0 meaning fully opaque. Default
     ///     value is <c>1.0</c>.
     /// </param>
-    void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
+    /// <param name="interpolationMode">
+    ///     Bitmap interpolation mode used when sampling the sprite texture (e.g. when scaling or rotating). Default value is
+    ///     <see cref="BitmapInterpolationMode.Linear" />.
+    /// </param>
+    void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d, BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.Linear);
 
     /// <summary>
     ///     Draws specified <see cref="SpriteBatch" />.
