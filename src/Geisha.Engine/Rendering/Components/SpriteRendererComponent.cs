@@ -43,9 +43,10 @@ namespace Geisha.Engine.Rendering.Components
             set => SpriteNode.Opacity = Math.Clamp(value, 0d, 1d);
         }
 
-        // TODO: Add xml documentation.
-        // TODO: Add xml documentation to IRenderingContext2D interface about interpolation mode (especially for DrawSprite method).
-        // TODO: Add xml documentation to SpriteBatch for BitmapInterpolationMode property.
+        /// <summary>
+        ///     Gets or sets bitmap interpolation mode used when sampling sprite texture (e.g. when scaling or rotating).
+        ///     Default value is <see cref="BitmapInterpolationMode.Linear" />.
+        /// </summary>
         public BitmapInterpolationMode BitmapInterpolationMode
         {
             get => SpriteNode.BitmapInterpolationMode;

@@ -30,6 +30,10 @@ public sealed class SpriteBatch
     /// </summary>
     public ITexture? Texture => _sprites.Count == 0 ? null : _sprites[0].Sprite.SourceTexture;
 
+    /// <summary>
+    ///     Gets or sets bitmap interpolation mode used when sampling the source texture while rendering sprites in this batch
+    ///     (e.g. when scaling or rotating).
+    /// </summary>
     public BitmapInterpolationMode BitmapInterpolationMode { get; set; }
 
     /// <summary>
