@@ -44,7 +44,6 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         // TODO: Add xml documentation.
-        // TODO: Add xml documentation to BitmapInterpolationMode enum.
         // TODO: Add xml documentation to IRenderingContext2D interface about interpolation mode (especially for DrawSprite method).
         // TODO: Add xml documentation to SpriteBatch for BitmapInterpolationMode property.
         public BitmapInterpolationMode BitmapInterpolationMode
