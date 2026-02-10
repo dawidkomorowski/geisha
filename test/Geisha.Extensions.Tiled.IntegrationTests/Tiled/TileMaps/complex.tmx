@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="28">
+ <properties>
+  <property name="Bool Property" type="bool" value="true"/>
+  <property name="Enum Property" propertytype="Enum Type" value="Value 2"/>
+  <property name="Float Property" type="float" value="3.14"/>
+  <property name="Int Property" type="int" value="69"/>
+  <property name="Object Property" type="object" value="13"/>
+  <property name="String Property" value="This is a string property"/>
+ </properties>
  <tileset firstgid="1" source="../TileSets/tiles.tsx"/>
  <tileset firstgid="181" source="../TileSets/characters.tsx"/>
  <layer id="1" name="Tile Layer 1" width="20" height="20">
