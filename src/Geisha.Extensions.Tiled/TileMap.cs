@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 namespace Geisha.Extensions.Tiled;
@@ -36,6 +37,9 @@ public sealed class TileMap
             throw new NotSupportedException($"Infinite maps are not yet supported by {typeof(TileMap).Namespace}.");
         }
 
+        var propertiesElement = map.ChildNodes.Cast<XmlElement>().SingleOrDefault(e => e.Name == "properties");
+        Properties = propertiesElement is not null ? new Properties(propertiesElement) : new Properties();
+
         foreach (XmlElement element in map.ChildNodes)
         {
             switch (element.Name)
@@ -71,6 +75,7 @@ public sealed class TileMap
     public int TileWidth { get; }
     public int TileHeight { get; }
     public bool IsInfinite { get; }
+    public Properties Properties { get; }
     public IReadOnlyList<TileSet> TileSets => _tileSets;
     public IReadOnlyList<TileLayer> TileLayers => _tileLayers;
     public IReadOnlyList<ObjectLayer> ObjectLayers => _objectLayers;

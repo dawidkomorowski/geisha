@@ -71,6 +71,42 @@ public class TileMapIntegrationTests
         Assert.That(tileMap.TileHeight, Is.EqualTo(18));
         Assert.That(tileMap.IsInfinite, Is.False);
 
+        // Assert map properties
+        Assert.That(tileMap.Properties["Bool Property"].Name, Is.EqualTo("Bool Property"));
+        Assert.That(tileMap.Properties["Bool Property"].Type, Is.EqualTo(PropertyType.Bool));
+        Assert.That(tileMap.Properties["Bool Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileMap.Properties["Bool Property"].Value, Is.EqualTo("true"));
+        Assert.That(tileMap.Properties["Bool Property"].BoolValue, Is.True);
+
+        Assert.That(tileMap.Properties["Enum Property"].Name, Is.EqualTo("Enum Property"));
+        Assert.That(tileMap.Properties["Enum Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileMap.Properties["Enum Property"].CustomPropertyType, Is.EqualTo("Enum Type"));
+        Assert.That(tileMap.Properties["Enum Property"].Value, Is.EqualTo("Value 2"));
+
+        Assert.That(tileMap.Properties["Float Property"].Name, Is.EqualTo("Float Property"));
+        Assert.That(tileMap.Properties["Float Property"].Type, Is.EqualTo(PropertyType.Float));
+        Assert.That(tileMap.Properties["Float Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileMap.Properties["Float Property"].Value, Is.EqualTo("3.14"));
+        Assert.That(tileMap.Properties["Float Property"].FloatValue, Is.EqualTo(3.14));
+
+        Assert.That(tileMap.Properties["Int Property"].Name, Is.EqualTo("Int Property"));
+        Assert.That(tileMap.Properties["Int Property"].Type, Is.EqualTo(PropertyType.Int));
+        Assert.That(tileMap.Properties["Int Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileMap.Properties["Int Property"].Value, Is.EqualTo("69"));
+        Assert.That(tileMap.Properties["Int Property"].IntValue, Is.EqualTo(69));
+
+        Assert.That(tileMap.Properties["String Property"].Name, Is.EqualTo("String Property"));
+        Assert.That(tileMap.Properties["String Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileMap.Properties["String Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileMap.Properties["String Property"].Value, Is.EqualTo("This is a string property"));
+        Assert.That(tileMap.Properties["String Property"].StringValue, Is.EqualTo("This is a string property"));
+
+        Assert.That(tileMap.Properties["Object Property"].Name, Is.EqualTo("Object Property"));
+        Assert.That(tileMap.Properties["Object Property"].Type, Is.EqualTo(PropertyType.Object));
+        Assert.That(tileMap.Properties["Object Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileMap.Properties["Object Property"].Value, Is.EqualTo("13"));
+        Assert.That(tileMap.Properties["Object Property"].ObjectValue, Is.EqualTo(13));
+
         // Assert tile sets
         Assert.That(tileMap.TileSets, Has.Count.EqualTo(2));
 
