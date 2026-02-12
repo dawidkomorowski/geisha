@@ -224,6 +224,33 @@ public class TileMapIntegrationTests
     }
 
     [Test]
+    public void LoadFromFile_Object_Point()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "object_point.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+
+        // Assert object layers
+        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
+        var objectLayer = tileMap.ObjectLayers[0];
+        Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+
+        // Assert object properties
+        var object1 = objectLayer.Objects[0];
+        Assert.That(object1.Id, Is.EqualTo(28));
+        Assert.That(object1.Name, Is.EqualTo("Point"));
+        Assert.That(object1.Type, Is.Empty);
+        Assert.That(object1.X, Is.EqualTo(44.1822));
+        Assert.That(object1.Y, Is.EqualTo(46.3063));
+        Assert.That(object1.Width, Is.Zero);
+        Assert.That(object1.Height, Is.Zero);
+    }
+
+    [Test]
     public void LoadFromFile_EmptyMap()
     {
         // Arrange

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="30">
+ <tileset firstgid="1" source="../TileSets/tiles.tsx"/>
+ <tileset firstgid="181" source="../TileSets/characters.tsx"/>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="28" name="Point" x="44.1822" y="46.3063">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
