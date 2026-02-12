@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="30">
- <tileset firstgid="1" source="../TileSets/tiles.tsx"/>
- <tileset firstgid="181" source="../TileSets/characters.tsx"/>
  <objectgroup id="2" name="Object Layer 1">
   <object id="28" name="Object 1" x="27.6139" y="29.738">
    <properties>
