@@ -79,7 +79,10 @@ public class TileMapIntegrationTests
         // Assert tile layers
         Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
         var tileLayer = tileMap.TileLayers[0];
+        Assert.That(tileLayer.Id, Is.EqualTo(1));
         Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
+        Assert.That(tileLayer.Width, Is.EqualTo(20));
+        Assert.That(tileLayer.Height, Is.EqualTo(20));
 
         // Assert tile properties
 
@@ -460,19 +463,6 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
         Assert.That(tileLayer.Width, Is.EqualTo(20));
         Assert.That(tileLayer.Height, Is.EqualTo(20));
-
-        // Assert basic tiles
-        Assert.That(tileLayer.Tiles[0][0], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[0][0].GlobalTileId.Value, Is.EqualTo(1));
-        Assert.That(tileLayer.Tiles[0][0].LocalTileId, Is.EqualTo(0));
-
-        Assert.That(tileLayer.Tiles[1][0], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[1][0].GlobalTileId.Value, Is.EqualTo(91));
-        Assert.That(tileLayer.Tiles[1][0].LocalTileId, Is.EqualTo(90));
-
-        Assert.That(tileLayer.Tiles[2][0], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[2][0].GlobalTileId.Value, Is.EqualTo(180));
-        Assert.That(tileLayer.Tiles[2][0].LocalTileId, Is.EqualTo(179));
 
         // Assert flipping and rotation flags
         Assert.That(tileLayer.Tiles[0][1], Is.Not.Null);
