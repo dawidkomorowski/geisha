@@ -7,7 +7,7 @@ namespace Geisha.Extensions.Tiled.IntegrationTests;
 public class TileMapIntegrationTests
 {
     [Test]
-    public void LoadFromFile_MapProperties()
+    public void LoadFromFile_Map_Properties()
     {
         // Arrange
         var filePath = Path.Combine("Tiled", "TileMaps", "map_properties.tmx");
@@ -66,7 +66,7 @@ public class TileMapIntegrationTests
     }
 
     [Test]
-    public void LoadFromFile_TileProperties()
+    public void LoadFromFile_Tile_Properties()
     {
         // Arrange
         var filePath = Path.Combine("Tiled", "TileMaps", "tile_properties.tmx");
@@ -150,7 +150,7 @@ public class TileMapIntegrationTests
     }
 
     [Test]
-    public void LoadFromFile_ObjectProperties()
+    public void LoadFromFile_Object_Properties()
     {
         // Arrange
         var filePath = Path.Combine("Tiled", "TileMaps", "object_properties.tmx");
@@ -164,6 +164,7 @@ public class TileMapIntegrationTests
         Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
         var objectLayer = tileMap.ObjectLayers[0];
         Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(objectLayer.Objects, Has.Count.EqualTo(2));
 
         // Assert object properties
         var object1 = objectLayer.Objects[0];
@@ -238,16 +239,46 @@ public class TileMapIntegrationTests
         Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
         var objectLayer = tileMap.ObjectLayers[0];
         Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(objectLayer.Objects, Has.Count.EqualTo(1));
 
         // Assert object properties
-        var object1 = objectLayer.Objects[0];
-        Assert.That(object1.Id, Is.EqualTo(28));
-        Assert.That(object1.Name, Is.EqualTo("Point"));
-        Assert.That(object1.Type, Is.Empty);
-        Assert.That(object1.X, Is.EqualTo(44.1822));
-        Assert.That(object1.Y, Is.EqualTo(46.3063));
-        Assert.That(object1.Width, Is.Zero);
-        Assert.That(object1.Height, Is.Zero);
+        var tiledObject = objectLayer.Objects[0];
+        Assert.That(tiledObject.Id, Is.EqualTo(28));
+        Assert.That(tiledObject.Name, Is.EqualTo("Point"));
+        Assert.That(tiledObject.Type, Is.Empty);
+        Assert.That(tiledObject.X, Is.EqualTo(44.1822));
+        Assert.That(tiledObject.Y, Is.EqualTo(46.3063));
+        Assert.That(tiledObject.Width, Is.Zero);
+        Assert.That(tiledObject.Height, Is.Zero);
+    }
+
+    [Test]
+    public void LoadFromFile_Object_Rectangle()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "object_rectangle.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+
+        // Assert object layers
+        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
+        var objectLayer = tileMap.ObjectLayers[0];
+        Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(objectLayer.Objects, Has.Count.EqualTo(1));
+
+        // Assert object properties
+        var tiledObject = objectLayer.Objects[0];
+        Assert.That(tiledObject.Id, Is.EqualTo(30));
+        Assert.That(tiledObject.Name, Is.EqualTo("Rectangle"));
+        Assert.That(tiledObject.Type, Is.Empty);
+        Assert.That(tiledObject.X, Is.EqualTo(28.3213));
+        Assert.That(tiledObject.Y, Is.EqualTo(25.5291));
+        Assert.That(tiledObject.Width, Is.EqualTo(42.6814));
+        Assert.That(tiledObject.Height, Is.EqualTo(22.7368));
+        Assert.That(tiledObject, Is.TypeOf<TiledObject.Rectangle>());
     }
 
     [Test]
@@ -479,7 +510,7 @@ public class TileMapIntegrationTests
         var objectLayer = tileMap.ObjectLayers[0];
         Assert.That(objectLayer.Id, Is.EqualTo(2));
         Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
-        Assert.That(objectLayer.Objects, Has.Count.EqualTo(6));
+        Assert.That(objectLayer.Objects, Has.Count.EqualTo(5));
 
         var object1 = objectLayer.Objects[0];
         Assert.That(object1.Id, Is.EqualTo(1));
@@ -502,64 +533,54 @@ public class TileMapIntegrationTests
         Assert.That(object1, Is.TypeOf<TiledObject.Point>());
 
         var object2 = objectLayer.Objects[1];
-        Assert.That(object2.Id, Is.EqualTo(9));
-        Assert.That(object2.Name, Is.EqualTo("Rectangle"));
+        Assert.That(object2.Id, Is.EqualTo(10));
+        Assert.That(object2.Name, Is.EqualTo("Ellipse"));
         Assert.That(object2.Type, Is.Empty);
-        Assert.That(object2.X, Is.EqualTo(99.3241));
-        Assert.That(object2.Y, Is.EqualTo(51.0582));
-        Assert.That(object2.Width, Is.EqualTo(42.6814));
-        Assert.That(object2.Height, Is.EqualTo(22.7368));
-        Assert.That(object2, Is.TypeOf<TiledObject.Rectangle>());
+        Assert.That(object2.X, Is.EqualTo(44.7756));
+        Assert.That(object2.Y, Is.EqualTo(46.9695));
+        Assert.That(object2.Width, Is.EqualTo(45.9501));
+        Assert.That(object2.Height, Is.EqualTo(29.1967));
+        Assert.That(object2, Is.TypeOf<TiledObject.Ellipse>());
 
         var object3 = objectLayer.Objects[2];
-        Assert.That(object3.Id, Is.EqualTo(10));
-        Assert.That(object3.Name, Is.EqualTo("Ellipse"));
+        Assert.That(object3.Id, Is.EqualTo(13));
+        Assert.That(object3.Name, Is.EqualTo("Lever"));
         Assert.That(object3.Type, Is.Empty);
-        Assert.That(object3.X, Is.EqualTo(44.7756));
-        Assert.That(object3.Y, Is.EqualTo(46.9695));
-        Assert.That(object3.Width, Is.EqualTo(45.9501));
-        Assert.That(object3.Height, Is.EqualTo(29.1967));
-        Assert.That(object3, Is.TypeOf<TiledObject.Ellipse>());
+        Assert.That(object3.X, Is.EqualTo(36));
+        Assert.That(object3.Y, Is.EqualTo(108));
+        Assert.That(object3.Width, Is.EqualTo(18));
+        Assert.That(object3.Height, Is.EqualTo(18));
+        Assert.That(object3.Properties["Door"].Name, Is.EqualTo("Door"));
+        Assert.That(object3.Properties["Door"].Type, Is.EqualTo(PropertyType.Object));
+        Assert.That(object3.Properties["Door"].CustomPropertyType, Is.Empty);
+        Assert.That(object3.Properties["Door"].Value, Is.EqualTo("15"));
+        Assert.That(object3.Properties["Door"].ObjectValue, Is.EqualTo(15));
+        Assert.That(object3, Is.TypeOf<TiledObject.Tile>());
+        var tileObject4 = (TiledObject.Tile)object3;
+        Assert.That(tileObject4.GlobalTileId.Value, Is.EqualTo(65));
 
         var object4 = objectLayer.Objects[3];
-        Assert.That(object4.Id, Is.EqualTo(13));
-        Assert.That(object4.Name, Is.EqualTo("Lever"));
+        Assert.That(object4.Id, Is.EqualTo(15));
+        Assert.That(object4.Name, Is.EqualTo("Door"));
         Assert.That(object4.Type, Is.Empty);
-        Assert.That(object4.X, Is.EqualTo(36));
+        Assert.That(object4.X, Is.EqualTo(72));
         Assert.That(object4.Y, Is.EqualTo(108));
         Assert.That(object4.Width, Is.EqualTo(18));
         Assert.That(object4.Height, Is.EqualTo(18));
-        Assert.That(object4.Properties["Door"].Name, Is.EqualTo("Door"));
-        Assert.That(object4.Properties["Door"].Type, Is.EqualTo(PropertyType.Object));
-        Assert.That(object4.Properties["Door"].CustomPropertyType, Is.Empty);
-        Assert.That(object4.Properties["Door"].Value, Is.EqualTo("15"));
-        Assert.That(object4.Properties["Door"].ObjectValue, Is.EqualTo(15));
         Assert.That(object4, Is.TypeOf<TiledObject.Tile>());
-        var tileObject4 = (TiledObject.Tile)object4;
-        Assert.That(tileObject4.GlobalTileId.Value, Is.EqualTo(65));
-
-        var object5 = objectLayer.Objects[4];
-        Assert.That(object5.Id, Is.EqualTo(15));
-        Assert.That(object5.Name, Is.EqualTo("Door"));
-        Assert.That(object5.Type, Is.Empty);
-        Assert.That(object5.X, Is.EqualTo(72));
-        Assert.That(object5.Y, Is.EqualTo(108));
-        Assert.That(object5.Width, Is.EqualTo(18));
-        Assert.That(object5.Height, Is.EqualTo(18));
-        Assert.That(object5, Is.TypeOf<TiledObject.Tile>());
-        var tileObject5 = (TiledObject.Tile)object5;
+        var tileObject5 = (TiledObject.Tile)object4;
         Assert.That(tileObject5.GlobalTileId.Value, Is.EqualTo(131));
 
-        var object6 = objectLayer.Objects[5];
-        Assert.That(object6.Id, Is.EqualTo(27));
-        Assert.That(object6.Name, Is.EqualTo("Text"));
-        Assert.That(object6.Type, Is.Empty);
-        Assert.That(object6.X, Is.EqualTo(112.871));
-        Assert.That(object6.Y, Is.EqualTo(88.0291));
-        Assert.That(object6.Width, Is.EqualTo(83));
-        Assert.That(object6.Height, Is.EqualTo(19));
-        Assert.That(object6, Is.TypeOf<TiledObject.Text>());
-        var textObject6 = (TiledObject.Text)object6;
+        var object5 = objectLayer.Objects[4];
+        Assert.That(object5.Id, Is.EqualTo(27));
+        Assert.That(object5.Name, Is.EqualTo("Text"));
+        Assert.That(object5.Type, Is.Empty);
+        Assert.That(object5.X, Is.EqualTo(112.871));
+        Assert.That(object5.Y, Is.EqualTo(88.0291));
+        Assert.That(object5.Width, Is.EqualTo(83));
+        Assert.That(object5.Height, Is.EqualTo(19));
+        Assert.That(object5, Is.TypeOf<TiledObject.Text>());
+        var textObject6 = (TiledObject.Text)object5;
         Assert.That(textObject6.Content, Is.EqualTo("Text object"));
     }
 }

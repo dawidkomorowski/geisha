@@ -37,7 +37,6 @@
    </properties>
    <point/>
   </object>
-  <object id="9" name="Rectangle" x="99.3241" y="51.0582" width="42.6814" height="22.7368"/>
   <object id="10" name="Ellipse" x="44.7756" y="46.9695" width="45.9501" height="29.1967">
    <ellipse/>
   </object>
