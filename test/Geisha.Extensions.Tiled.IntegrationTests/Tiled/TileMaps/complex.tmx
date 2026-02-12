@@ -29,13 +29,4 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="Object Layer 1">
-  <object id="1" name="Point" type="Object Class" x="27.1247" y="64.4211">
-   <properties>
-    <property name="Object Int Property" type="int" value="456"/>
-    <property name="Object String Property" value="String value in object"/>
-   </properties>
-   <point/>
-  </object>
- </objectgroup>
 </map>

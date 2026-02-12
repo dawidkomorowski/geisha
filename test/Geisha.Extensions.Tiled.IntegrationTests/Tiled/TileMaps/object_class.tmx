@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="34">
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="33" name="Point" type="Object Class" x="27.5235" y="28.1219">
+   <properties>
+    <property name="Object Int Property" type="int" value="456"/>
+    <property name="Object String Property" value="String value in object"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+</map>

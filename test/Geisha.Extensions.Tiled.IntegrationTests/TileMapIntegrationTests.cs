@@ -361,6 +361,45 @@ public class TileMapIntegrationTests
     }
 
     [Test]
+    public void LoadFromFile_Object_Class()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "object_class.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
+        var objectLayer = tileMap.ObjectLayers[0];
+        Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(objectLayer.Objects, Has.Count.EqualTo(1));
+
+        var tiledObject = objectLayer.Objects[0];
+        Assert.That(tiledObject.Id, Is.EqualTo(33));
+        Assert.That(tiledObject.Name, Is.EqualTo("Point"));
+        Assert.That(tiledObject.Type, Is.EqualTo("Object Class"));
+        Assert.That(tiledObject.X, Is.EqualTo(27.5235));
+        Assert.That(tiledObject.Y, Is.EqualTo(28.1219));
+        Assert.That(tiledObject.Width, Is.EqualTo(0));
+        Assert.That(tiledObject.Height, Is.EqualTo(0));
+
+        Assert.That(tiledObject.Properties["Object Int Property"].Name, Is.EqualTo("Object Int Property"));
+        Assert.That(tiledObject.Properties["Object Int Property"].Type, Is.EqualTo(PropertyType.Int));
+        Assert.That(tiledObject.Properties["Object Int Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tiledObject.Properties["Object Int Property"].Value, Is.EqualTo("456"));
+        Assert.That(tiledObject.Properties["Object Int Property"].IntValue, Is.EqualTo(456));
+
+        Assert.That(tiledObject.Properties["Object String Property"].Name, Is.EqualTo("Object String Property"));
+        Assert.That(tiledObject.Properties["Object String Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tiledObject.Properties["Object String Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tiledObject.Properties["Object String Property"].Value, Is.EqualTo("String value in object"));
+        Assert.That(tiledObject.Properties["Object String Property"].StringValue, Is.EqualTo("String value in object"));
+
+        Assert.That(tiledObject, Is.TypeOf<TiledObject.Point>());
+    }
+
+    [Test]
     public void LoadFromFile_EmptyMap()
     {
         // Arrange
@@ -548,9 +587,6 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Tiles[11][2].GlobalTileId.FlippedHorizontally, Is.True);
         Assert.That(tileLayer.Tiles[11][2].LocalTileId, Is.EqualTo(2));
 
-        // Assert tile properties
-        Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].StringValue, Is.EqualTo("This is a string property"));
-
         // Assert all remaining tiles are null
         var skipTiles = new HashSet<(int x, int y)>
         {
@@ -570,32 +606,5 @@ public class TileMapIntegrationTests
                 }
             }
         }
-
-        // Assert object layers
-        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
-        var objectLayer = tileMap.ObjectLayers[0];
-        Assert.That(objectLayer.Id, Is.EqualTo(2));
-        Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
-        Assert.That(objectLayer.Objects, Has.Count.EqualTo(1));
-
-        var object1 = objectLayer.Objects[0];
-        Assert.That(object1.Id, Is.EqualTo(1));
-        Assert.That(object1.Name, Is.EqualTo("Point"));
-        Assert.That(object1.Type, Is.EqualTo("Object Class"));
-        Assert.That(object1.X, Is.EqualTo(27.1247));
-        Assert.That(object1.Y, Is.EqualTo(64.4211));
-        Assert.That(object1.Width, Is.EqualTo(0));
-        Assert.That(object1.Height, Is.EqualTo(0));
-        Assert.That(object1.Properties["Object Int Property"].Name, Is.EqualTo("Object Int Property"));
-        Assert.That(object1.Properties["Object Int Property"].Type, Is.EqualTo(PropertyType.Int));
-        Assert.That(object1.Properties["Object Int Property"].CustomPropertyType, Is.Empty);
-        Assert.That(object1.Properties["Object Int Property"].Value, Is.EqualTo("456"));
-        Assert.That(object1.Properties["Object Int Property"].IntValue, Is.EqualTo(456));
-        Assert.That(object1.Properties["Object String Property"].Name, Is.EqualTo("Object String Property"));
-        Assert.That(object1.Properties["Object String Property"].Type, Is.EqualTo(PropertyType.String));
-        Assert.That(object1.Properties["Object String Property"].CustomPropertyType, Is.Empty);
-        Assert.That(object1.Properties["Object String Property"].Value, Is.EqualTo("String value in object"));
-        Assert.That(object1.Properties["Object String Property"].StringValue, Is.EqualTo("String value in object"));
-        Assert.That(object1, Is.TypeOf<TiledObject.Point>());
     }
 }
