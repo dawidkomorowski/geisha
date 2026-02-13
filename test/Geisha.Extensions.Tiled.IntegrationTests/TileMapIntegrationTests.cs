@@ -608,6 +608,53 @@ public class TileMapIntegrationTests
     }
 
     [Test]
+    public void LoadFromFile_TileLayer_MultipleTileSets()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "tilelayer_multiple_tilesets.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
+        var tileLayer = tileMap.TileLayers[0];
+
+        Assert.That(tileLayer.Id, Is.EqualTo(1));
+        Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
+        Assert.That(tileLayer.Width, Is.EqualTo(30));
+        Assert.That(tileLayer.Height, Is.EqualTo(20));
+
+        Assert.That(tileLayer.Tiles[1][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.Value, Is.EqualTo(66));
+        Assert.That(tileLayer.Tiles[1][1].LocalTileId, Is.EqualTo(65));
+
+        Assert.That(tileLayer.Tiles[3][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.Value, Is.EqualTo(199));
+        Assert.That(tileLayer.Tiles[3][1].LocalTileId, Is.EqualTo(18));
+
+        // Assert all remaining tiles are null
+        var skipTiles = new HashSet<(int x, int y)>
+        {
+            (1, 1), (3, 1)
+        };
+        for (var w = 0; w < tileLayer.Width; w++)
+        {
+            for (var h = 0; h < tileLayer.Height; h++)
+            {
+                if (skipTiles.Contains((w, h)))
+                {
+                    Assert.That(tileLayer.Tiles[w][h], Is.Not.Null, $"Invalid tile at ({w},{h}).");
+                }
+                else
+                {
+                    Assert.That(tileLayer.Tiles[w][h], Is.Null, $"Invalid tile at ({w},{h}).");
+                }
+            }
+        }
+    }
+
+    [Test]
     public void LoadFromFile_ComplexMap()
     {
         // Arrange
