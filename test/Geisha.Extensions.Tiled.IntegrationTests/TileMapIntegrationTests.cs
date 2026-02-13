@@ -130,6 +130,48 @@ public class TileMapIntegrationTests
     }
 
     [Test]
+    public void LoadFromFile_Map_Layers()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "map_layers.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.TileLayers, Has.Count.EqualTo(3));
+
+        Assert.That(tileMap.TileLayers[0].Id, Is.EqualTo(2));
+        Assert.That(tileMap.TileLayers[0].Name, Is.EqualTo("Tile Layer 1"));
+        Assert.That(tileMap.TileLayers[0].Width, Is.EqualTo(30));
+        Assert.That(tileMap.TileLayers[0].Height, Is.EqualTo(20));
+
+        Assert.That(tileMap.TileLayers[1].Id, Is.EqualTo(3));
+        Assert.That(tileMap.TileLayers[1].Name, Is.EqualTo("Tile Layer 2"));
+        Assert.That(tileMap.TileLayers[1].Width, Is.EqualTo(30));
+        Assert.That(tileMap.TileLayers[1].Height, Is.EqualTo(20));
+
+        Assert.That(tileMap.TileLayers[2].Id, Is.EqualTo(4));
+        Assert.That(tileMap.TileLayers[2].Name, Is.EqualTo("Tile Layer 3"));
+        Assert.That(tileMap.TileLayers[2].Width, Is.EqualTo(30));
+        Assert.That(tileMap.TileLayers[2].Height, Is.EqualTo(20));
+
+        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(3));
+
+        Assert.That(tileMap.ObjectLayers[0].Id, Is.EqualTo(5));
+        Assert.That(tileMap.ObjectLayers[0].Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(tileMap.ObjectLayers[0].Objects, Is.Empty);
+
+        Assert.That(tileMap.ObjectLayers[1].Id, Is.EqualTo(6));
+        Assert.That(tileMap.ObjectLayers[1].Name, Is.EqualTo("Object Layer 2"));
+        Assert.That(tileMap.ObjectLayers[1].Objects, Is.Empty);
+
+        Assert.That(tileMap.ObjectLayers[2].Id, Is.EqualTo(7));
+        Assert.That(tileMap.ObjectLayers[2].Name, Is.EqualTo("Object Layer 3"));
+        Assert.That(tileMap.ObjectLayers[2].Objects, Is.Empty);
+    }
+
+    [Test]
     public void LoadFromFile_Tile_Properties()
     {
         // Arrange
@@ -518,13 +560,7 @@ public class TileMapIntegrationTests
         // Assert
 
         // Assert tile layers
-        Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
         var tileLayer = tileMap.TileLayers[0];
-
-        Assert.That(tileLayer.Id, Is.EqualTo(1));
-        Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
-        Assert.That(tileLayer.Width, Is.EqualTo(20));
-        Assert.That(tileLayer.Height, Is.EqualTo(20));
 
         // Assert flipping and rotation flags
         Assert.That(tileLayer.Tiles[0][1], Is.Not.Null);
