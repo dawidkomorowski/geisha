@@ -66,6 +66,43 @@ public class TileMapIntegrationTests
     }
 
     [Test]
+    public void LoadFromFile_Map_TileSets()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "map_tilesets.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.TileSets, Has.Count.EqualTo(2));
+
+        var tileSet1 = tileMap.TileSets[0];
+        Assert.That(tileSet1.FirstGlobalTileId.Value, Is.EqualTo(1));
+        Assert.That(tileSet1.Source, Is.EqualTo("../TileSets/tiles.tsx"));
+        Assert.That(tileSet1.Version, Is.EqualTo("1.10"));
+        Assert.That(tileSet1.TiledVersion, Is.EqualTo("1.11.2"));
+        Assert.That(tileSet1.Name, Is.EqualTo("tiles"));
+        Assert.That(tileSet1.TileWidth, Is.EqualTo(18));
+        Assert.That(tileSet1.TileHeight, Is.EqualTo(18));
+        Assert.That(tileSet1.Spacing, Is.EqualTo(1));
+        Assert.That(tileSet1.TileCount, Is.EqualTo(180));
+        Assert.That(tileSet1.Columns, Is.EqualTo(20));
+
+        var tileSet2 = tileMap.TileSets[1];
+        Assert.That(tileSet2.FirstGlobalTileId.Value, Is.EqualTo(181));
+        Assert.That(tileSet2.Source, Is.EqualTo("../TileSets/characters.tsx"));
+        Assert.That(tileSet2.Version, Is.EqualTo("1.10"));
+        Assert.That(tileSet2.TiledVersion, Is.EqualTo("1.11.2"));
+        Assert.That(tileSet2.Name, Is.EqualTo("characters"));
+        Assert.That(tileSet2.TileWidth, Is.EqualTo(24));
+        Assert.That(tileSet2.TileHeight, Is.EqualTo(24));
+        Assert.That(tileSet2.Spacing, Is.EqualTo(1));
+        Assert.That(tileSet2.TileCount, Is.EqualTo(27));
+        Assert.That(tileSet2.Columns, Is.EqualTo(9));
+    }
+
+    [Test]
     public void LoadFromFile_Tile_Properties()
     {
         // Arrange
@@ -452,47 +489,6 @@ public class TileMapIntegrationTests
         var tileMap = TileMap.LoadFromFile(filePath);
 
         // Assert
-
-        // Assert map properties
-        Assert.That(tileMap.Version, Is.EqualTo("1.10"));
-        Assert.That(tileMap.TiledVersion, Is.EqualTo("1.11.2"));
-        Assert.That(tileMap.Orientation, Is.EqualTo(Orientation.Orthogonal));
-        Assert.That(tileMap.RenderOrder, Is.EqualTo(RenderOrder.RightDown));
-        Assert.That(tileMap.Width, Is.EqualTo(20));
-        Assert.That(tileMap.Height, Is.EqualTo(20));
-        Assert.That(tileMap.TileWidth, Is.EqualTo(18));
-        Assert.That(tileMap.TileHeight, Is.EqualTo(18));
-        Assert.That(tileMap.IsInfinite, Is.False);
-
-        // Assert map custom properties
-        Assert.That(tileMap.Properties["String Property"].StringValue, Is.EqualTo("This is a string property"));
-
-        // Assert tile sets
-        Assert.That(tileMap.TileSets, Has.Count.EqualTo(2));
-
-        var tileSet1 = tileMap.TileSets[0];
-        Assert.That(tileSet1.FirstGlobalTileId.Value, Is.EqualTo(1));
-        Assert.That(tileSet1.Source, Is.EqualTo("../TileSets/tiles.tsx"));
-        Assert.That(tileSet1.Version, Is.EqualTo("1.10"));
-        Assert.That(tileSet1.TiledVersion, Is.EqualTo("1.11.2"));
-        Assert.That(tileSet1.Name, Is.EqualTo("tiles"));
-        Assert.That(tileSet1.TileWidth, Is.EqualTo(18));
-        Assert.That(tileSet1.TileHeight, Is.EqualTo(18));
-        Assert.That(tileSet1.Spacing, Is.EqualTo(1));
-        Assert.That(tileSet1.TileCount, Is.EqualTo(180));
-        Assert.That(tileSet1.Columns, Is.EqualTo(20));
-
-        var tileSet2 = tileMap.TileSets[1];
-        Assert.That(tileSet2.FirstGlobalTileId.Value, Is.EqualTo(181));
-        Assert.That(tileSet2.Source, Is.EqualTo("../TileSets/characters.tsx"));
-        Assert.That(tileSet2.Version, Is.EqualTo("1.10"));
-        Assert.That(tileSet2.TiledVersion, Is.EqualTo("1.11.2"));
-        Assert.That(tileSet2.Name, Is.EqualTo("characters"));
-        Assert.That(tileSet2.TileWidth, Is.EqualTo(24));
-        Assert.That(tileSet2.TileHeight, Is.EqualTo(24));
-        Assert.That(tileSet2.Spacing, Is.EqualTo(1));
-        Assert.That(tileSet2.TileCount, Is.EqualTo(27));
-        Assert.That(tileSet2.Columns, Is.EqualTo(9));
 
         // Assert tile layers
         Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
