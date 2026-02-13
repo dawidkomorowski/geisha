@@ -453,6 +453,7 @@ public class TileMapIntegrationTests
         Assert.That(tiledObject.Y, Is.EqualTo(46.3063));
         Assert.That(tiledObject.Width, Is.Zero);
         Assert.That(tiledObject.Height, Is.Zero);
+        Assert.That(tiledObject, Is.TypeOf<TiledObject.Point>());
     }
 
     [Test]
@@ -749,5 +750,57 @@ public class TileMapIntegrationTests
                 }
             }
         }
+    }
+
+    [Test]
+    public void LoadFromFile_ObjectLayer_Empty()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "objectlayer_empty.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
+        var objectLayer = tileMap.ObjectLayers[0];
+
+        Assert.That(objectLayer.Id, Is.EqualTo(2));
+        Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(objectLayer.Objects, Is.Empty);
+    }
+
+    [Test]
+    public void LoadFromFile_ObjectLayer_NonEmpty()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "objectlayer_nonempty.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.ObjectLayers, Has.Count.EqualTo(1));
+        var objectLayer = tileMap.ObjectLayers[0];
+
+        Assert.That(objectLayer.Id, Is.EqualTo(2));
+        Assert.That(objectLayer.Name, Is.EqualTo("Object Layer 1"));
+        Assert.That(objectLayer.Objects, Has.Count.EqualTo(4));
+
+        Assert.That(objectLayer.Objects[0].Id, Is.EqualTo(32));
+        Assert.That(objectLayer.Objects[0].Name, Is.EqualTo("Point"));
+        Assert.That(objectLayer.Objects[0], Is.TypeOf<TiledObject.Point>());
+
+        Assert.That(objectLayer.Objects[1].Id, Is.EqualTo(33));
+        Assert.That(objectLayer.Objects[1].Name, Is.EqualTo("Rectangle"));
+        Assert.That(objectLayer.Objects[1], Is.TypeOf<TiledObject.Rectangle>());
+
+        Assert.That(objectLayer.Objects[2].Id, Is.EqualTo(34));
+        Assert.That(objectLayer.Objects[2].Name, Is.EqualTo("Ellipse"));
+        Assert.That(objectLayer.Objects[2], Is.TypeOf<TiledObject.Ellipse>());
+
+        Assert.That(objectLayer.Objects[3].Id, Is.EqualTo(35));
+        Assert.That(objectLayer.Objects[3].Name, Is.EqualTo("Text"));
+        Assert.That(objectLayer.Objects[3], Is.TypeOf<TiledObject.Text>());
     }
 }
