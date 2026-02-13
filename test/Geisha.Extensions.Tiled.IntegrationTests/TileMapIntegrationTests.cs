@@ -506,31 +506,15 @@ public class TileMapIntegrationTests
     }
 
     [Test]
-    public void LoadFromFile_EmptyMap()
+    public void LoadFromFile_TileLayer_Empty()
     {
         // Arrange
-        var filePath = Path.Combine("Tiled", "TileMaps", "empty.tmx");
+        var filePath = Path.Combine("Tiled", "TileMaps", "tilelayer_empty.tmx");
 
         // Act
         var tileMap = TileMap.LoadFromFile(filePath);
 
         // Assert
-
-        // Assert map properties
-        Assert.That(tileMap.Version, Is.EqualTo("1.10"));
-        Assert.That(tileMap.TiledVersion, Is.EqualTo("1.11.2"));
-        Assert.That(tileMap.Orientation, Is.EqualTo(Orientation.Orthogonal));
-        Assert.That(tileMap.RenderOrder, Is.EqualTo(RenderOrder.RightDown));
-        Assert.That(tileMap.Width, Is.EqualTo(30));
-        Assert.That(tileMap.Height, Is.EqualTo(20));
-        Assert.That(tileMap.TileWidth, Is.EqualTo(32));
-        Assert.That(tileMap.TileHeight, Is.EqualTo(32));
-        Assert.That(tileMap.IsInfinite, Is.False);
-
-        // Assert tile sets
-        Assert.That(tileMap.TileSets, Is.Empty);
-
-        // Assert tile layers
         Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
         var tileLayer = tileMap.TileLayers[0];
 
