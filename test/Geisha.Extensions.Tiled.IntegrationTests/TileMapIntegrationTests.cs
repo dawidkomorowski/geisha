@@ -533,6 +533,81 @@ public class TileMapIntegrationTests
     }
 
     [Test]
+    public void LoadFromFile_TileLayer_NonEmpty()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "tilelayer_nonempty.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+        Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
+        var tileLayer = tileMap.TileLayers[0];
+
+        Assert.That(tileLayer.Id, Is.EqualTo(1));
+        Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
+        Assert.That(tileLayer.Width, Is.EqualTo(30));
+        Assert.That(tileLayer.Height, Is.EqualTo(20));
+
+        Assert.That(tileLayer.Tiles[1][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.Value, Is.EqualTo(1));
+        Assert.That(tileLayer.Tiles[1][1].LocalTileId, Is.EqualTo(0));
+
+        Assert.That(tileLayer.Tiles[3][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.Value, Is.EqualTo(7));
+        Assert.That(tileLayer.Tiles[3][1].LocalTileId, Is.EqualTo(6));
+
+        Assert.That(tileLayer.Tiles[5][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.Value, Is.EqualTo(10));
+        Assert.That(tileLayer.Tiles[5][1].LocalTileId, Is.EqualTo(9));
+
+        Assert.That(tileLayer.Tiles[2][3], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[2][3].GlobalTileId.Value, Is.EqualTo(125));
+        Assert.That(tileLayer.Tiles[2][3].LocalTileId, Is.EqualTo(124));
+
+        Assert.That(tileLayer.Tiles[4][3], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[4][3].GlobalTileId.Value, Is.EqualTo(126));
+        Assert.That(tileLayer.Tiles[4][3].LocalTileId, Is.EqualTo(125));
+
+        Assert.That(tileLayer.Tiles[6][3], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[6][3].GlobalTileId.Value, Is.EqualTo(127));
+        Assert.That(tileLayer.Tiles[6][3].LocalTileId, Is.EqualTo(126));
+
+        Assert.That(tileLayer.Tiles[3][5], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[3][5].GlobalTileId.Value, Is.EqualTo(85));
+        Assert.That(tileLayer.Tiles[3][5].LocalTileId, Is.EqualTo(84));
+
+        Assert.That(tileLayer.Tiles[5][5], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[5][5].GlobalTileId.Value, Is.EqualTo(87));
+        Assert.That(tileLayer.Tiles[5][5].LocalTileId, Is.EqualTo(86));
+
+        Assert.That(tileLayer.Tiles[7][5], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[7][5].GlobalTileId.Value, Is.EqualTo(86));
+        Assert.That(tileLayer.Tiles[7][5].LocalTileId, Is.EqualTo(85));
+
+        // Assert all remaining tiles are null
+        var skipTiles = new HashSet<(int x, int y)>
+        {
+            (1, 1), (3, 1), (5, 1), (2, 3), (4, 3), (6, 3), (3, 5), (5, 5), (7, 5)
+        };
+        for (var w = 0; w < tileLayer.Width; w++)
+        {
+            for (var h = 0; h < tileLayer.Height; h++)
+            {
+                if (skipTiles.Contains((w, h)))
+                {
+                    Assert.That(tileLayer.Tiles[w][h], Is.Not.Null, $"Invalid tile at ({w},{h}).");
+                }
+                else
+                {
+                    Assert.That(tileLayer.Tiles[w][h], Is.Null, $"Invalid tile at ({w},{h}).");
+                }
+            }
+        }
+    }
+
+    [Test]
     public void LoadFromFile_ComplexMap()
     {
         // Arrange
