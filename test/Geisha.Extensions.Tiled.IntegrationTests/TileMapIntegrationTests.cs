@@ -7,6 +7,33 @@ namespace Geisha.Extensions.Tiled.IntegrationTests;
 public class TileMapIntegrationTests
 {
     [Test]
+    public void LoadFromFile_Map_Empty()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "map_empty.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+
+        // Assert map properties
+        Assert.That(tileMap.Version, Is.EqualTo("1.10"));
+        Assert.That(tileMap.TiledVersion, Is.EqualTo("1.11.2"));
+        Assert.That(tileMap.Orientation, Is.EqualTo(Orientation.Orthogonal));
+        Assert.That(tileMap.RenderOrder, Is.EqualTo(RenderOrder.RightDown));
+        Assert.That(tileMap.Width, Is.EqualTo(30));
+        Assert.That(tileMap.Height, Is.EqualTo(20));
+        Assert.That(tileMap.TileWidth, Is.EqualTo(32));
+        Assert.That(tileMap.TileHeight, Is.EqualTo(32));
+        Assert.That(tileMap.IsInfinite, Is.False);
+
+        Assert.That(tileMap.TileSets, Is.Empty);
+        Assert.That(tileMap.TileLayers, Is.Empty);
+        Assert.That(tileMap.ObjectLayers, Is.Empty);
+    }
+
+    [Test]
     public void LoadFromFile_Map_Properties()
     {
         // Arrange
