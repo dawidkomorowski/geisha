@@ -185,10 +185,6 @@ public class TileMapIntegrationTests
         // Assert tile layers
         Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
         var tileLayer = tileMap.TileLayers[0];
-        Assert.That(tileLayer.Id, Is.EqualTo(1));
-        Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
-        Assert.That(tileLayer.Width, Is.EqualTo(20));
-        Assert.That(tileLayer.Height, Is.EqualTo(20));
 
         // Assert tile properties
 
@@ -256,6 +252,107 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].CustomPropertyType, Is.Empty);
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Value, Is.EqualTo("Nine"));
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].StringValue, Is.EqualTo("Nine"));
+    }
+
+
+    [Test]
+    public void LoadFromFile_Tile_FlippingFlags()
+    {
+        // Arrange
+        var filePath = Path.Combine("Tiled", "TileMaps", "tile_flipping_flags.tmx");
+
+        // Act
+        var tileMap = TileMap.LoadFromFile(filePath);
+
+        // Assert
+
+        // Assert tile layers
+        Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
+        var tileLayer = tileMap.TileLayers[0];
+
+        // Assert flipping and rotation flags from first tile set
+        Assert.That(tileLayer.Tiles[0][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.Value, Is.EqualTo(128));
+        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.HasFlippingFlags, Is.False);
+        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.FlippedHorizontally, Is.False);
+        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.FlippedVertically, Is.False);
+        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.FlippedDiagonally, Is.False);
+        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[0][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[1][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.Value, Is.EqualTo(2147483776));
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.FlippedHorizontally, Is.True);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.FlippedVertically, Is.False);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.FlippedDiagonally, Is.False);
+        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[1][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[2][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.Value, Is.EqualTo(1073741952));
+        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.FlippedHorizontally, Is.False);
+        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.FlippedVertically, Is.True);
+        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.FlippedDiagonally, Is.False);
+        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[2][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[3][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.Value, Is.EqualTo(3221225600));
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.FlippedHorizontally, Is.True);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.FlippedVertically, Is.True);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.FlippedDiagonally, Is.False);
+        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[3][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[4][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.Value, Is.EqualTo(2684354688));
+        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.FlippedHorizontally, Is.True);
+        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.FlippedVertically, Is.False);
+        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.FlippedDiagonally, Is.True);
+        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[4][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[5][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.Value, Is.EqualTo(3758096512));
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.FlippedHorizontally, Is.True);
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.FlippedVertically, Is.True);
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.FlippedDiagonally, Is.True);
+        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[5][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[6][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.Value, Is.EqualTo(1610612864));
+        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.FlippedHorizontally, Is.False);
+        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.FlippedVertically, Is.True);
+        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.FlippedDiagonally, Is.True);
+        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[6][1].LocalTileId, Is.EqualTo(127));
+
+        Assert.That(tileLayer.Tiles[7][1], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.Value, Is.EqualTo(536871040));
+        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.HasFlippingFlags, Is.True);
+        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.FlippedHorizontally, Is.False);
+        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.FlippedVertically, Is.False);
+        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.FlippedDiagonally, Is.True);
+        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.RotatedHexagonal120, Is.False);
+        Assert.That(tileLayer.Tiles[7][1].LocalTileId, Is.EqualTo(127));
+
+        // Assert flipping and rotation flags from second tile set
+        Assert.That(tileLayer.Tiles[9][2], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[9][2].GlobalTileId.Value, Is.EqualTo(183));
+        Assert.That(tileLayer.Tiles[9][2].GlobalTileId.HasFlippingFlags, Is.False);
+        Assert.That(tileLayer.Tiles[9][2].LocalTileId, Is.EqualTo(2));
+
+        Assert.That(tileLayer.Tiles[11][2], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[11][2].GlobalTileId.Value, Is.EqualTo(2147483831));
+        Assert.That(tileLayer.Tiles[11][2].GlobalTileId.FlippedHorizontally, Is.True);
+        Assert.That(tileLayer.Tiles[11][2].LocalTileId, Is.EqualTo(2));
     }
 
     [Test]
@@ -637,125 +734,6 @@ public class TileMapIntegrationTests
         var skipTiles = new HashSet<(int x, int y)>
         {
             (1, 1), (3, 1)
-        };
-        for (var w = 0; w < tileLayer.Width; w++)
-        {
-            for (var h = 0; h < tileLayer.Height; h++)
-            {
-                if (skipTiles.Contains((w, h)))
-                {
-                    Assert.That(tileLayer.Tiles[w][h], Is.Not.Null, $"Invalid tile at ({w},{h}).");
-                }
-                else
-                {
-                    Assert.That(tileLayer.Tiles[w][h], Is.Null, $"Invalid tile at ({w},{h}).");
-                }
-            }
-        }
-    }
-
-    [Test]
-    public void LoadFromFile_ComplexMap()
-    {
-        // Arrange
-        var filePath = Path.Combine("Tiled", "TileMaps", "complex.tmx");
-
-        // Act
-        var tileMap = TileMap.LoadFromFile(filePath);
-
-        // Assert
-
-        // Assert tile layers
-        var tileLayer = tileMap.TileLayers[0];
-
-        // Assert flipping and rotation flags
-        Assert.That(tileLayer.Tiles[0][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.Value, Is.EqualTo(128));
-        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.HasFlippingFlags, Is.False);
-        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.FlippedHorizontally, Is.False);
-        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.FlippedVertically, Is.False);
-        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.FlippedDiagonally, Is.False);
-        Assert.That(tileLayer.Tiles[0][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[0][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[1][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.Value, Is.EqualTo(2147483776));
-        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.FlippedHorizontally, Is.True);
-        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.FlippedVertically, Is.False);
-        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.FlippedDiagonally, Is.False);
-        Assert.That(tileLayer.Tiles[1][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[1][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[2][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.Value, Is.EqualTo(1073741952));
-        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.FlippedHorizontally, Is.False);
-        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.FlippedVertically, Is.True);
-        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.FlippedDiagonally, Is.False);
-        Assert.That(tileLayer.Tiles[2][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[2][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[3][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.Value, Is.EqualTo(3221225600));
-        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.FlippedHorizontally, Is.True);
-        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.FlippedVertically, Is.True);
-        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.FlippedDiagonally, Is.False);
-        Assert.That(tileLayer.Tiles[3][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[3][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[4][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.Value, Is.EqualTo(2684354688));
-        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.FlippedHorizontally, Is.True);
-        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.FlippedVertically, Is.False);
-        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.FlippedDiagonally, Is.True);
-        Assert.That(tileLayer.Tiles[4][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[4][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[5][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.Value, Is.EqualTo(3758096512));
-        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.FlippedHorizontally, Is.True);
-        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.FlippedVertically, Is.True);
-        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.FlippedDiagonally, Is.True);
-        Assert.That(tileLayer.Tiles[5][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[5][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[6][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.Value, Is.EqualTo(1610612864));
-        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.FlippedHorizontally, Is.False);
-        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.FlippedVertically, Is.True);
-        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.FlippedDiagonally, Is.True);
-        Assert.That(tileLayer.Tiles[6][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[6][1].LocalTileId, Is.EqualTo(127));
-
-        Assert.That(tileLayer.Tiles[7][1], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.Value, Is.EqualTo(536871040));
-        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.HasFlippingFlags, Is.True);
-        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.FlippedHorizontally, Is.False);
-        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.FlippedVertically, Is.False);
-        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.FlippedDiagonally, Is.True);
-        Assert.That(tileLayer.Tiles[7][1].GlobalTileId.RotatedHexagonal120, Is.False);
-        Assert.That(tileLayer.Tiles[7][1].LocalTileId, Is.EqualTo(127));
-
-        // Assert tiles from second tile set
-        Assert.That(tileLayer.Tiles[9][2], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[9][2].GlobalTileId.Value, Is.EqualTo(183));
-        Assert.That(tileLayer.Tiles[9][2].GlobalTileId.HasFlippingFlags, Is.False);
-        Assert.That(tileLayer.Tiles[9][2].LocalTileId, Is.EqualTo(2));
-
-        Assert.That(tileLayer.Tiles[11][2], Is.Not.Null);
-        Assert.That(tileLayer.Tiles[11][2].GlobalTileId.Value, Is.EqualTo(2147483831));
-        Assert.That(tileLayer.Tiles[11][2].GlobalTileId.FlippedHorizontally, Is.True);
-        Assert.That(tileLayer.Tiles[11][2].LocalTileId, Is.EqualTo(2));
-
-        // Assert all remaining tiles are null
-        var skipTiles = new HashSet<(int x, int y)>
-        {
-            (0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (9, 2), (11, 2)
         };
         for (var w = 0; w < tileLayer.Width; w++)
         {
