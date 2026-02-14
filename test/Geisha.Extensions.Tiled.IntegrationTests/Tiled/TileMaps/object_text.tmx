@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="33">
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="32" name="Text" x="20.3283" y="17.2258" width="83" height="19">
+   <text wrap="1">Text object</text>
+  </object>
+ </objectgroup>
+</map>

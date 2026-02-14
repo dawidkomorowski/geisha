@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="30">
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="28" name="Object 1" x="27.6139" y="29.738">
+   <properties>
+    <property name="Bool Property" type="bool" value="true"/>
+    <property name="Enum Property" propertytype="Enum Type" value="Value 2"/>
+    <property name="Float Property" type="float" value="3.14"/>
+    <property name="Int Property" type="int" value="69"/>
+    <property name="Object Property" type="object" value="29"/>
+    <property name="String Property" value="This is a string property"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="29" name="Object 2" x="90.9134" y="31.8622">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
