@@ -90,6 +90,58 @@ public class TileMapIntegrationTests
         Assert.That(tileMap.Properties["Object Property"].CustomPropertyType, Is.Empty);
         Assert.That(tileMap.Properties["Object Property"].Value, Is.EqualTo("28"));
         Assert.That(tileMap.Properties["Object Property"].ObjectValue, Is.EqualTo(28));
+
+        // Assert TryGetProperty method when property exists
+        Assert.That(tileMap.Properties.TryGetProperty("Bool Property", out var boolProperty), Is.True);
+        Assert.That(boolProperty, Is.Not.Null);
+        Assert.That(boolProperty.Name, Is.EqualTo("Bool Property"));
+        Assert.That(boolProperty.Type, Is.EqualTo(PropertyType.Bool));
+        Assert.That(boolProperty.CustomPropertyType, Is.Empty);
+        Assert.That(boolProperty.Value, Is.EqualTo("true"));
+        Assert.That(boolProperty.BoolValue, Is.True);
+
+        Assert.That(tileMap.Properties.TryGetProperty("Enum Property", out var enumProperty), Is.True);
+        Assert.That(enumProperty, Is.Not.Null);
+        Assert.That(enumProperty.Name, Is.EqualTo("Enum Property"));
+        Assert.That(enumProperty.Type, Is.EqualTo(PropertyType.String));
+        Assert.That(enumProperty.CustomPropertyType, Is.EqualTo("Enum Type"));
+        Assert.That(enumProperty.Value, Is.EqualTo("Value 2"));
+
+        Assert.That(tileMap.Properties.TryGetProperty("Float Property", out var floatProperty), Is.True);
+        Assert.That(floatProperty, Is.Not.Null);
+        Assert.That(floatProperty.Name, Is.EqualTo("Float Property"));
+        Assert.That(floatProperty.Type, Is.EqualTo(PropertyType.Float));
+        Assert.That(floatProperty.CustomPropertyType, Is.Empty);
+        Assert.That(floatProperty.Value, Is.EqualTo("3.14"));
+        Assert.That(floatProperty.FloatValue, Is.EqualTo(3.14));
+
+        Assert.That(tileMap.Properties.TryGetProperty("Int Property", out var intProperty), Is.True);
+        Assert.That(intProperty, Is.Not.Null);
+        Assert.That(intProperty.Name, Is.EqualTo("Int Property"));
+        Assert.That(intProperty.Type, Is.EqualTo(PropertyType.Int));
+        Assert.That(intProperty.CustomPropertyType, Is.Empty);
+        Assert.That(intProperty.Value, Is.EqualTo("69"));
+        Assert.That(intProperty.IntValue, Is.EqualTo(69));
+
+        Assert.That(tileMap.Properties.TryGetProperty("String Property", out var stringProperty), Is.True);
+        Assert.That(stringProperty, Is.Not.Null);
+        Assert.That(stringProperty.Name, Is.EqualTo("String Property"));
+        Assert.That(stringProperty.Type, Is.EqualTo(PropertyType.String));
+        Assert.That(stringProperty.CustomPropertyType, Is.Empty);
+        Assert.That(stringProperty.Value, Is.EqualTo("This is a string property"));
+        Assert.That(stringProperty.StringValue, Is.EqualTo("This is a string property"));
+
+        Assert.That(tileMap.Properties.TryGetProperty("Object Property", out var objectProperty), Is.True);
+        Assert.That(objectProperty, Is.Not.Null);
+        Assert.That(objectProperty.Name, Is.EqualTo("Object Property"));
+        Assert.That(objectProperty.Type, Is.EqualTo(PropertyType.Object));
+        Assert.That(objectProperty.CustomPropertyType, Is.Empty);
+        Assert.That(objectProperty.Value, Is.EqualTo("28"));
+        Assert.That(objectProperty.ObjectValue, Is.EqualTo(28));
+
+        // Assert TryGetProperty method when property does not exist
+        Assert.That(tileMap.Properties.TryGetProperty("Non Existing Property", out var nonExistingProperty), Is.False);
+        Assert.That(nonExistingProperty, Is.Null);
     }
 
     [Test]
