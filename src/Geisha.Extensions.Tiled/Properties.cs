@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 
 namespace Geisha.Extensions.Tiled;
@@ -42,7 +43,7 @@ public sealed class Properties
         }
     }
 
-    public bool TryGetProperty(string name, out Property? property)
+    public bool TryGetProperty(string name, [NotNullWhen(true)] out Property? property)
     {
         return _properties.TryGetValue(name, out property);
     }
