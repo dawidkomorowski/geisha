@@ -8,6 +8,19 @@ namespace Geisha.Engine.UnitTests.Core.Assets;
 public class AssetIdTests
 {
     [Test]
+    public void Constructor_ShouldCreateAssetId_GivenSpecifiedGuid()
+    {
+        // Arrange
+        var guid = Guid.NewGuid();
+
+        // Act
+        var actual = new AssetId(guid);
+
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(guid));
+    }
+
+    [Test]
     public void CreateUnique_ShouldCreateUniqueAssetIds()
     {
         // Arrange
@@ -20,15 +33,73 @@ public class AssetIdTests
     }
 
     [Test]
-    public void Constructor_ShouldCreateAssetId_GivenSpecifiedGuid()
+    public void Parse_ShouldCreateAssetId_GivenValidGuidString()
     {
         // Arrange
         var guid = Guid.NewGuid();
+        var assetIdString = guid.ToString();
 
         // Act
-        var actual = new AssetId(guid);
+        var actual = AssetId.Parse(assetIdString);
 
         // Assert
         Assert.That(actual.Value, Is.EqualTo(guid));
+    }
+
+    [Test]
+    public void Parse_ShouldThrowArgumentNullException_GivenNull()
+    {
+        // Arrange
+        // Act
+        // Assert
+        Assert.That(() => AssetId.Parse(null!), Throws.ArgumentNullException);
+    }
+
+    [Test]
+    public void Parse_ShouldThrowFormatException_GivenInvalidString()
+    {
+        // Arrange
+        // Act
+        // Assert
+        Assert.That(() => AssetId.Parse("invalid"), Throws.TypeOf<FormatException>());
+    }
+
+    [Test]
+    public void TryParse_ShouldReturnTrueAndCreateAssetId_GivenValidGuidString()
+    {
+        // Arrange
+        var guid = Guid.NewGuid();
+        var assetIdString = guid.ToString();
+
+        // Act
+        var success = AssetId.TryParse(assetIdString, out var actual);
+
+        // Assert
+        Assert.That(success, Is.True);
+        Assert.That(actual.Value, Is.EqualTo(guid));
+    }
+
+    [Test]
+    public void TryParse_ShouldReturnFalseAndDefaultValue_GivenInvalidString()
+    {
+        // Arrange
+        // Act
+        var success = AssetId.TryParse("invalid", out var actual);
+
+        // Assert
+        Assert.That(success, Is.False);
+        Assert.That(actual, Is.EqualTo(default(AssetId)));
+    }
+
+    [Test]
+    public void TryParse_ShouldReturnFalseAndDefaultValue_GivenNull()
+    {
+        // Arrange
+        // Act
+        var success = AssetId.TryParse(null, out var actual);
+
+        // Assert
+        Assert.That(success, Is.False);
+        Assert.That(actual, Is.EqualTo(default(AssetId)));
     }
 }
