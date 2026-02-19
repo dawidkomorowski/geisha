@@ -43,7 +43,7 @@ public class AssetIdTests
         var actual = assetId.ToString();
 
         // Assert
-        Assert.That(actual, Is.EqualTo("7BE324F2-25A0-4C85-9B85-069B16B0B84F"));
+        Assert.That(actual, Is.EqualTo("AssetId { Value = 7be324f2-25a0-4c85-9b85-069b16b0b84f }"));
     }
 
     [TestCase("7DE5D927-3AC9-45DB-9DFF-2F5DC8595E3E", "7DE5D927-3AC9-45DB-9DFF-2F5DC8595E3E", true)]
