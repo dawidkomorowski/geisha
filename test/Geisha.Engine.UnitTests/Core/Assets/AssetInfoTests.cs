@@ -51,7 +51,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         public void ToString_ShouldReturn_AssetId_AssetType_AssetFilePath()
         {
             // Arrange
-            var assetId = new AssetId(new Guid("E0598EF9-A13E-4915-8DE3-AD5FB7036EF5"));
+            var assetId = AssetId.Parse("E0598EF9-A13E-4915-8DE3-AD5FB7036EF5");
             var assetType = new AssetType("Asset Type");
             const string assetFilePath = "some file path";
 
@@ -61,7 +61,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var actual = assetInfo.ToString();
 
             // Assert
-            Assert.That(actual, Is.EqualTo("AssetId: AssetId { Value = e0598ef9-a13e-4915-8de3-ad5fb7036ef5 }, AssetType: Asset Type, AssetFilePath: some file path"));
+            Assert.That(actual,
+                Is.EqualTo("AssetId: AssetId { Value = e0598ef9-a13e-4915-8de3-ad5fb7036ef5 }, AssetType: Asset Type, AssetFilePath: some file path"));
         }
 
         [TestCase("345E30DC-5F18-472C-B539-15ECE44B6B60", "Asset Type 1", "some file path",
@@ -76,8 +77,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             string assetFilePath1, string assetIdString2, string assetTypeString2, string assetFilePath2, bool expectedIsEqual)
         {
             // Arrange
-            var assetId1 = new AssetId(new Guid(assetIdString1));
-            var assetId2 = new AssetId(new Guid(assetIdString2));
+            var assetId1 = AssetId.Parse(assetIdString1);
+            var assetId2 = AssetId.Parse(assetIdString2);
 
             var assetType1 = new AssetType(assetTypeString1);
             var assetType2 = new AssetType(assetTypeString2);

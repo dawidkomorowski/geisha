@@ -8,6 +8,28 @@ namespace Geisha.Engine.UnitTests.Core.Assets;
 public class AssetIdTests
 {
     [Test]
+    public void Empty_ShouldHaveValueEqualGuidEmpty()
+    {
+        // Arrange
+        // Act
+        var actual = AssetId.Empty;
+
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(Guid.Empty));
+    }
+
+    [Test]
+    public void Empty_ShouldBeEqualToDefaultAssetId()
+    {
+        // Arrange
+        // Act
+        var actual = AssetId.Empty;
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(default(AssetId)));
+    }
+
+    [Test]
     public void Constructor_ShouldCreateAssetId_GivenSpecifiedGuid()
     {
         // Arrange

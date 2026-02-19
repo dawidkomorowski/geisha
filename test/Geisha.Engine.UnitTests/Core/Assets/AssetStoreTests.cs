@@ -242,8 +242,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             bool overridden)
         {
             // Arrange
-            var assetId1 = new AssetId(new Guid(assetIdString1));
-            var assetId2 = new AssetId(new Guid(assetIdString2));
+            var assetId1 = AssetId.Parse(assetIdString1);
+            var assetId2 = AssetId.Parse(assetIdString2);
 
             var assetType1 = new AssetType(assetTypeString1);
             var assetType2 = new AssetType(assetTypeString2);

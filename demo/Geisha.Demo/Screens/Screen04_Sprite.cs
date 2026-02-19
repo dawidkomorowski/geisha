@@ -81,7 +81,7 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
             // Add SpriteRendererComponent to entity so it can show planet Earth sprite on the screen.
             var spriteRenderer = entity.CreateComponent<SpriteRendererComponent>();
             // Set sprite to be planet Earth (sprite is accessed through IAssetStore using id of asset file).
-            spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("d62a5ea8-73c4-44f0-9f80-26a9ad9ca74a")));
+            spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse("d62a5ea8-73c4-44f0-9f80-26a9ad9ca74a"));
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = entity.CreateComponent<InputComponent>();
             // Set input mapping so UP and DOWN keys will trigger "IncreaseOpacity" and "DecreaseOpacity" actions.

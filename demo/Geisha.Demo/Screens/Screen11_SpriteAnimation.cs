@@ -69,13 +69,13 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
             var spriteAnimationComponent = character.CreateComponent<SpriteAnimationComponent>();
             // Add animations to SpriteAnimationComponent from asset files.
             spriteAnimationComponent.AddAnimation("Idle",
-                _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("5ef754d7-ba6c-44cb-8ca5-588ba575600b"))));
+                _assetStore.GetAsset<SpriteAnimation>(AssetId.Parse("5ef754d7-ba6c-44cb-8ca5-588ba575600b")));
             spriteAnimationComponent.AddAnimation("Walk",
-                _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("c47ae60d-5d0a-4d12-901a-a5e468b8f40b"))));
+                _assetStore.GetAsset<SpriteAnimation>(AssetId.Parse("c47ae60d-5d0a-4d12-901a-a5e468b8f40b")));
             spriteAnimationComponent.AddAnimation("Fire",
-                _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("ae6d28cf-5f73-44b4-a7fc-825ee382c340"))));
+                _assetStore.GetAsset<SpriteAnimation>(AssetId.Parse("ae6d28cf-5f73-44b4-a7fc-825ee382c340")));
             spriteAnimationComponent.AddAnimation("Defeat",
-                _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("15a034af-2009-4963-9d2c-94048fb07dc6"))));
+                _assetStore.GetAsset<SpriteAnimation>(AssetId.Parse("15a034af-2009-4963-9d2c-94048fb07dc6")));
             // Enable looping of the animations.
             spriteAnimationComponent.PlayInLoop = true;
             // Play "Idle" animation at first.

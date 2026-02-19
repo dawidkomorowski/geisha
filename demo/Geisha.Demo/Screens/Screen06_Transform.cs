@@ -78,7 +78,7 @@ internal sealed class TransformSceneBehaviorFactory : ISceneBehaviorFactory
             // Add SpriteRendererComponent to entity so it can show computer sprite on the screen.
             var spriteRenderer1 = entity1.CreateComponent<SpriteRendererComponent>();
             // Set sprite to be computer (sprite is accessed through IAssetStore using id of asset file).
-            spriteRenderer1.Sprite = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d")));
+            spriteRenderer1.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d"));
 
             // Create entity representing computer.
             var entity2 = Scene.CreateEntity();
@@ -90,7 +90,7 @@ internal sealed class TransformSceneBehaviorFactory : ISceneBehaviorFactory
             // Add SpriteRendererComponent to entity so it can show computer sprite on the screen.
             var spriteRenderer2 = entity2.CreateComponent<SpriteRendererComponent>();
             // Set sprite to be computer (sprite is accessed through IAssetStore using id of asset file).
-            spriteRenderer2.Sprite = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d")));
+            spriteRenderer2.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d"));
 
             // Create entity representing computer.
             var entity3 = Scene.CreateEntity();
@@ -102,7 +102,7 @@ internal sealed class TransformSceneBehaviorFactory : ISceneBehaviorFactory
             // Add SpriteRendererComponent to entity so it can show computer sprite on the screen.
             var spriteRenderer3 = entity3.CreateComponent<SpriteRendererComponent>();
             // Set sprite to be computer (sprite is accessed through IAssetStore using id of asset file).
-            spriteRenderer3.Sprite = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d")));
+            spriteRenderer3.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d"));
 
             // Create entity representing second text block.
             var textBlock2 = Scene.CreateEntity();

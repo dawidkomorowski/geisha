@@ -14,6 +14,15 @@ namespace Geisha.Engine.Core.Assets;
 public readonly record struct AssetId(Guid Value)
 {
     /// <summary>
+    ///     Gets the empty asset identifier.
+    /// </summary>
+    /// <remarks>
+    ///     The empty asset identifier has <see cref="Value" /> set to <see cref="Guid.Empty" /> and is equal to the
+    ///     default value of <see cref="AssetId" />.
+    /// </remarks>
+    public static AssetId Empty => new(Guid.Empty);
+
+    /// <summary>
     ///     Creates new instance of <see cref="AssetId" /> with a unique value.
     /// </summary>
     /// <returns>New instance of <see cref="AssetId" /> with a unique value.</returns>
