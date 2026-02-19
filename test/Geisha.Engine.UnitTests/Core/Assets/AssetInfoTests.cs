@@ -61,7 +61,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var actual = assetInfo.ToString();
 
             // Assert
-            Assert.That(actual, Is.EqualTo("AssetId: E0598EF9-A13E-4915-8DE3-AD5FB7036EF5, AssetType: Asset Type, AssetFilePath: some file path"));
+            Assert.That(actual, Is.EqualTo("AssetId: AssetId { Value = e0598ef9-a13e-4915-8de3-ad5fb7036ef5 }, AssetType: Asset Type, AssetFilePath: some file path"));
         }
 
         [TestCase("345E30DC-5F18-472C-B539-15ECE44B6B60", "Asset Type 1", "some file path",
