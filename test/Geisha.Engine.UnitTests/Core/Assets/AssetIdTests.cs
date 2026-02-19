@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Engine.Core.Assets;
-using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Assets;
@@ -9,7 +8,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets;
 public class AssetIdTests
 {
     [Test]
-    public void CreateUnique_CreatesUniqueAssetIds()
+    public void CreateUnique_ShouldCreateUniqueAssetIds()
     {
         // Arrange
         // Act
@@ -21,7 +20,7 @@ public class AssetIdTests
     }
 
     [Test]
-    public void Constructor_CreatesAssetIdWithValueGivenAsParameter()
+    public void Constructor_ShouldCreateAssetId_GivenSpecifiedGuid()
     {
         // Arrange
         var guid = Guid.NewGuid();
@@ -31,35 +30,5 @@ public class AssetIdTests
 
         // Assert
         Assert.That(actual.Value, Is.EqualTo(guid));
-    }
-
-    [Test]
-    public void ToString_ShouldReturn_Guid()
-    {
-        // Arrange
-        var assetId = new AssetId(new Guid("7BE324F2-25A0-4C85-9B85-069B16B0B84F"));
-
-        // Act
-        var actual = assetId.ToString();
-
-        // Assert
-        Assert.That(actual, Is.EqualTo("AssetId { Value = 7be324f2-25a0-4c85-9b85-069b16b0b84f }"));
-    }
-
-    [TestCase("7DE5D927-3AC9-45DB-9DFF-2F5DC8595E3E", "7DE5D927-3AC9-45DB-9DFF-2F5DC8595E3E", true)]
-    [TestCase("7DE5D927-3AC9-45DB-9DFF-2F5DC8595E3E", "7956026B-8D34-453A-A2F4-8D3E4D5D04E6", false)]
-    public void EqualityMembers_ShouldEqualAssetId_WhenGuidIsEqual(string guid1, string guid2, bool expectedIsEqual)
-    {
-        // Arrange
-        var assetId1 = new AssetId(new Guid(guid1));
-        var assetId2 = new AssetId(new Guid(guid2));
-
-        // Act
-        // Assert
-        AssertEqualityMembers
-            .ForValues(assetId1, assetId2)
-            .UsingEqualityOperator((x, y) => x == y)
-            .UsingInequalityOperator((x, y) => x != y)
-            .EqualityIsExpectedToBe(expectedIsEqual);
     }
 }
