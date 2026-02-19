@@ -3,8 +3,12 @@
 namespace Geisha.Engine.Core.Assets;
 
 /// <summary>
-///     Asset registration info to be used in <see cref="IAssetStore" />.
+///     Describes an asset entry registered in an <see cref="IAssetStore" />.
 /// </summary>
+/// <remarks>
+///     This type is metadata used by the asset store to identify and locate an asset (id, type and file path).
+///     It does not contain the asset data itself.
+/// </remarks>
 public readonly record struct AssetInfo
 {
     private readonly string? _assetFilePath;
@@ -12,9 +16,10 @@ public readonly record struct AssetInfo
     /// <summary>
     ///     Creates new instance of <see cref="AssetInfo" />.
     /// </summary>
-    /// <param name="assetId">Id of asset.</param>
-    /// <param name="assetType">Type of asset.</param>
-    /// <param name="assetFilePath">Path to asset file.</param>
+    /// <param name="assetId">Unique identifier of the asset.</param>
+    /// <param name="assetType">Type of the asset.</param>
+    /// <param name="assetFilePath">Absolute path to the asset file.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="assetFilePath" /> is <see langword="null" />.</exception>
     public AssetInfo(AssetId assetId, AssetType assetType, string assetFilePath)
     {
         AssetId = assetId;
@@ -23,17 +28,17 @@ public readonly record struct AssetInfo
     }
 
     /// <summary>
-    ///     Id of asset.
+    ///     Unique identifier of the asset.
     /// </summary>
     public AssetId AssetId { get; }
 
     /// <summary>
-    ///     Type of asset.
+    ///     Type of the asset.
     /// </summary>
     public AssetType AssetType { get; }
 
     /// <summary>
-    ///     Path to asset file.
+    ///     Absolute path to the asset file.
     /// </summary>
     public string AssetFilePath => _assetFilePath ?? string.Empty;
 }
