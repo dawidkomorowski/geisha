@@ -140,9 +140,9 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                 }
             };
             // Get sound assets from IAssetStore.
-            var sound1 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("0a72baa4-22dd-41f1-b2c3-2f254501697a")));
-            var sound2 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("18e7fcdf-c857-44db-8b02-0186ec5d01ed")));
-            var sound3 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("521f3eea-7c3c-4a5a-8509-ae3c3c93bad3")));
+            var sound1 = _assetStore.GetAsset<ISound>(AssetId.Parse("0a72baa4-22dd-41f1-b2c3-2f254501697a"));
+            var sound2 = _assetStore.GetAsset<ISound>(AssetId.Parse("18e7fcdf-c857-44db-8b02-0186ec5d01ed"));
+            var sound3 = _assetStore.GetAsset<ISound>(AssetId.Parse("521f3eea-7c3c-4a5a-8509-ae3c3c93bad3"));
             // Define variable for sound volume. It is in range [0,100] for on screen display.
             var volume = 100;
             soundVolumeText.Text = $"Volume {volume}% - Press [UP][DOWN]";
@@ -164,9 +164,9 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             });
 
             // Get sprite assets from IAssetStore
-            var sprite1 = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("dafaa5ee-2f22-4756-9694-fb2300166bdf")));
-            var sprite2 = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("71b16835-65e1-4f6b-ab94-2448ff068083")));
-            var sprite3 = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d")));
+            var sprite1 = _assetStore.GetAsset<Sprite>(AssetId.Parse("dafaa5ee-2f22-4756-9694-fb2300166bdf"));
+            var sprite2 = _assetStore.GetAsset<Sprite>(AssetId.Parse("71b16835-65e1-4f6b-ab94-2448ff068083"));
+            var sprite3 = _assetStore.GetAsset<Sprite>(AssetId.Parse("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d"));
             // Create entities that show sprite and label. Sprite is corresponding with sound to be played.
             AddSpriteWithLabel(sprite1, "Press [1]", -300, 0);
             AddSpriteWithLabel(sprite2, "Press [2]", 0, 0);

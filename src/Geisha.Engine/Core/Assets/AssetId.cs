@@ -1,73 +1,63 @@
 ﻿using System;
 
-namespace Geisha.Engine.Core.Assets
+namespace Geisha.Engine.Core.Assets;
+
+/// <summary>
+///     Represents a type-safe identifier of an asset.
+/// </summary>
+/// <remarks>
+///     <see cref="AssetId" /> is a lightweight wrapper around <see cref="Guid" />.
+///     The default value of <see cref="AssetId" /> has <see cref="Value" /> set to <see cref="Guid.Empty" />.
+/// </remarks>
+/// <param name="Value">Underlying <see cref="Guid" /> value of the identifier.</param>
+/// <seealso cref="Guid" />
+public readonly record struct AssetId(Guid Value)
 {
     /// <summary>
-    ///     Represents type safe identifier of an asset.
+    ///     Gets the empty asset identifier.
     /// </summary>
-    public readonly struct AssetId : IEquatable<AssetId>
-    {
-        /// <summary>
-        ///     Creates new, globally unique, instance of <see cref="AssetId" />.
-        /// </summary>
-        /// <returns>New, globally unique, instance of <see cref="AssetId" />.</returns>
-        /// <remarks>Uniqueness of created <see cref="AssetId" /> instances is based on uniqueness of <see cref="Guid" />.</remarks>
-        public static AssetId CreateUnique() => new(Guid.NewGuid());
+    /// <remarks>
+    ///     The empty asset identifier has <see cref="Value" /> set to <see cref="Guid.Empty" /> and is equal to the
+    ///     default value of <see cref="AssetId" />.
+    /// </remarks>
+    public static AssetId Empty => new(Guid.Empty);
 
-        /// <summary>
-        ///     Creates new instance of <see cref="AssetId" /> with <see cref="Value" /> set as specified by
-        ///     <paramref name="value" />.
-        /// </summary>
-        /// <param name="value"></param>
-        public AssetId(Guid value)
+    /// <summary>
+    ///     Creates new instance of <see cref="AssetId" /> with a unique value.
+    /// </summary>
+    /// <returns>New instance of <see cref="AssetId" /> with a unique value.</returns>
+    /// <remarks>
+    ///     Uniqueness is based on <see cref="Guid.NewGuid" /> and collisions are extremely unlikely.
+    /// </remarks>
+    public static AssetId CreateUnique() => new(Guid.NewGuid());
+
+    /// <summary>
+    ///     Converts the string representation of an asset identifier to its <see cref="AssetId" /> equivalent.
+    /// </summary>
+    /// <param name="assetId">A string containing the identifier to convert.</param>
+    /// <returns>An <see cref="AssetId" /> equivalent to the identifier contained in <paramref name="assetId" />.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="assetId" /> is <c>null</c>.</exception>
+    /// <exception cref="FormatException"><paramref name="assetId" /> is not in a recognized format.</exception>
+    public static AssetId Parse(string assetId) => new(Guid.Parse(assetId));
+
+    /// <summary>
+    ///     Converts the string representation of an asset identifier to its <see cref="AssetId" /> equivalent.
+    /// </summary>
+    /// <param name="assetId">A string containing the identifier to convert.</param>
+    /// <param name="result">
+    ///     When this method returns, contains the parsed value if the conversion succeeded; otherwise, the default value of
+    ///     <see cref="AssetId" />.
+    /// </param>
+    /// <returns><c>true</c> if <paramref name="assetId" /> was converted successfully; otherwise, <c>false</c>.</returns>
+    public static bool TryParse(string? assetId, out AssetId result)
+    {
+        if (Guid.TryParse(assetId, out var guid))
         {
-            Value = value;
+            result = new AssetId(guid);
+            return true;
         }
 
-        /// <summary>
-        ///     Actual value of identifier.
-        /// </summary>
-        public Guid Value { get; }
-
-        /// <summary>
-        ///     Converts the value of the current <see cref="AssetId" /> object to its equivalent string representation.
-        /// </summary>
-        /// <returns>A string representation of the value of the current <see cref="AssetId" /> object.</returns>
-        public override string ToString() => Value.ToString().ToUpper();
-
-        #region Equality members
-
-        /// <inheritdoc />
-        public bool Equals(AssetId other) => Value.Equals(other.Value);
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => obj is AssetId other && Equals(other);
-
-        /// <inheritdoc />
-        public override int GetHashCode() => Value.GetHashCode();
-
-        /// <summary>
-        ///     Determines whether two specified instances of <see cref="AssetId" /> are equal.
-        /// </summary>
-        /// <param name="left">The first object to compare.</param>
-        /// <param name="right">The second object to compare.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
-        ///     <see cref="AssetId" />; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool operator ==(AssetId left, AssetId right) => left.Equals(right);
-
-        /// <summary>
-        ///     Determines whether two specified instances of <see cref="AssetId" /> are not equal.
-        /// </summary>
-        /// <param name="left">The first object to compare.</param>
-        /// <param name="right">The second object to compare.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
-        ///     <see cref="AssetId" />; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool operator !=(AssetId left, AssetId right) => !left.Equals(right);
-
-        #endregion
+        result = default;
+        return false;
     }
 }
