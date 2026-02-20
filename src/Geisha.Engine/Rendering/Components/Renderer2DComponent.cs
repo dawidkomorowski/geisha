@@ -67,8 +67,9 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Defines order of objects rendering in the same layer. Rendering order is from lower to higher. Default value is
-        ///     zero.
+        ///     Defines order of objects rendering in the same sorting layer (<see cref="SortingLayerName" />). Rendering order
+        ///     is from lower to higher. Default value is zero. If multiple objects have the same value, their relative order is
+        ///     undefined.
         /// </summary>
         public int OrderInLayer
         {
