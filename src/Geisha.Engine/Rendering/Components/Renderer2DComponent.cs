@@ -67,9 +67,25 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Defines order of objects rendering in the same layer. Rendering order is from lower to higher. Default value is
-        ///     zero.
+        ///     Defines order of objects rendering in the same sorting layer (<see cref="SortingLayerName" />). Rendering order
+        ///     is from lower to higher. Default value is zero. If multiple objects have the same value, their relative order is
+        ///     undefined.
         /// </summary>
+        /// <example>
+        ///     <code><![CDATA[
+        /// // All renderers below use the same sorting layer.
+        /// backgroundRenderer.SortingLayerName = "Default";
+        /// playerRenderer.SortingLayerName = "Default";
+        /// effectsRenderer.SortingLayerName = "Default";
+        ///
+        /// // Render order within the layer: lower values first, higher values last.
+        /// backgroundRenderer.OrderInLayer = -10;
+        /// playerRenderer.OrderInLayer = 0;
+        /// effectsRenderer.OrderInLayer = 10;
+        ///
+        /// // If multiple objects have the same OrderInLayer value, their relative order is undefined.
+        /// ]]></code>
+        /// </example>
         public int OrderInLayer
         {
             get => RenderNode.OrderInLayer;
