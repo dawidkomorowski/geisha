@@ -53,6 +53,7 @@ namespace Geisha.Engine.Rendering.Components
             set => SpriteNode.BitmapInterpolationMode = value;
         }
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -69,6 +70,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteEnum("BitmapInterpolationMode", BitmapInterpolationMode);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

@@ -78,6 +78,7 @@ namespace Geisha.Engine.Rendering.Components
             set => EllipseNode.FillInterior = value;
         }
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -87,6 +88,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteBool("FillInterior", FillInterior);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

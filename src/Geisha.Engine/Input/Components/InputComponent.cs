@@ -66,7 +66,7 @@ namespace Geisha.Engine.Input.Components
                 _enabled = value;
 
                 if (_enabled) return;
-                
+
                 HardwareInput = HardwareInput.Empty;
                 ResetActionAndAxisStates();
             }
@@ -146,10 +146,11 @@ namespace Geisha.Engine.Input.Components
             AxisBindings.Clear();
         }
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
-            
+
             if (InputMapping == null)
             {
                 writer.WriteNull("InputMapping");
@@ -162,6 +163,7 @@ namespace Geisha.Engine.Input.Components
             writer.WriteBool("Enabled", Enabled);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

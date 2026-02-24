@@ -183,6 +183,7 @@ namespace Geisha.Engine.Rendering.Components
         /// <seealso cref="Renderer2DComponent.IsManagedByRenderingSystem" />
         public AxisAlignedRectangle TextRectangle => TextNode.TextRectangle;
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -198,6 +199,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteBool("ClipToLayoutBox", ClipToLayoutBox);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

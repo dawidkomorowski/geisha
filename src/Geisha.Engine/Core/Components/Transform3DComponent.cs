@@ -103,9 +103,7 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.CreateScale(Scale)
             * Matrix4x4.Identity;
 
-        /// <summary>
-        ///     Serializes data of this instance of <see cref="Transform3DComponent" />.
-        /// </summary>
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -114,9 +112,7 @@ namespace Geisha.Engine.Core.Components
             writer.WriteVector3("Scale", Scale);
         }
 
-        /// <summary>
-        ///     Deserializes data of this instance of <see cref="Transform3DComponent" />.
-        /// </summary>
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

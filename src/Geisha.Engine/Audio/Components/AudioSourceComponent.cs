@@ -26,6 +26,7 @@ namespace Geisha.Engine.Audio.Components
         /// </summary>
         public bool IsPlaying { get; internal set; }
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -42,6 +43,7 @@ namespace Geisha.Engine.Audio.Components
             writer.WriteBool("IsPlaying", IsPlaying);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

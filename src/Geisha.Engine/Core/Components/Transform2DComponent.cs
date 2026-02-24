@@ -298,9 +298,7 @@ public sealed class Transform2DComponent : Component
         return parentTransform * InterpolatedTransform.ToMatrix();
     }
 
-    /// <summary>
-    ///     Serializes data of this instance of <see cref="Transform2DComponent" />.
-    /// </summary>
+    /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
@@ -310,9 +308,7 @@ public sealed class Transform2DComponent : Component
         writer.WriteBool("IsInterpolated", IsInterpolated);
     }
 
-    /// <summary>
-    ///     Deserializes data of this instance of <see cref="Transform2DComponent" />.
-    /// </summary>
+    /// <inheritdoc />
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
     {
         base.Deserialize(reader, assetStore);

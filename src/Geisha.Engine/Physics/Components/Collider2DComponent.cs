@@ -80,12 +80,14 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public Contact2D[] GetContacts() => PhysicsBodyProxy?.GetContacts() ?? Array.Empty<Contact2D>();
 
+    /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
         writer.WriteBool("Enabled", Enabled);
     }
 
+    /// <inheritdoc />
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
     {
         base.Deserialize(reader, assetStore);

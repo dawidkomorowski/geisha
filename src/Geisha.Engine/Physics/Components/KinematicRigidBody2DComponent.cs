@@ -56,6 +56,7 @@ public sealed class KinematicRigidBody2DComponent : Component
     /// </remarks>
     public bool EnableCollisionResponse { get; set; }
 
+    /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
@@ -64,6 +65,7 @@ public sealed class KinematicRigidBody2DComponent : Component
         writer.WriteBool("EnableCollisionResponse", EnableCollisionResponse);
     }
 
+    /// <inheritdoc />
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
     {
         base.Deserialize(reader, assetStore);

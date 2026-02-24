@@ -162,6 +162,7 @@ public sealed class CameraComponent : Component
     /// <seealso cref="IsManagedByRenderingSystem" />
     public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToScreen();
 
+    /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
@@ -169,6 +170,7 @@ public sealed class CameraComponent : Component
         writer.WriteVector2("ViewRectangle", ViewRectangle);
     }
 
+    /// <inheritdoc />
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
     {
         base.Deserialize(reader, assetStore);
