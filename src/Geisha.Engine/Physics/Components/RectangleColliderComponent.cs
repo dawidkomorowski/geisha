@@ -40,12 +40,14 @@ public sealed class RectangleColliderComponent : Collider2DComponent
     /// </remarks>
     public Vector2 Dimensions { get; set; }
 
+    /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
         writer.WriteVector2("Dimensions", Dimensions);
     }
 
+    /// <inheritdoc />
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
     {
         base.Deserialize(reader, assetStore);

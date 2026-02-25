@@ -154,6 +154,7 @@ namespace Geisha.Engine.Animation.Components
             Position = 0;
         }
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -180,6 +181,7 @@ namespace Geisha.Engine.Animation.Components
             writer.WriteBool("PlayInLoop", PlayInLoop);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

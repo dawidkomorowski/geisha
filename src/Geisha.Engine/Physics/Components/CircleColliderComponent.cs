@@ -38,12 +38,14 @@ public sealed class CircleColliderComponent : Collider2DComponent
     /// </remarks>
     public double Radius { get; set; }
 
+    /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
         writer.WriteDouble("Radius", Radius);
     }
 
+    /// <inheritdoc />
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
     {
         base.Deserialize(reader, assetStore);
