@@ -231,6 +231,7 @@ public sealed class Transform2DComponent : Component
     // TODO: Review AlmostEqual documentation and tests.
     // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
     // TODO: Include information about TRS limitations in documentation.
+    // TODO: Review implementation of Matrix3x3.ToTransform().
     public Transform2D ComputeWorldTransform() => Transform;
 
     /// <summary>

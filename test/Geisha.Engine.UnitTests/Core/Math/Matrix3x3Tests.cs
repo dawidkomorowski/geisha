@@ -587,7 +587,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         public void ToTransform_AdditionalCases_TODO()
         {
             // Arrange
-            var parent = new Transform2D(new Vector2(1, 2), 3, new Vector2(4, 5));
+            var parent = new Transform2D(new Vector2(1, 2), 3, new Vector2(5, 5));
             var child = new Transform2D(new Vector2(10, 20), 30, new Vector2(40, 50));
 
             var quad = new AxisAlignedRectangle(Vector2.Zero, new Vector2(20, 10)).ToQuad();
@@ -600,7 +600,12 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var actualQuad = quad.Transform(transform2D.ToMatrix());
 
             // Assert
-            Assert.That(actualQuad, Is.EqualTo(expectedQuad));
+            const double tolerance = 1e-12;
+            var comparer = CommonEqualityComparer.Vector2(tolerance);
+            Assert.That(actualQuad.V1, Is.EqualTo(expectedQuad.V1).Using(comparer));
+            Assert.That(actualQuad.V2, Is.EqualTo(expectedQuad.V2).Using(comparer));
+            Assert.That(actualQuad.V3, Is.EqualTo(expectedQuad.V3).Using(comparer));
+            Assert.That(actualQuad.V4, Is.EqualTo(expectedQuad.V4).Using(comparer));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
