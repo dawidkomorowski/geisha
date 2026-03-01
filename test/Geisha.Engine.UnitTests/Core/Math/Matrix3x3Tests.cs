@@ -583,6 +583,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         // TODO: This test is for debugging. Once the issue is fixed it will be refactored into regression test.
+        // TODO: Consider converting this test into test case based test that allows to specify parent and child transform and use it to reproduce possible bugs. Especially that scale 5x5 requires tolerance of 1e14 as for 1e15 it does not work.
         [Test]
         public void ToTransform_AdditionalCases_TODO()
         {
@@ -645,6 +646,8 @@ namespace Geisha.Engine.UnitTests.Core.Math
                 -1.0,
                 5.0
                 - 5.0,
+                50.0,
+                -50.0
             };
 
             var childTranslations = new[]
@@ -676,6 +679,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
                 new Vector2(-2, 3),
                 new Vector2(-2, -3),
                 new Vector2(0.2, 0.3),
+                new Vector2(20.0, 30.0),
                 new Vector2(0, 1),
                 new Vector2(0, -1),
                 new Vector2(1, 0),

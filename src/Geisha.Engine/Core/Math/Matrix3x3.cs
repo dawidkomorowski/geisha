@@ -132,7 +132,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12, Epsilon);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12, Epsilon, Epsilon);
 
         #endregion
 

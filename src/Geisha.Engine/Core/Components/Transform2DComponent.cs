@@ -229,10 +229,13 @@ public sealed class Transform2DComponent : Component
     // TODO: Add actual implementation.
     // TODO: Convert Transform2D into record struct?
     // TODO: Review AlmostEqual documentation and tests.
+    // TODO: Consider adding AlmostEqual overloads that use the same value as absolute and relative tolerance.
     // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
     // TODO: Include information about TRS limitations in documentation.
     // TODO: Review implementation of Matrix3x3.ToTransform().
     // TODO: Review Angle.NormalizeRadians().
+    // TODO: Can this test ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform be named better?
+    // TODO: Maybe introduce a test for ToTransform() that multiplies parent matrices many times to check if it is stable and does not diverge from TRS?
     public Transform2D ComputeWorldTransform() => Transform;
 
     /// <summary>
