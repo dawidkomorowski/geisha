@@ -14,6 +14,8 @@ namespace Geisha.Engine.Core.Math
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix3x3 : IEquatable<Matrix3x3>
     {
+        private const double Epsilon = 1e-14;
+
         #region Static properties
 
         /// <summary>
@@ -130,7 +132,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12, 1e-14);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12, Epsilon);
 
         #endregion
 
@@ -316,18 +318,51 @@ namespace Geisha.Engine.Core.Math
                 throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS. {this}");
             }
 
-            var sx = new Vector2(M11, M21).Length;
-            var sy = new Vector2(M12, M22).Length;
+            var col0Len = new Vector2(M11, M21).Length;
+            var col1Len = new Vector2(M12, M22).Length;
 
-            if (double.IsNegative(M11 / M22))
+            // Rotation:
+            // - Prefer column 0 when possible: col0 = (sx*cos, sx*sin) => angle = atan2(M21, M11)
+            // - If sx == 0, use column 1: col1 = (-sy*sin, sy*cos) => angle = atan2(-M12, M22)
+            // - If both axes are degenerate, rotation is not observable -> choose 0.
+            double rotation;
+            if (col0Len > Epsilon)
+            {
+                rotation = System.Math.Atan2(M21, M11);
+            }
+            else if (col1Len > Epsilon)
+            {
+                rotation = System.Math.Atan2(-M12, M22);
+            }
+            else
+            {
+                rotation = 0d;
+            }
+
+            var cos = System.Math.Cos(rotation);
+            var sin = System.Math.Sin(rotation);
+
+            // Signed scale via projection onto rotated basis:
+            // col0 = (cos, sin) * sx  => sx = dot(col0, (cos, sin))
+            // col1 = (-sin, cos) * sy => sy = dot(col1, (-sin, cos))
+            var sx = M11 * cos + M21 * sin;
+            var sy = M12 * -sin + M22 * cos;
+
+            // Canonicalize to meet requirement (sy >= 0).
+            if (sy < 0d)
             {
                 sx = -sx;
+                sy = -sy;
+                rotation = Angle.NormalizeRadians(rotation + System.Math.PI);
             }
+
+            if (System.Math.Abs(sx) <= Epsilon) sx = 0d;
+            if (System.Math.Abs(sy) <= Epsilon) sy = 0d;
 
             return new Transform2D
             {
                 Translation = new Vector2(M13, M23),
-                Rotation = System.Math.Atan2(M21 * System.Math.Sign(sx), M11 * System.Math.Sign(sx)),
+                Rotation = rotation,
                 Scale = new Vector2(sx, sy)
             };
         }

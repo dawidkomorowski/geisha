@@ -558,7 +558,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(10, -20, 30 * (System.Math.PI / 180), -2, -3,
             10, -20, -150 * (System.Math.PI / 180), 2, 3)]
         [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 1,
-            10, -20, 0 * (System.Math.PI / 180), 0, 1)]
+            10, -20, 30 * (System.Math.PI / 180), 0, 1)]
         [TestCase(10, -20, 30 * (System.Math.PI / 180), 1, 0,
             10, -20, 30 * (System.Math.PI / 180), 1, 0)]
         [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 0,
@@ -644,7 +644,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
                 1.0,
                 -1.0,
                 5.0
-                -5.0,
+                - 5.0,
             };
 
             var childTranslations = new[]
@@ -670,8 +670,11 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var childScales = new[]
             {
                 Vector2.One,
+                -Vector2.One,
                 new Vector2(2, 3),
                 new Vector2(2, -3),
+                new Vector2(-2, 3),
+                new Vector2(-2, -3),
                 new Vector2(0.2, 0.3),
                 new Vector2(0, 1),
                 new Vector2(0, -1),
