@@ -130,7 +130,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12, 1e-14);
 
         #endregion
 
@@ -313,7 +313,7 @@ namespace Geisha.Engine.Core.Math
         {
             if (!IsTRS)
             {
-                throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS.");
+                throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS. {this}");
             }
 
             var sx = new Vector2(M11, M21).Length;

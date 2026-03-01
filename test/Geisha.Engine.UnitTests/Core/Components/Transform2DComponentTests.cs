@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -230,6 +231,92 @@ public class Transform2DComponentTests
         Assert.That(transform2DComponent.Translation, Is.EqualTo(transform2D.Translation));
         Assert.That(transform2DComponent.Rotation, Is.EqualTo(transform2D.Rotation));
         Assert.That(transform2DComponent.Scale, Is.EqualTo(transform2D.Scale));
+    }
+
+    [Test]
+    public void ComputeWorldTransform_ShouldReturnWorldTransform_GivenDefaultTransformOnRootEntity()
+    {
+        // Arrange
+        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+
+        // Act
+        var worldTransform = transform2DComponent.ComputeWorldTransform();
+
+        // Assert
+        Assert.That(worldTransform, Is.EqualTo(Transform2D.Identity));
+    }
+
+    [Test]
+    public void ComputeWorldTransform_ShouldReturnWorldTransform_GivenNonDefaultTransformOnRootEntity()
+    {
+        // Arrange
+        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(1, 2);
+        transform2DComponent.Rotation = 3;
+        transform2DComponent.Scale = new Vector2(4, 5);
+
+        var expectedTransform = transform2DComponent.Transform;
+
+        // Act
+        var worldTransform = transform2DComponent.ComputeWorldTransform();
+
+        // Assert
+        Assert.That(worldTransform, Is.EqualTo(expectedTransform));
+    }
+
+    [Test]
+    public void ComputeWorldTransform_ShouldReturnWorldTransform_GivenNonDefaultTransformOnChildEntity_AndParentEntityWithNoTransform()
+    {
+        // Arrange
+        var parent = Scene.CreateEntity();
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.Translation = new Vector2(1, 2);
+        childTransform.Rotation = 3;
+        childTransform.Scale = new Vector2(4, 5);
+
+        var expectedTransform = childTransform.Transform;
+
+        // Assume
+        Assert.That(parent.HasComponent<Transform2DComponent>(), Is.False);
+
+        // Act
+        var worldTransform = childTransform.ComputeWorldTransform();
+
+        // Assert
+        Assert.That(worldTransform, Is.EqualTo(expectedTransform));
+    }
+
+    [Test]
+    public void ComputeWorldTransform_ShouldReturnWorldTransform_GivenNonDefaultTransformOnChildEntity_AndParentEntityWithNonDefaultTransform()
+    {
+        // Arrange
+        var parent = Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 4); // Uniform scale to keep the matrix TRS.
+
+        // TODO: Scale 4x4 works for 1e-15 tolerance, but scale 5x5 requires 1e-14 tolerance.
+        // TODO: How to find good general tolerance?
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.Translation = new Vector2(10, 20);
+        childTransform.Rotation = 30;
+        childTransform.Scale = new Vector2(40, 50);
+
+        // TODO: Review this test.
+        Console.WriteLine(parentTransform.ToMatrix() * childTransform.ToMatrix());
+
+        var expectedTransform = (parentTransform.ToMatrix() * childTransform.ToMatrix()).ToTransform();
+
+        // Act
+        var worldTransform = childTransform.ComputeWorldTransform();
+
+        // Assert
+        Assert.That(worldTransform, Is.EqualTo(expectedTransform));
     }
 
     [Test]

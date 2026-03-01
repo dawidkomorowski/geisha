@@ -26,7 +26,7 @@
         ///     <paramref name="maxDiff" />, it is then compared with magnitude of greater number scaled by
         ///     <paramref name="maxRelativeDiff" />. If difference is lesser the numbers are considered equal.
         /// </remarks>
-        public static bool AlmostEqual(double a, double b, double maxDiff = double.Epsilon, double maxRelativeDiff = 1e-15)
+        public static bool AlmostEqual(double a, double b, double maxRelativeDiff = 1e-15, double maxDiff = double.Epsilon)
         {
             var diff = System.Math.Abs(a - b);
 

@@ -224,6 +224,15 @@ public sealed class Transform2DComponent : Component
     /// <returns>2D transformation matrix representing this transform component.</returns>
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
+    // TODO: Add documentation.
+    // TODO: Add unit tests.
+    // TODO: Add actual implementation.
+    // TODO: Convert Transform2D into record struct?
+    // TODO: Review AlmostEqual documentation and tests.
+    // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
+    // TODO: Include information about TRS limitations in documentation.
+    public Transform2D ComputeWorldTransform() => Transform;
+
     /// <summary>
     ///     Computes the 2D transformation matrix in world (global) coordinate space for the current transform hierarchy.
     /// </summary>

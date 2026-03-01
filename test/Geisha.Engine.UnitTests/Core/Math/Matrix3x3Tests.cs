@@ -582,6 +582,27 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.Scale.Y, Is.EqualTo(expectedSy));
         }
 
+        // TODO: This test is for debugging. Once the issue is fixed it will be refactored into regression test.
+        [Test]
+        public void ToTransform_AdditionalCases_TODO()
+        {
+            // Arrange
+            var parent = new Transform2D(new Vector2(1, 2), 3, new Vector2(4, 5));
+            var child = new Transform2D(new Vector2(10, 20), 30, new Vector2(40, 50));
+
+            var quad = new AxisAlignedRectangle(Vector2.Zero, new Vector2(20, 10)).ToQuad();
+
+            var matrix = parent.ToMatrix() * child.ToMatrix();
+            var expectedQuad = quad.Transform(matrix);
+
+            // Act
+            var transform2D = matrix.ToTransform();
+            var actualQuad = quad.Transform(transform2D.ToMatrix());
+
+            // Assert
+            Assert.That(actualQuad, Is.EqualTo(expectedQuad));
+        }
+
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
             1, 2, 3, 4, 5, 6, 7, 8, 9, true)]
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
