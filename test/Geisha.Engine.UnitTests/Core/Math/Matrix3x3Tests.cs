@@ -625,17 +625,26 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var parentRotations = new[]
             {
                 0d,
-                Angle.Deg2Rad(30),
                 Angle.Deg2Rad(90),
+                Angle.Deg2Rad(-90),
+                Angle.Deg2Rad(180),
+                Angle.Deg2Rad(-180),
+                Angle.Deg2Rad(270),
+                Angle.Deg2Rad(-270),
+                Angle.Deg2Rad(30),
                 Angle.Deg2Rad(-170)
             };
 
             // Uniform scale => composition with child TRS stays TRS (no shear).
             var parentUniformScales = new[]
             {
+                0,
                 0.5,
+                -0.5,
                 1.0,
+                -1.0,
                 5.0
+                -5.0,
             };
 
             var childTranslations = new[]
@@ -648,9 +657,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var childRotations = new[]
             {
                 0d,
+                Angle.Deg2Rad(90),
+                Angle.Deg2Rad(-90),
+                Angle.Deg2Rad(180),
+                Angle.Deg2Rad(-180),
+                Angle.Deg2Rad(270),
+                Angle.Deg2Rad(-270),
                 Angle.Deg2Rad(15),
-                Angle.Deg2Rad(-80),
-                Angle.Deg2Rad(180)
+                Angle.Deg2Rad(-80)
             };
 
             var childScales = new[]
@@ -659,7 +673,11 @@ namespace Geisha.Engine.UnitTests.Core.Math
                 new Vector2(2, 3),
                 new Vector2(2, -3),
                 new Vector2(0.2, 0.3),
-                new Vector2(0, 1) // degenerate axis; keep if you want to test edge behavior
+                new Vector2(0, 1),
+                new Vector2(0, -1),
+                new Vector2(1, 0),
+                new Vector2(-1, 0),
+                new Vector2(0, 0)
             };
 
             foreach (var pt in parentTranslations)
