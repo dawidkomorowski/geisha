@@ -608,6 +608,85 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actualQuad.V4, Is.EqualTo(expectedQuad.V4).Using(comparer));
         }
 
+        [Test]
+        public void ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform()
+        {
+            // Arrange
+            const double tolerance = 1e-10;
+            var matrixComparer = CommonEqualityComparer.Matrix3x3(tolerance);
+
+            var parentTranslations = new[]
+            {
+                Vector2.Zero,
+                new Vector2(1, 2),
+                new Vector2(-13, 21)
+            };
+
+            var parentRotations = new[]
+            {
+                0d,
+                Angle.Deg2Rad(30),
+                Angle.Deg2Rad(90),
+                Angle.Deg2Rad(-170)
+            };
+
+            // Uniform scale => composition with child TRS stays TRS (no shear).
+            var parentUniformScales = new[]
+            {
+                0.5,
+                1.0,
+                5.0
+            };
+
+            var childTranslations = new[]
+            {
+                Vector2.Zero,
+                new Vector2(10, 20),
+                new Vector2(-100, 50)
+            };
+
+            var childRotations = new[]
+            {
+                0d,
+                Angle.Deg2Rad(15),
+                Angle.Deg2Rad(-80),
+                Angle.Deg2Rad(180)
+            };
+
+            var childScales = new[]
+            {
+                Vector2.One,
+                new Vector2(2, 3),
+                new Vector2(2, -3),
+                new Vector2(0.2, 0.3),
+                new Vector2(0, 1) // degenerate axis; keep if you want to test edge behavior
+            };
+
+            foreach (var pt in parentTranslations)
+            foreach (var pr in parentRotations)
+            foreach (var ps in parentUniformScales)
+            foreach (var ct in childTranslations)
+            foreach (var cr in childRotations)
+            foreach (var cs in childScales)
+            {
+                var parent = new Transform2D(pt, pr, new Vector2(ps, ps));
+                var child = new Transform2D(ct, cr, cs);
+
+                var matrix = parent.ToMatrix() * child.ToMatrix();
+
+                // Assume
+                Assert.That(matrix.IsTRS, Is.True,
+                    $"Expected composed matrix to be TRS for uniform parent scale. Parent: {parent}; Child: {child}; Matrix: {matrix}");
+
+                // Act
+                var roundTripped = matrix.ToTransform().ToMatrix();
+
+                // Assert
+                Assert.That(roundTripped, Is.EqualTo(matrix).Using(matrixComparer),
+                    $"Round-trip failed. Parent: {parent}; Child: {child}; Matrix: {matrix}; RoundTripped: {roundTripped}");
+            }
+        }
+
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
             1, 2, 3, 4, 5, 6, 7, 8, 9, true)]
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
