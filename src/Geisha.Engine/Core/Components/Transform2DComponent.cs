@@ -225,8 +225,6 @@ public sealed class Transform2DComponent : Component
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
     // TODO: Add documentation.
-    // TODO: Add unit tests.
-    // TODO: Add actual implementation.
     // TODO: Convert Transform2D into record struct?
     // TODO: Review AlmostEqual documentation and tests.
     // TODO: Consider adding AlmostEqual overloads that use the same value as absolute and relative tolerance.
@@ -236,7 +234,8 @@ public sealed class Transform2DComponent : Component
     // TODO: Review Angle.NormalizeRadians().
     // TODO: Can this test ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform be named better?
     // TODO: Maybe introduce a test for ToTransform() that multiplies parent matrices many times to check if it is stable and does not diverge from TRS?
-    public Transform2D ComputeWorldTransform() => Transform;
+    // TODO: Consider throwing not supported in GetHashCode of tolerance based equality comparers to prevent their usage in hash-based collections.
+    public Transform2D ComputeWorldTransform() => ComputeWorldTransformMatrix().ToTransform();
 
     /// <summary>
     ///     Computes the 2D transformation matrix in world (global) coordinate space for the current transform hierarchy.
