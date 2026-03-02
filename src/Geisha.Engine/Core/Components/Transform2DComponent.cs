@@ -235,6 +235,12 @@ public sealed class Transform2DComponent : Component
     // TODO: Review Angle.NormalizeRadians().
     // TODO: Can this test ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform be named better?
     // TODO: Maybe introduce a test for ToTransform() that multiplies parent matrices many times to check if it is stable and does not diverge from TRS?
+    // TODO: Consider renaming GMath to:
+    // TODO: •	GeishaMath
+    // TODO: •	EngineMath
+    // TODO: •	CoreMath
+    // TODO: •	MathPrimitives
+    // TODO: •	Other?
     public Transform2D ComputeWorldTransform() => ComputeWorldTransformMatrix().ToTransform();
 
     /// <summary>
