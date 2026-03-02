@@ -207,7 +207,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         // Contact normal
         var contactNormal = new AxisAlignedRectangle(15, 0, 30, 0);
         var expectedTransform = Matrix3x3.CreateTRS(contact2D.ContactPoints[0].WorldPosition, Angle.Deg2Rad(60), Vector2.One);
-        DebugRenderer.Received(1).DrawRectangle(contactNormal, _contactNormalColor, Arg.Is<Matrix3x3>(m => Matrix3x3Comparer.Equals(expectedTransform, m)));
+        DebugRenderer.Received(1).DrawRectangle(contactNormal, _contactNormalColor, Arg.Is<Matrix3x3>(m => Matrix3x3Equality(expectedTransform, m)));
 
         // Total calls
         Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(5));

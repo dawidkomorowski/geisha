@@ -1,7 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Core.Math
 {
@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     public class Transform2DTests
     {
         private const double Epsilon = 0.0001;
-        private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+        private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
         [Test]
         public void Constructor_ShouldCreateTransformWithZeroTranslationZeroRotationZeroScale_GivenNoArguments()
@@ -70,7 +70,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var actual = transform.VectorX;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(new Vector2(vx, vy)).Using(Vector2Comparer));
+            Assert.That(actual, Is.EqualTo(new Vector2(vx, vy)).Using<Vector2>(Vector2Equality));
         }
 
         [TestCase(0, 0, 1)]
@@ -88,7 +88,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var actual = transform.VectorY;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(new Vector2(vx, vy)).Using(Vector2Comparer));
+            Assert.That(actual, Is.EqualTo(new Vector2(vx, vy)).Using<Vector2>(Vector2Equality));
         }
 
         [TestCase(1, 2, 3, 4, 5,

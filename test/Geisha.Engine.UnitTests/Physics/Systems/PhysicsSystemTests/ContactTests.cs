@@ -449,23 +449,23 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(kinematicBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
         Assert.That(kinematicBodyContacts[0].ContactPoints.ToArray(),
-            Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()).Using<ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
         Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(staticBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
 
         var reflectedExpectedContactPoints = testCase.ExpectedContactPoints.ToArray()
             .Select(cp => new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition)).ToArray();
         Assert.That(staticBodyContacts[0].ContactPoints.ToArray(),
-            Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D>(ContactPoint2DComparison));
     }
 
     #endregion
@@ -660,25 +660,25 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(kinematicBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
         Assert.That(kinematicBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
         Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(staticBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
 
         var cp = testCase.ExpectedContactPoint;
         var reflectedContactPoint = new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition);
         Assert.That(staticBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
         Assert.That(staticBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
     }
 
     #endregion
@@ -952,25 +952,25 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(kinematicBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
         Assert.That(kinematicBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
         Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(staticBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
 
         var cp = testCase.ExpectedContactPoint;
         var reflectedContactPoint = new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition);
         Assert.That(staticBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
         Assert.That(staticBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
     }
 
     public static IEnumerable<TestCaseData> CircleAndRectangleTestCases =>
@@ -1005,27 +1005,27 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(kinematicBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
         Assert.That(kinematicBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
 
         var cp = testCase.ExpectedContactPoint;
         var reflectedContactPoint = new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition);
         Assert.That(kinematicBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
         Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(staticBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
 
 
         Assert.That(staticBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
         Assert.That(staticBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
     }
 
     #endregion
@@ -1449,23 +1449,23 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(kinematicBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
         Assert.That(kinematicBodyContacts[0].ContactPoints.ToArray(),
-            Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()).Using<ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
         Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(staticBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
 
         var reflectedExpectedContactPoints = testCase.ExpectedContactPoints.ToArray()
             .Select(cp => new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition)).ToArray();
         Assert.That(staticBodyContacts[0].ContactPoints.ToArray(),
-            Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D>(ContactPoint2DComparison));
     }
 
     #endregion
@@ -1651,27 +1651,27 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(kinematicBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
         Assert.That(kinematicBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
 
         var cp = testCase.ExpectedContactPoint;
         var reflectedContactPoint = new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition);
         Assert.That(kinematicBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
         Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using<Vector2>(Vector2Equality));
         Assert.That(staticBodyContacts[0].PenetrationDepth, Is.EqualTo(testCase.ExpectedPenetrationDepth));
 
 
         Assert.That(staticBodyContacts[0].ContactPoints.Count, Is.EqualTo(1));
         Assert.That(staticBodyContacts[0].ContactPoints[0],
-            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D>(ContactPoint2DComparison));
     }
 
     #endregion

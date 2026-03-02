@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -12,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
     public class Transform3DComponentTests
     {
         private const double Epsilon = 0.0001;
-        private static IEqualityComparer<Vector3> Vector3Comparer => CommonEqualityComparer.Vector3(Epsilon);
+        private static Func<Vector3, Vector3, bool> Vector3Equality => ToleranceEquality.ForVector3(Epsilon);
 
         private Entity Entity { get; set; } = null!;
 
@@ -139,7 +139,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
             var vectorX = transformComponent.VectorX;
 
             // Assert
-            Assert.That(vectorX, Is.EqualTo(new Vector3(vx, vy, vz)).Using(Vector3Comparer));
+            Assert.That(vectorX, Is.EqualTo(new Vector3(vx, vy, vz)).Using<Vector3>(Vector3Equality));
         }
 
         [TestCase(0, 0, 0,
@@ -162,7 +162,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
             var vectorY = transformComponent.VectorY;
 
             // Assert
-            Assert.That(vectorY, Is.EqualTo(new Vector3(vx, vy, vz)).Using(Vector3Comparer));
+            Assert.That(vectorY, Is.EqualTo(new Vector3(vx, vy, vz)).Using<Vector3>(Vector3Equality));
         }
 
         [TestCase(0, 0, 0,
@@ -185,7 +185,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
             var vectorZ = transformComponent.VectorZ;
 
             // Assert
-            Assert.That(vectorZ, Is.EqualTo(new Vector3(vx, vy, vz)).Using(Vector3Comparer));
+            Assert.That(vectorZ, Is.EqualTo(new Vector3(vx, vy, vz)).Using<Vector3>(Vector3Equality));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -12,8 +12,8 @@ namespace Geisha.Engine.UnitTests.Core.Components;
 public class Transform2DComponentTests
 {
     private const double Epsilon = 0.0001;
-    private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
-    private static IEqualityComparer<Transform2D> Transform2DComparer => CommonEqualityComparer.Transform2D(Epsilon);
+    private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
+    private static Func<Transform2D, Transform2D, bool> Transform2DEquality => ToleranceEquality.ForTransform2D(Epsilon);
 
     private Scene Scene { get; set; } = null!;
     private Entity Entity { get; set; } = null!;
@@ -159,7 +159,7 @@ public class Transform2DComponentTests
         var vectorX = transformComponent.VectorX;
 
         // Assert
-        Assert.That(vectorX, Is.EqualTo(new Vector2(vx, vy)).Using(Vector2Comparer));
+        Assert.That(vectorX, Is.EqualTo(new Vector2(vx, vy)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 1)]
@@ -175,7 +175,7 @@ public class Transform2DComponentTests
         var vectorY = transformComponent.VectorY;
 
         // Assert
-        Assert.That(vectorY, Is.EqualTo(new Vector2(vx, vy)).Using(Vector2Comparer));
+        Assert.That(vectorY, Is.EqualTo(new Vector2(vx, vy)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -261,7 +261,7 @@ public class Transform2DComponentTests
         var worldTransform = transform2DComponent.ComputeWorldTransform();
 
         // Assert
-        Assert.That(worldTransform, Is.EqualTo(expectedTransform).Using(Transform2DComparer));
+        Assert.That(worldTransform, Is.EqualTo(expectedTransform).Using<Transform2D>(Transform2DEquality));
     }
 
     [Test]
@@ -285,7 +285,7 @@ public class Transform2DComponentTests
         var worldTransform = childTransform.ComputeWorldTransform();
 
         // Assert
-        Assert.That(worldTransform, Is.EqualTo(expectedTransform).Using(Transform2DComparer));
+        Assert.That(worldTransform, Is.EqualTo(expectedTransform).Using<Transform2D>(Transform2DEquality));
     }
 
     [Test]

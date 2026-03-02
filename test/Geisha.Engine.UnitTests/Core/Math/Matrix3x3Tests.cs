@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     public class Matrix3x3Tests
     {
         private const double Epsilon = 0.0001;
-        private static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
+        private static Func<Matrix3x3, Matrix3x3, bool> Matrix3x3Equality => ToleranceEquality.ForMatrix3x3(Epsilon);
 
         #region Static properties
 
@@ -602,19 +601,19 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Assert
             const double tolerance = 1e-12;
-            var comparer = CommonEqualityComparer.Vector2(tolerance);
-            Assert.That(actualQuad.V1, Is.EqualTo(expectedQuad.V1).Using(comparer));
-            Assert.That(actualQuad.V2, Is.EqualTo(expectedQuad.V2).Using(comparer));
-            Assert.That(actualQuad.V3, Is.EqualTo(expectedQuad.V3).Using(comparer));
-            Assert.That(actualQuad.V4, Is.EqualTo(expectedQuad.V4).Using(comparer));
+            var equality = ToleranceEquality.ForVector2(tolerance);
+            Assert.That(actualQuad.V1, Is.EqualTo(expectedQuad.V1).Using<Vector2>(equality));
+            Assert.That(actualQuad.V2, Is.EqualTo(expectedQuad.V2).Using<Vector2>(equality));
+            Assert.That(actualQuad.V3, Is.EqualTo(expectedQuad.V3).Using<Vector2>(equality));
+            Assert.That(actualQuad.V4, Is.EqualTo(expectedQuad.V4).Using<Vector2>(equality));
         }
 
         [Test]
         public void ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform()
         {
             // Arrange
-            const double tolerance = 1e-10;
-            var matrixComparer = CommonEqualityComparer.Matrix3x3(tolerance);
+            const double tolerance = 1e-12;
+            var matrixEquality = ToleranceEquality.ForMatrix3x3(tolerance);
 
             var parentTranslations = new[]
             {
@@ -707,7 +706,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
                 var roundTripped = matrix.ToTransform().ToMatrix();
 
                 // Assert
-                Assert.That(roundTripped, Is.EqualTo(matrix).Using(matrixComparer),
+                Assert.That(roundTripped, Is.EqualTo(matrix).Using<Matrix3x3>(matrixEquality),
                     $"Round-trip failed. Parent: {parent}; Child: {child}; Matrix: {matrix}; RoundTripped: {roundTripped}");
             }
         }
@@ -930,7 +929,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var m3 = Matrix3x3.LerpTRS(m1, m2, alpha);
 
             // Assert
-            Assert.That(m3, Is.EqualTo(Transform2D.Lerp(t1, t2, alpha).ToMatrix()).Using(Matrix3x3Comparer));
+            Assert.That(m3, Is.EqualTo(Transform2D.Lerp(t1, t2, alpha).ToMatrix()).Using<Matrix3x3>(Matrix3x3Equality));
         }
 
         #endregion

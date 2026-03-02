@@ -76,7 +76,7 @@ namespace Geisha.Engine.Core.Components
         ///     facing towards Y axis in its own local coordinate system then after application of rotation this property gets
         ///     vector of where the object is facing in parent's local coordinate system (or global coordinate system if there is
         ///     no parent). It can be used to easily move an object along the direction it is facing by moving it along
-        ///     <see cref="VectorX" />.
+        ///     <see cref="VectorY" />.
         /// </remarks>
         public Vector3 VectorY => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitY.Homogeneous).ToVector3();
 
@@ -89,7 +89,7 @@ namespace Geisha.Engine.Core.Components
         ///     facing towards Z axis in its own local coordinate system then after application of rotation this property gets
         ///     vector of where the object is facing in parent's local coordinate system (or global coordinate system if there is
         ///     no parent). It can be used to easily move an object along the direction it is facing by moving it along
-        ///     <see cref="VectorX" />.
+        ///     <see cref="VectorZ" />.
         /// </remarks>
         public Vector3 VectorZ => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitZ.Homogeneous).ToVector3();
 

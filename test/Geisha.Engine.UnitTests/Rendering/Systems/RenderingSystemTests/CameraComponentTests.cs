@@ -1,9 +1,9 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
-using System;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -400,7 +400,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(wx, wy)).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(new Vector2(wx, wy)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -433,7 +433,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(-2265, 1350)).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(new Vector2(-2265, 1350)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -486,7 +486,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(px, py)).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(new Vector2(px, py)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -519,7 +519,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -573,7 +573,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var viewPoint = (viewMatrix * worldPoint.Homogeneous).ToVector2();
 
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(Vector2Comparer));
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -609,7 +609,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var viewPoint = (viewMatrix * worldPoint.Homogeneous).ToVector2();
 
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(viewPoint, Is.EqualTo(new Vector2(200, 100)).Using(Vector2Comparer));
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(200, 100)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -663,7 +663,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var viewPoint = (viewMatrixScaledToScreen * worldPoint.Homogeneous).ToVector2();
 
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(Vector2Comparer));
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -699,7 +699,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var viewPoint = (viewMatrixScaledToScreen * worldPoint.Homogeneous).ToVector2();
 
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(viewPoint, Is.EqualTo(new Vector2(2000, 1000)).Using(Vector2Comparer));
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(2000, 1000)).Using<Vector2>(Vector2Equality));
     }
 
     #region Default ViewRectangle (0x0) Behavior Tests
@@ -799,7 +799,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Assert
         // With default ViewRectangle, should behave as if ViewRectangle = ScreenSize (1920, 1080)
         Assert.That(camera.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(-760, 440)).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(new Vector2(-760, 440)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -824,7 +824,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         // Assert
         // With default ViewRectangle, should behave as if ViewRectangle = ScreenSize (1920, 1080)
         Assert.That(camera.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]

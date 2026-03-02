@@ -235,12 +235,6 @@ public sealed class Transform2DComponent : Component
     // TODO: Review Angle.NormalizeRadians().
     // TODO: Can this test ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform be named better?
     // TODO: Maybe introduce a test for ToTransform() that multiplies parent matrices many times to check if it is stable and does not diverge from TRS?
-    // TODO: Consider throwing not supported in GetHashCode of tolerance based equality comparers to prevent their usage in hash-based collections.
-    // TODO: OR
-    // TODO: -> Consider adding tolerance based equality methods on math types and provide factory methods for tolerance based equality delegates Func<T,T,bool>.
-    // TODO: -> This has benefit of no hash code required and more discoverable API.
-    // TODO: OR
-    // TODO: -> Have tolerance based equality delegates only for tests?
     public Transform2D ComputeWorldTransform() => ComputeWorldTransformMatrix().ToTransform();
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -12,8 +13,6 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -27,7 +26,7 @@ public abstract class RenderingSystemTestsBase
     private protected IDebugRendererForRenderingSystem DebugRendererForRenderingSystem = null!;
     private protected IRenderingDiagnosticInfoProvider RenderingDiagnosticInfoProvider = null!;
 
-    protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    protected static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     [SetUp]
     public void SetUp()

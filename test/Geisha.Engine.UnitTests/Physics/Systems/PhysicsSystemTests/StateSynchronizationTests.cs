@@ -286,7 +286,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body3.ColliderType, Is.EqualTo(ColliderType.Rectangle));
         var expectedPosition3 = expectedPosition2 + (Matrix3x3.CreateRotation(Angle.Deg2Rad(10 + 20)) * new Vector2(5, 6).Homogeneous).ToVector2();
-        Assert.That(body3.Position, Is.EqualTo(expectedPosition3).Using(Vector2Comparer));
+        Assert.That(body3.Position, Is.EqualTo(expectedPosition3).Using<Vector2>(Vector2Equality));
         Assert.That(body3.Rotation, Is.EqualTo(Angle.Deg2Rad(60)));
         Assert.That(body3.LinearVelocity, Is.EqualTo(Vector2.Zero));
         Assert.That(body3.AngularVelocity, Is.EqualTo(0d));

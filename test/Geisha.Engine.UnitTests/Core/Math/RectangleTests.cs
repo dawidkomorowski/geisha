@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -11,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math;
 public class RectangleTests
 {
     private const double Epsilon = 1e-6;
-    private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     #region Constructors
 
@@ -80,10 +79,10 @@ public class RectangleTests
         var rectangle = new Rectangle(center, dimensions);
 
         // Assert
-        Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using(Vector2Comparer));
-        Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using(Vector2Comparer));
-        Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using(Vector2Comparer));
-        Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using(Vector2Comparer));
+        Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using<Vector2>(Vector2Equality));
+        Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using<Vector2>(Vector2Equality));
+        Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using<Vector2>(Vector2Equality));
+        Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using<Vector2>(Vector2Equality));
     }
 
     #endregion
@@ -110,7 +109,7 @@ public class RectangleTests
         var actualCenter = rectangle.Center;
 
         // Assert
-        Assert.That(actualCenter, Is.EqualTo(center).Using(Vector2Comparer));
+        Assert.That(actualCenter, Is.EqualTo(center).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 1, 1, 0, 1)]
@@ -230,8 +229,8 @@ public class RectangleTests
         var boundingRectangle = rectangle.GetBoundingRectangle();
 
         // Assert
-        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(2.464101, 3.732050)).Using(Vector2Comparer));
-        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using(Vector2Comparer));
+        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(2.464101, 3.732050)).Using<Vector2>(Vector2Equality));
+        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 20, 10)]
