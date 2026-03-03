@@ -225,7 +225,6 @@ public sealed class Transform2DComponent : Component
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
     // TODO: Add documentation.
-    // TODO: Convert Transform2D into record struct?
     // TODO: Review AlmostEqual documentation and tests.
     // TODO: Consider adding AlmostEqual overloads that use the same value as absolute and relative tolerance.
     // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
