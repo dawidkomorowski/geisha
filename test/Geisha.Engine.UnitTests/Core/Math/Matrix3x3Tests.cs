@@ -581,31 +581,26 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.Scale.Y, Is.EqualTo(expectedSy));
         }
 
-        // TODO: This test is for debugging. Once the issue is fixed it will be refactored into regression test.
-        // TODO: Consider converting this test into test case based test that allows to specify parent and child transform and use it to reproduce possible bugs. Especially that scale 5x5 requires tolerance of 1e14 as for 1e15 it does not work.
+        /// <summary>
+        ///     This test case is sensitive to floating-point precision. <see cref="Matrix3x3.Epsilon" /> of 1e-15 is too strict.
+        /// </summary>
         [Test]
-        public void ToTransform_AdditionalCases_TODO()
+        public void ToTransform_ShouldPreserveMatrix_ForPrecisionSensitiveHierarchyCase()
         {
             // Arrange
+            const double tolerance = 1e-13;
+            var matrixEquality = ToleranceEquality.ForMatrix3x3(tolerance);
+
             var parent = new Transform2D(new Vector2(1, 2), 3, new Vector2(5, 5));
             var child = new Transform2D(new Vector2(10, 20), 30, new Vector2(40, 50));
 
-            var quad = new AxisAlignedRectangle(Vector2.Zero, new Vector2(20, 10)).ToQuad();
-
             var matrix = parent.ToMatrix() * child.ToMatrix();
-            var expectedQuad = quad.Transform(matrix);
 
             // Act
-            var transform2D = matrix.ToTransform();
-            var actualQuad = quad.Transform(transform2D.ToMatrix());
+            var matrixAfterConversion = matrix.ToTransform().ToMatrix();
 
             // Assert
-            const double tolerance = 1e-12;
-            var equality = ToleranceEquality.ForVector2(tolerance);
-            Assert.That(actualQuad.V1, Is.EqualTo(expectedQuad.V1).Using<Vector2>(equality));
-            Assert.That(actualQuad.V2, Is.EqualTo(expectedQuad.V2).Using<Vector2>(equality));
-            Assert.That(actualQuad.V3, Is.EqualTo(expectedQuad.V3).Using<Vector2>(equality));
-            Assert.That(actualQuad.V4, Is.EqualTo(expectedQuad.V4).Using<Vector2>(equality));
+            Assert.That(matrixAfterConversion, Is.EqualTo(matrix).Using<Matrix3x3>(matrixEquality));
         }
 
         [Test]
