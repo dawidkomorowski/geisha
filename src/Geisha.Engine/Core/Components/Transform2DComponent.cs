@@ -232,7 +232,7 @@ public sealed class Transform2DComponent : Component
     // TODO: Consider expanding TRS concept with concept of Orthonormal.
     // TODO: Review implementation of Matrix3x3.ToTransform().
     // TODO: Review Angle.NormalizeRadians().
-    // TODO: Can this test ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform be named better?
+    // TODO: Review Matrix3x3 test ToTransform_AdditionalCases_TODO.
     // TODO: Maybe introduce a test for ToTransform() that multiplies parent matrices many times to check if it is stable and does not diverge from TRS?
     // TODO: Consider renaming GMath to:
     // TODO: •	GeishaMath

@@ -609,7 +609,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         [Test]
-        public void ToTransform_ShouldRoundTrip_ComposedTRS_WhenParentScaleIsUniform()
+        public void ToTransform_ShouldPreserveComposedTRSMatrix_WhenParentScaleIsUniform()
         {
             // Arrange
             const double tolerance = 1e-12;
@@ -703,11 +703,11 @@ namespace Geisha.Engine.UnitTests.Core.Math
                     $"Expected composed matrix to be TRS for uniform parent scale. Parent: {parent}; Child: {child}; Matrix: {matrix}");
 
                 // Act
-                var roundTripped = matrix.ToTransform().ToMatrix();
+                var matrixAfterConversion = matrix.ToTransform().ToMatrix();
 
                 // Assert
-                Assert.That(roundTripped, Is.EqualTo(matrix).Using<Matrix3x3>(matrixEquality),
-                    $"Round-trip failed. Parent: {parent}; Child: {child}; Matrix: {matrix}; RoundTripped: {roundTripped}");
+                Assert.That(matrixAfterConversion, Is.EqualTo(matrix).Using<Matrix3x3>(matrixEquality),
+                    $"Matrix was not preserved after conversion to Transform2D and back. Parent: {parent}; Child: {child}; Matrix: {matrix}; MatrixAfterConversion: {matrixAfterConversion}");
             }
         }
 
