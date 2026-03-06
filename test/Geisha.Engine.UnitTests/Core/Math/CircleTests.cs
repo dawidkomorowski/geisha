@@ -51,7 +51,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Arrange
             var circle = new Circle(new Vector2(2, 1), 2);
             var transform = Matrix3x3.CreateTranslation(new Vector2(2, 1))
-                            * Matrix3x3.CreateRotation(Angle.Deg2Rad(90))
+                            * Matrix3x3.CreateRotation(Angle.DegreesToRadians(90))
                             * Matrix3x3.CreateScale(new Vector2(2, 2));
 
             // Act

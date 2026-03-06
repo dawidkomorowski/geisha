@@ -161,11 +161,11 @@ public class OverlapTests
     {
         // Arrange
         var rotationMatrix1 = Matrix3x3.CreateTranslation(new Vector2(x1, y1)) *
-                              Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation1)) *
+                              Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation1)) *
                               Matrix3x3.CreateTranslation(new Vector2(-x1, -y1));
 
         var rotationMatrix2 = Matrix3x3.CreateTranslation(new Vector2(x2, y2)) *
-                              Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation2)) *
+                              Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation2)) *
                               Matrix3x3.CreateTranslation(new Vector2(-x2, -y2));
 
         var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1)).Transform(rotationMatrix1);
@@ -318,7 +318,7 @@ public class OverlapTests
     {
         // Arrange
         var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
-                             Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                             Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)) *
                              Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
 
         var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);

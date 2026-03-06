@@ -620,14 +620,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var parentRotations = new[]
             {
                 0d,
-                Angle.Deg2Rad(90),
-                Angle.Deg2Rad(-90),
-                Angle.Deg2Rad(180),
-                Angle.Deg2Rad(-180),
-                Angle.Deg2Rad(270),
-                Angle.Deg2Rad(-270),
-                Angle.Deg2Rad(30),
-                Angle.Deg2Rad(-170)
+                Angle.DegreesToRadians(90),
+                Angle.DegreesToRadians(-90),
+                Angle.DegreesToRadians(180),
+                Angle.DegreesToRadians(-180),
+                Angle.DegreesToRadians(270),
+                Angle.DegreesToRadians(-270),
+                Angle.DegreesToRadians(30),
+                Angle.DegreesToRadians(-170)
             };
 
             // Uniform scale => composition with child TRS stays TRS (no shear).
@@ -654,14 +654,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var childRotations = new[]
             {
                 0d,
-                Angle.Deg2Rad(90),
-                Angle.Deg2Rad(-90),
-                Angle.Deg2Rad(180),
-                Angle.Deg2Rad(-180),
-                Angle.Deg2Rad(270),
-                Angle.Deg2Rad(-270),
-                Angle.Deg2Rad(15),
-                Angle.Deg2Rad(-80)
+                Angle.DegreesToRadians(90),
+                Angle.DegreesToRadians(-90),
+                Angle.DegreesToRadians(180),
+                Angle.DegreesToRadians(-180),
+                Angle.DegreesToRadians(270),
+                Angle.DegreesToRadians(-270),
+                Angle.DegreesToRadians(15),
+                Angle.DegreesToRadians(-80)
             };
 
             var childScales = new[]
@@ -906,14 +906,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var t1 = new Transform2D
             {
                 Translation = new Vector2(-400, -500),
-                Rotation = Angle.Deg2Rad(60),
+                Rotation = Angle.DegreesToRadians(60),
                 Scale = new Vector2(0.5, 0.5)
             };
 
             var t2 = new Transform2D
             {
                 Translation = new Vector2(-200, -200),
-                Rotation = Angle.Deg2Rad(-80),
+                Rotation = Angle.DegreesToRadians(-80),
                 Scale = new Vector2(2, 2)
             };
 

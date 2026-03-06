@@ -10,8 +10,7 @@ public static class Angle
     /// </summary>
     /// <param name="degrees">Angle in degrees.</param>
     /// <returns>Angle in radians.</returns>
-    // TODO Rename to DegreesToRadians?
-    public static double Deg2Rad(double degrees)
+    public static double DegreesToRadians(double degrees)
     {
         return degrees * (System.Math.PI / 180);
     }
@@ -21,7 +20,7 @@ public static class Angle
     /// </summary>
     /// <param name="radians">Angle in radians.</param>
     /// <returns>Angle in degrees.</returns>
-    public static double Rad2Deg(double radians)
+    public static double RadiansToDegrees(double radians)
     {
         return radians * (180 / System.Math.PI);
     }

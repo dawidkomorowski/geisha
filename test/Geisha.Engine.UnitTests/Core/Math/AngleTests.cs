@@ -17,12 +17,12 @@ public class AngleTests
     [TestCase(-720, -4 * System.Math.PI)]
     [TestCase(37.375612, 0.65232748934790286)]
     [TestCase(-37.375612, -0.65232748934790286)]
-    public void Deg2Rad_And_Rad2Deg_Test(double degrees, double radians)
+    public void DegreesToRadians_And_RadiansToDegrees_Test(double degrees, double radians)
     {
         // Arrange
         // Act
-        var actualRadians = Angle.Deg2Rad(degrees);
-        var actualDegrees = Angle.Rad2Deg(radians);
+        var actualRadians = Angle.DegreesToRadians(degrees);
+        var actualDegrees = Angle.RadiansToDegrees(radians);
 
         // Assert
         Assert.That(actualRadians, Is.EqualTo(radians));
@@ -83,9 +83,11 @@ public class AngleTests
     [TestCase(double.NaN, double.NaN)]
     [TestCase(double.PositiveInfinity, double.NaN)]
     [TestCase(double.NegativeInfinity, double.NaN)]
-    public void NormalizeRadiansTo2Pi_Test(double radians, double expected, double tolerance = 1e-12)
+    public void NormalizeRadiansTo2Pi_Test(double radians, double expected)
     {
         // Arrange
+        const double tolerance = 1e-12;
+
         // Act
         var actual = Angle.NormalizeRadiansTo2Pi(radians);
 

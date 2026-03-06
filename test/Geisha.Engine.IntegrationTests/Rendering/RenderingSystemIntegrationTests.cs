@@ -99,9 +99,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     // 2D transformations
                     entityFactory.CreateRectangle(scene, new Vector2(100, 100), Color.FromArgb(255, 255, 255, 0), fillInterior: true,
-                        translation: new Vector2(50, 50), rotation: Angle.Deg2Rad(45), scale: new Vector2(0.2, 0.2));
+                        translation: new Vector2(50, 50), rotation: Angle.DegreesToRadians(45), scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateRectangle(scene, new Vector2(200, 100), Color.FromArgb(255, 255, 0, 255), fillInterior: true,
-                        translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
+                        translation: new Vector2(-50, -50), rotation: Angle.DegreesToRadians(20), scale: new Vector2(0.2, 0.3));
 
                     // Visibility
                     var visibilityEntity = entityFactory.CreateRectangle(scene, new Vector2(200, 200), Color.Black, true);
@@ -123,9 +123,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     // 2D transformations
                     entityFactory.CreateEllipse(scene, 100, 100, Color.FromArgb(255, 255, 255, 0), fillInterior: true,
-                        translation: new Vector2(50, 50), rotation: Angle.Deg2Rad(45), scale: new Vector2(0.2, 0.2));
+                        translation: new Vector2(50, 50), rotation: Angle.DegreesToRadians(45), scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateEllipse(scene, 200, 100, Color.FromArgb(255, 255, 0, 255), fillInterior: true,
-                        translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
+                        translation: new Vector2(-50, -50), rotation: Angle.DegreesToRadians(20), scale: new Vector2(0.2, 0.3));
 
                     // Visibility
                     var visibilityEntity = entityFactory.CreateEllipse(scene, 200, 200, Color.Black, true);
@@ -148,13 +148,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
 
                     // 2D transformations
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75), rotation: Angle.Deg2Rad(45),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75), rotation: Angle.DegreesToRadians(45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.Deg2Rad(-45),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.DegreesToRadians(-45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75), rotation: Angle.Deg2Rad(-135),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75), rotation: Angle.DegreesToRadians(-135),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75), rotation: Angle.Deg2Rad(135),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75), rotation: Angle.DegreesToRadians(135),
                         scale: new Vector2(0.2, 0.2));
 
                     // Visibility
@@ -238,7 +238,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     // 2D transformations
                     entityFactory.CreateText(scene, "Transformed", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 255), translation: new Vector2(90, 30),
-                        rotation: Angle.Deg2Rad(-90), scale: new Vector2(0.5, 2.0));
+                        rotation: Angle.DegreesToRadians(-90), scale: new Vector2(0.5, 2.0));
 
                     // Visibility
                     var visibilityTextRendererComponent = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.Black,
@@ -448,7 +448,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     var text =
                         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
                     var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black,
-                        translation: new Vector2(-20, -10), rotation: Angle.Deg2Rad(45));
+                        translation: new Vector2(-20, -10), rotation: Angle.DegreesToRadians(45));
                     textRendererComponent.FontFamilyName = "Calibri";
                     textRendererComponent.MaxWidth = 180;
                     textRendererComponent.MaxHeight = 180;
@@ -556,7 +556,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraTransform = camera.GetComponent<Transform2DComponent>();
                     cameraTransform.Translation = new Vector2(100, 100);
-                    cameraTransform.Rotation = Angle.Deg2Rad(-45);
+                    cameraTransform.Rotation = Angle.DegreesToRadians(-45);
                     cameraTransform.Scale = new Vector2(3, 3);
 
                     // Rectangle
@@ -635,8 +635,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     CreatePortrait(scene, entityFactory, new Vector2(0, 0), 0, new Vector2(0.5, 0.5));
-                    CreatePortrait(scene, entityFactory, new Vector2(-60, 60), Angle.Deg2Rad(45), new Vector2(0.3, 0.3));
-                    CreatePortrait(scene, entityFactory, new Vector2(60, -60), Angle.Deg2Rad(-45), new Vector2(0.4, 0.4));
+                    CreatePortrait(scene, entityFactory, new Vector2(-60, 60), Angle.DegreesToRadians(45), new Vector2(0.3, 0.3));
+                    CreatePortrait(scene, entityFactory, new Vector2(60, -60), Angle.DegreesToRadians(-45), new Vector2(0.4, 0.4));
 
                     static void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
                     {
@@ -647,7 +647,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         transform2DComponent.Scale = scale;
 
                         var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.Black, fillInterior: true,
-                            rotation: Angle.Deg2Rad(-45));
+                            rotation: Angle.DegreesToRadians(-45));
                         rectangle.GetComponent<RectangleRendererComponent>().OrderInLayer = -2;
                         rectangle.Parent = root;
 
@@ -692,7 +692,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     var rectangleTransform =
                         Matrix3x3.CreateTranslation(new Vector2(-50, 50))
-                        * Matrix3x3.CreateRotation(Angle.Deg2Rad(45))
+                        * Matrix3x3.CreateRotation(Angle.DegreesToRadians(45))
                         * Matrix3x3.CreateScale(new Vector2(0.5, 0.5));
                     debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, rectangleTransform);
                     debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, rectangleTransform);
@@ -771,15 +771,15 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(120, -120),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                 }
             },
             new()
@@ -790,15 +790,15 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(120, -120),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                     entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150),
-                        rotation: Angle.Deg2Rad(45));
+                        rotation: Angle.DegreesToRadians(45));
                 }
             },
             new()
@@ -809,11 +809,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100), rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115), rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120), rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150), rotation: Angle.DegreesToRadians(45));
                 }
             },
             new()
@@ -824,11 +824,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100), rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(-105, -105), rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(115, -115), rotation: Angle.Deg2Rad(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(-105, -105), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(115, -115), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150), rotation: Angle.DegreesToRadians(45));
                 }
             },
             new()
@@ -840,23 +840,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e1 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e1.Parent = p1;
 
                     var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e2 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e2.Parent = p2;
 
                     var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e3 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e3.Parent = p3;
 
                     var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e4 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e4.Parent = p4;
 
                     var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e5 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e5.Parent = p5;
                 }
             },
@@ -869,23 +869,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e1 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e1.Parent = p1;
 
                     var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e2 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e2.Parent = p2;
 
                     var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e3 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e3.Parent = p3;
 
                     var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e4 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e4.Parent = p4;
 
                     var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    var e5 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
                     e5.Parent = p5;
                 }
             },
@@ -898,23 +898,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    var e1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e1.Parent = p1;
 
                     var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    var e2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e2.Parent = p2;
 
                     var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    var e3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e3.Parent = p3;
 
                     var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    var e4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e4.Parent = p4;
 
                     var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    var e5 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e5.Parent = p5;
                 }
             },
@@ -927,23 +927,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    var e1 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
                     e1.Parent = p1;
 
                     var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    var e2 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
                     e2.Parent = p2;
 
                     var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    var e3 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
                     e3.Parent = p3;
 
                     var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(120, -120));
-                    var e4 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    var e4 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
                     e4.Parent = p4;
 
                     var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    var e5 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
                     e5.Parent = p5;
                 }
             },
@@ -970,7 +970,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
-                    camera.GetComponent<Transform2DComponent>().Rotation = Angle.Deg2Rad(45);
+                    camera.GetComponent<Transform2DComponent>().Rotation = Angle.DegreesToRadians(45);
 
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
                     entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));

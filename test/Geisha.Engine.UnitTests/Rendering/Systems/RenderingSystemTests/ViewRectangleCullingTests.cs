@@ -38,7 +38,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         var context = CreateRenderingTestContext();
         context.AddCamera();
 
-        var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
+        var transform = new Transform2D(new Vector2(tx, ty), Angle.DegreesToRadians(r), new Vector2(sx, sy));
 
         var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
@@ -95,7 +95,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         var context = CreateRenderingTestContext();
         context.AddCamera();
 
-        var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
+        var transform = new Transform2D(new Vector2(tx, ty), Angle.DegreesToRadians(r), new Vector2(sx, sy));
 
         var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
@@ -152,7 +152,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         var context = CreateRenderingTestContext();
         context.AddCamera();
 
-        var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
+        var transform = new Transform2D(new Vector2(tx, ty), Angle.DegreesToRadians(r), new Vector2(sx, sy));
 
         var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
@@ -227,7 +227,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         var context = CreateRenderingTestContext();
         context.AddCamera();
 
-        var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
+        var transform = new Transform2D(new Vector2(tx, ty), Angle.DegreesToRadians(r), new Vector2(sx, sy));
 
         var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();
@@ -296,7 +296,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
         var cameraComponent = camera.GetComponent<CameraComponent>();
         cameraComponent.ViewRectangle = new Vector2(width, height);
 
-        var transform = new Transform2D(new Vector2(tx, ty), Angle.Deg2Rad(r), new Vector2(sx, sy));
+        var transform = new Transform2D(new Vector2(tx, ty), Angle.DegreesToRadians(r), new Vector2(sx, sy));
 
         var parent = context.Scene.CreateEntity();
         parent.CreateComponent<Transform2DComponent>();

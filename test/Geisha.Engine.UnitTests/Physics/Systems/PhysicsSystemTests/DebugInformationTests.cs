@@ -41,7 +41,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         var circle = new Circle(new Vector2(10, 20), 30);
-        CreateCircleStaticBody(circle, Angle.Deg2Rad(30));
+        CreateCircleStaticBody(circle, Angle.DegreesToRadians(30));
 
         SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
@@ -54,7 +54,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         var rectangle = new AxisAlignedRectangle(15, 0, 30, 0);
         DebugRenderer.Received(expectedDrawCallsCount)
-            .DrawRectangle(rectangle, _staticBodyColor, Matrix3x3.CreateTRS(new Vector2(10, 20), Angle.Deg2Rad(30), Vector2.One));
+            .DrawRectangle(rectangle, _staticBodyColor, Matrix3x3.CreateTRS(new Vector2(10, 20), Angle.DegreesToRadians(30), Vector2.One));
 
         Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(expectedDrawCallsCount * 2));
     }
@@ -68,7 +68,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
         physicsSystem.EnableDebugRendering = enableDebugRendering;
 
-        var entity = CreateRectangleStaticBody(10, 20, 200, 100, Angle.Deg2Rad(30));
+        var entity = CreateRectangleStaticBody(10, 20, 200, 100, Angle.DegreesToRadians(30));
 
         SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
@@ -122,7 +122,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         physicsSystem.EnableDebugRendering = enableDebugRendering;
 
         var circle = new Circle(new Vector2(10, 20), 30);
-        CreateCircleKinematicBody(circle, Angle.Deg2Rad(30));
+        CreateCircleKinematicBody(circle, Angle.DegreesToRadians(30));
 
         SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
@@ -135,7 +135,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         var rectangle = new AxisAlignedRectangle(15, 0, 30, 0);
         DebugRenderer.Received(expectedDrawCallsCount)
-            .DrawRectangle(rectangle, _kinematicBodyColor, Matrix3x3.CreateTRS(new Vector2(10, 20), Angle.Deg2Rad(30), Vector2.One));
+            .DrawRectangle(rectangle, _kinematicBodyColor, Matrix3x3.CreateTRS(new Vector2(10, 20), Angle.DegreesToRadians(30), Vector2.One));
 
         Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(expectedDrawCallsCount * 2));
     }
@@ -149,7 +149,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
         physicsSystem.EnableDebugRendering = enableDebugRendering;
 
-        var entity = CreateRectangleKinematicBody(10, 20, 200, 100, Angle.Deg2Rad(30));
+        var entity = CreateRectangleKinematicBody(10, 20, 200, 100, Angle.DegreesToRadians(30));
 
         SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
@@ -172,8 +172,8 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
         physicsSystem.EnableDebugRendering = true;
 
-        var circleEntity = CreateCircleKinematicBody(-40, 40, 30, Angle.Deg2Rad(30));
-        var rectangleEntity = CreateRectangleStaticBody(-20, -30, 200, 50, Angle.Deg2Rad(-30));
+        var circleEntity = CreateCircleKinematicBody(-40, 40, 30, Angle.DegreesToRadians(30));
+        var rectangleEntity = CreateRectangleStaticBody(-20, -30, 200, 50, Angle.DegreesToRadians(-30));
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem);
@@ -192,7 +192,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         var radius = new AxisAlignedRectangle(15, 0, 30, 0);
         DebugRenderer.Received(1)
-            .DrawRectangle(radius, _kinematicBodyColor, Matrix3x3.CreateTRS(new Vector2(-40, 40), Angle.Deg2Rad(30), Vector2.One));
+            .DrawRectangle(radius, _kinematicBodyColor, Matrix3x3.CreateTRS(new Vector2(-40, 40), Angle.DegreesToRadians(30), Vector2.One));
 
         // Rectangle
         var rectangle = new AxisAlignedRectangle(new Vector2(200, 50));
@@ -206,7 +206,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         // Contact normal
         var contactNormal = new AxisAlignedRectangle(15, 0, 30, 0);
-        var expectedTransform = Matrix3x3.CreateTRS(contact2D.ContactPoints[0].WorldPosition, Angle.Deg2Rad(60), Vector2.One);
+        var expectedTransform = Matrix3x3.CreateTRS(contact2D.ContactPoints[0].WorldPosition, Angle.DegreesToRadians(60), Vector2.One);
         DebugRenderer.Received(1).DrawRectangle(contactNormal, _contactNormalColor, Arg.Is<Matrix3x3>(m => Matrix3x3Equality(expectedTransform, m)));
 
         // Total calls

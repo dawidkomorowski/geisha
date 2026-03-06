@@ -118,7 +118,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(-4, 1), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(45),
+            Rotation1 = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -128,7 +128,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, 9), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(45),
+            Rotation1 = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -138,7 +138,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(14, 4), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(45),
+            Rotation1 = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -148,7 +148,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, -4), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(45),
+            Rotation1 = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -159,7 +159,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(0, 5), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(45),
+            Rotation1 = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -169,7 +169,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(-45),
+            Rotation1 = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -179,7 +179,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(10, 0), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(45),
+            Rotation1 = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -189,7 +189,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(0, 0), new Vector2(10, 5)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
-            Rotation1 = Angle.Deg2Rad(-45),
+            Rotation1 = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -363,8 +363,8 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, -5), new Vector2(10, 10)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
-            Rotation1 = Angle.Deg2Rad(-30),
-            Rotation2 = Angle.Deg2Rad(30),
+            Rotation1 = Angle.DegreesToRadians(-30),
+            Rotation2 = Angle.DegreesToRadians(30),
             ExpectedCollisionNormal = new Vector2(0.499999, -0.866025),
             ExpectedPenetrationDepth = 3.169872,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -624,8 +624,8 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Circle1 = new Circle(new Vector2(0, 10), 5),
             Circle2 = new Circle(new Vector2(5, 5), 5),
-            Rotation1 = Angle.Deg2Rad(45),
-            Rotation2 = Angle.Deg2Rad(-45),
+            Rotation1 = Angle.DegreesToRadians(45),
+            Rotation2 = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.928932,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 7.5), new Vector2(0, -3.535533), new Vector2(-3.535533, 0))
@@ -772,7 +772,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(0, 10), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.928932,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 7.5), new Vector2(3.535533, 0), new Vector2(-2.5, 2.5))
@@ -781,7 +781,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(10, 10), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.928932,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(7.5, 7.5), new Vector2(0, -3.535533), new Vector2(2.5, 2.5))
@@ -790,7 +790,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(10, 0), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.928932,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(7.5, 2.5), new Vector2(-3.535533, 0), new Vector2(2.5, -2.5))
@@ -799,7 +799,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(0, 0), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.928932,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 2.5), new Vector2(0, 3.535533), new Vector2(-2.5, -2.5))
@@ -809,7 +809,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(-5, 5), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 2.071067,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(1.035533, 5), new Vector2(4.267766, 4.267766), new Vector2(-3.964466, 0))
@@ -818,7 +818,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(5, 15), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 2.071067,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 8.964466), new Vector2(4.267766, -4.267766), new Vector2(0, 3.964466))
@@ -827,7 +827,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(15, 5), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 2.071067,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(8.964466, 5), new Vector2(-4.267766, -4.267766), new Vector2(3.964466, 0))
@@ -836,7 +836,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(5, -5), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 2.071067,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 1.035533), new Vector2(-4.267766, 4.267766), new Vector2(0, -3.964466))
@@ -896,8 +896,8 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(-2, 8), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
-            CircleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
+            CircleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.928932,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 7.5), new Vector2(3.535533, 2.828427), new Vector2(0, 3.535533))
@@ -906,8 +906,8 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(-4, 6), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            RectangleRotation = Angle.Deg2Rad(-45),
-            CircleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
+            CircleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-0.887789, 0.460249),
             ExpectedPenetrationDepth = 2.827264,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(1.816059, 6.650623), new Vector2(3.652515, 4.572635), new Vector2(-1.084218, 3.418552))
@@ -917,7 +917,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(-4, 5), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(5, 5), 5),
-            CircleRotation = Angle.Deg2Rad(45),
+            CircleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 1,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(0.5, 5), new Vector2(4.5, 0), new Vector2(-3.181981, 3.181981))
@@ -1135,7 +1135,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(1, 3.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1145,7 +1145,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(10, 11.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1155,7 +1155,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(19, 6.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1165,7 +1165,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(10, -1.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1176,7 +1176,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(5, 7.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1186,7 +1186,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(15, 7.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1196,7 +1196,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(15, 2.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(45),
+            RectangleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1206,7 +1206,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
             Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
-            RectangleRotation = Angle.Deg2Rad(-45),
+            RectangleRotation = Angle.DegreesToRadians(-45),
             ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
@@ -1609,7 +1609,7 @@ public class ContactTests : PhysicsSystemTestsBase
         {
             Tile = new AxisAlignedRectangle(new Vector2(10, 10), new Vector2(10, 10)),
             Circle = new Circle(new Vector2(19, 10), 5),
-            CircleRotation = Angle.Deg2Rad(45),
+            CircleRotation = Angle.DegreesToRadians(45),
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 1,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(14.5, 10), new Vector2(4.5, 0), new Vector2(-3.181981, 3.181981))

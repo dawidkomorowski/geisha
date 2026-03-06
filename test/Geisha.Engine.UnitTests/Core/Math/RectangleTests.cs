@@ -103,7 +103,7 @@ public class RectangleTests
         // We want to rotate around center of rectangle thus we need to transform by center after rotation.
         var rectangle = rotation == 0
             ? new Rectangle(center, dimensions)
-            : new Rectangle(dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));
+            : new Rectangle(dimensions).Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation))).Transform(Matrix3x3.CreateTranslation(center));
 
         // Act
         var actualCenter = rectangle.Center;
@@ -123,7 +123,7 @@ public class RectangleTests
         var center = new Vector2(centerX, centerY);
         var dimensions = new Vector2(width, height);
 
-        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
+        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)));
 
         // Act
         var actualWidth = rectangle.Width;
@@ -143,7 +143,7 @@ public class RectangleTests
         var center = new Vector2(centerX, centerY);
         var dimensions = new Vector2(width, height);
 
-        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
+        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)));
 
         // Act
         var actualHeight = rectangle.Height;
@@ -191,7 +191,7 @@ public class RectangleTests
     {
         // Arrange
         var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
-                             Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                             Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)) *
                              Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
 
         var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
@@ -223,7 +223,7 @@ public class RectangleTests
     {
         // Arrange
         var rectangle = new Rectangle(new Vector2(4, 2), new Vector2(10, 6))
-            .Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(30)));
+            .Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(30)));
 
         // Act
         var boundingRectangle = rectangle.GetBoundingRectangle();

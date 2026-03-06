@@ -86,7 +86,7 @@ internal sealed class TransformSceneBehaviorFactory : ISceneBehaviorFactory
             var entity2Transform = entity2.CreateComponent<Transform2DComponent>();
             // Set position of the entity.
             entity2Transform.Translation = new Vector2(0, -50);
-            entity2Transform.Rotation = Angle.Deg2Rad(45);
+            entity2Transform.Rotation = Angle.DegreesToRadians(45);
             // Add SpriteRendererComponent to entity so it can show computer sprite on the screen.
             var spriteRenderer2 = entity2.CreateComponent<SpriteRendererComponent>();
             // Set sprite to be computer (sprite is accessed through IAssetStore using id of asset file).

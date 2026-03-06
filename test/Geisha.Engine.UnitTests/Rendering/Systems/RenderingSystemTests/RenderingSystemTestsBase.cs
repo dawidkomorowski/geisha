@@ -237,7 +237,7 @@ public abstract class RenderingSystemTestsBase
 
         private static void SetTransformInCameraView(Transform2DComponent transform2DComponent)
         {
-            SetTransform(transform2DComponent, new Vector2(100, 200), Angle.Deg2Rad(30), new Vector2(0.5, 0.5));
+            SetTransform(transform2DComponent, new Vector2(100, 200), Angle.DegreesToRadians(30), new Vector2(0.5, 0.5));
         }
 
         private static void SetTransform(Transform2DComponent transform2DComponent, Vector2 translation, double rotation, Vector2 scale)
