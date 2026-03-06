@@ -231,7 +231,6 @@ public sealed class Transform2DComponent : Component
     // TODO: Include information about TRS limitations in documentation.
     // TODO: Consider expanding TRS concept with concept of Orthonormal.
     // TODO: Review implementation of Matrix3x3.ToTransform().
-    // TODO: Review Angle.NormalizeRadians().
     // TODO: Consider renaming GMath to:
     // TODO: •	GeishaMath
     // TODO: •	EngineMath
