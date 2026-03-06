@@ -353,7 +353,7 @@ namespace Geisha.Engine.Core.Math
             {
                 sx = -sx;
                 sy = -sy;
-                rotation = Angle.NormalizeRadians(rotation + System.Math.PI);
+                rotation = Angle.NormalizeRadiansToPi(rotation + System.Math.PI);
             }
 
             if (System.Math.Abs(sx) <= Epsilon) sx = 0d;

@@ -6,13 +6,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
     [TestFixture]
     public class AngleTests
     {
+        // TODO: Add negative angles to test cases.
         [TestCase(0, 0)]
         [TestCase(90, System.Math.PI / 2)]
         [TestCase(180, System.Math.PI)]
         [TestCase(360, 2 * System.Math.PI)]
         [TestCase(720, 4 * System.Math.PI)]
         [TestCase(37.375612, 0.65232748934790286)]
-        public void Deg2Rad_And_Rag2Deg(double degrees, double radians)
+        public void Deg2Rad_And_Rad2Deg(double degrees, double radians)
         {
             // Arrange
             // Act
