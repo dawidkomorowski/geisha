@@ -19,8 +19,8 @@ public readonly struct MinimumTranslationVector : IEquatable<MinimumTranslationV
     /// <param name="length">Length of <see cref="MinimumTranslationVector" />.</param>
     public MinimumTranslationVector(Vector2 direction, double length)
     {
-        Debug.Assert(GMath.AlmostEqual(direction.Length, 1d) || GMath.AlmostEqual(direction.Length, 0d),
-            "GMath.AlmostEqual(direction.Length, 1d) || GMath.AlmostEqual(direction.Length, 0d)");
+        Debug.Assert(MathEx.AlmostEqual(direction.Length, 1d) || MathEx.AlmostEqual(direction.Length, 0d),
+            "MathEx.AlmostEqual(direction.Length, 1d) || MathEx.AlmostEqual(direction.Length, 0d)");
 
         Direction = direction;
         Length = length;

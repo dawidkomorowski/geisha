@@ -163,10 +163,10 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         public static Color Lerp(Color c1, Color c2, double alpha) =>
             FromArgb(
-                GMath.Lerp(c1.DoubleA, c2.DoubleA, alpha),
-                GMath.Lerp(c1.DoubleR, c2.DoubleR, alpha),
-                GMath.Lerp(c1.DoubleG, c2.DoubleG, alpha),
-                GMath.Lerp(c1.DoubleB, c2.DoubleB, alpha)
+                MathEx.Lerp(c1.DoubleA, c2.DoubleA, alpha),
+                MathEx.Lerp(c1.DoubleR, c2.DoubleR, alpha),
+                MathEx.Lerp(c1.DoubleG, c2.DoubleG, alpha),
+                MathEx.Lerp(c1.DoubleB, c2.DoubleB, alpha)
             );
 
         /// <summary>

@@ -128,8 +128,8 @@ public readonly struct Vector2 : IEquatable<Vector2>
     /// </remarks>
     public static Vector2 Lerp(in Vector2 v1, in Vector2 v2, double alpha) =>
         new(
-            GMath.Lerp(v1.X, v2.X, alpha),
-            GMath.Lerp(v1.Y, v2.Y, alpha)
+            MathEx.Lerp(v1.X, v2.X, alpha),
+            MathEx.Lerp(v1.Y, v2.Y, alpha)
         );
 
     /// <summary>

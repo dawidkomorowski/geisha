@@ -74,7 +74,7 @@ public readonly record struct Transform2D
         new()
         {
             Translation = Vector2.Lerp(t1.Translation, t2.Translation, alpha),
-            Rotation = GMath.Lerp(t1.Rotation, t2.Rotation, alpha),
+            Rotation = MathEx.Lerp(t1.Rotation, t2.Rotation, alpha),
             Scale = Vector2.Lerp(t1.Scale, t2.Scale, alpha)
         };
 

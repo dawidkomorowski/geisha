@@ -141,10 +141,10 @@ public readonly struct Vector4 : IEquatable<Vector4>
     /// </remarks>
     public static Vector4 Lerp(in Vector4 v1, in Vector4 v2, double alpha) =>
         new(
-            GMath.Lerp(v1.X, v2.X, alpha),
-            GMath.Lerp(v1.Y, v2.Y, alpha),
-            GMath.Lerp(v1.Z, v2.Z, alpha),
-            GMath.Lerp(v1.W, v2.W, alpha)
+            MathEx.Lerp(v1.X, v2.X, alpha),
+            MathEx.Lerp(v1.Y, v2.Y, alpha),
+            MathEx.Lerp(v1.Z, v2.Z, alpha),
+            MathEx.Lerp(v1.W, v2.W, alpha)
         );
 
     #endregion

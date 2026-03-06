@@ -132,7 +132,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12, Epsilon, Epsilon);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && MathEx.AlmostEqual(M21 * M22, -M11 * M12, Epsilon, Epsilon);
 
         #endregion
 
@@ -485,15 +485,15 @@ namespace Geisha.Engine.Core.Math
         /// <seealso cref="LerpTRS" />
         public static Matrix3x3 Lerp(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
             new(
-                GMath.Lerp(m1.M11, m2.M11, alpha),
-                GMath.Lerp(m1.M12, m2.M12, alpha),
-                GMath.Lerp(m1.M13, m2.M13, alpha),
-                GMath.Lerp(m1.M21, m2.M21, alpha),
-                GMath.Lerp(m1.M22, m2.M22, alpha),
-                GMath.Lerp(m1.M23, m2.M23, alpha),
-                GMath.Lerp(m1.M31, m2.M31, alpha),
-                GMath.Lerp(m1.M32, m2.M32, alpha),
-                GMath.Lerp(m1.M33, m2.M33, alpha)
+                MathEx.Lerp(m1.M11, m2.M11, alpha),
+                MathEx.Lerp(m1.M12, m2.M12, alpha),
+                MathEx.Lerp(m1.M13, m2.M13, alpha),
+                MathEx.Lerp(m1.M21, m2.M21, alpha),
+                MathEx.Lerp(m1.M22, m2.M22, alpha),
+                MathEx.Lerp(m1.M23, m2.M23, alpha),
+                MathEx.Lerp(m1.M31, m2.M31, alpha),
+                MathEx.Lerp(m1.M32, m2.M32, alpha),
+                MathEx.Lerp(m1.M33, m2.M33, alpha)
             );
 
         /// <summary>
