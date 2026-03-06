@@ -28,6 +28,12 @@ public static class Angle
 
     // TODO: Add documentation.
     // TODO: Include information about the range of the output and how it handles edge cases (e.g., exactly -π)?
-    // TODO: Include implementation of NormalizeRadiansTo2Pi?
     public static double NormalizeRadiansToPi(double radians) => System.Math.IEEERemainder(radians, 2 * System.Math.PI);
+
+    // TODO: Add documentation.
+    public static double NormalizeRadiansTo2Pi(double radians)
+    {
+        const double twoPi = 2 * System.Math.PI;
+        return radians - twoPi * System.Math.Floor(radians / twoPi);
+    }
 }
