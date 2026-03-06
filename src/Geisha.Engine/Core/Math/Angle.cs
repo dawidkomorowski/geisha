@@ -26,17 +26,8 @@ public static class Angle
         return radians * (180 / System.Math.PI);
     }
 
-    // TODO: Review.
-    // TODO: Add tests.
     // TODO: Add documentation.
     // TODO: Include information about the range of the output and how it handles edge cases (e.g., exactly -π)?
     // TODO: Include implementation of NormalizeRadiansTo2Pi?
-    public static double NormalizeRadiansToPi(double radians)
-    {
-        // Produces an angle in (-PI, PI], matching expectations like 190° => -170°.
-        // TODO: Investigate "The comment says it produces (-PI, PI].
-        //       IEEERemainder can return -π for some inputs (e.g., exactly -π), so the true range is closer to [-π, π].
-        //       If you strictly need (-π, π], you’d special-case -π to +π."
-        return System.Math.IEEERemainder(radians, 2 * System.Math.PI);
-    }
+    public static double NormalizeRadiansToPi(double radians) => System.Math.IEEERemainder(radians, 2 * System.Math.PI);
 }
