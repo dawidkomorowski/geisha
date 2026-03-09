@@ -5,6 +5,8 @@ namespace Geisha.Engine.Core.Math;
 /// </summary>
 public static class MathEx
 {
+    private const double Tolerance = 1e-12;
+
     /// <summary>
     ///     Checks for equality of two <see cref="double" /> numbers within specified absolute and relative tolerance.
     /// </summary>
@@ -27,7 +29,7 @@ public static class MathEx
     ///     Absolute difference between specified numbers is compared against an effective tolerance computed as:
     ///     <c>max(absoluteTolerance, relativeTolerance * max(|a|, |b|))</c>.
     /// </remarks>
-    public static bool AlmostEqual(double a, double b, double relativeTolerance = 1e-12, double absoluteTolerance = 1e-12)
+    public static bool AlmostEqual(double a, double b, double relativeTolerance = Tolerance, double absoluteTolerance = Tolerance)
     {
         if (double.IsNaN(relativeTolerance) || relativeTolerance < 0)
         {
@@ -54,6 +56,17 @@ public static class MathEx
 
         return difference <= tolerance;
     }
+
+    /// <summary>
+    ///     Checks if a <see cref="double" /> value is near zero within a tolerance of <c>1e-12</c>.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns><c>true</c> if the absolute value is less than <c>1e-12</c>; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    ///     This method is useful for detecting degenerate cases such as zero-length vectors, zero scale, or negligible values.
+    /// </remarks>
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearZero(double value) => System.Math.Abs(value) < Tolerance;
 
     /// <summary>
     ///     Linearly interpolates from <see cref="double" /> <paramref name="a" /> to <see cref="double" />

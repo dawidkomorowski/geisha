@@ -225,8 +225,8 @@ public sealed class Transform2DComponent : Component
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
     // TODO: Add documentation.
-    // TODO: Review AlmostEqual documentation and tests.
-    // TODO: Consider adding AlmostEqual overloads that use the same value as absolute and relative tolerance.
+    // TODO: Review usages of AlmostZero.
+    // TODO: Use IsNearZero in matrix and in Vector2.Unit.
     // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
     // TODO: Include information about TRS limitations in documentation.
     // TODO: Consider expanding TRS concept with concept of Orthonormal.

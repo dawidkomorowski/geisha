@@ -14,7 +14,7 @@ namespace Geisha.Engine.Core.Math
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix3x3 : IEquatable<Matrix3x3>
     {
-        private const double Epsilon = 1e-14;
+        private const double Tolerance = 1e-14;
 
         #region Static properties
 
@@ -132,7 +132,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && MathEx.AlmostEqual(M21 * M22, -M11 * M12, Epsilon, Epsilon);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && MathEx.AlmostEqual(M21 * M22, -M11 * M12, Tolerance, Tolerance);
 
         #endregion
 
@@ -326,11 +326,11 @@ namespace Geisha.Engine.Core.Math
             // - If sx == 0, use column 1: col1 = (-sy*sin, sy*cos) => angle = atan2(-M12, M22)
             // - If both axes are degenerate, rotation is not observable -> choose 0.
             double rotation;
-            if (col0Len > Epsilon)
+            if (col0Len > Tolerance)
             {
                 rotation = System.Math.Atan2(M21, M11);
             }
-            else if (col1Len > Epsilon)
+            else if (col1Len > Tolerance)
             {
                 rotation = System.Math.Atan2(-M12, M22);
             }
@@ -356,8 +356,8 @@ namespace Geisha.Engine.Core.Math
                 rotation = Angle.NormalizeRadiansToPi(rotation + System.Math.PI);
             }
 
-            if (System.Math.Abs(sx) <= Epsilon) sx = 0d;
-            if (System.Math.Abs(sy) <= Epsilon) sy = 0d;
+            if (System.Math.Abs(sx) <= Tolerance) sx = 0d;
+            if (System.Math.Abs(sy) <= Tolerance) sy = 0d;
 
             return new Transform2D
             {

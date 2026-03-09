@@ -129,6 +129,71 @@ public class MathExTests
 
     #endregion
 
+    #region IsNearZero
+
+    [TestCase(0)]
+    [TestCase(0d)]
+    [TestCase(-0d)]
+    public void IsNearZero_ShouldReturnTrue_WhenValueIsExactlyZero(double value)
+    {
+        // Arrange
+        // Act
+        var actual = MathEx.IsNearZero(value);
+
+        // Assert
+        Assert.That(actual, Is.True);
+    }
+
+    [TestCase(1e-13)]
+    [TestCase(-1e-13)]
+    [TestCase(5e-13)]
+    [TestCase(-5e-13)]
+    [TestCase(9.99e-13)]
+    [TestCase(-9.99e-13)]
+    public void IsNearZero_ShouldReturnTrue_WhenValueIsWithinTolerance(double value)
+    {
+        // Arrange
+        // Act
+        var actual = MathEx.IsNearZero(value);
+
+        // Assert
+        Assert.That(actual, Is.True);
+    }
+
+    [TestCase(1e-12)]
+    [TestCase(-1e-12)]
+    [TestCase(2e-12)]
+    [TestCase(-2e-12)]
+    [TestCase(1e-11)]
+    [TestCase(-1e-11)]
+    [TestCase(1.0)]
+    [TestCase(-1.0)]
+    [TestCase(1e100)]
+    public void IsNearZero_ShouldReturnFalse_WhenValueExceedsTolerance(double value)
+    {
+        // Arrange
+        // Act
+        var actual = MathEx.IsNearZero(value);
+
+        // Assert
+        Assert.That(actual, Is.False);
+    }
+
+    [TestCase(double.NaN)]
+    [TestCase(double.PositiveInfinity)]
+    [TestCase(double.NegativeInfinity)]
+    public void IsNearZero_ShouldReturnFalse_ForSpecialValues(double value)
+    {
+        // Arrange
+        // Act
+        var actual = MathEx.IsNearZero(value);
+
+        // Assert
+        Assert.That(actual, Is.False);
+    }
+
+    #endregion
+
     [TestCase(-3, 5, 0, -3)]
     [TestCase(-3, 5, 1, 5)]
     [TestCase(-3, 5, 0.5, 1)]
