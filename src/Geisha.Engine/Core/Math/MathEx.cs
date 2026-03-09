@@ -6,38 +6,47 @@ namespace Geisha.Engine.Core.Math;
 public static class MathEx
 {
     /// <summary>
-    ///     Checks for equality of two <see cref="double" /> numbers within absolute difference of <paramref name="maxDiff" />
-    ///     and relative difference of <paramref name="maxRelativeDiff" />.
+    ///     Checks for equality of two <see cref="double" /> numbers within specified absolute and relative tolerance.
     /// </summary>
     /// <param name="a">First value to check for equality.</param>
     /// <param name="b">Second value to check for equality.</param>
-    /// <param name="maxDiff">
-    ///     Maximum absolute difference between values to treat them as equal. Default value is
-    ///     <see cref="double.Epsilon" />.
+    /// <param name="relativeTolerance">
+    ///     Relative tolerance for comparing values. Default value is <c>1e-12</c>.
     /// </param>
-    /// <param name="maxRelativeDiff">
-    ///     Maximum relative difference between values to treat them as equal. Default value is
-    ///     <c>1e-15</c>.
+    /// <param name="absoluteTolerance">
+    ///     Absolute tolerance for comparing values. Default value is <c>1e-12</c>.
     /// </param>
-    /// <returns><c>true</c> if specified numbers are consider equal; otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if specified numbers are considered equal; otherwise, <c>false</c>.</returns>
     /// <remarks>
-    ///     Absolute value of difference between specified numbers is compared with <paramref name="maxDiff" />. If
-    ///     difference is less than <paramref name="maxDiff" /> the numbers are considered equal. If difference is greater than
-    ///     <paramref name="maxDiff" />, it is then compared with magnitude of greater number scaled by
-    ///     <paramref name="maxRelativeDiff" />. If difference is lesser the numbers are considered equal.
+    ///     Absolute difference between specified numbers is compared against an effective tolerance computed as:
+    ///     <c>max(absoluteTolerance, relativeTolerance * max(|a|, |b|))</c>.
     /// </remarks>
-    public static bool AlmostEqual(double a, double b, double maxRelativeDiff = 1e-15, double maxDiff = double.Epsilon)
+    public static bool AlmostEqual(double a, double b, double relativeTolerance = 1e-12, double absoluteTolerance = 1e-12)
     {
-        var diff = System.Math.Abs(a - b);
+        if (double.IsNaN(a) || double.IsNaN(b)) return false;
 
-        if (diff <= maxDiff)
+        // Handles exact equality (including +0.0 == -0.0) and same infinities.
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (a == b) return true;
+
+        // At this point, if either is infinite they are not equal (since a == b already returned false).
+        if (double.IsInfinity(a) || double.IsInfinity(b)) return false;
+
+        if (double.IsNaN(relativeTolerance) || relativeTolerance < 0)
         {
-            return true;
+            throw new System.ArgumentOutOfRangeException(nameof(relativeTolerance), relativeTolerance, "Tolerance must be a non-negative number.");
         }
 
-        var largerMagnitude = System.Math.Max(System.Math.Abs(a), System.Math.Abs(b));
+        if (double.IsNaN(absoluteTolerance) || absoluteTolerance < 0)
+        {
+            throw new System.ArgumentOutOfRangeException(nameof(absoluteTolerance), absoluteTolerance, "Tolerance must be a non-negative number.");
+        }
 
-        return diff <= largerMagnitude * maxRelativeDiff;
+        var difference = System.Math.Abs(a - b);
+        var largerMagnitude = System.Math.Max(System.Math.Abs(a), System.Math.Abs(b));
+        var tolerance = System.Math.Max(absoluteTolerance, largerMagnitude * relativeTolerance);
+
+        return difference <= tolerance;
     }
 
     /// <summary>
