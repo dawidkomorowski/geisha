@@ -17,21 +17,18 @@ public static class MathEx
     ///     Absolute tolerance for comparing values. Default value is <c>1e-12</c>.
     /// </param>
     /// <returns><c>true</c> if specified numbers are considered equal; otherwise, <c>false</c>.</returns>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    ///     <paramref name="relativeTolerance" /> is <see cref="double.NaN" /> or negative.
+    /// </exception>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    ///     <paramref name="absoluteTolerance" /> is <see cref="double.NaN" /> or negative.
+    /// </exception>
     /// <remarks>
     ///     Absolute difference between specified numbers is compared against an effective tolerance computed as:
     ///     <c>max(absoluteTolerance, relativeTolerance * max(|a|, |b|))</c>.
     /// </remarks>
     public static bool AlmostEqual(double a, double b, double relativeTolerance = 1e-12, double absoluteTolerance = 1e-12)
     {
-        if (double.IsNaN(a) || double.IsNaN(b)) return false;
-
-        // Handles exact equality (including +0.0 == -0.0) and same infinities.
-        // ReSharper disable once CompareOfFloatsByEqualityOperator
-        if (a == b) return true;
-
-        // At this point, if either is infinite they are not equal (since a == b already returned false).
-        if (double.IsInfinity(a) || double.IsInfinity(b)) return false;
-
         if (double.IsNaN(relativeTolerance) || relativeTolerance < 0)
         {
             throw new System.ArgumentOutOfRangeException(nameof(relativeTolerance), relativeTolerance, "Tolerance must be a non-negative number.");
@@ -41,6 +38,15 @@ public static class MathEx
         {
             throw new System.ArgumentOutOfRangeException(nameof(absoluteTolerance), absoluteTolerance, "Tolerance must be a non-negative number.");
         }
+
+        if (double.IsNaN(a) || double.IsNaN(b)) return false;
+
+        // Handles exact equality (including +0.0 == -0.0) and same infinities.
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (a == b) return true;
+
+        // At this point, if either is infinite they are not equal (since a == b already returned false).
+        if (double.IsInfinity(a) || double.IsInfinity(b)) return false;
 
         var difference = System.Math.Abs(a - b);
         var largerMagnitude = System.Math.Max(System.Math.Abs(a), System.Math.Abs(b));

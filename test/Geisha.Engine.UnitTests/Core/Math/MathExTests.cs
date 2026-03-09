@@ -115,7 +115,7 @@ public class MathExTests
     {
         // Arrange
         // Act & Assert
-        Assert.That(() => MathEx.AlmostEqual(100.0, 100.0001, invalidTolerance, 1e-12), Throws.TypeOf<ArgumentOutOfRangeException>());
+        Assert.That(() => MathEx.AlmostEqual(0, 0, invalidTolerance, 1e-12), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     [TestCase(-1.0)]
@@ -124,7 +124,7 @@ public class MathExTests
     {
         // Arrange
         // Act & Assert
-        Assert.That(() => MathEx.AlmostEqual(100.0, 100.0001, 1e-12, invalidTolerance), Throws.TypeOf<ArgumentOutOfRangeException>());
+        Assert.That(() => MathEx.AlmostEqual(0, 0, 1e-12, invalidTolerance), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     #endregion
