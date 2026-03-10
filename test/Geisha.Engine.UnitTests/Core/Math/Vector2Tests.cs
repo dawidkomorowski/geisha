@@ -104,7 +104,9 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(-3, 4, -0.6, 0.8)]
         [TestCase(-0.54, -0.065, -0.992833, -0.119507)]
         [TestCase(89.727, 59.751, 0.832337, 0.554269)]
-        public void Unit(double x1, double y1, double x2, double y2)
+        [TestCase(1e-11, 0, 1, 0)] // Just above threshold (10x larger)
+        [TestCase(0, 2e-12, 0, 1)] // Just above threshold (2x larger)
+        public void Unit_ShouldReturnUnitVector_WhenVectorLengthIsNonZero(double x1, double y1, double x2, double y2)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -118,14 +120,18 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actualVector.Y, Is.EqualTo(y2));
         }
 
-        [Test]
-        public void Unit_ShouldReturnZeroVector_WhenVectorLengthIsToSmall()
+        [TestCase(0, 0)] // Exactly zero
+        [TestCase(1e-13, 0)] // Far below threshold (10x smaller)
+        [TestCase(0, 5e-13)] // Mid-range below threshold (2x smaller)
+        [TestCase(9e-13, 0)] // Very close to threshold but still below (1.1x smaller)
+        [TestCase(1e-13, 1e-13)] // Combined components below threshold
+        public void Unit_ShouldReturnZeroVector_WhenVectorLengthIsNearZero(double x, double y)
         {
             // Arrange
-            var v1 = Vector2.Zero;
+            var v = new Vector2(x, y);
 
             // Act
-            var actualVector = v1.Unit;
+            var actualVector = v.Unit;
 
             // Assert
             Assert.That(actualVector, Is.EqualTo(Vector2.Zero));

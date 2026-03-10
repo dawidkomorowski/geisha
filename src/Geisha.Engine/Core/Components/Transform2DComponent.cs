@@ -226,7 +226,10 @@ public sealed class Transform2DComponent : Component
 
     // TODO: Add documentation.
     // TODO: Review usages of AlmostZero.
-    // TODO: Use IsNearZero in matrix and in Vector2.Unit.
+    // TODO: Use IsNearZero in matrix and some other places?
+    // TODO: Review documentation of Vector2.Unit. Applies to Vector3.Unit and Vector4.Unit as well.
+    // TODO: Report ticket to review performance of Vector2.Unit in terms of multiple calls to Length and division by length.
+    //       Applies to Vector3.Unit and Vector4.Unit as well.
     // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
     // TODO: Include information about TRS limitations in documentation.
     // TODO: Consider expanding TRS concept with concept of Orthonormal.

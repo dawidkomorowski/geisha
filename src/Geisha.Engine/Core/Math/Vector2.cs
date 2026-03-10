@@ -60,7 +60,7 @@ public readonly struct Vector2 : IEquatable<Vector2>
     ///     one.
     /// </summary>
     /// <remarks>For vector with near zero length this property returns zero vector.</remarks>
-    public Vector2 Unit => Length > double.Epsilon ? new Vector2(X / Length, Y / Length) : Zero;
+    public Vector2 Unit => MathEx.IsNearZero(Length) ? Zero : new Vector2(X / Length, Y / Length);
 
     /// <summary>
     ///     Returns vector opposite to this vector, that is vector with all components negated.

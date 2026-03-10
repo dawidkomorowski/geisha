@@ -81,7 +81,7 @@ public readonly struct Vector4 : IEquatable<Vector4>
     ///     one.
     /// </summary>
     /// <remarks>For vector with near zero length this property returns zero vector.</remarks>
-    public Vector4 Unit => Length > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
+    public Vector4 Unit => MathEx.IsNearZero(Length) ? Zero : new Vector4(X / Length, Y / Length, Z / Length, W / Length);
 
     /// <summary>
     ///     Returns vector opposite to this vector, that is vector with all components negated.
