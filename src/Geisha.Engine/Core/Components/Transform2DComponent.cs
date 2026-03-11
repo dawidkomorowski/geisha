@@ -226,7 +226,6 @@ public sealed class Transform2DComponent : Component
 
     // TODO: Add documentation.
     // TODO: Review usages of AlmostZero.
-    // TODO: Use IsNearZero in matrix and some other places?
     // TODO: Review documentation of Vector2.Unit. Applies to Vector3.Unit and Vector4.Unit as well.
     // TODO: Report ticket to review performance of Vector2.Unit in terms of multiple calls to Length and division by length.
     //       Applies to Vector3.Unit and Vector4.Unit as well.
