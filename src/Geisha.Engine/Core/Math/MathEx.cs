@@ -61,12 +61,12 @@ public static class MathEx
     ///     Checks if a <see cref="double" /> value is near zero within a tolerance of <c>1e-12</c>.
     /// </summary>
     /// <param name="value">The value to check.</param>
-    /// <returns><c>true</c> if the absolute value is less than <c>1e-12</c>; otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if the absolute value is less than or equal to <c>1e-12</c>; otherwise, <c>false</c>.</returns>
     /// <remarks>
     ///     This method is useful for detecting degenerate cases such as zero-length vectors, zero scale, or negligible values.
     /// </remarks>
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public static bool IsNearZero(double value) => System.Math.Abs(value) < Tolerance;
+    public static bool IsNearZero(double value) => System.Math.Abs(value) <= Tolerance;
 
     /// <summary>
     ///     Linearly interpolates from <see cref="double" /> <paramref name="a" /> to <see cref="double" />

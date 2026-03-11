@@ -150,6 +150,8 @@ public class MathExTests
     [TestCase(-5e-13)]
     [TestCase(9.99e-13)]
     [TestCase(-9.99e-13)]
+    [TestCase(1e-12)]
+    [TestCase(-1e-12)]
     public void IsNearZero_ShouldReturnTrue_WhenValueIsWithinTolerance(double value)
     {
         // Arrange
@@ -160,8 +162,8 @@ public class MathExTests
         Assert.That(actual, Is.True);
     }
 
-    [TestCase(1e-12)]
-    [TestCase(-1e-12)]
+    [TestCase(1.01e-12)]
+    [TestCase(-1.01e-12)]
     [TestCase(2e-12)]
     [TestCase(-2e-12)]
     [TestCase(1e-11)]
