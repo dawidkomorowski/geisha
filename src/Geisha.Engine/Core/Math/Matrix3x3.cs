@@ -326,11 +326,11 @@ namespace Geisha.Engine.Core.Math
             // - If sx == 0, use column 1: col1 = (-sy*sin, sy*cos) => angle = atan2(-M12, M22)
             // - If both axes are degenerate, rotation is not observable -> choose 0.
             double rotation;
-            if (col0Len > Tolerance)
+            if (!MathEx.IsNearZero(col0Len))
             {
                 rotation = System.Math.Atan2(M21, M11);
             }
-            else if (col1Len > Tolerance)
+            else if (!MathEx.IsNearZero(col1Len))
             {
                 rotation = System.Math.Atan2(-M12, M22);
             }
@@ -356,8 +356,8 @@ namespace Geisha.Engine.Core.Math
                 rotation = Angle.NormalizeRadiansToPi(rotation + System.Math.PI);
             }
 
-            if (System.Math.Abs(sx) <= Tolerance) sx = 0d;
-            if (System.Math.Abs(sy) <= Tolerance) sy = 0d;
+            if (MathEx.IsNearZero(sx)) sx = 0d;
+            if (MathEx.IsNearZero(sy)) sy = 0d;
 
             return new Transform2D
             {
