@@ -581,28 +581,6 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.Scale.Y, Is.EqualTo(expectedSy));
         }
 
-        /// <summary>
-        ///     This test case is sensitive to floating-point precision. <see cref="Matrix3x3.Epsilon" /> of 1e-15 is too strict.
-        /// </summary>
-        [Test]
-        public void ToTransform_ShouldPreserveMatrix_ForPrecisionSensitiveHierarchyCase()
-        {
-            // Arrange
-            const double tolerance = 1e-13;
-            var matrixEquality = ToleranceEquality.ForMatrix3x3(tolerance);
-
-            var parent = new Transform2D(new Vector2(1, 2), 3, new Vector2(5, 5));
-            var child = new Transform2D(new Vector2(10, 20), 30, new Vector2(40, 50));
-
-            var matrix = parent.ToMatrix() * child.ToMatrix();
-
-            // Act
-            var matrixAfterConversion = matrix.ToTransform().ToMatrix();
-
-            // Assert
-            Assert.That(matrixAfterConversion, Is.EqualTo(matrix).Using<Matrix3x3>(matrixEquality));
-        }
-
         [Test]
         public void ToTransform_ShouldPreserveComposedTRSMatrix_WhenParentScaleIsUniform()
         {

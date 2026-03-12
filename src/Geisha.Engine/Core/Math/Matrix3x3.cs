@@ -14,8 +14,6 @@ namespace Geisha.Engine.Core.Math
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix3x3 : IEquatable<Matrix3x3>
     {
-        private const double Tolerance = 1e-14;
-
         #region Static properties
 
         /// <summary>
@@ -132,7 +130,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && MathEx.AlmostEqual(M21 * M22, -M11 * M12, Tolerance, Tolerance);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && MathEx.AlmostEqual(M21 * M22, -M11 * M12);
 
         #endregion
 
