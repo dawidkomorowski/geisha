@@ -106,18 +106,20 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(89.727, 59.751, 0.832337, 0.554269)]
         [TestCase(1e-11, 0, 1, 0)] // Just above threshold (10x larger)
         [TestCase(0, 2e-12, 0, 1)] // Just above threshold (2x larger)
-        public void Unit_ShouldReturnUnitVector_WhenVectorLengthIsNonZero(double x1, double y1, double x2, double y2)
+        public void Unit_And_Normalize_ShouldReturnUnitVector_WhenVectorLengthIsNonZero(double x1, double y1, double x2, double y2)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
 
             // Act
-            var actualVector = v1.Unit;
+            var actualFromUnit = v1.Unit;
+            var actualFromNormalize = Vector2.Normalize(v1);
 
             // Assert
-            Assert.That(actualVector.Length, Is.EqualTo(1));
-            Assert.That(actualVector.X, Is.EqualTo(x2));
-            Assert.That(actualVector.Y, Is.EqualTo(y2));
+            Assert.That(actualFromUnit, Is.EqualTo(actualFromNormalize));
+            Assert.That(actualFromUnit.Length, Is.EqualTo(1));
+            Assert.That(actualFromUnit.X, Is.EqualTo(x2));
+            Assert.That(actualFromUnit.Y, Is.EqualTo(y2));
         }
 
         [TestCase(0, 0)] // Exactly zero
@@ -125,16 +127,18 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(0, 5e-13)] // Mid-range below threshold (2x smaller)
         [TestCase(9e-13, 0)] // Very close to threshold but still below (1.1x smaller)
         [TestCase(1e-13, 1e-13)] // Combined components below threshold
-        public void Unit_ShouldReturnZeroVector_WhenVectorLengthIsNearZero(double x, double y)
+        public void Unit_And_Normalize_ShouldReturnZeroVector_WhenVectorLengthIsNearZero(double x, double y)
         {
             // Arrange
             var v = new Vector2(x, y);
 
             // Act
-            var actualVector = v.Unit;
+            var actualFromUnit = v.Unit;
+            var actualFromNormalize = Vector2.Normalize(v);
 
             // Assert
-            Assert.That(actualVector, Is.EqualTo(Vector2.Zero));
+            Assert.That(actualFromUnit, Is.EqualTo(actualFromNormalize));
+            Assert.That(actualFromUnit, Is.EqualTo(Vector2.Zero));
         }
 
         [TestCase(0, 0, 0, 0)]
