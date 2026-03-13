@@ -66,10 +66,21 @@ public readonly struct Vector3 : IEquatable<Vector3>
     public double LengthSquared => X * X + Y * Y + Z * Z;
 
     /// <summary>
-    ///     Returns unit vector out of this <see cref="Vector3" /> that is vector with the same direction but with length equal
-    ///     one.
+    ///     Gets the normalized form of this vector (unit vector), which has the same direction
+    ///     but a length of one.
     /// </summary>
-    /// <remarks>For vector with near zero length this property returns zero vector.</remarks>
+    /// <remarks>
+    ///     <para>
+    ///         Normalized vectors are commonly used when only direction matters, such as for movement directions,
+    ///         surface normals, and various vector operations. Normalization preserves the direction while scaling
+    ///         the magnitude to exactly one.
+    ///     </para>
+    ///     <para>
+    ///         If this vector has near-zero length, this property returns <see cref="Zero" /> to avoid division by zero.
+    ///         For axis-aligned unit vectors, consider using the static properties <see cref="UnitX" />,
+    ///         <see cref="UnitY" />, and <see cref="UnitZ" /> instead, which provide better performance.
+    ///     </para>
+    /// </remarks>
     public Vector3 Unit => MathEx.IsNearZero(Length) ? Zero : new Vector3(X / Length, Y / Length, Z / Length);
 
     /// <summary>

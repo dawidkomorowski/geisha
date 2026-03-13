@@ -225,7 +225,6 @@ public sealed class Transform2DComponent : Component
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
     // TODO: Add documentation.
-    // TODO: Review documentation of Vector2.Unit. Applies to Vector3.Unit and Vector4.Unit as well.
     // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
     // TODO: Include information about TRS limitations in documentation.
     // TODO: Consider expanding TRS concept with concept of Orthonormal.
