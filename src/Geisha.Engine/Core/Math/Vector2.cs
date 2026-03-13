@@ -144,6 +144,21 @@ public readonly struct Vector2 : IEquatable<Vector2>
         );
 
     /// <summary>
+    ///     Returns the normalized form of the specified vector (unit vector), which has the same direction
+    ///     but a length of one.
+    /// </summary>
+    /// <param name="vector">The vector to normalize.</param>
+    /// <returns>
+    ///     A <see cref="Vector2" /> with the same direction as <paramref name="vector" /> but with a length of one,
+    ///     or <see cref="Zero" /> if <paramref name="vector" /> has near-zero length.
+    /// </returns>
+    /// <remarks>
+    ///     This method is equivalent to accessing the <see cref="Unit" /> property of the vector. For axis-aligned
+    ///     unit vectors, consider using <see cref="UnitX" /> or <see cref="UnitY" /> instead for better performance.
+    /// </remarks>
+    public static Vector2 Normalize(in Vector2 vector) => vector.Unit;
+
+    /// <summary>
     ///     Returns the <see cref="Vector2" /> that X and Y components are maximum of corresponding X and Y components of
     ///     <paramref name="v1" /> and <paramref name="v2" />.
     /// </summary>
