@@ -21,12 +21,12 @@ public readonly struct Vector2 : IEquatable<Vector2>
     public static Vector2 One => new(1, 1);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector2" /> directed along the X axis, that is vector (1,0).
+    ///     Gets the unit vector along the X axis (1,0).
     /// </summary>
     public static Vector2 UnitX => new(1, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector2" /> directed along the Y axis, that is vector (0,1).
+    ///     Gets the unit vector along the Y axis (0,1).
     /// </summary>
     public static Vector2 UnitY => new(0, 1);
 

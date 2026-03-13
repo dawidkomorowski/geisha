@@ -22,22 +22,22 @@ public readonly struct Vector4 : IEquatable<Vector4>
     public static Vector4 One => new(1, 1, 1, 1);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector4" /> directed along the X axis, that is vector (1,0,0,0).
+    ///     Gets the unit vector along the X axis (1,0,0,0).
     /// </summary>
     public static Vector4 UnitX => new(1, 0, 0, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector4" /> directed along the Y axis, that is vector (0,1,0,0).
+    ///     Gets the unit vector along the Y axis (0,1,0,0).
     /// </summary>
     public static Vector4 UnitY => new(0, 1, 0, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector4" /> directed along the Z axis, that is vector (0,0,1,0).
+    ///     Gets the unit vector along the Z axis (0,0,1,0).
     /// </summary>
     public static Vector4 UnitZ => new(0, 0, 1, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector4" /> directed along the W axis, that is vector (0,0,0,1).
+    ///     Gets the unit vector along the W axis (0,0,0,1).
     /// </summary>
     public static Vector4 UnitW => new(0, 0, 0, 1);
 

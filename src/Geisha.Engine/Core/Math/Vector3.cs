@@ -21,17 +21,17 @@ public readonly struct Vector3 : IEquatable<Vector3>
     public static Vector3 One => new(1, 1, 1);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector3" /> directed along the X axis, that is vector (1,0,0).
+    ///     Gets the unit vector along the X axis (1,0,0).
     /// </summary>
     public static Vector3 UnitX => new(1, 0, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector3" /> directed along the Y axis, that is vector (0,1,0).
+    ///     Gets the unit vector along the Y axis (0,1,0).
     /// </summary>
     public static Vector3 UnitY => new(0, 1, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector3" /> directed along the Z axis, that is vector (0,0,1).
+    ///     Gets the unit vector along the Z axis (0,0,1).
     /// </summary>
     public static Vector3 UnitZ => new(0, 0, 1);
 
