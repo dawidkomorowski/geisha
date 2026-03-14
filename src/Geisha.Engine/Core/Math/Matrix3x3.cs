@@ -316,19 +316,19 @@ namespace Geisha.Engine.Core.Math
                 throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS. {this}");
             }
 
-            var col0Len = new Vector2(M11, M21).Length;
-            var col1Len = new Vector2(M12, M22).Length;
+            var xAxisLength = new Vector2(M11, M21).Length;
+            var yAxisLength = new Vector2(M12, M22).Length;
 
             // Rotation:
-            // - Prefer column 0 when possible: col0 = (sx*cos, sx*sin) => angle = atan2(M21, M11)
-            // - If sx == 0, use column 1: col1 = (-sy*sin, sy*cos) => angle = atan2(-M12, M22)
+            // - Prefer X axis when possible: X axis = (sx*cos, sx*sin) => angle = atan2(M21, M11)
+            // - If sx == 0, use Y axis: Y axis = (-sy*sin, sy*cos) => angle = atan2(-M12, M22)
             // - If both axes are degenerate, rotation is not observable -> choose 0.
             double rotation;
-            if (!MathEx.IsNearZero(col0Len))
+            if (!MathEx.IsNearZero(xAxisLength))
             {
                 rotation = System.Math.Atan2(M21, M11);
             }
-            else if (!MathEx.IsNearZero(col1Len))
+            else if (!MathEx.IsNearZero(yAxisLength))
             {
                 rotation = System.Math.Atan2(-M12, M22);
             }
@@ -341,8 +341,8 @@ namespace Geisha.Engine.Core.Math
             var sin = System.Math.Sin(rotation);
 
             // Signed scale via projection onto rotated basis:
-            // col0 = (cos, sin) * sx  => sx = dot(col0, (cos, sin))
-            // col1 = (-sin, cos) * sy => sy = dot(col1, (-sin, cos))
+            // X axis = (cos, sin) * sx  => sx = dot(X axis, (cos, sin))
+            // Y axis = (-sin, cos) * sy => sy = dot(Y axis, (-sin, cos))
             var sx = M11 * cos + M21 * sin;
             var sy = M12 * -sin + M22 * cos;
 
