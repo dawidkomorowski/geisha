@@ -240,8 +240,35 @@ public sealed class Transform2DComponent : Component
     /// <seealso cref="ComputeInterpolatedWorldTransformMatrix"/>
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
-    // TODO: Add documentation.
-    // TODO: Include information about TRS limitations in documentation.
+    /// <summary>
+    ///     Computes the world transformation as <see cref="Transform2D"/> for the current transform hierarchy.
+    /// </summary>
+    /// <returns>
+    ///     <see cref="Transform2D"/> representing the transformation in world (global) coordinate space.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    ///     The computed world transformation matrix is not TRS-decomposable. This can occur when combining
+    ///     transformations in a hierarchy results in a non-orthogonal matrix (containing shear).
+    /// </exception>
+    /// <remarks>
+    ///     <para>
+    ///         This is a convenience method that combines <see cref="ComputeWorldTransformMatrix"/> with
+    ///         matrix-to-transform decomposition. It computes the world transformation matrix for the current
+    ///         hierarchy and converts it to <see cref="Transform2D"/>.
+    ///     </para>
+    ///     <para>
+    ///         <b>TRS Limitation:</b> While individual <see cref="Transform2DComponent"/> instances always represent
+    ///         valid TRS transformations, combining multiple transformations through matrix multiplication during
+    ///         hierarchy traversal can produce matrices that are not TRS-decomposable (e.g., containing shear).
+    ///         A common cause is combining non-uniform scales with rotations in a hierarchy - for example, when
+    ///         a parent entity has non-uniform scale and a child entity has rotation. In such cases, this method
+    ///         throws <see cref="InvalidOperationException"/>. If you need to handle arbitrary transformation
+    ///         hierarchies, use <see cref="ComputeWorldTransformMatrix"/> directly.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="ComputeWorldTransformMatrix"/>
+    /// <seealso cref="Matrix3x3.ToTransform"/>
+    /// <seealso cref="Matrix3x3.IsTRS"/>
     public Transform2D ComputeWorldTransform() => ComputeWorldTransformMatrix().ToTransform();
 
     /// <summary>
