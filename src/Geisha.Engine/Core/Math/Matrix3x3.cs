@@ -121,11 +121,19 @@ namespace Geisha.Engine.Core.Math
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         <see cref="Matrix3x3" /> is considered valid Translation-Rotation-Scale matrix when it represents
-        ///         transformation that can be expressed as combination of scale followed by rotation followed by translation.
+        ///         A TRS matrix represents transformations composed of scale, rotation, and translation only - without
+        ///         shear, perspective, or other non-standard affine transformations.
         ///     </para>
         ///     <para>
-        ///         If <see cref="Matrix3x3" /> is TRS matrix then it can be decomposed into translation, rotation and scale.
+        ///         This property checks that:
+        ///         <list type="number">
+        ///             <item><description>The matrix is affine (M31 = 0, M32 = 0, M33 = 1)</description></item>
+        ///             <item><description>The transformation preserves axis orthogonality (no shear)</description></item>
+        ///         </list>
+        ///     </para>
+        ///     <para>
+        ///         Only TRS matrices can be converted to <see cref="Transform2D"/> using <see cref="ToTransform"/>.
+        ///         Use <see cref="CreateTRS"/> to create TRS-compatible matrices.
         ///     </para>
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
