@@ -4,12 +4,22 @@ using System.Collections.Generic;
 namespace Geisha.Engine.Core.Math
 {
     /// <summary>
-    ///     3D transformation matrix in homogeneous coordinates. It is four rows by four columns matrix consisting sixteen
-    ///     components.
+    ///     Represents a 4×4 matrix for 3D transformations in homogeneous coordinates.
     /// </summary>
     /// <remarks>
-    ///     In computation this matrix treats vectors as column vectors therefore translation is located in last column of
-    ///     the matrix.
+    ///     <para>
+    ///         This matrix uses row-major storage with column-vector convention. Components are stored
+    ///         sequentially by row in memory. Matrix-vector multiplication follows the form M × v (matrix on left,
+    ///         vector on right), and translation is located in the last column (M14, M24, M34).
+    ///     </para>
+    ///     <para>
+    ///         Primary use cases:
+    ///         <list type="bullet">
+    ///             <item><description>Representing 3D transformations (translation, rotation, scale)</description></item>
+    ///             <item><description>Composing multiple transformations through matrix multiplication</description></item>
+    ///             <item><description>Transforming points and vectors in 3D space</description></item>
+    ///         </list>
+    ///     </para>
     /// </remarks>
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix4x4 : IEquatable<Matrix4x4>

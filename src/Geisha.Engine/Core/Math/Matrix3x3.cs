@@ -4,12 +4,28 @@ using System.Collections.Generic;
 namespace Geisha.Engine.Core.Math
 {
     /// <summary>
-    ///     2D transformation matrix in homogeneous coordinates. It is three rows by three columns matrix consisting nine
-    ///     components.
+    ///     Represents a 3×3 matrix for 2D transformations in homogeneous coordinates.
     /// </summary>
     /// <remarks>
-    ///     In computation this matrix treats vectors as column vectors therefore translation is located in last column of
-    ///     the matrix.
+    ///     <para>
+    ///         This matrix uses row-major storage with column-vector convention. Components are stored
+    ///         sequentially by row in memory. Matrix-vector multiplication follows the form M × v (matrix on left,
+    ///         vector on right), and translation is located in the last column (M13, M23).
+    ///     </para>
+    ///     <para>
+    ///         Primary use cases:
+    ///         <list type="bullet">
+    ///             <item><description>Representing 2D transformations (translation, rotation, scale)</description></item>
+    ///             <item><description>Composing multiple transformations through matrix multiplication</description></item>
+    ///             <item><description>Transforming points and vectors in 2D space</description></item>
+    ///         </list>
+    ///     </para>
+    ///     <para>
+    ///         <b>TRS Matrices:</b> A special subset of transformation matrices that represent only translation,
+    ///         rotation, and scale (without shear or perspective). TRS matrices can be decomposed into
+    ///         <see cref="Transform2D"/> using <see cref="ToTransform"/> and created using <see cref="CreateTRS"/>.
+    ///         Use <see cref="IsTRS"/> to check if a matrix is TRS-compatible.
+    ///     </para>
     /// </remarks>
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix3x3 : IEquatable<Matrix3x3>
