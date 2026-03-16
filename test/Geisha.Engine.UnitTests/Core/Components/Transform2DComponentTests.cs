@@ -234,6 +234,27 @@ public class Transform2DComponentTests
     }
 
     [Test]
+    public void ComputeWorldTransform_ShouldThrowInvalidOperationException_GivenNonTRSDecomposableMatrixFromHierarchy()
+    {
+        // Arrange
+        // Create a parent with non-uniform scale
+        var parent = Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Scale = new Vector2(1, 2); // Non-uniform scale
+
+        // Create a child with rotation that combines with parent's non-uniform scale to create shear
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.Rotation = 1; // Arbitrary rotation
+
+        // The composed matrix (parentTransform.ToMatrix() * childTransform.ToMatrix())
+        // will contain shear and is not TRS-decomposable
+
+        // Act & Assert
+        Assert.That(() => childTransform.ComputeWorldTransform(), Throws.InvalidOperationException);
+    }
+
+    [Test]
     public void ComputeWorldTransform_ShouldReturnWorldTransform_GivenDefaultTransformOnRootEntity()
     {
         // Arrange

@@ -616,8 +616,8 @@ namespace Geisha.Engine.UnitTests.Core.Math
                 -0.5,
                 1.0,
                 -1.0,
-                5.0
-                - 5.0,
+                5.0,
+                -5.0,
                 50.0,
                 -50.0
             };
