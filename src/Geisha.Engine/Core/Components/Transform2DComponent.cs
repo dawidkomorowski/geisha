@@ -219,13 +219,28 @@ public sealed class Transform2DComponent : Component
     }
 
     /// <summary>
-    ///     Creates 2D transformation matrix that represents this transform component.
+    ///     Creates a TRS <see cref="Matrix3x3" /> representing the local transformation defined by this component.
     /// </summary>
-    /// <returns>2D transformation matrix representing this transform component.</returns>
+    /// <returns>
+    ///     <see cref="Matrix3x3" /> that applies the transformation defined by this component in local coordinate space.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         Creates a Translation-Rotation-Scale matrix where transformations are applied in the order:
+    ///         scale, then rotation, then translation. The resulting matrix satisfies <see cref="Matrix3x3.IsTRS"/>.
+    ///     </para>
+    ///     <para>
+    ///         The matrix represents the transformation in local coordinate space (relative to the parent entity).
+    ///         To get the transformation in world coordinate space, use <see cref="ComputeWorldTransformMatrix"/>.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Matrix3x3.CreateTRS"/>
+    /// <seealso cref="Transform2D.ToMatrix"/>
+    /// <seealso cref="ComputeWorldTransformMatrix"/>
+    /// <seealso cref="ComputeInterpolatedWorldTransformMatrix"/>
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
     // TODO: Add documentation.
-    // TODO: Review existing documentation of Matrix3x3 when it comes to conversion to and from Transform2D.
     // TODO: Include information about TRS limitations in documentation.
     public Transform2D ComputeWorldTransform() => ComputeWorldTransformMatrix().ToTransform();
 

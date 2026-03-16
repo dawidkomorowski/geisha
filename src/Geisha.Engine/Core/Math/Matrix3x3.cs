@@ -311,10 +311,38 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
-        ///     Creates <see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.
+        ///     Decomposes this <see cref="Matrix3x3" /> into a <see cref="Transform2D" /> with translation, rotation, and scale components.
         /// </summary>
-        /// <returns><see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.</returns>
-        /// <exception cref="InvalidOperationException">This <see cref="Matrix3x3" /> is not TRS decomposable.</exception>
+        /// <returns>
+        ///     <see cref="Transform2D" /> representing the decomposed transformation with translation, rotation (in radians), 
+        ///     and scale components.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        ///     This <see cref="Matrix3x3" /> is not a valid TRS matrix. Use <see cref="IsTRS"/> to check before calling this method.
+        /// </exception>
+        /// <remarks>
+        ///     <para>
+        ///         This method decomposes a TRS matrix into its constituent transformation components. The matrix must
+        ///         represent a transformation composed only of scale, rotation, and translation (no shear or perspective).
+        ///     </para>
+        ///     <para>
+        ///         Decomposition guarantees:
+        ///         <list type="bullet">
+        ///             <item><description>Translation is extracted from the translation column of the matrix</description></item>
+        ///             <item><description>Rotation is returned in the range [-π, π] radians</description></item>
+        ///             <item><description>Scale values preserve the magnitude of the X and Y axes</description></item>
+        ///             <item><description>Result is in canonical form where Scale.Y is always non-negative</description></item>
+        ///         </list>
+        ///     </para>
+        ///     <para>
+        ///         Edge case handling:
+        ///         <list type="bullet">
+        ///             <item><description>If both scale components are near-zero, rotation is set to 0</description></item>
+        ///             <item><description>Scale values very close to zero are clamped to exactly 0</description></item>
+        ///             <item><description>Negative Y-scale is represented by adjusting both scale signs and rotation</description></item>
+        ///         </list>
+        ///     </para>
+        /// </remarks>
         /// <seealso cref="IsTRS" />
         /// <seealso cref="CreateTRS" />
         public Transform2D ToTransform()
@@ -450,16 +478,37 @@ namespace Geisha.Engine.Core.Math
             );
 
         /// <summary>
-        ///     Creates <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed
-        ///     by rotation followed by translation.
+        ///     Creates a <see cref="Matrix3x3" /> from translation, rotation, and scale components.
         /// </summary>
-        /// <param name="translation">Translation component of TRS transformation matrix.</param>
-        /// <param name="rotation">Rotation component of TRS transformation matrix.</param>
-        /// <param name="scale">Scale component of TRS transformation matrix.</param>
+        /// <param name="translation">Translation to apply, as offset in X and Y directions.</param>
+        /// <param name="rotation">Rotation angle in radians (counterclockwise, applied after scale).</param>
+        /// <param name="scale">Scale factors along X and Y axes (applied first).</param>
         /// <returns>
-        ///     <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed by
-        ///     rotation followed by translation.
+        ///     <see cref="Matrix3x3" /> representing the TRS transformation.
         /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         Creates a TRS (Translation-Rotation-Scale) matrix by composing three transformations.
+        ///         When this matrix is applied to a point, transformations are applied in this order:
+        ///         <list type="number">
+        ///             <item><description>Scale - Scales along X and Y axes</description></item>
+        ///             <item><description>Rotation - Rotates counterclockwise around the origin</description></item>
+        ///             <item><description>Translation - Moves by the specified offset</description></item>
+        ///         </list>
+        ///     </para>
+        ///     <para>
+        ///         The resulting matrix satisfies <see cref="IsTRS"/> and can be decomposed back into 
+        ///         components using <see cref="ToTransform"/>.
+        ///     </para>
+        ///     <para>
+        ///         Special cases:
+        ///         <list type="bullet">
+        ///             <item><description>Negative scale values are supported and flip the corresponding axis</description></item>
+        ///             <item><description>Zero scale in either component produces a degenerate transformation</description></item>
+        ///             <item><description>Rotation is applied in 2D around the origin (Z-axis in 3D)</description></item>
+        ///         </list>
+        ///     </para>
+        /// </remarks>
         /// <seealso cref="IsTRS" />
         /// <seealso cref="ToTransform" />
         // ReSharper disable once InconsistentNaming

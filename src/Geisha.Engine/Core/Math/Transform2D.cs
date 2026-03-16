@@ -79,8 +79,24 @@ public readonly record struct Transform2D
         };
 
     /// <summary>
-    ///     Creates 2D transformation matrix representing this <see cref="Transform2D" />.
+    ///     Creates a TRS <see cref="Matrix3x3" /> representing this <see cref="Transform2D" />.
     /// </summary>
-    /// <returns><see cref="Matrix3x3" /> representing this <see cref="Transform2D" />.</returns>
+    /// <returns>
+    ///     <see cref="Matrix3x3" /> that applies the transformation defined by this <see cref="Transform2D" />.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         Creates a Translation-Rotation-Scale matrix where transformations are applied in the order:
+    ///         scale, then rotation, then translation. The resulting matrix satisfies <see cref="Matrix3x3.IsTRS"/>.
+    ///     </para>
+    ///     <para>
+    ///         This is the inverse operation of <see cref="Matrix3x3.ToTransform"/>: converting a TRS matrix
+    ///         back to <see cref="Transform2D"/> will produce an equivalent transformation (though component
+    ///         values may differ due to canonicalization).
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Matrix3x3.CreateTRS"/>
+    /// <seealso cref="Matrix3x3.ToTransform"/>
+    /// <seealso cref="Matrix3x3.IsTRS"/>
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 }

@@ -831,6 +831,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Assert
             var expected = Matrix3x3.CreateTranslation(translation) * Matrix3x3.CreateRotation(rotation) * Matrix3x3.CreateScale(scale);
             Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual.IsTRS, Is.True);
         }
 
         [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
