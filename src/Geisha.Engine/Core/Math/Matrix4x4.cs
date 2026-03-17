@@ -4,12 +4,22 @@ using System.Collections.Generic;
 namespace Geisha.Engine.Core.Math
 {
     /// <summary>
-    ///     3D transformation matrix in homogeneous coordinates. It is four rows by four columns matrix consisting sixteen
-    ///     components.
+    ///     Represents a 4×4 matrix for 3D transformations in homogeneous coordinates.
     /// </summary>
     /// <remarks>
-    ///     In computation this matrix treats vectors as column vectors therefore translation is located in last column of
-    ///     the matrix.
+    ///     <para>
+    ///         This matrix uses row-major storage with column-vector convention. Components are stored
+    ///         sequentially by row in memory. Matrix-vector multiplication follows the form M × v (matrix on left,
+    ///         vector on right), and translation is located in the last column (M14, M24, M34).
+    ///     </para>
+    ///     <para>
+    ///         Primary use cases:
+    ///         <list type="bullet">
+    ///             <item><description>Representing 3D transformations (translation, rotation, scale)</description></item>
+    ///             <item><description>Composing multiple transformations through matrix multiplication</description></item>
+    ///             <item><description>Transforming points and vectors in 3D space</description></item>
+    ///         </list>
+    ///     </para>
     /// </remarks>
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix4x4 : IEquatable<Matrix4x4>
@@ -537,22 +547,22 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         public static Matrix4x4 Lerp(in Matrix4x4 m1, in Matrix4x4 m2, double alpha) =>
             new(
-                GMath.Lerp(m1.M11, m2.M11, alpha),
-                GMath.Lerp(m1.M12, m2.M12, alpha),
-                GMath.Lerp(m1.M13, m2.M13, alpha),
-                GMath.Lerp(m1.M14, m2.M14, alpha),
-                GMath.Lerp(m1.M21, m2.M21, alpha),
-                GMath.Lerp(m1.M22, m2.M22, alpha),
-                GMath.Lerp(m1.M23, m2.M23, alpha),
-                GMath.Lerp(m1.M24, m2.M24, alpha),
-                GMath.Lerp(m1.M31, m2.M31, alpha),
-                GMath.Lerp(m1.M32, m2.M32, alpha),
-                GMath.Lerp(m1.M33, m2.M33, alpha),
-                GMath.Lerp(m1.M34, m2.M34, alpha),
-                GMath.Lerp(m1.M41, m2.M41, alpha),
-                GMath.Lerp(m1.M42, m2.M42, alpha),
-                GMath.Lerp(m1.M43, m2.M43, alpha),
-                GMath.Lerp(m1.M44, m2.M44, alpha)
+                MathEx.Lerp(m1.M11, m2.M11, alpha),
+                MathEx.Lerp(m1.M12, m2.M12, alpha),
+                MathEx.Lerp(m1.M13, m2.M13, alpha),
+                MathEx.Lerp(m1.M14, m2.M14, alpha),
+                MathEx.Lerp(m1.M21, m2.M21, alpha),
+                MathEx.Lerp(m1.M22, m2.M22, alpha),
+                MathEx.Lerp(m1.M23, m2.M23, alpha),
+                MathEx.Lerp(m1.M24, m2.M24, alpha),
+                MathEx.Lerp(m1.M31, m2.M31, alpha),
+                MathEx.Lerp(m1.M32, m2.M32, alpha),
+                MathEx.Lerp(m1.M33, m2.M33, alpha),
+                MathEx.Lerp(m1.M34, m2.M34, alpha),
+                MathEx.Lerp(m1.M41, m2.M41, alpha),
+                MathEx.Lerp(m1.M42, m2.M42, alpha),
+                MathEx.Lerp(m1.M43, m2.M43, alpha),
+                MathEx.Lerp(m1.M44, m2.M44, alpha)
             );
 
         #endregion

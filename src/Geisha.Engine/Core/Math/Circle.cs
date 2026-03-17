@@ -88,7 +88,7 @@ namespace Geisha.Engine.Core.Math
                 return false;
             }
 
-            mtv = translation == Vector2.Zero
+            mtv = MathEx.IsNearZero(distance)
                 ? new MinimumTranslationVector(Vector2.UnitX, penetrationDepth)
                 : new MinimumTranslationVector(translation.Unit, penetrationDepth);
 

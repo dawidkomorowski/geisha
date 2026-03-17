@@ -122,32 +122,42 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(-3, 4, -5, -0.424264, 0.565685, -0.707106)]
         [TestCase(-0.54, -0.065, 0.17, -0.947623, -0.1140658, 0.298325)]
         [TestCase(89.727, 59.751, 9.027, 0.829434, 0.552336, 0.083445)]
-        public void Unit(double x1, double y1, double z1, double x2, double y2, double z2)
+        [TestCase(1e-11, 0, 0, 1, 0, 0)] // Just above threshold (10x larger)
+        [TestCase(0, 2e-12, 0, 0, 1, 0)] // Just above threshold (2x larger)
+        public void Unit_And_Normalize_ShouldReturnUnitVector_WhenVectorLengthIsNonZero(double x1, double y1, double z1, double x2, double y2, double z2)
         {
             // Arrange
             var v1 = new Vector3(x1, y1, z1);
 
             // Act
-            var actualVector = v1.Unit;
+            var actualFromUnit = v1.Unit;
+            var actualFromNormalize = Vector3.Normalize(v1);
 
             // Assert
-            Assert.That(actualVector.Length, Is.EqualTo(1));
-            Assert.That(actualVector.X, Is.EqualTo(x2));
-            Assert.That(actualVector.Y, Is.EqualTo(y2));
-            Assert.That(actualVector.Z, Is.EqualTo(z2));
+            Assert.That(actualFromUnit, Is.EqualTo(actualFromNormalize));
+            Assert.That(actualFromUnit.Length, Is.EqualTo(1));
+            Assert.That(actualFromUnit.X, Is.EqualTo(x2));
+            Assert.That(actualFromUnit.Y, Is.EqualTo(y2));
+            Assert.That(actualFromUnit.Z, Is.EqualTo(z2));
         }
 
-        [Test]
-        public void Unit_ShouldReturnZeroVector_WhenVectorLengthIsToSmall()
+        [TestCase(0, 0, 0)] // Exactly zero
+        [TestCase(1e-13, 0, 0)] // Far below threshold (10x smaller)
+        [TestCase(0, 5e-13, 0)] // Mid-range below threshold (2x smaller)
+        [TestCase(0, 0, 9e-13)] // Very close to threshold but still below (1.1x smaller)
+        [TestCase(1e-13, 1e-13, 1e-13)] // Combined components below threshold
+        public void Unit_And_Normalize_ShouldReturnZeroVector_WhenVectorLengthIsNearZero(double x, double y, double z)
         {
             // Arrange
-            var v1 = Vector3.Zero;
+            var v = new Vector3(x, y, z);
 
             // Act
-            var actualVector = v1.Unit;
+            var actualFromUnit = v.Unit;
+            var actualFromNormalize = Vector3.Normalize(v);
 
             // Assert
-            Assert.That(actualVector, Is.EqualTo(Vector3.Zero));
+            Assert.That(actualFromUnit, Is.EqualTo(actualFromNormalize));
+            Assert.That(actualFromUnit, Is.EqualTo(Vector3.Zero));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0)]

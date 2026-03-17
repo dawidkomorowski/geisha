@@ -1,17 +1,17 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.TestUtils;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Core.Systems;
 
 public class TransformInterpolationSystemTests
 {
     private const double Epsilon = 0.000001;
-    private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     private TransformInterpolationSystem _transformInterpolationSystem = null!;
     private Scene _scene = null!;
@@ -77,9 +77,9 @@ public class TransformInterpolationSystemTests
         _transformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assert
-        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using<Vector2>(Vector2Equality));
         Assert.That(transformComponent.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
-        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(3, 4.5)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(3, 4.5)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -106,9 +106,9 @@ public class TransformInterpolationSystemTests
         _transformInterpolationSystem.InterpolateTransforms(0.25);
 
         // Assert
-        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(12.5, 25)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(12.5, 25)).Using<Vector2>(Vector2Equality));
         Assert.That(transformComponent.InterpolatedTransform.Rotation, Is.EqualTo(37.5).Within(Epsilon));
-        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(2.5, 3.75)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(2.5, 3.75)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -137,9 +137,9 @@ public class TransformInterpolationSystemTests
         _transformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assert
-        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using<Vector2>(Vector2Equality));
         Assert.That(transformComponent.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
-        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(3, 4.5)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(3, 4.5)).Using<Vector2>(Vector2Equality));
     }
 
     [Test]
@@ -249,9 +249,9 @@ public class TransformInterpolationSystemTests
         // Assume
         Assert.That(_transformInterpolationSystem.HasTransformData(transform2DComponent), Is.True);
 
-        Assert.That(transform2DComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(transform2DComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using<Vector2>(Vector2Equality));
         Assert.That(transform2DComponent.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
-        Assert.That(transform2DComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+        Assert.That(transform2DComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using<Vector2>(Vector2Equality));
 
         // Act
         var worldTransformMatrix = transform2DComponent.ComputeInterpolatedWorldTransformMatrix();
@@ -291,9 +291,9 @@ public class TransformInterpolationSystemTests
         Assert.That(parent.HasComponent<Transform2DComponent>(), Is.False);
         Assert.That(_transformInterpolationSystem.HasTransformData(childTransform), Is.True);
 
-        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using<Vector2>(Vector2Equality));
         Assert.That(childTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
-        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using<Vector2>(Vector2Equality));
 
         // Act
         var worldTransformMatrix = childTransform.ComputeInterpolatedWorldTransformMatrix();
@@ -343,13 +343,13 @@ public class TransformInterpolationSystemTests
         Assert.That(_transformInterpolationSystem.HasTransformData(parentTransform), Is.True);
         Assert.That(_transformInterpolationSystem.HasTransformData(childTransform), Is.True);
 
-        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using<Vector2>(Vector2Equality));
         Assert.That(parentTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
-        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using<Vector2>(Vector2Equality));
 
-        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using<Vector2>(Vector2Equality));
         Assert.That(childTransform.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
-        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using<Vector2>(Vector2Equality));
 
         // Act
         var worldTransformMatrix = childTransform.ComputeInterpolatedWorldTransformMatrix();
@@ -413,17 +413,17 @@ public class TransformInterpolationSystemTests
         Assert.That(_transformInterpolationSystem.HasTransformData(childTransform), Is.True);
         Assert.That(_transformInterpolationSystem.HasTransformData(grandChildTransform), Is.True);
 
-        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using<Vector2>(Vector2Equality));
         Assert.That(parentTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
-        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using<Vector2>(Vector2Equality));
 
-        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using<Vector2>(Vector2Equality));
         Assert.That(childTransform.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
-        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using(Vector2Comparer));
+        Assert.That(childTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using<Vector2>(Vector2Equality));
 
-        Assert.That(grandChildTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(150, 300)).Using(Vector2Comparer));
+        Assert.That(grandChildTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(150, 300)).Using<Vector2>(Vector2Equality));
         Assert.That(grandChildTransform.InterpolatedTransform.Rotation, Is.EqualTo(450).Within(Epsilon));
-        Assert.That(grandChildTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(600, 750)).Using(Vector2Comparer));
+        Assert.That(grandChildTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(600, 750)).Using<Vector2>(Vector2Equality));
 
         // Act
         var worldTransformMatrix = grandChildTransform.ComputeInterpolatedWorldTransformMatrix();
@@ -476,13 +476,13 @@ public class TransformInterpolationSystemTests
         Assert.That(_transformInterpolationSystem.HasTransformData(parentTransform), Is.True);
         Assert.That(_transformInterpolationSystem.HasTransformData(grandChildTransform), Is.True);
 
-        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1.5, 3)).Using<Vector2>(Vector2Equality));
         Assert.That(parentTransform.InterpolatedTransform.Rotation, Is.EqualTo(4.5).Within(Epsilon));
-        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using(Vector2Comparer));
+        Assert.That(parentTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(6, 7.5)).Using<Vector2>(Vector2Equality));
 
-        Assert.That(grandChildTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(grandChildTransform.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using<Vector2>(Vector2Equality));
         Assert.That(grandChildTransform.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
-        Assert.That(grandChildTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using(Vector2Comparer));
+        Assert.That(grandChildTransform.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(60, 75)).Using<Vector2>(Vector2Equality));
 
         // Act
         var worldTransformMatrix = grandChildTransform.ComputeInterpolatedWorldTransformMatrix();
@@ -622,7 +622,7 @@ public class TransformInterpolationSystemTests
         _transformInterpolationSystem.InterpolateTransforms(0.5);
 
         // Assert
-        Assert.That(transformComponent3.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(150, 300)).Using(Vector2Comparer));
-        Assert.That(transformComponent4.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1500, 3000)).Using(Vector2Comparer));
+        Assert.That(transformComponent3.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(150, 300)).Using<Vector2>(Vector2Equality));
+        Assert.That(transformComponent4.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1500, 3000)).Using<Vector2>(Vector2Equality));
     }
 }

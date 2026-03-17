@@ -1,7 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Core.Math
 {
@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     public class CircleTests
     {
         private const double Epsilon = 1e-6;
-        private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+        private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
         #region Constructors
 
@@ -51,14 +51,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Arrange
             var circle = new Circle(new Vector2(2, 1), 2);
             var transform = Matrix3x3.CreateTranslation(new Vector2(2, 1))
-                            * Matrix3x3.CreateRotation(Angle.Deg2Rad(90))
+                            * Matrix3x3.CreateRotation(Angle.DegreesToRadians(90))
                             * Matrix3x3.CreateScale(new Vector2(2, 2));
 
             // Act
             var actual = circle.Transform(transform);
 
             // Assert
-            Assert.That(actual.Center, Is.EqualTo(new Vector2(0, 5)).Using(Vector2Comparer));
+            Assert.That(actual.Center, Is.EqualTo(new Vector2(0, 5)).Using<Vector2>(Vector2Equality));
             Assert.That(actual.Radius, Is.EqualTo(4d));
         }
 

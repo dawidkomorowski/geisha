@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -12,8 +13,6 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -27,7 +26,7 @@ public abstract class RenderingSystemTestsBase
     private protected IDebugRendererForRenderingSystem DebugRendererForRenderingSystem = null!;
     private protected IRenderingDiagnosticInfoProvider RenderingDiagnosticInfoProvider = null!;
 
-    protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    protected static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     [SetUp]
     public void SetUp()
@@ -238,7 +237,7 @@ public abstract class RenderingSystemTestsBase
 
         private static void SetTransformInCameraView(Transform2DComponent transform2DComponent)
         {
-            SetTransform(transform2DComponent, new Vector2(100, 200), Angle.Deg2Rad(30), new Vector2(0.5, 0.5));
+            SetTransform(transform2DComponent, new Vector2(100, 200), Angle.DegreesToRadians(30), new Vector2(0.5, 0.5));
         }
 
         private static void SetTransform(Transform2DComponent transform2DComponent, Vector2 translation, double rotation, Vector2 scale)

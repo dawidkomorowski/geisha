@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -8,7 +8,7 @@ namespace Geisha.Engine.UnitTests.Core.Math;
 [TestFixture]
 public class LineSegmentTests
 {
-    private static readonly IEqualityComparer<Vector2> Vector2Comparer = CommonEqualityComparer.Vector2(0.000001);
+    private static readonly Func<Vector2, Vector2, bool> Vector2Equality = ToleranceEquality.ForVector2(0.000001);
 
     [Test]
     public void Constructor_ShouldCreateLineSegment_GivenSpecifiedStartAndEndPoints()
@@ -39,7 +39,7 @@ public class LineSegmentTests
         var actual = lineSegment.Normal;
 
         // Assert
-        Assert.That(actual, Is.EqualTo(expectedNormal).Using(Vector2Comparer));
+        Assert.That(actual, Is.EqualTo(expectedNormal).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(new double[] { 1, 1, 5, 5 }, new double[] { 3, 1, 5, 3 })]
@@ -96,7 +96,7 @@ public class LineSegmentTests
 
         // Assert
         Assert.That(intersectionResult, Is.EqualTo(LineSegment.IntersectionResult.LineSegmentIntersection));
-        Assert.That(intersectionPoint, Is.EqualTo(expected).Using(Vector2Comparer));
+        Assert.That(intersectionPoint, Is.EqualTo(expected).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(new double[] { 1, 1, 5, 5 }, new double[] { 3, 1, 4, 0 }, new double[] { 2, 2 })]
@@ -119,7 +119,7 @@ public class LineSegmentTests
 
         // Assert
         Assert.That(intersectionResult, Is.EqualTo(LineSegment.IntersectionResult.LineIntersection));
-        Assert.That(intersectionPoint, Is.EqualTo(expected).Using(Vector2Comparer));
+        Assert.That(intersectionPoint, Is.EqualTo(expected).Using<Vector2>(Vector2Equality));
     }
 
     [Test]

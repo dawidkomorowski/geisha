@@ -219,10 +219,57 @@ public sealed class Transform2DComponent : Component
     }
 
     /// <summary>
-    ///     Creates 2D transformation matrix that represents this transform component.
+    ///     Creates a TRS <see cref="Matrix3x3" /> representing the local transformation defined by this component.
     /// </summary>
-    /// <returns>2D transformation matrix representing this transform component.</returns>
+    /// <returns>
+    ///     <see cref="Matrix3x3" /> that applies the transformation defined by this component in local coordinate space.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         Creates a Translation-Rotation-Scale matrix where transformations are applied in the order:
+    ///         scale, then rotation, then translation. The resulting matrix satisfies <see cref="Matrix3x3.IsTRS"/>.
+    ///     </para>
+    ///     <para>
+    ///         The matrix represents the transformation in local coordinate space (relative to the parent entity).
+    ///         To get the transformation in world coordinate space, use <see cref="ComputeWorldTransformMatrix"/>.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Matrix3x3.CreateTRS"/>
+    /// <seealso cref="Transform2D.ToMatrix"/>
+    /// <seealso cref="ComputeWorldTransformMatrix"/>
+    /// <seealso cref="ComputeInterpolatedWorldTransformMatrix"/>
     public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
+
+    /// <summary>
+    ///     Computes the world transformation as <see cref="Transform2D"/> for the current transform hierarchy.
+    /// </summary>
+    /// <returns>
+    ///     <see cref="Transform2D"/> representing the transformation in world (global) coordinate space.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    ///     The computed world transformation matrix is not TRS-decomposable. This can occur when combining
+    ///     transformations in a hierarchy results in a non-orthogonal matrix (containing shear).
+    /// </exception>
+    /// <remarks>
+    ///     <para>
+    ///         This is a convenience method that combines <see cref="ComputeWorldTransformMatrix"/> with
+    ///         matrix-to-transform decomposition. It computes the world transformation matrix for the current
+    ///         hierarchy and converts it to <see cref="Transform2D"/>.
+    ///     </para>
+    ///     <para>
+    ///         <b>TRS Limitation:</b> While individual <see cref="Transform2DComponent"/> instances always represent
+    ///         valid TRS transformations, combining multiple transformations through matrix multiplication during
+    ///         hierarchy traversal can produce matrices that are not TRS-decomposable (e.g., containing shear).
+    ///         A common cause is combining non-uniform scales with rotations in a hierarchy - for example, when
+    ///         a parent entity has non-uniform scale and a child entity has rotation. In such cases, this method
+    ///         throws <see cref="InvalidOperationException"/>. If you need to handle arbitrary transformation
+    ///         hierarchies, use <see cref="ComputeWorldTransformMatrix"/> directly.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="ComputeWorldTransformMatrix"/>
+    /// <seealso cref="Matrix3x3.ToTransform"/>
+    /// <seealso cref="Matrix3x3.IsTRS"/>
+    public Transform2D ComputeWorldTransform() => ComputeWorldTransformMatrix().ToTransform();
 
     /// <summary>
     ///     Computes the 2D transformation matrix in world (global) coordinate space for the current transform hierarchy.

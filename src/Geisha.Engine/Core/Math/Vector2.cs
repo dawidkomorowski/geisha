@@ -21,12 +21,12 @@ public readonly struct Vector2 : IEquatable<Vector2>
     public static Vector2 One => new(1, 1);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector2" /> directed along the X axis, that is vector (1,0).
+    ///     Gets the unit vector along the X axis (1,0).
     /// </summary>
     public static Vector2 UnitX => new(1, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector2" /> directed along the Y axis, that is vector (0,1).
+    ///     Gets the unit vector along the Y axis (0,1).
     /// </summary>
     public static Vector2 UnitY => new(0, 1);
 
@@ -56,11 +56,22 @@ public readonly struct Vector2 : IEquatable<Vector2>
     public double LengthSquared => X * X + Y * Y;
 
     /// <summary>
-    ///     Returns unit vector out of this <see cref="Vector2" /> that is vector with the same direction but with length equal
-    ///     one.
+    ///     Gets the normalized form of this vector (unit vector), which has the same direction
+    ///     but a length of one.
     /// </summary>
-    /// <remarks>For vector with near zero length this property returns zero vector.</remarks>
-    public Vector2 Unit => Length > double.Epsilon ? new Vector2(X / Length, Y / Length) : Zero;
+    /// <remarks>
+    ///     <para>
+    ///         Normalized vectors are commonly used when only direction matters, such as for movement directions,
+    ///         surface normals, and various vector operations. Normalization preserves the direction while scaling
+    ///         the magnitude to exactly one.
+    ///     </para>
+    ///     <para>
+    ///         If this vector has near-zero length, this property returns <see cref="Zero" /> to avoid division by zero.
+    ///         For axis-aligned unit vectors, consider using the static properties <see cref="UnitX" /> and
+    ///         <see cref="UnitY" /> instead, which provide better performance.
+    ///     </para>
+    /// </remarks>
+    public Vector2 Unit => MathEx.IsNearZero(Length) ? Zero : new Vector2(X / Length, Y / Length);
 
     /// <summary>
     ///     Returns vector opposite to this vector, that is vector with all components negated.
@@ -128,9 +139,24 @@ public readonly struct Vector2 : IEquatable<Vector2>
     /// </remarks>
     public static Vector2 Lerp(in Vector2 v1, in Vector2 v2, double alpha) =>
         new(
-            GMath.Lerp(v1.X, v2.X, alpha),
-            GMath.Lerp(v1.Y, v2.Y, alpha)
+            MathEx.Lerp(v1.X, v2.X, alpha),
+            MathEx.Lerp(v1.Y, v2.Y, alpha)
         );
+
+    /// <summary>
+    ///     Returns the normalized form of the specified vector (unit vector), which has the same direction
+    ///     but a length of one.
+    /// </summary>
+    /// <param name="vector">The vector to normalize.</param>
+    /// <returns>
+    ///     A <see cref="Vector2" /> with the same direction as <paramref name="vector" /> but with a length of one,
+    ///     or <see cref="Zero" /> if <paramref name="vector" /> has near-zero length.
+    /// </returns>
+    /// <remarks>
+    ///     This method is equivalent to accessing the <see cref="Unit" /> property of the vector. For axis-aligned
+    ///     unit vectors, consider using <see cref="UnitX" /> or <see cref="UnitY" /> instead for better performance.
+    /// </remarks>
+    public static Vector2 Normalize(in Vector2 vector) => vector.Unit;
 
     /// <summary>
     ///     Returns the <see cref="Vector2" /> that X and Y components are maximum of corresponding X and Y components of

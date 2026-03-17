@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math;
 public class OverlapTests
 {
     private const double Epsilon = 1e-6;
-    private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false, 0, 0, 0,
         TestName = $"01_{nameof(CircleAndCircle)}")]
@@ -58,10 +58,10 @@ public class OverlapTests
             Assert.That(actual3, Is.EqualTo(overlap));
             Assert.That(actual4, Is.EqualTo(overlap));
 
-            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
+            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using<Vector2>(Vector2Equality));
             Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
 
-            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
+            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using<Vector2>(Vector2Equality));
             Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
         });
     }
@@ -161,11 +161,11 @@ public class OverlapTests
     {
         // Arrange
         var rotationMatrix1 = Matrix3x3.CreateTranslation(new Vector2(x1, y1)) *
-                              Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation1)) *
+                              Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation1)) *
                               Matrix3x3.CreateTranslation(new Vector2(-x1, -y1));
 
         var rotationMatrix2 = Matrix3x3.CreateTranslation(new Vector2(x2, y2)) *
-                              Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation2)) *
+                              Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation2)) *
                               Matrix3x3.CreateTranslation(new Vector2(-x2, -y2));
 
         var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1)).Transform(rotationMatrix1);
@@ -190,10 +190,10 @@ public class OverlapTests
             Assert.That(actual3, Is.EqualTo(overlap));
             Assert.That(actual4, Is.EqualTo(overlap));
 
-            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
+            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using<Vector2>(Vector2Equality));
             Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
 
-            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
+            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using<Vector2>(Vector2Equality));
             Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
         });
     }
@@ -318,7 +318,7 @@ public class OverlapTests
     {
         // Arrange
         var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
-                             Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                             Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)) *
                              Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
 
         var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
@@ -347,10 +347,10 @@ public class OverlapTests
             Assert.That(actual3, Is.EqualTo(overlap));
             Assert.That(actual4, Is.EqualTo(overlap));
 
-            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
+            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using<Vector2>(Vector2Equality));
             Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
 
-            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
+            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using<Vector2>(Vector2Equality));
             Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
         });
     }

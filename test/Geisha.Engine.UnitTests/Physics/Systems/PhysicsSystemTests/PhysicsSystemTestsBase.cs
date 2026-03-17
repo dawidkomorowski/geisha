@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -22,10 +22,10 @@ public abstract class PhysicsSystemTestsBase
     private protected IDebugRenderer DebugRenderer = null!;
 
     private protected const double Epsilon = 1e-6;
-    private protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private protected static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     // ReSharper disable once InconsistentNaming
-    private protected static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
+    private protected static Func<Matrix3x3, Matrix3x3, bool> Matrix3x3Equality => ToleranceEquality.ForMatrix3x3(Epsilon);
 
     [SetUp]
     public void SetUp()
@@ -70,9 +70,9 @@ public abstract class PhysicsSystemTestsBase
 
     private protected static bool ContactPoint2DComparison(ContactPoint2D p1, ContactPoint2D p2)
     {
-        return Vector2Comparer.Equals(p1.WorldPosition, p2.WorldPosition) &&
-               Vector2Comparer.Equals(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
-               Vector2Comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
+        return Vector2Equality(p1.WorldPosition, p2.WorldPosition) &&
+               Vector2Equality(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
+               Vector2Equality(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
 
     private protected static RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>

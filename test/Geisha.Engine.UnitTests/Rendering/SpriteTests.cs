@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.TestUtils;
@@ -11,7 +11,7 @@ namespace Geisha.Engine.UnitTests.Rendering
     public class SpriteTests
     {
         private const double Epsilon = 0.000001;
-        private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+        private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
         [TestCase(200, 100, 100, 50, 1,
             0, 0, 200, 100)]
@@ -42,8 +42,8 @@ namespace Geisha.Engine.UnitTests.Rendering
             var rectangle = sprite.Rectangle;
 
             // Assert
-            Assert.That(rectangle.Center, Is.EqualTo(expectedCenter).Using(Vector2Comparer));
-            Assert.That(rectangle.Dimensions, Is.EqualTo(expectedDimensions).Using(Vector2Comparer));
+            Assert.That(rectangle.Center, Is.EqualTo(expectedCenter).Using<Vector2>(Vector2Equality));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(expectedDimensions).Using<Vector2>(Vector2Equality));
         }
     }
 }

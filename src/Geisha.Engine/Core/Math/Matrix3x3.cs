@@ -4,12 +4,28 @@ using System.Collections.Generic;
 namespace Geisha.Engine.Core.Math
 {
     /// <summary>
-    ///     2D transformation matrix in homogeneous coordinates. It is three rows by three columns matrix consisting nine
-    ///     components.
+    ///     Represents a 3×3 matrix for 2D transformations in homogeneous coordinates.
     /// </summary>
     /// <remarks>
-    ///     In computation this matrix treats vectors as column vectors therefore translation is located in last column of
-    ///     the matrix.
+    ///     <para>
+    ///         This matrix uses row-major storage with column-vector convention. Components are stored
+    ///         sequentially by row in memory. Matrix-vector multiplication follows the form M × v (matrix on left,
+    ///         vector on right), and translation is located in the last column (M13, M23).
+    ///     </para>
+    ///     <para>
+    ///         Primary use cases:
+    ///         <list type="bullet">
+    ///             <item><description>Representing 2D transformations (translation, rotation, scale)</description></item>
+    ///             <item><description>Composing multiple transformations through matrix multiplication</description></item>
+    ///             <item><description>Transforming points and vectors in 2D space</description></item>
+    ///         </list>
+    ///     </para>
+    ///     <para>
+    ///         <b>TRS Matrices:</b> A special subset of transformation matrices that represent only translation,
+    ///         rotation, and scale (without shear or perspective). TRS matrices can be decomposed into
+    ///         <see cref="Transform2D"/> using <see cref="ToTransform"/> and created using <see cref="CreateTRS"/>.
+    ///         Use <see cref="IsTRS"/> to check if a matrix is TRS-compatible.
+    ///     </para>
     /// </remarks>
     // ReSharper disable once InconsistentNaming
     public readonly struct Matrix3x3 : IEquatable<Matrix3x3>
@@ -121,16 +137,24 @@ namespace Geisha.Engine.Core.Math
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         <see cref="Matrix3x3" /> is considered valid Translation-Rotation-Scale matrix when it represents
-        ///         transformation that can be expressed as combination of scale followed by rotation followed by translation.
+        ///         A TRS matrix represents transformations composed of scale, rotation, and translation only - without
+        ///         shear, perspective, or other non-standard affine transformations.
         ///     </para>
         ///     <para>
-        ///         If <see cref="Matrix3x3" /> is TRS matrix then it can be decomposed into translation, rotation and scale.
+        ///         This property checks that:
+        ///         <list type="number">
+        ///             <item><description>The matrix is affine (M31 = 0, M32 = 0, M33 = 1)</description></item>
+        ///             <item><description>The transformation preserves axis orthogonality (no shear)</description></item>
+        ///         </list>
+        ///     </para>
+        ///     <para>
+        ///         Only TRS matrices can be converted to <see cref="Transform2D"/> using <see cref="ToTransform"/>.
+        ///         Use <see cref="CreateTRS"/> to create TRS-compatible matrices.
         ///     </para>
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
-        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && MathEx.AlmostEqual(M21 * M22, -M11 * M12);
 
         #endregion
 
@@ -303,31 +327,92 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
-        ///     Creates <see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.
+        ///     Decomposes this <see cref="Matrix3x3" /> into a <see cref="Transform2D" /> with translation, rotation, and scale components.
         /// </summary>
-        /// <returns><see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.</returns>
-        /// <exception cref="InvalidOperationException">This <see cref="Matrix3x3" /> is not TRS decomposable.</exception>
+        /// <returns>
+        ///     <see cref="Transform2D" /> representing the decomposed transformation with translation, rotation (in radians), 
+        ///     and scale components.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        ///     This <see cref="Matrix3x3" /> is not a valid TRS matrix. Use <see cref="IsTRS"/> to check before calling this method.
+        /// </exception>
+        /// <remarks>
+        ///     <para>
+        ///         This method decomposes a TRS matrix into its constituent transformation components. The matrix must
+        ///         represent a transformation composed only of scale, rotation, and translation (no shear or perspective).
+        ///     </para>
+        ///     <para>
+        ///         Decomposition guarantees:
+        ///         <list type="bullet">
+        ///             <item><description>Translation is extracted from the translation column of the matrix</description></item>
+        ///             <item><description>Rotation is returned in the range [-π, π] radians</description></item>
+        ///             <item><description>Scale values preserve the magnitude of the X and Y axes</description></item>
+        ///             <item><description>Result is in canonical form where Scale.Y is always non-negative</description></item>
+        ///         </list>
+        ///     </para>
+        ///     <para>
+        ///         Edge case handling:
+        ///         <list type="bullet">
+        ///             <item><description>If both scale components are near-zero, rotation is set to 0</description></item>
+        ///             <item><description>Scale values very close to zero are clamped to exactly 0</description></item>
+        ///             <item><description>Negative Y-scale is represented by adjusting both scale signs and rotation</description></item>
+        ///         </list>
+        ///     </para>
+        /// </remarks>
         /// <seealso cref="IsTRS" />
         /// <seealso cref="CreateTRS" />
         public Transform2D ToTransform()
         {
             if (!IsTRS)
             {
-                throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS.");
+                throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS. {this}");
             }
 
-            var sx = new Vector2(M11, M21).Length;
-            var sy = new Vector2(M12, M22).Length;
+            var xAxisLength = new Vector2(M11, M21).Length;
+            var yAxisLength = new Vector2(M12, M22).Length;
 
-            if (double.IsNegative(M11 / M22))
+            // Rotation:
+            // - Prefer X axis when possible: X axis = (sx*cos, sx*sin) => angle = atan2(M21, M11)
+            // - If sx == 0, use Y axis: Y axis = (-sy*sin, sy*cos) => angle = atan2(-M12, M22)
+            // - If both axes are degenerate, rotation is not observable -> choose 0.
+            double rotation;
+            if (!MathEx.IsNearZero(xAxisLength))
+            {
+                rotation = System.Math.Atan2(M21, M11);
+            }
+            else if (!MathEx.IsNearZero(yAxisLength))
+            {
+                rotation = System.Math.Atan2(-M12, M22);
+            }
+            else
+            {
+                rotation = 0d;
+            }
+
+            var cos = System.Math.Cos(rotation);
+            var sin = System.Math.Sin(rotation);
+
+            // Signed scale via projection onto rotated basis:
+            // X axis = (cos, sin) * sx  => sx = dot(X axis, (cos, sin))
+            // Y axis = (-sin, cos) * sy => sy = dot(Y axis, (-sin, cos))
+            var sx = M11 * cos + M21 * sin;
+            var sy = M12 * -sin + M22 * cos;
+
+            // Canonicalize to meet requirement (sy >= 0).
+            if (sy < 0d)
             {
                 sx = -sx;
+                sy = -sy;
+                rotation = Angle.NormalizeRadiansToPi(rotation + System.Math.PI);
             }
+
+            if (MathEx.IsNearZero(sx)) sx = 0d;
+            if (MathEx.IsNearZero(sy)) sy = 0d;
 
             return new Transform2D
             {
                 Translation = new Vector2(M13, M23),
-                Rotation = System.Math.Atan2(M21 * System.Math.Sign(sx), M11 * System.Math.Sign(sx)),
+                Rotation = rotation,
                 Scale = new Vector2(sx, sy)
             };
         }
@@ -409,16 +494,37 @@ namespace Geisha.Engine.Core.Math
             );
 
         /// <summary>
-        ///     Creates <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed
-        ///     by rotation followed by translation.
+        ///     Creates a <see cref="Matrix3x3" /> from translation, rotation, and scale components.
         /// </summary>
-        /// <param name="translation">Translation component of TRS transformation matrix.</param>
-        /// <param name="rotation">Rotation component of TRS transformation matrix.</param>
-        /// <param name="scale">Scale component of TRS transformation matrix.</param>
+        /// <param name="translation">Translation to apply, as offset in X and Y directions.</param>
+        /// <param name="rotation">Rotation angle in radians (counterclockwise, applied after scale).</param>
+        /// <param name="scale">Scale factors along X and Y axes (applied first).</param>
         /// <returns>
-        ///     <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed by
-        ///     rotation followed by translation.
+        ///     <see cref="Matrix3x3" /> representing the TRS transformation.
         /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         Creates a TRS (Translation-Rotation-Scale) matrix by composing three transformations.
+        ///         When this matrix is applied to a point, transformations are applied in this order:
+        ///         <list type="number">
+        ///             <item><description>Scale - Scales along X and Y axes</description></item>
+        ///             <item><description>Rotation - Rotates counterclockwise around the origin</description></item>
+        ///             <item><description>Translation - Moves by the specified offset</description></item>
+        ///         </list>
+        ///     </para>
+        ///     <para>
+        ///         The resulting matrix satisfies <see cref="IsTRS"/> and can be decomposed back into 
+        ///         components using <see cref="ToTransform"/>.
+        ///     </para>
+        ///     <para>
+        ///         Special cases:
+        ///         <list type="bullet">
+        ///             <item><description>Negative scale values are supported and flip the corresponding axis</description></item>
+        ///             <item><description>Zero scale in either component produces a degenerate transformation</description></item>
+        ///             <item><description>Rotation is applied in 2D around the origin (Z-axis in 3D)</description></item>
+        ///         </list>
+        ///     </para>
+        /// </remarks>
         /// <seealso cref="IsTRS" />
         /// <seealso cref="ToTransform" />
         // ReSharper disable once InconsistentNaming
@@ -450,15 +556,15 @@ namespace Geisha.Engine.Core.Math
         /// <seealso cref="LerpTRS" />
         public static Matrix3x3 Lerp(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
             new(
-                GMath.Lerp(m1.M11, m2.M11, alpha),
-                GMath.Lerp(m1.M12, m2.M12, alpha),
-                GMath.Lerp(m1.M13, m2.M13, alpha),
-                GMath.Lerp(m1.M21, m2.M21, alpha),
-                GMath.Lerp(m1.M22, m2.M22, alpha),
-                GMath.Lerp(m1.M23, m2.M23, alpha),
-                GMath.Lerp(m1.M31, m2.M31, alpha),
-                GMath.Lerp(m1.M32, m2.M32, alpha),
-                GMath.Lerp(m1.M33, m2.M33, alpha)
+                MathEx.Lerp(m1.M11, m2.M11, alpha),
+                MathEx.Lerp(m1.M12, m2.M12, alpha),
+                MathEx.Lerp(m1.M13, m2.M13, alpha),
+                MathEx.Lerp(m1.M21, m2.M21, alpha),
+                MathEx.Lerp(m1.M22, m2.M22, alpha),
+                MathEx.Lerp(m1.M23, m2.M23, alpha),
+                MathEx.Lerp(m1.M31, m2.M31, alpha),
+                MathEx.Lerp(m1.M32, m2.M32, alpha),
+                MathEx.Lerp(m1.M33, m2.M33, alpha)
             );
 
         /// <summary>

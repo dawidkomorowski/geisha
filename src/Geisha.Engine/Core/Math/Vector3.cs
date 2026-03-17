@@ -21,17 +21,17 @@ public readonly struct Vector3 : IEquatable<Vector3>
     public static Vector3 One => new(1, 1, 1);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector3" /> directed along the X axis, that is vector (1,0,0).
+    ///     Gets the unit vector along the X axis (1,0,0).
     /// </summary>
     public static Vector3 UnitX => new(1, 0, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector3" /> directed along the Y axis, that is vector (0,1,0).
+    ///     Gets the unit vector along the Y axis (0,1,0).
     /// </summary>
     public static Vector3 UnitY => new(0, 1, 0);
 
     /// <summary>
-    ///     Returns unit <see cref="Vector3" /> directed along the Z axis, that is vector (0,0,1).
+    ///     Gets the unit vector along the Z axis (0,0,1).
     /// </summary>
     public static Vector3 UnitZ => new(0, 0, 1);
 
@@ -66,11 +66,22 @@ public readonly struct Vector3 : IEquatable<Vector3>
     public double LengthSquared => X * X + Y * Y + Z * Z;
 
     /// <summary>
-    ///     Returns unit vector out of this <see cref="Vector3" /> that is vector with the same direction but with length equal
-    ///     one.
+    ///     Gets the normalized form of this vector (unit vector), which has the same direction
+    ///     but a length of one.
     /// </summary>
-    /// <remarks>For vector with near zero length this property returns zero vector.</remarks>
-    public Vector3 Unit => Length > double.Epsilon ? new Vector3(X / Length, Y / Length, Z / Length) : Zero;
+    /// <remarks>
+    ///     <para>
+    ///         Normalized vectors are commonly used when only direction matters, such as for movement directions,
+    ///         surface normals, and various vector operations. Normalization preserves the direction while scaling
+    ///         the magnitude to exactly one.
+    ///     </para>
+    ///     <para>
+    ///         If this vector has near-zero length, this property returns <see cref="Zero" /> to avoid division by zero.
+    ///         For axis-aligned unit vectors, consider using the static properties <see cref="UnitX" />,
+    ///         <see cref="UnitY" />, and <see cref="UnitZ" /> instead, which provide better performance.
+    ///     </para>
+    /// </remarks>
+    public Vector3 Unit => MathEx.IsNearZero(Length) ? Zero : new Vector3(X / Length, Y / Length, Z / Length);
 
     /// <summary>
     ///     Returns vector opposite to this vector, that is vector with all components negated.
@@ -136,10 +147,26 @@ public readonly struct Vector3 : IEquatable<Vector3>
     /// </remarks>
     public static Vector3 Lerp(in Vector3 v1, in Vector3 v2, double alpha) =>
         new(
-            GMath.Lerp(v1.X, v2.X, alpha),
-            GMath.Lerp(v1.Y, v2.Y, alpha),
-            GMath.Lerp(v1.Z, v2.Z, alpha)
+            MathEx.Lerp(v1.X, v2.X, alpha),
+            MathEx.Lerp(v1.Y, v2.Y, alpha),
+            MathEx.Lerp(v1.Z, v2.Z, alpha)
         );
+
+    /// <summary>
+    ///     Returns the normalized form of the specified vector (unit vector), which has the same direction
+    ///     but a length of one.
+    /// </summary>
+    /// <param name="vector">The vector to normalize.</param>
+    /// <returns>
+    ///     A <see cref="Vector3" /> with the same direction as <paramref name="vector" /> but with a length of one,
+    ///     or <see cref="Zero" /> if <paramref name="vector" /> has near-zero length.
+    /// </returns>
+    /// <remarks>
+    ///     This method is equivalent to accessing the <see cref="Unit" /> property of the vector. For axis-aligned
+    ///     unit vectors, consider using <see cref="UnitX" />, <see cref="UnitY" />, or <see cref="UnitZ" /> instead
+    ///     for better performance.
+    /// </remarks>
+    public static Vector3 Normalize(in Vector3 vector) => vector.Unit;
 
     #endregion
 

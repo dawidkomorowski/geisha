@@ -14,7 +14,7 @@ internal readonly struct Contact
         in ReadOnlyFixedList2<ContactPoint> contactPoints
     )
     {
-        Debug.Assert(GMath.AlmostEqual(collisionNormal.Length, 1d), "GMath.AlmostEqual(collisionNormal.Length, 1d)");
+        Debug.Assert(MathEx.AlmostEqual(collisionNormal.Length, 1d), "Collision normal must be a unit vector");
 
         Body1 = body1;
         Body2 = body2;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -11,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math;
 public class RectangleTests
 {
     private const double Epsilon = 1e-6;
-    private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     #region Constructors
 
@@ -80,10 +79,10 @@ public class RectangleTests
         var rectangle = new Rectangle(center, dimensions);
 
         // Assert
-        Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using(Vector2Comparer));
-        Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using(Vector2Comparer));
-        Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using(Vector2Comparer));
-        Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using(Vector2Comparer));
+        Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using<Vector2>(Vector2Equality));
+        Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using<Vector2>(Vector2Equality));
+        Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using<Vector2>(Vector2Equality));
+        Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using<Vector2>(Vector2Equality));
     }
 
     #endregion
@@ -104,13 +103,13 @@ public class RectangleTests
         // We want to rotate around center of rectangle thus we need to transform by center after rotation.
         var rectangle = rotation == 0
             ? new Rectangle(center, dimensions)
-            : new Rectangle(dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));
+            : new Rectangle(dimensions).Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation))).Transform(Matrix3x3.CreateTranslation(center));
 
         // Act
         var actualCenter = rectangle.Center;
 
         // Assert
-        Assert.That(actualCenter, Is.EqualTo(center).Using(Vector2Comparer));
+        Assert.That(actualCenter, Is.EqualTo(center).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 1, 1, 0, 1)]
@@ -124,7 +123,7 @@ public class RectangleTests
         var center = new Vector2(centerX, centerY);
         var dimensions = new Vector2(width, height);
 
-        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
+        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)));
 
         // Act
         var actualWidth = rectangle.Width;
@@ -144,7 +143,7 @@ public class RectangleTests
         var center = new Vector2(centerX, centerY);
         var dimensions = new Vector2(width, height);
 
-        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
+        var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)));
 
         // Act
         var actualHeight = rectangle.Height;
@@ -192,7 +191,7 @@ public class RectangleTests
     {
         // Arrange
         var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
-                             Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                             Matrix3x3.CreateRotation(Angle.DegreesToRadians(rotation)) *
                              Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
 
         var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
@@ -224,14 +223,14 @@ public class RectangleTests
     {
         // Arrange
         var rectangle = new Rectangle(new Vector2(4, 2), new Vector2(10, 6))
-            .Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(30)));
+            .Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(30)));
 
         // Act
         var boundingRectangle = rectangle.GetBoundingRectangle();
 
         // Assert
-        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(2.464101, 3.732050)).Using(Vector2Comparer));
-        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using(Vector2Comparer));
+        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(2.464101, 3.732050)).Using<Vector2>(Vector2Equality));
+        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 20, 10)]

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     public class Matrix3x3Tests
     {
         private const double Epsilon = 0.0001;
-        private static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
+        private static Func<Matrix3x3, Matrix3x3, bool> Matrix3x3Equality => ToleranceEquality.ForMatrix3x3(Epsilon);
 
         #region Static properties
 
@@ -558,7 +557,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(10, -20, 30 * (System.Math.PI / 180), -2, -3,
             10, -20, -150 * (System.Math.PI / 180), 2, 3)]
         [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 1,
-            10, -20, 0 * (System.Math.PI / 180), 0, 1)]
+            10, -20, 30 * (System.Math.PI / 180), 0, 1)]
         [TestCase(10, -20, 30 * (System.Math.PI / 180), 1, 0,
             10, -20, 30 * (System.Math.PI / 180), 1, 0)]
         [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 0,
@@ -580,6 +579,109 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.Rotation, Is.EqualTo(expectedR));
             Assert.That(actual.Scale.X, Is.EqualTo(expectedSx));
             Assert.That(actual.Scale.Y, Is.EqualTo(expectedSy));
+        }
+
+        [Test]
+        public void ToTransform_ShouldPreserveComposedTRSMatrix_WhenParentScaleIsUniform()
+        {
+            // Arrange
+            const double tolerance = 1e-12;
+            var matrixEquality = ToleranceEquality.ForMatrix3x3(tolerance);
+
+            var parentTranslations = new[]
+            {
+                Vector2.Zero,
+                new Vector2(1, 2),
+                new Vector2(-13, 21)
+            };
+
+            var parentRotations = new[]
+            {
+                0d,
+                Angle.DegreesToRadians(90),
+                Angle.DegreesToRadians(-90),
+                Angle.DegreesToRadians(180),
+                Angle.DegreesToRadians(-180),
+                Angle.DegreesToRadians(270),
+                Angle.DegreesToRadians(-270),
+                Angle.DegreesToRadians(30),
+                Angle.DegreesToRadians(-170)
+            };
+
+            // Uniform scale => composition with child TRS stays TRS (no shear).
+            var parentUniformScales = new[]
+            {
+                0,
+                0.5,
+                -0.5,
+                1.0,
+                -1.0,
+                5.0,
+                -5.0,
+                50.0,
+                -50.0
+            };
+
+            var childTranslations = new[]
+            {
+                Vector2.Zero,
+                new Vector2(10, 20),
+                new Vector2(-100, 50)
+            };
+
+            var childRotations = new[]
+            {
+                0d,
+                Angle.DegreesToRadians(90),
+                Angle.DegreesToRadians(-90),
+                Angle.DegreesToRadians(180),
+                Angle.DegreesToRadians(-180),
+                Angle.DegreesToRadians(270),
+                Angle.DegreesToRadians(-270),
+                Angle.DegreesToRadians(15),
+                Angle.DegreesToRadians(-80)
+            };
+
+            var childScales = new[]
+            {
+                Vector2.One,
+                -Vector2.One,
+                new Vector2(2, 3),
+                new Vector2(2, -3),
+                new Vector2(-2, 3),
+                new Vector2(-2, -3),
+                new Vector2(0.2, 0.3),
+                new Vector2(20.0, 30.0),
+                new Vector2(0, 1),
+                new Vector2(0, -1),
+                new Vector2(1, 0),
+                new Vector2(-1, 0),
+                new Vector2(0, 0)
+            };
+
+            foreach (var pt in parentTranslations)
+            foreach (var pr in parentRotations)
+            foreach (var ps in parentUniformScales)
+            foreach (var ct in childTranslations)
+            foreach (var cr in childRotations)
+            foreach (var cs in childScales)
+            {
+                var parent = new Transform2D(pt, pr, new Vector2(ps, ps));
+                var child = new Transform2D(ct, cr, cs);
+
+                var matrix = parent.ToMatrix() * child.ToMatrix();
+
+                // Assume
+                Assert.That(matrix.IsTRS, Is.True,
+                    $"Expected composed matrix to be TRS for uniform parent scale. Parent: {parent}; Child: {child}; Matrix: {matrix}");
+
+                // Act
+                var matrixAfterConversion = matrix.ToTransform().ToMatrix();
+
+                // Assert
+                Assert.That(matrixAfterConversion, Is.EqualTo(matrix).Using<Matrix3x3>(matrixEquality),
+                    $"Matrix was not preserved after conversion to Transform2D and back. Parent: {parent}; Child: {child}; Matrix: {matrix}; MatrixAfterConversion: {matrixAfterConversion}");
+            }
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -729,6 +831,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Assert
             var expected = Matrix3x3.CreateTranslation(translation) * Matrix3x3.CreateRotation(rotation) * Matrix3x3.CreateScale(scale);
             Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual.IsTRS, Is.True);
         }
 
         [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
@@ -782,14 +885,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var t1 = new Transform2D
             {
                 Translation = new Vector2(-400, -500),
-                Rotation = Angle.Deg2Rad(60),
+                Rotation = Angle.DegreesToRadians(60),
                 Scale = new Vector2(0.5, 0.5)
             };
 
             var t2 = new Transform2D
             {
                 Translation = new Vector2(-200, -200),
-                Rotation = Angle.Deg2Rad(-80),
+                Rotation = Angle.DegreesToRadians(-80),
                 Scale = new Vector2(2, 2)
             };
 
@@ -800,7 +903,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var m3 = Matrix3x3.LerpTRS(m1, m2, alpha);
 
             // Assert
-            Assert.That(m3, Is.EqualTo(Transform2D.Lerp(t1, t2, alpha).ToMatrix()).Using(Matrix3x3Comparer));
+            Assert.That(m3, Is.EqualTo(Transform2D.Lerp(t1, t2, alpha).ToMatrix()).Using<Matrix3x3>(Matrix3x3Equality));
         }
 
         #endregion

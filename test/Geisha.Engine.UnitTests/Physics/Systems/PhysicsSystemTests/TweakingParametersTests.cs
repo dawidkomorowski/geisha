@@ -175,8 +175,8 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
         var kinematicBody = CreateRectangleKinematicBody(0, 2, 10, 10);
         kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
-        CreateRectangleStaticBody(-7, 0, 10, 10, Angle.Deg2Rad(30));
-        CreateRectangleStaticBody(7, 0, 10, 10, Angle.Deg2Rad(-30));
+        CreateRectangleStaticBody(-7, 0, 10, 10, Angle.DegreesToRadians(30));
+        CreateRectangleStaticBody(7, 0, 10, 10, Angle.DegreesToRadians(-30));
 
         // Act
         SaveVisualOutput(physicsSystem, 0, 10);

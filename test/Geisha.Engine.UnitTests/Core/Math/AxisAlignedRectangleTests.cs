@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math;
 public class AxisAlignedRectangleTests
 {
     private const double Epsilon = 0.000001;
-    private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
 
     #region Constructors
 
@@ -197,7 +198,7 @@ public class AxisAlignedRectangleTests
 
         // Act
         // Assert
-        Assert.That(rectangle.Max, Is.EqualTo(new Vector2(maxX, maxY)).Using(Vector2Comparer));
+        Assert.That(rectangle.Max, Is.EqualTo(new Vector2(maxX, maxY)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 0, 0, 0, 0)]
@@ -210,7 +211,7 @@ public class AxisAlignedRectangleTests
 
         // Act
         // Assert
-        Assert.That(rectangle.Min, Is.EqualTo(new Vector2(minX, minY)).Using(Vector2Comparer));
+        Assert.That(rectangle.Min, Is.EqualTo(new Vector2(minX, minY)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 0, 0, 0, 0)]
@@ -223,7 +224,7 @@ public class AxisAlignedRectangleTests
 
         // Act
         // Assert
-        Assert.That(rectangle.UpperLeft, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        Assert.That(rectangle.UpperLeft, Is.EqualTo(new Vector2(expectedX, expectedY)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 0, 0, 0, 0)]
@@ -236,7 +237,7 @@ public class AxisAlignedRectangleTests
 
         // Act
         // Assert
-        Assert.That(rectangle.UpperRight, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        Assert.That(rectangle.UpperRight, Is.EqualTo(new Vector2(expectedX, expectedY)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 0, 0, 0, 0)]
@@ -249,7 +250,7 @@ public class AxisAlignedRectangleTests
 
         // Act
         // Assert
-        Assert.That(rectangle.LowerLeft, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        Assert.That(rectangle.LowerLeft, Is.EqualTo(new Vector2(expectedX, expectedY)).Using<Vector2>(Vector2Equality));
     }
 
     [TestCase(0, 0, 0, 0, 0, 0)]
@@ -262,7 +263,7 @@ public class AxisAlignedRectangleTests
 
         // Act
         // Assert
-        Assert.That(rectangle.LowerRight, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        Assert.That(rectangle.LowerRight, Is.EqualTo(new Vector2(expectedX, expectedY)).Using<Vector2>(Vector2Equality));
     }
 
     #endregion
