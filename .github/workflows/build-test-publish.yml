@@ -65,7 +65,7 @@ jobs:
         run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2.6.0
         if: success() || failure()
         with:
           name: Test Results
