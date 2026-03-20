@@ -162,7 +162,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.Animations.Single().Value),
                 Is.EqualTo(AssetsIds.TestSpriteAnimation));
             Assert.That(loadedComponent1.CurrentAnimation, Is.Not.Null);
-            Assert.That(loadedComponent1.CurrentAnimation!.Value.Name, Is.EqualTo("animation1"));
+            Assert.That(loadedComponent1.CurrentAnimation.Value.Name, Is.EqualTo("animation1"));
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.CurrentAnimation.Value.Animation),
                 Is.EqualTo(AssetsIds.TestSpriteAnimation));
             Assert.That(loadedComponent1.IsPlaying, Is.True);
@@ -208,7 +208,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var loadedComponent = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
             Assert.That(loadedComponent.IsPlaying, Is.EqualTo(audioSourceComponent.IsPlaying));
             Assert.That(loadedComponent.Sound, Is.Not.Null);
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sound!), Is.EqualTo(AssetsIds.TestSound));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sound), Is.EqualTo(AssetsIds.TestSound));
         }
 
         #endregion
@@ -371,7 +371,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var loadedComponent1 = loadedEntity1.GetComponent<InputComponent>();
             Assert.That(loadedComponent1.HardwareInput, Is.EqualTo(HardwareInput.Empty));
             Assert.That(loadedComponent1.InputMapping, Is.Not.Null);
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.InputMapping!), Is.EqualTo(AssetsIds.TestInputMapping));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
             Assert.That(loadedComponent1.Enabled, Is.EqualTo(inputComponent1.Enabled));
 
             var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
@@ -379,7 +379,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var loadedComponent2 = loadedEntity2.GetComponent<InputComponent>();
             Assert.That(loadedComponent2.HardwareInput, Is.EqualTo(HardwareInput.Empty));
             Assert.That(loadedComponent2.InputMapping, Is.Not.Null);
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.InputMapping!), Is.EqualTo(AssetsIds.TestInputMapping));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
             Assert.That(loadedComponent2.Enabled, Is.EqualTo(inputComponent2.Enabled));
         }
 
@@ -686,7 +686,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertEntitiesAreEqual(loadedEntity1, entity1);
             var loadedComponent1 = loadedEntity1.GetComponent<SpriteRendererComponent>();
             Assert.That(loadedComponent1.Sprite, Is.Not.Null);
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.Sprite!), Is.EqualTo(AssetsIds.TestSprite));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.Sprite), Is.EqualTo(AssetsIds.TestSprite));
             Assert.That(loadedComponent1.Opacity, Is.EqualTo(spriteRendererComponent1.Opacity));
             Assert.That(loadedComponent1.BitmapInterpolationMode, Is.EqualTo(spriteRendererComponent1.BitmapInterpolationMode));
             Assert.That(loadedComponent1.Visible, Is.EqualTo(spriteRendererComponent1.Visible));
@@ -697,7 +697,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertEntitiesAreEqual(loadedEntity2, entity2);
             var loadedComponent2 = loadedEntity2.GetComponent<SpriteRendererComponent>();
             Assert.That(loadedComponent2.Sprite, Is.Not.Null);
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.Sprite!), Is.EqualTo(AssetsIds.TestSprite));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.Sprite), Is.EqualTo(AssetsIds.TestSprite));
             Assert.That(loadedComponent2.Opacity, Is.EqualTo(spriteRendererComponent2.Opacity));
             Assert.That(loadedComponent2.BitmapInterpolationMode, Is.EqualTo(spriteRendererComponent2.BitmapInterpolationMode));
             Assert.That(loadedComponent2.Visible, Is.EqualTo(spriteRendererComponent2.Visible));
