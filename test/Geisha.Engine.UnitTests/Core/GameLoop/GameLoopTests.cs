@@ -170,9 +170,12 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
+            // Process input at beginning of frame.
+            _inputStep.Received(1).ProcessInput();
+
+            // Process fixed time step game loop steps expected number of times.
             for (var i = 0; i < expectedFixedUpdateCount; i++)
             {
-                _inputStep.Received(1).ProcessInput();
                 _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                 _coroutineStep.Received(1).ProcessCoroutines();
                 _customStep1.Received(1).ProcessFixedUpdate();
@@ -181,6 +184,18 @@ public class GameLoopTests
                 _physicsStep.Received(1).ProcessPhysics();
                 _transformInterpolationStep.Received(1).SnapshotTransforms();
             }
+
+            // Process variable time step game loop steps.
+            _transformInterpolationStep.Received(1).InterpolateTransforms(Arg.Any<double>());
+            _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
+            _coroutineStep.Received(1).ProcessCoroutines(gameTime);
+            _customStep1.Received(1).ProcessUpdate(gameTime);
+            _customStep2.Received(1).ProcessUpdate(gameTime);
+            _customStep3.Received(1).ProcessUpdate(gameTime);
+            _physicsStep.Received(1).PreparePhysicsDebugInformation();
+            _audioStep.Received(1).ProcessAudio();
+            _animationStep.Received(1).ProcessAnimations(gameTime);
+            _renderingStep.Received(1).RenderScene();
         });
     }
 

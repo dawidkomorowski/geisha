@@ -10,8 +10,7 @@ using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Systems
 {
-    // TODO Should this system be Fixed or Variable time step? How it impacts determinism of simulation?
-    // TODO It seems that by making InputMapping immutable it could simplify InputSystem code and optimize it a bit.
+    // TODO: It seems that by making InputMapping immutable it could simplify InputSystem code and optimize it a bit.
     internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     {
         private readonly IInputProvider _inputProvider;

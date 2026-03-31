@@ -47,12 +47,12 @@ internal sealed class GameLoop : IGameLoop
         _timeToSimulate += gameTime.DeltaTime;
         var fixedUpdatesPerFrame = 0;
 
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.InputStep.ProcessInput();
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
+
         while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
         {
-            _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.InputStep.ProcessInput();
-            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
-
             _performanceStatisticsRecorder.BeginStepDuration();
             _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
             _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
