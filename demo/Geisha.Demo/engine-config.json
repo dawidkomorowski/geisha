@@ -31,7 +31,7 @@
     "EnableDebugRendering": false
   },
   "Rendering": {
-    "EnableVSync": false,
+    "EnableVSync": true,
     "ScreenSize": {
       "Width": 1600,
       "Height": 900

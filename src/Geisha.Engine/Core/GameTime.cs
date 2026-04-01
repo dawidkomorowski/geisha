@@ -3,7 +3,6 @@
 namespace Geisha.Engine.Core;
 
 // TODO: Demo application needs fixing input after moving input processing out of fixed update.
-// TODO: Demo application should use V-Sync to avoid unnecessary CPU/GPU usage.
 // TODO: Profile input system as it now runs each frame - not only on simulation frames.
 
 /// <summary>

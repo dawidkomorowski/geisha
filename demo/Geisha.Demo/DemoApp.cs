@@ -3,72 +3,71 @@ using System.Reflection;
 using Geisha.Demo.Common;
 using Geisha.Demo.Screens;
 
-namespace Geisha.Demo
+namespace Geisha.Demo;
+
+internal sealed class DemoApp : Game
 {
-    internal sealed class DemoApp : Game
+    public override string WindowTitle =>
+        $"Geisha Engine Demo {Assembly.GetAssembly(typeof(DemoApp))?.GetName().Version?.ToString(3)}";
+
+    public override void RegisterComponents(IComponentsRegistry componentsRegistry)
     {
-        public override string WindowTitle =>
-            $"Geisha Engine Demo {Assembly.GetAssembly(typeof(DemoApp))?.GetName().Version?.ToString(3)}";
+        componentsRegistry.RegisterSingleInstance<CommonScreenFactory>();
+        componentsRegistry.RegisterSingleInstance<ScreenManager>();
+        componentsRegistry.RegisterComponentFactory<MenuControlsComponentFactory>();
+        componentsRegistry.RegisterSceneBehaviorFactory<MainSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<GoToHelloScreenComponentFactory>();
 
-        public override void RegisterComponents(IComponentsRegistry componentsRegistry)
-        {
-            componentsRegistry.RegisterSingleInstance<CommonScreenFactory>();
-            componentsRegistry.RegisterSingleInstance<ScreenManager>();
-            componentsRegistry.RegisterComponentFactory<MenuControlsComponentFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MainSceneBehaviorFactory>();
-            componentsRegistry.RegisterComponentFactory<GoToHelloScreenComponentFactory>();
+        // Hello
+        componentsRegistry.RegisterSceneBehaviorFactory<HelloSceneBehaviorFactory>();
 
-            // Hello
-            componentsRegistry.RegisterSceneBehaviorFactory<HelloSceneBehaviorFactory>();
+        // Instructions
+        componentsRegistry.RegisterSceneBehaviorFactory<InstructionsSceneBehaviorFactory>();
 
-            // Instructions
-            componentsRegistry.RegisterSceneBehaviorFactory<InstructionsSceneBehaviorFactory>();
+        // Entity
+        componentsRegistry.RegisterSceneBehaviorFactory<EntitySceneBehaviorFactory>();
 
-            // Entity
-            componentsRegistry.RegisterSceneBehaviorFactory<EntitySceneBehaviorFactory>();
+        // Primitives
+        componentsRegistry.RegisterSceneBehaviorFactory<PrimitivesSceneBehaviorFactory>();
 
-            // Primitives
-            componentsRegistry.RegisterSceneBehaviorFactory<PrimitivesSceneBehaviorFactory>();
+        // Sprite
+        componentsRegistry.RegisterSceneBehaviorFactory<SpriteSceneBehaviorFactory>();
 
-            // Sprite
-            componentsRegistry.RegisterSceneBehaviorFactory<SpriteSceneBehaviorFactory>();
+        // Text
+        componentsRegistry.RegisterSceneBehaviorFactory<TextSceneBehaviorFactory>();
 
-            // Text
-            componentsRegistry.RegisterSceneBehaviorFactory<TextSceneBehaviorFactory>();
+        // Transform
+        componentsRegistry.RegisterSceneBehaviorFactory<TransformSceneBehaviorFactory>();
 
-            // Transform
-            componentsRegistry.RegisterSceneBehaviorFactory<TransformSceneBehaviorFactory>();
+        // RenderingSortingLayers
+        componentsRegistry.RegisterSceneBehaviorFactory<RenderingSortingLayersSceneBehaviorFactory>();
 
-            // RenderingSortingLayers
-            componentsRegistry.RegisterSceneBehaviorFactory<RenderingSortingLayersSceneBehaviorFactory>();
+        // RenderingOrderInLayer
+        componentsRegistry.RegisterSceneBehaviorFactory<RenderingOrderInLayerSceneBehaviorFactory>();
 
-            // RenderingOrderInLayer
-            componentsRegistry.RegisterSceneBehaviorFactory<RenderingOrderInLayerSceneBehaviorFactory>();
+        // RenderingEntityHierarchy
+        componentsRegistry.RegisterSceneBehaviorFactory<RenderingEntityHierarchySceneBehaviorFactory>();
 
-            // RenderingEntityHierarchy
-            componentsRegistry.RegisterSceneBehaviorFactory<RenderingEntityHierarchySceneBehaviorFactory>();
+        // Camera
+        componentsRegistry.RegisterSceneBehaviorFactory<CameraSceneBehaviorFactory>();
 
-            // Camera
-            componentsRegistry.RegisterSceneBehaviorFactory<CameraSceneBehaviorFactory>();
+        // SpriteAnimation
+        componentsRegistry.RegisterSceneBehaviorFactory<SpriteAnimationSceneBehaviorFactory>();
 
-            // SpriteAnimation
-            componentsRegistry.RegisterSceneBehaviorFactory<SpriteAnimationSceneBehaviorFactory>();
+        // KeyboardInput
+        componentsRegistry.RegisterSceneBehaviorFactory<KeyboardInputSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<SetTextToKeyboardInputComponentFactory>();
 
-            // KeyboardInput
-            componentsRegistry.RegisterSceneBehaviorFactory<KeyboardInputSceneBehaviorFactory>();
-            componentsRegistry.RegisterComponentFactory<SetTextToKeyboardInputComponentFactory>();
+        // MouseInput
+        componentsRegistry.RegisterSceneBehaviorFactory<MouseInputSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<SetTextToMouseInputComponentFactory>();
+        componentsRegistry.RegisterComponentFactory<FollowMousePositionComponentFactory>();
 
-            // MouseInput
-            componentsRegistry.RegisterSceneBehaviorFactory<MouseInputSceneBehaviorFactory>();
-            componentsRegistry.RegisterComponentFactory<SetTextToMouseInputComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<FollowMousePositionComponentFactory>();
+        // InputComponent
+        componentsRegistry.RegisterSceneBehaviorFactory<InputComponentSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<SetTextToActionStateComponentFactory>();
 
-            // InputComponent
-            componentsRegistry.RegisterSceneBehaviorFactory<InputComponentSceneBehaviorFactory>();
-            componentsRegistry.RegisterComponentFactory<SetTextToActionStateComponentFactory>();
-
-            // Audio
-            componentsRegistry.RegisterSceneBehaviorFactory<AudioSceneBehaviorFactory>();
-        }
+        // Audio
+        componentsRegistry.RegisterSceneBehaviorFactory<AudioSceneBehaviorFactory>();
     }
 }
