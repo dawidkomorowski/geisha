@@ -5,12 +5,11 @@ namespace Geisha.Engine.Core;
 // TODO: Demo application needs fixing input after moving input processing out of fixed update.
 // TODO: Demo application should use V-Sync to avoid unnecessary CPU/GPU usage.
 // TODO: Profile input system as it now runs each frame - not only on simulation frames.
-// TODO: Convert to readonly record struct.
 
 /// <summary>
 ///     Represents game time that is composed of delta time and provides other useful time related information.
 /// </summary>
-public readonly struct GameTime : IEquatable<GameTime>
+public readonly record struct GameTime
 {
     /// <summary>
     ///     Internal date and time provider used for calculating certain time information.
@@ -69,39 +68,4 @@ public readonly struct GameTime : IEquatable<GameTime>
     {
         DeltaTime = deltaTime;
     }
-
-    #region Equality members
-
-    /// <inheritdoc />
-    public bool Equals(GameTime other) => DeltaTime.Equals(other.DeltaTime);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is GameTime other && Equals(other);
-
-    /// <inheritdoc />
-    public override int GetHashCode() => DeltaTime.GetHashCode();
-
-    /// <summary>
-    ///     Determines whether two specified instances of <see cref="GameTime" /> are equal.
-    /// </summary>
-    /// <param name="left">The first object to compare.</param>
-    /// <param name="right">The second object to compare.</param>
-    /// <returns>
-    ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
-    ///     <see cref="GameTime" />; otherwise, <c>false</c>.
-    /// </returns>
-    public static bool operator ==(GameTime left, GameTime right) => left.Equals(right);
-
-    /// <summary>
-    ///     Determines whether two specified instances of <see cref="GameTime" /> are not equal.
-    /// </summary>
-    /// <param name="left">The first object to compare.</param>
-    /// <param name="right">The second object to compare.</param>
-    /// <returns>
-    ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
-    ///     <see cref="GameTime" />; otherwise, <c>false</c>.
-    /// </returns>
-    public static bool operator !=(GameTime left, GameTime right) => !left.Equals(right);
-
-    #endregion
 }
