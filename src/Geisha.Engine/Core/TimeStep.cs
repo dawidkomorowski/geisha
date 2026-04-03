@@ -18,6 +18,6 @@ public readonly record struct TimeStep
     public double DeltaTimeSeconds => DeltaTime.TotalSeconds;
     public double UnscaledDeltaTimeSeconds => UnscaledDeltaTime.TotalSeconds;
 
-    public static TimeSpan FixedDeltaTime => TimeSystem.FixedDeltaTime;
+    public static TimeSpan FixedDeltaTime { get; internal set; }
     public static double FixedDeltaTimeSeconds => FixedDeltaTime.TotalSeconds;
 }
