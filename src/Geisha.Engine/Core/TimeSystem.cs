@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Geisha.Engine.Core;
 
@@ -19,13 +20,29 @@ internal interface ITimeSystemInternal : ITimeSystem
 // TODO: Once migrated to .NET 8 a TimeProvider abstraction can be used instead of custom approach.
 internal sealed class TimeSystem : ITimeSystemInternal
 {
+    private readonly Stopwatch _stopwatch = new();
+    private readonly Func<DateTime> _now;
+
+    public TimeSystem(CoreConfiguration configuration) : this(configuration, () => DateTime.Now)
+    {
+    }
+
+    public TimeSystem(CoreConfiguration configuration, Func<DateTime> now)
+    {
+        _now = now;
+
+        StartUpTime = _now();
+        FixedDeltaTime = TimeSpan.FromSeconds(1.0 / configuration.FixedUpdatesPerSecond);
+        TimeStep.FixedDeltaTime = FixedDeltaTime;
+    }
+
     #region Implementation of ITimeSystem
 
     public DateTime StartUpTime { get; }
-    public TimeSpan TimeSinceStartUp { get; }
-    public int FramesSinceStartUp { get; }
+    public TimeSpan TimeSinceStartUp => _now() - StartUpTime;
+    public int FramesSinceStartUp { get; private set; }
     public TimeSpan FixedDeltaTime { get; }
-    public double TimeScale { get; set; }
+    public double TimeScale { get; set; } = 1.0;
 
     #endregion
 
@@ -33,7 +50,11 @@ internal sealed class TimeSystem : ITimeSystemInternal
 
     public TimeStep NextTimeStep()
     {
-        throw new NotImplementedException();
+        FramesSinceStartUp++;
+
+        var elapsed = _stopwatch.Elapsed;
+        _stopwatch.Restart();
+        return new TimeStep(elapsed, TimeScale);
     }
 
     #endregion
