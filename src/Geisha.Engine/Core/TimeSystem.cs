@@ -17,10 +17,11 @@ internal interface ITimeSystemInternal : ITimeSystem
     TimeStep NextTimeStep();
 }
 
-// TODO: Once migrated to .NET 8 a TimeProvider abstraction can be used instead of custom approach.
 internal sealed class TimeSystem : ITimeSystemInternal
 {
     private readonly Stopwatch _stopwatch = new();
+
+    // TODO: Once migrated to .NET 8 a TimeProvider abstraction can be used instead of custom approach.
     private readonly Func<DateTime> _now;
 
     public TimeSystem(CoreConfiguration configuration) : this(configuration, () => DateTime.Now)
