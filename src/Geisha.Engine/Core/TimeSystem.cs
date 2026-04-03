@@ -31,6 +31,12 @@ internal sealed class TimeSystem : ITimeSystemInternal
     {
         _now = now;
 
+        if (configuration.FixedUpdatesPerSecond <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(configuration.FixedUpdatesPerSecond), configuration.FixedUpdatesPerSecond,
+                "FixedUpdatesPerSecond must be greater than zero.");
+        }
+
         StartUpTime = _now();
         FixedDeltaTime = TimeSpan.FromSeconds(1.0 / configuration.FixedUpdatesPerSecond);
         TimeStep.FixedDeltaTime = FixedDeltaTime;

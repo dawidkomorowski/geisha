@@ -11,9 +11,9 @@ public readonly record struct TimeStep
         TimeScale = timeScale;
     }
 
-    public TimeSpan DeltaTime { get; init; }
-    public TimeSpan UnscaledDeltaTime { get; init; }
-    public double TimeScale { get; init; }
+    public TimeSpan DeltaTime { get; }
+    public TimeSpan UnscaledDeltaTime { get; }
+    public double TimeScale { get; }
 
     public double DeltaTimeSeconds => DeltaTime.TotalSeconds;
     public double UnscaledDeltaTimeSeconds => UnscaledDeltaTime.TotalSeconds;
