@@ -9,7 +9,7 @@
 
         public Coroutine Coroutine { get; }
 
-        internal override bool IsCompleted(GameTime gameTime) => true;
+        internal override bool IsCompleted(in TimeStep timeStep) => true;
 
         internal override void Execute(Coroutine coroutine)
         {

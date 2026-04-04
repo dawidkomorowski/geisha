@@ -3,6 +3,6 @@
     internal interface ICoroutineGameLoopStep
     {
         void ProcessCoroutines();
-        void ProcessCoroutines(GameTime gameTime);
+        void ProcessCoroutines(in TimeStep timeStep);
     }
 }

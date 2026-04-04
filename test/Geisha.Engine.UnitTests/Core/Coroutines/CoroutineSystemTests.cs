@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Coroutines;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Coroutines
@@ -13,13 +14,16 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
     [TestFixture]
     public abstract class CoroutineSystemTests
     {
+        private ITimeSystem _timeSystem = null!;
         private CoroutineSystem _coroutineSystem = null!;
         private Scene _scene = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _coroutineSystem = new CoroutineSystem();
+            _timeSystem = Substitute.For<ITimeSystem>();
+            _timeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(1.0 / 60));
+            _coroutineSystem = new CoroutineSystem(_timeSystem);
             _scene = TestSceneFactory.Create();
             _scene.AddObserver(_coroutineSystem);
         }
@@ -887,7 +891,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Abort(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Abort, Throws.InvalidOperationException);
             }
 
             #endregion
@@ -927,7 +931,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Pause, Throws.InvalidOperationException);
             }
 
             [Test]
@@ -942,7 +946,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Pause, Throws.InvalidOperationException);
             }
 
             [Test]
@@ -958,7 +962,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Pause, Throws.InvalidOperationException);
             }
 
             #endregion
@@ -1001,7 +1005,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Resume(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Resume, Throws.InvalidOperationException);
             }
 
             [Test]
@@ -1016,7 +1020,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Resume(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Resume, Throws.InvalidOperationException);
             }
 
             [Test]
@@ -1032,7 +1036,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => coroutine.Resume(), Throws.InvalidOperationException);
+                Assert.That(coroutine.Resume, Throws.InvalidOperationException);
             }
 
             #endregion
@@ -1307,13 +1311,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         [TestFixture]
         public class VariableTimeStepCoroutineSystemTests : CommonCoroutineSystemTests
         {
-            private readonly GameTime _deltaTime = new(TimeSpan.FromMilliseconds(16));
+            private readonly TimeStep _timeStep = new(TimeSpan.FromMilliseconds(16), 1.0);
 
             protected override CoroutineUpdateMode UpdateMode => CoroutineUpdateMode.VariableTimeStep;
 
             protected override void ProcessCoroutines()
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                _coroutineSystem.ProcessCoroutines(_timeStep);
             }
 
             [TestCase(1, 40, 1)]
@@ -1333,7 +1337,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 // Act
                 for (var i = 0; i < executionTimes; i++)
                 {
-                    _coroutineSystem.ProcessCoroutines(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+                    _coroutineSystem.ProcessCoroutines(new TimeStep(TimeSpan.FromMilliseconds(deltaTime), 1.0));
                 }
 
                 // Assert
@@ -1370,7 +1374,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 var data = new Data();
                 _coroutineSystem.StartCoroutine(WaitTimeCoroutine(data), UpdateMode);
 
-                GameTime.FixedDeltaTime = TimeSpan.FromMilliseconds(fixedDeltaTime);
+                _timeSystem.FixedDeltaTime.Returns(TimeSpan.FromMilliseconds(fixedDeltaTime));
 
                 // Act
                 for (var i = 0; i < executionTimes; i++)
@@ -1391,7 +1395,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         [TestFixture]
         public class AdditionalCoroutineSystemTests : CoroutineSystemTests
         {
-            private readonly GameTime _deltaTime = new(TimeSpan.FromMilliseconds(16));
+            private readonly TimeStep _timeStep = new(TimeSpan.FromMilliseconds(16), 1.0);
 
             [Test]
             public void ProcessCoroutines_ShouldThrowException_WhenFixedTimeStepCoroutineSwitchesToVariableTimeStepCoroutine()
@@ -1417,7 +1421,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
                 // Act
                 // Assert
-                Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
+                Assert.That(() => _coroutineSystem.ProcessCoroutines(_timeStep),
                     Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to coroutine with different update mode."));
             }
 
@@ -1452,7 +1456,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(fixedTimeStepData), CoroutineUpdateMode.FixedTimeStep);
 
                 // Act
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                _coroutineSystem.ProcessCoroutines(_timeStep);
 
                 // Assert
                 Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));

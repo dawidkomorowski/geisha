@@ -14,7 +14,7 @@
     /// <seealso cref="Coroutine.WaitUntil"/>
     public abstract class CoroutineInstruction
     {
-        internal abstract bool IsCompleted(GameTime gameTime);
+        internal abstract bool IsCompleted(in TimeStep timeStep);
         internal abstract void Execute(Coroutine coroutine);
     }
 }

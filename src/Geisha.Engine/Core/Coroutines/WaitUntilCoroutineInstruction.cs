@@ -11,7 +11,7 @@ namespace Geisha.Engine.Core.Coroutines
             _condition = condition;
         }
 
-        internal override bool IsCompleted(GameTime gameTime) => _condition();
+        internal override bool IsCompleted(in TimeStep timeStep) => _condition();
 
         internal override void Execute(Coroutine coroutine)
         {

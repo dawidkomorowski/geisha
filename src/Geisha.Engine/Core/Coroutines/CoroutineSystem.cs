@@ -11,7 +11,7 @@ namespace Geisha.Engine.Core.Coroutines
     /// <remarks>
     ///     <para>
     ///         Coroutines are special type of functions that follow cooperative concurrency model that is multiple coroutines
-    ///         may execute on a single thread. By design the coroutines do some part of their work and they suspend their
+    ///         may execute on a single thread. By design the coroutines do some part of their work, and they suspend their
     ///         execution to give opportunity for other coroutines to execute.
     ///     </para>
     ///     <para>
@@ -112,10 +112,16 @@ namespace Geisha.Engine.Core.Coroutines
 
     internal sealed class CoroutineSystem : ICoroutineSystem, ISceneObserver, ICoroutineGameLoopStep
     {
+        private readonly ITimeSystem _timeSystem;
         private readonly Context _fixedTimeStepContext = Context.Create();
         private readonly Context _variableTimeStepContext = Context.Create();
         private readonly Dictionary<Entity, List<Coroutine>> _coroutineIndexByEntity = new();
         private readonly Dictionary<Component, List<Coroutine>> _coroutineIndexByComponent = new();
+
+        public CoroutineSystem(ITimeSystem timeSystem)
+        {
+            _timeSystem = timeSystem;
+        }
 
         #region Implementation of ICoroutineSystem
 
@@ -147,12 +153,12 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void ProcessCoroutines()
         {
-            ProcessCoroutines(new GameTime(GameTime.FixedDeltaTime), _fixedTimeStepContext);
+            ProcessCoroutines(new TimeStep(_timeSystem.FixedDeltaTime, 1.0), _fixedTimeStepContext);
         }
 
-        public void ProcessCoroutines(GameTime gameTime)
+        public void ProcessCoroutines(in TimeStep timeStep)
         {
-            ProcessCoroutines(gameTime, _variableTimeStepContext);
+            ProcessCoroutines(timeStep, _variableTimeStepContext);
         }
 
         #endregion
@@ -287,7 +293,7 @@ namespace Geisha.Engine.Core.Coroutines
             return coroutine;
         }
 
-        private void ProcessCoroutines(GameTime gameTime, in Context context)
+        private void ProcessCoroutines(in TimeStep timeStep, in Context context)
         {
             context.Coroutines.AddRange(context.JustStartedCoroutines);
             context.JustStartedCoroutines.Clear();
@@ -301,7 +307,7 @@ namespace Geisha.Engine.Core.Coroutines
 
             foreach (var coroutine in context.Coroutines)
             {
-                coroutine.Execute(gameTime);
+                coroutine.Execute(timeStep);
             }
 
             foreach (var (from, to) in context.SwitchToCoroutines)

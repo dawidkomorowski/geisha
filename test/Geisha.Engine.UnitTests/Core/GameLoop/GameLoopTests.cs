@@ -143,7 +143,7 @@ public class GameLoopTests
             _transformInterpolationStep.Received(1).SnapshotTransforms();
             _transformInterpolationStep.Received(1).InterpolateTransforms(0.5);
             _behaviorStep.Received(1).ProcessBehaviorUpdate(timeStep);
-            _coroutineStep.Received(1).ProcessCoroutines(gameTime);
+            _coroutineStep.Received(1).ProcessCoroutines(timeStep);
             _customStep1.Received(1).ProcessUpdate(gameTime);
             _customStep2.Received(1).ProcessUpdate(gameTime);
             _customStep3.Received(1).ProcessUpdate(gameTime);
@@ -198,7 +198,7 @@ public class GameLoopTests
             // Process variable time step game loop steps.
             _transformInterpolationStep.Received(1).InterpolateTransforms(Arg.Any<double>());
             _behaviorStep.Received(1).ProcessBehaviorUpdate(timeStep);
-            _coroutineStep.Received(1).ProcessCoroutines(gameTime);
+            _coroutineStep.Received(1).ProcessCoroutines(timeStep);
             _customStep1.Received(1).ProcessUpdate(gameTime);
             _customStep2.Received(1).ProcessUpdate(gameTime);
             _customStep3.Received(1).ProcessUpdate(gameTime);
@@ -264,7 +264,7 @@ public class GameLoopTests
             _transformInterpolationStep.Received(1).SnapshotTransforms();
             _transformInterpolationStep.Received(1).InterpolateTransforms(0.5);
             _behaviorStep.Received(1).ProcessBehaviorUpdate(timeStep);
-            _coroutineStep.Received(1).ProcessCoroutines(gameTime);
+            _coroutineStep.Received(1).ProcessCoroutines(timeStep);
             _customStep1.Received(1).ProcessUpdate(gameTime);
             _customStep2.Received(1).ProcessUpdate(gameTime);
             _customStep3.Received(1).ProcessUpdate(gameTime);

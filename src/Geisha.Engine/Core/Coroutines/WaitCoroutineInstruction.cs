@@ -12,9 +12,9 @@ namespace Geisha.Engine.Core.Coroutines
             _waitTime = waitTime;
         }
 
-        internal override bool IsCompleted(GameTime gameTime)
+        internal override bool IsCompleted(in TimeStep timeStep)
         {
-            _timeWaited += gameTime.DeltaTime;
+            _timeWaited += timeStep.DeltaTime;
             return _timeWaited >= _waitTime;
         }
 

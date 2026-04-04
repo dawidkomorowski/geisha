@@ -94,7 +94,7 @@ internal sealed class GameLoop : IGameLoop
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.CoroutineStep.ProcessCoroutines(gameTime);
+        _gameLoopSteps.CoroutineStep.ProcessCoroutines(timeStep);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.CoroutineStepName);
 
         foreach (var customStep in _gameLoopSteps.CustomSteps)

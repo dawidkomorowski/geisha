@@ -76,7 +76,7 @@ namespace Geisha.Engine.Core.Coroutines
         /// <returns><see cref="CoroutineInstruction" /> representing WaitForNextFrame instruction.</returns>
         /// <remarks>
         ///     <para>
-        ///         WaitForNextFrame instruction is primary way of spreading the execution of coroutine code over multiple
+        ///         WaitForNextFrame instruction is a primary way of spreading the execution of coroutine code over multiple
         ///         frames. Use it in loops or between chunks of code in order to make progress of the coroutine tasks and at the
         ///         same time let the engine process other systems.
         ///     </para>
@@ -101,7 +101,7 @@ namespace Geisha.Engine.Core.Coroutines
         ///     Actual time of wait may vary from the specified <paramref name="waitTime" />. It is due to discrete nature of
         ///     finite number of updates per second. Each update moves the logical clock by elapsed delta time or fixed delta time,
         ///     depending on selected <see cref="CoroutineUpdateMode" />. Wait instruction guarantees that at least specified
-        ///     <paramref name="waitTime" /> elapsed before resuming the coroutine. However the actual elapsed time may be longer.
+        ///     <paramref name="waitTime" /> elapsed before resuming the coroutine. However, the actual elapsed time may be longer.
         /// </remarks>
         public static CoroutineInstruction Wait(TimeSpan waitTime)
         {
@@ -214,10 +214,10 @@ namespace Geisha.Engine.Core.Coroutines
             State = CoroutineState.Running;
         }
 
-        internal void Execute(GameTime gameTime)
+        internal void Execute(in TimeStep timeStep)
         {
             if (State != CoroutineState.Running) return;
-            if (!_instruction.IsCompleted(gameTime)) return;
+            if (!_instruction.IsCompleted(timeStep)) return;
 
             var coroutine = _callStack.Peek();
 

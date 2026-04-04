@@ -2,7 +2,7 @@
 {
     internal sealed class WaitForNextFrameCoroutineInstruction : CoroutineInstruction
     {
-        internal override bool IsCompleted(GameTime gameTime) => true;
+        internal override bool IsCompleted(in TimeStep timeStep) => true;
 
         internal override void Execute(Coroutine coroutine)
         {
