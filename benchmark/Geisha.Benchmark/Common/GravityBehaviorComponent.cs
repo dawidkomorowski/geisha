@@ -23,7 +23,7 @@ internal sealed class GravityBehaviorComponent : BehaviorComponent
 
     public override void OnFixedUpdate()
     {
-        _kinematicRigidBody2DComponent.LinearVelocity += Gravity * GameTime.FixedDeltaTime.TotalSeconds;
+        _kinematicRigidBody2DComponent.LinearVelocity += Gravity * TimeStep.FixedDeltaTime.TotalSeconds;
     }
 }
 

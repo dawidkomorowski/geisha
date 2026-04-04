@@ -29,8 +29,8 @@ namespace Geisha.Benchmark.Common
 
         public override void OnFixedUpdate()
         {
-            _cannonRotorTransform.Rotation -= GameTime.FixedDeltaTime.TotalSeconds * 5;
-            _fireTimer += GameTime.FixedDeltaTime;
+            _cannonRotorTransform.Rotation -= TimeStep.FixedDeltaTime.TotalSeconds * 5;
+            _fireTimer += TimeStep.FixedDeltaTime;
 
             if (_fireTimer > TimeSpan.FromSeconds(0.05))
             {
