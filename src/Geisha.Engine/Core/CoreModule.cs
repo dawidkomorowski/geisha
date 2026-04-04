@@ -16,7 +16,6 @@ namespace Geisha.Engine.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
             builder.RegisterType<TimeSystem>().As<ITimeSystemInternal>();
 
