@@ -11,6 +11,7 @@ internal interface IGameLoop
 
 internal sealed class GameLoop : IGameLoop
 {
+    private readonly ITimeSystemInternal _timeSystem;
     private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
     private readonly IGameTimeProvider _gameTimeProvider;
     private readonly IGameLoopSteps _gameLoopSteps;
@@ -21,6 +22,7 @@ internal sealed class GameLoop : IGameLoop
     private TimeSpan _timeToSimulate;
 
     public GameLoop(
+        ITimeSystemInternal timeSystem,
         ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
         IGameTimeProvider gameTimeProvider,
         IGameLoopSteps gameLoopSteps,
@@ -28,6 +30,7 @@ internal sealed class GameLoop : IGameLoop
         IPerformanceStatisticsRecorder performanceStatisticsRecorder,
         CoreConfiguration configuration)
     {
+        _timeSystem = timeSystem;
         _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
         _gameTimeProvider = gameTimeProvider;
         _gameLoopSteps = gameLoopSteps;
@@ -42,7 +45,8 @@ internal sealed class GameLoop : IGameLoop
         _sceneManager.OnNextFrame();
 
         var scene = _sceneManager.CurrentScene;
-        var gameTime = _gameTimeProvider.GetGameTime();
+        var timeStep = _timeSystem.NextTimeStep();
+        var gameTime = new GameTime(timeStep.DeltaTime);
 
         _timeToSimulate += gameTime.DeltaTime;
         var fixedUpdatesPerFrame = 0;

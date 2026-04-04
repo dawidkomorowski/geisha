@@ -6,6 +6,7 @@ namespace Geisha.Engine.Core;
 // TODO: Profile input system as it now runs each frame - not only on simulation frames.
 // TODO: Review existing docs of this struct.
 // TODO: Add missing docs for new APIs.
+// TODO: Add tests verifying that time system can be injected into custom game code.
 
 /// <summary>
 ///     Represents game time that is composed of delta time and provides other useful time related information.

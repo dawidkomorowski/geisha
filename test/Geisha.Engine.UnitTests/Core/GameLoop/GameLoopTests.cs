@@ -14,6 +14,7 @@ public class GameLoopTests
 {
     private const double Epsilon = 0.000001;
 
+    private ITimeSystemInternal _timeSystem = null!;
     private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider = null!;
     private IGameTimeProvider _gameTimeProvider = null!;
     private IGameLoopSteps _gameLoopSteps = null!;
@@ -47,6 +48,7 @@ public class GameLoopTests
     [SetUp]
     public void SetUp()
     {
+        _timeSystem = Substitute.For<ITimeSystemInternal>();
         _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
         _gameTimeProvider = Substitute.For<IGameTimeProvider>();
         _gameLoopSteps = Substitute.For<IGameLoopSteps>();
@@ -97,6 +99,7 @@ public class GameLoopTests
     private Geisha.Engine.Core.GameLoop.GameLoop GetGameLoop(CoreConfiguration? configuration = null)
     {
         return new Geisha.Engine.Core.GameLoop.GameLoop(
+            _timeSystem,
             _coreDiagnosticInfoProvider,
             _gameTimeProvider,
             _gameLoopSteps,
@@ -111,7 +114,8 @@ public class GameLoopTests
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
-        _gameTimeProvider.GetGameTime().Returns(gameTime);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        _timeSystem.NextTimeStep().Returns(timeStep);
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -151,13 +155,14 @@ public class GameLoopTests
     [TestCase(0.78, 0, 7)]
     [TestCase(0.78, 10, 7)]
     [TestCase(0.78, 3, 3)]
-    public void Update_ShouldExecuteFixedTimeStepGameLoopStepsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit,
+    public void Update_ShouldExecuteFixedTimeStepGameLoopStepsCorrectNumberOfTimes(double deltaTimeSeconds, int fixedUpdatesPerFrameLimit,
         int expectedFixedUpdateCount)
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-        var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTime));
-        _gameTimeProvider.GetGameTime().Returns(gameTime);
+        var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTimeSeconds));
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds), 1.0);
+        _timeSystem.NextTimeStep().Returns(timeStep);
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -205,12 +210,12 @@ public class GameLoopTests
     [TestCase(0.38, 0, 0.8)]
     [TestCase(0.38, 3, 0.8)]
     [TestCase(0.38, 2, 1.0)]
-    public void Update_ShouldCallInterpolateTransformsWithCorrectAlpha(double deltaTime, int fixedUpdatesPerFrameLimit, double expectedAlpha)
+    public void Update_ShouldCallInterpolateTransformsWithCorrectAlpha(double deltaTimeSeconds, int fixedUpdatesPerFrameLimit, double expectedAlpha)
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-        var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTime));
-        _gameTimeProvider.GetGameTime().Returns(gameTime);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds), 1.0);
+        _timeSystem.NextTimeStep().Returns(timeStep);
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -230,7 +235,8 @@ public class GameLoopTests
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
-        _gameTimeProvider.GetGameTime().Returns(gameTime);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        _timeSystem.NextTimeStep().Returns(timeStep);
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -272,8 +278,8 @@ public class GameLoopTests
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
-        _gameTimeProvider.GetGameTime().Returns(gameTime);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        _timeSystem.NextTimeStep().Returns(timeStep);
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -408,7 +414,8 @@ public class GameLoopTests
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
-        _gameTimeProvider.GetGameTime().Returns(gameTime);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        _timeSystem.NextTimeStep().Returns(timeStep);
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
