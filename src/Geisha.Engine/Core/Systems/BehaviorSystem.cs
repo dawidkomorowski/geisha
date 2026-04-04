@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
@@ -17,12 +16,12 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
 
     public void ProcessBehaviorFixedUpdate()
     {
-        PerformUpdate(UpdateAction.FixedUpdate);
+        PerformUpdate(UpdateAction.FixedUpdate, default);
     }
 
-    public void ProcessBehaviorUpdate(GameTime gameTime)
+    public void ProcessBehaviorUpdate(in TimeStep timeStep)
     {
-        PerformUpdate(UpdateAction.Update, gameTime);
+        PerformUpdate(UpdateAction.Update, timeStep);
     }
 
     #endregion
@@ -59,7 +58,7 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
 
     #endregion
 
-    private void PerformUpdate(UpdateAction updateAction, GameTime? gameTime = null)
+    private void PerformUpdate(UpdateAction updateAction, in TimeStep timeStep)
     {
         _components.AddRange(_componentsPendingToAdd);
         _componentsPendingToAdd.Clear();
@@ -85,8 +84,7 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
             switch (updateAction)
             {
                 case UpdateAction.Update:
-                    Debug.Assert(gameTime is not null, "gameTime is not null");
-                    behaviorComponent.OnUpdate(gameTime.Value);
+                    behaviorComponent.OnUpdate(timeStep);
                     break;
                 case UpdateAction.FixedUpdate:
                     behaviorComponent.OnFixedUpdate();

@@ -3,6 +3,6 @@
     internal interface IBehaviorGameLoopStep
     {
         void ProcessBehaviorFixedUpdate();
-        void ProcessBehaviorUpdate(GameTime gameTime);
+        void ProcessBehaviorUpdate(in TimeStep timeStep);
     }
 }

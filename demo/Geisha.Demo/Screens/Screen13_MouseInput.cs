@@ -144,7 +144,7 @@ internal sealed class SetTextToMouseInputComponent : BehaviorComponent
     }
 
     // We implement OnUpdate method to run custom logic once per frame.
-    public override void OnUpdate(GameTime gameTime)
+    public override void OnUpdate(in TimeStep timeStep)
     {
         var stringBuilder = new StringBuilder();
 
@@ -196,7 +196,7 @@ internal sealed class FollowMousePositionComponent : BehaviorComponent
     }
 
     // We implement OnUpdate method to run custom logic once per frame.
-    public override void OnUpdate(GameTime gameTime)
+    public override void OnUpdate(in TimeStep timeStep)
     {
         // We read position of mouse from InputComponent,
         // then we convert it to world space using CameraComponent

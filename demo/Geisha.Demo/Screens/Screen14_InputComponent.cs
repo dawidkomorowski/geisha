@@ -287,7 +287,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
     }
 
     // We implement OnUpdate method to run custom logic once per frame.
-    public override void OnUpdate(GameTime gameTime)
+    public override void OnUpdate(in TimeStep timeStep)
     {
         var stringBuilder = new StringBuilder();
 

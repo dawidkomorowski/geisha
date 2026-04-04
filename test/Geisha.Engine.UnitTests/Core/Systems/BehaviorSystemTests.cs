@@ -12,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems;
 [TestFixture]
 public class BehaviorSystemTests
 {
-    private readonly GameTime _gameTime = new(TimeSpan.FromSeconds(0.1));
+    private readonly TimeStep _timeStep = new(TimeSpan.FromSeconds(0.1), 1.0);
     private BehaviorSystem _behaviorSystem = null!;
     private BehaviorScene _behaviorScene = null!;
 
@@ -183,7 +183,7 @@ public class BehaviorSystemTests
         behaviorComponent.ExecuteOnUpdate = executeOnUpdate;
 
         // Act
-        _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
+        _behaviorSystem.ProcessBehaviorUpdate(_timeStep);
 
         // Assert
         Assert.That(entity.Components, Has.Count.EqualTo(expectedCount));
@@ -201,7 +201,7 @@ public class BehaviorSystemTests
         behaviorComponent.CreateEntityOnUpdate = createEntityOnUpdate;
 
         // Act
-        _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
+        _behaviorSystem.ProcessBehaviorUpdate(_timeStep);
 
         // Assert
         Assert.That(_behaviorScene.Scene.AllEntities, Has.Count.EqualTo(2));
@@ -215,15 +215,15 @@ public class BehaviorSystemTests
         _behaviorScene.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
 
         // Act
-        _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
+        _behaviorSystem.ProcessBehaviorUpdate(_timeStep);
 
         // Assert
         Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
-        Assert.That(behavior1OfEntity1.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
+        Assert.That(behavior1OfEntity1.OnUpdateCalls, Has.Exactly(1).EqualTo(_timeStep));
         Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
-        Assert.That(behavior1OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
+        Assert.That(behavior1OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_timeStep));
         Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
-        Assert.That(behavior2OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
+        Assert.That(behavior2OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_timeStep));
     }
 
     #region Helpers
@@ -259,9 +259,9 @@ public class BehaviorSystemTests
             }
         }
 
-        public override void OnUpdate(GameTime gameTime)
+        public override void OnUpdate(in TimeStep timeStep)
         {
-            base.OnUpdate(gameTime);
+            base.OnUpdate(timeStep);
             if (ExecuteOnUpdate)
             {
                 Execute();
@@ -326,9 +326,9 @@ public class BehaviorSystemTests
             }
         }
 
-        public override void OnUpdate(GameTime gameTime)
+        public override void OnUpdate(in TimeStep timeStep)
         {
-            base.OnUpdate(gameTime);
+            base.OnUpdate(timeStep);
             if (CreateEntityOnUpdate)
             {
                 Scene.CreateEntity();
@@ -353,24 +353,24 @@ public class BehaviorSystemTests
     private sealed class TestBehaviorComponent : BehaviorComponent
     {
         private readonly List<string> _methodCalls = new();
-        private readonly List<GameTime> _onUpdateCalls = new();
+        private readonly List<TimeStep> _onUpdateCalls = new();
 
         public TestBehaviorComponent(Entity entity) : base(entity)
         {
         }
 
         public IReadOnlyList<string> MethodCalls => _methodCalls.AsReadOnly();
-        public IReadOnlyList<GameTime> OnUpdateCalls => _onUpdateCalls.AsReadOnly();
+        public IReadOnlyList<TimeStep> OnUpdateCalls => _onUpdateCalls.AsReadOnly();
 
         public override void OnStart()
         {
             _methodCalls.Add(nameof(OnStart));
         }
 
-        public override void OnUpdate(GameTime gameTime)
+        public override void OnUpdate(in TimeStep timeStep)
         {
             _methodCalls.Add(nameof(OnUpdate));
-            _onUpdateCalls.Add(gameTime);
+            _onUpdateCalls.Add(timeStep);
         }
 
         public override void OnFixedUpdate()

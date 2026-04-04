@@ -46,7 +46,7 @@ internal sealed class GameLoop : IGameLoop
         var fixedDeltaTime = _timeSystem.FixedDeltaTime;
         var gameTime = new GameTime(timeStep.DeltaTime);
 
-        _timeToSimulate += gameTime.DeltaTime;
+        _timeToSimulate += timeStep.DeltaTime;
         var fixedUpdatesPerFrame = 0;
 
         _performanceStatisticsRecorder.BeginStepDuration();
@@ -90,7 +90,7 @@ internal sealed class GameLoop : IGameLoop
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
+        _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(timeStep);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();

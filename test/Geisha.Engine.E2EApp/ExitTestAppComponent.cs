@@ -16,7 +16,7 @@ namespace Geisha.Engine.E2EApp
 
         public int ExitOnFrame { get; set; } = 1;
 
-        public override void OnUpdate(GameTime gameTime)
+        public override void OnUpdate(in TimeStep timeStep)
         {
             _frameCounter++;
 
