@@ -43,6 +43,7 @@ internal sealed class GameLoop : IGameLoop
 
         var scene = _sceneManager.CurrentScene;
         var timeStep = _timeSystem.NextTimeStep();
+        var fixedDeltaTime = _timeSystem.FixedDeltaTime;
         var gameTime = new GameTime(timeStep.DeltaTime);
 
         _timeToSimulate += gameTime.DeltaTime;
@@ -52,7 +53,7 @@ internal sealed class GameLoop : IGameLoop
         _gameLoopSteps.InputStep.ProcessInput();
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
 
-        while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
+        while (_timeToSimulate >= fixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
         {
             _performanceStatisticsRecorder.BeginStepDuration();
             _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
@@ -79,12 +80,12 @@ internal sealed class GameLoop : IGameLoop
 
             scene.RemoveEntitiesAfterFixedTimeStep();
 
-            _timeToSimulate -= GameTime.FixedDeltaTime;
+            _timeToSimulate -= fixedDeltaTime;
             fixedUpdatesPerFrame++;
         }
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        var alpha = System.Math.Min(_timeToSimulate.TotalSeconds / GameTime.FixedDeltaTime.TotalSeconds, 1d);
+        var alpha = System.Math.Min(_timeToSimulate.TotalSeconds / fixedDeltaTime.TotalSeconds, 1d);
         _gameLoopSteps.TransformInterpolationStep.InterpolateTransforms(alpha);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
 

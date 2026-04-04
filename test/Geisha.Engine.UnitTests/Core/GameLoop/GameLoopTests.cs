@@ -50,8 +50,12 @@ public class GameLoopTests
     public void SetUp()
     {
         _timeSystem = Substitute.For<ITimeSystemInternal>();
-        _timeSystem.NextTimeStep()
-            .ThrowsForAnyArgs(new InvalidOperationException("NextTimeStep() not configured. Use: _timeSystem.Configure().NextTimeStep().Returns(timeStep);"));
+        _timeSystem.NextTimeStep().ThrowsForAnyArgs(
+            new InvalidOperationException("NextTimeStep() not configured. Use: _timeSystem.Configure().NextTimeStep().Returns(timeStep);")
+        );
+        _timeSystem.FixedDeltaTime.ThrowsForAnyArgs(
+            new InvalidOperationException("FixedDeltaTime not configured. Use: _timeSystem.Configure().FixedDeltaTime.Returns(fixedDeltaTime);")
+        );
         _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
         _gameLoopSteps = Substitute.For<IGameLoopSteps>();
         _sceneManager = Substitute.For<ISceneManagerInternal>();
@@ -113,10 +117,10 @@ public class GameLoopTests
     public void Update_ShouldExecuteGameLoopStepsInCorrectOrder()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
+        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -160,10 +164,10 @@ public class GameLoopTests
         int expectedFixedUpdateCount)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-        var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTimeSeconds));
         var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
+        var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTimeSeconds));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -214,9 +218,9 @@ public class GameLoopTests
     public void Update_ShouldCallInterpolateTransformsWithCorrectAlpha(double deltaTimeSeconds, int fixedUpdatesPerFrameLimit, double expectedAlpha)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -234,10 +238,10 @@ public class GameLoopTests
     public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllGameLoopStepsAndAfterRecordingFrame()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
+        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -278,9 +282,9 @@ public class GameLoopTests
     public void Update_ShouldFirstRecordGameLoopStepsThenRecordFrame()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -337,9 +341,9 @@ public class GameLoopTests
     public void Update_ShouldExecuteSceneManagerOnNextFrameBeforeAccessingCurrentScene()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var sceneBeforeOnNextFrame = TestSceneFactory.Create();
         var sceneAfterOnNextFrame = TestSceneFactory.Create();
@@ -362,9 +366,9 @@ public class GameLoopTests
     public void Update_ShouldNotRemoveEntityFromScene_WhenNoRemoveMethodIsExecutedForEntity()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -387,9 +391,9 @@ public class GameLoopTests
     public void Update_ShouldNotRemoveEntityFromScene_WhenRemoveAfterFixedTimeStepIsExecutedForEntityButFixedTimeStepDoesNotHappen()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.05), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -413,9 +417,9 @@ public class GameLoopTests
     public void Update_ShouldRemoveEntityFromScene_WhenRemoveAfterFixedTimeStepIsExecutedForEntityAndFixedTimeStepHappens()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -439,9 +443,9 @@ public class GameLoopTests
     public void Update_ShouldRemoveEntityFromScene_WhenRemoveAfterFullFrameIsExecutedForEntityDespiteFixedTimeStepDoesNotHappen()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.05), 1.0);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
