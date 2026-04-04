@@ -13,7 +13,6 @@ internal sealed class GameLoop : IGameLoop
 {
     private readonly ITimeSystemInternal _timeSystem;
     private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
-    private readonly IGameTimeProvider _gameTimeProvider;
     private readonly IGameLoopSteps _gameLoopSteps;
     private readonly ISceneManagerInternal _sceneManager;
     private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
@@ -24,7 +23,6 @@ internal sealed class GameLoop : IGameLoop
     public GameLoop(
         ITimeSystemInternal timeSystem,
         ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
-        IGameTimeProvider gameTimeProvider,
         IGameLoopSteps gameLoopSteps,
         ISceneManagerInternal sceneManager,
         IPerformanceStatisticsRecorder performanceStatisticsRecorder,
@@ -32,7 +30,6 @@ internal sealed class GameLoop : IGameLoop
     {
         _timeSystem = timeSystem;
         _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
-        _gameTimeProvider = gameTimeProvider;
         _gameLoopSteps = gameLoopSteps;
         _sceneManager = sceneManager;
         _performanceStatisticsRecorder = performanceStatisticsRecorder;

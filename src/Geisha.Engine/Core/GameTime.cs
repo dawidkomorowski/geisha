@@ -7,6 +7,7 @@ namespace Geisha.Engine.Core;
 // TODO: Review existing docs of this struct.
 // TODO: Add missing docs for new APIs.
 // TODO: Add tests verifying that time system can be injected into custom game code.
+// TODO: Report ticket for showcasing TimeScale in Demo Application.
 
 /// <summary>
 ///     Represents game time that is composed of delta time and provides other useful time related information.
