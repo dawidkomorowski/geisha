@@ -19,6 +19,7 @@ namespace Geisha.Engine.Core
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
             builder.RegisterType<GameTimeProvider>().As<IGameTimeProvider>().SingleInstance();
+            builder.RegisterType<TimeSystem>().As<ITimeSystemInternal>();
 
             // Assets
             builder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
