@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -333,7 +334,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
         kinematicRigidBody2DComponent.EnableCollisionResponse = true;
 
-        GameTime.FixedDeltaTime = TimeSpan.Zero;
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.Zero);
         physicsSystem.ProcessPhysics();
 
         // Assert
@@ -387,7 +388,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
         kinematicRigidBody2DComponent.EnableCollisionResponse = true;
 
-        GameTime.FixedDeltaTime = TimeSpan.Zero;
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.Zero);
         physicsSystem.ProcessPhysics();
 
         // Assert
