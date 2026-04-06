@@ -4,6 +4,10 @@ namespace Geisha.Engine.Core;
 
 public readonly record struct TimeStep
 {
+    public TimeStep(TimeSpan deltaTime) : this(deltaTime, 1.0)
+    {
+    }
+
     public TimeStep(TimeSpan unscaledDeltaTime, double timeScale)
     {
         DeltaTime = unscaledDeltaTime * timeScale;

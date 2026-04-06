@@ -153,7 +153,7 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void ProcessCoroutines()
         {
-            ProcessCoroutines(new TimeStep(_timeSystem.FixedDeltaTime, 1.0), _fixedTimeStepContext);
+            ProcessCoroutines(new TimeStep(_timeSystem.FixedDeltaTime), _fixedTimeStepContext);
         }
 
         public void ProcessCoroutines(in TimeStep timeStep)

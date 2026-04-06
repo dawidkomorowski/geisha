@@ -8,9 +8,9 @@ namespace Geisha.Engine.Animation.Systems
 {
     internal sealed class AnimationState
     {
-        private readonly List<AnimationNode> _nodes = new List<AnimationNode>();
-        private readonly Dictionary<Entity, AnimationNode> _index = new Dictionary<Entity, AnimationNode>();
-        private readonly Dictionary<Entity, SpriteRendererComponent> _pendingSpriteRendererComponents = new Dictionary<Entity, SpriteRendererComponent>();
+        private readonly List<AnimationNode> _nodes = new();
+        private readonly Dictionary<Entity, AnimationNode> _index = new();
+        private readonly Dictionary<Entity, SpriteRendererComponent> _pendingSpriteRendererComponents = new();
 
         public void CreateStateFor(SpriteAnimationComponent spriteAnimationComponent)
         {
@@ -56,11 +56,11 @@ namespace Geisha.Engine.Animation.Systems
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(in TimeStep timeStep)
         {
             foreach (var node in _nodes)
             {
-                node.Update(gameTime);
+                node.Update(timeStep);
             }
         }
 
@@ -76,9 +76,9 @@ namespace Geisha.Engine.Animation.Systems
             private SpriteAnimationComponent SpriteAnimationComponent { get; }
             public SpriteRendererComponent? SpriteRendererComponent { get; set; }
 
-            public void Update(GameTime gameTime)
+            public void Update(in TimeStep timeStep)
             {
-                SpriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime);
+                SpriteAnimationComponent.AdvanceAnimation(timeStep.DeltaTime);
 
                 if (SpriteRendererComponent != null)
                 {

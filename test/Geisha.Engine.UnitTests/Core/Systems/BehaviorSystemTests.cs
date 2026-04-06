@@ -12,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems;
 [TestFixture]
 public class BehaviorSystemTests
 {
-    private readonly TimeStep _timeStep = new(TimeSpan.FromSeconds(0.1), 1.0);
+    private readonly TimeStep _timeStep = new(TimeSpan.FromSeconds(0.1));
     private BehaviorSystem _behaviorSystem = null!;
     private BehaviorScene _behaviorScene = null!;
 

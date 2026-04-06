@@ -113,7 +113,7 @@ internal sealed class GameLoop : IGameLoop
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AudioStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
+        _gameLoopSteps.AnimationStep.ProcessAnimations(timeStep);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AnimationStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();

@@ -117,7 +117,7 @@ public class GameLoopTests
     public void Update_ShouldExecuteGameLoopStepsInCorrectOrder()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
@@ -149,7 +149,7 @@ public class GameLoopTests
             _customStep3.Received(1).ProcessUpdate(gameTime);
             _physicsStep.Received(1).PreparePhysicsDebugInformation();
             _audioStep.Received(1).ProcessAudio();
-            _animationStep.Received(1).ProcessAnimations(gameTime);
+            _animationStep.Received(1).ProcessAnimations(timeStep);
             _renderingStep.Received(1).RenderScene();
         });
     }
@@ -164,7 +164,7 @@ public class GameLoopTests
         int expectedFixedUpdateCount)
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTimeSeconds));
@@ -204,7 +204,7 @@ public class GameLoopTests
             _customStep3.Received(1).ProcessUpdate(gameTime);
             _physicsStep.Received(1).PreparePhysicsDebugInformation();
             _audioStep.Received(1).ProcessAudio();
-            _animationStep.Received(1).ProcessAnimations(gameTime);
+            _animationStep.Received(1).ProcessAnimations(timeStep);
             _renderingStep.Received(1).RenderScene();
         });
     }
@@ -218,7 +218,7 @@ public class GameLoopTests
     public void Update_ShouldCallInterpolateTransformsWithCorrectAlpha(double deltaTimeSeconds, int fixedUpdatesPerFrameLimit, double expectedAlpha)
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -238,7 +238,7 @@ public class GameLoopTests
     public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllGameLoopStepsAndAfterRecordingFrame()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
@@ -270,7 +270,7 @@ public class GameLoopTests
             _customStep3.Received(1).ProcessUpdate(gameTime);
             _physicsStep.Received(1).PreparePhysicsDebugInformation();
             _audioStep.Received(1).ProcessAudio();
-            _animationStep.Received(1).ProcessAnimations(gameTime);
+            _animationStep.Received(1).ProcessAnimations(timeStep);
             _renderingStep.Received(1).RenderScene();
 
             _performanceStatisticsRecorder.RecordFrame();
@@ -282,7 +282,7 @@ public class GameLoopTests
     public void Update_ShouldFirstRecordGameLoopStepsThenRecordFrame()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -341,7 +341,7 @@ public class GameLoopTests
     public void Update_ShouldExecuteSceneManagerOnNextFrameBeforeAccessingCurrentScene()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -366,7 +366,7 @@ public class GameLoopTests
     public void Update_ShouldNotRemoveEntityFromScene_WhenNoRemoveMethodIsExecutedForEntity()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -391,7 +391,7 @@ public class GameLoopTests
     public void Update_ShouldNotRemoveEntityFromScene_WhenRemoveAfterFixedTimeStepIsExecutedForEntityButFixedTimeStepDoesNotHappen()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.05), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.05));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -417,7 +417,7 @@ public class GameLoopTests
     public void Update_ShouldRemoveEntityFromScene_WhenRemoveAfterFixedTimeStepIsExecutedForEntityAndFixedTimeStepHappens()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -443,7 +443,7 @@ public class GameLoopTests
     public void Update_ShouldRemoveEntityFromScene_WhenRemoveAfterFullFrameIsExecutedForEntityDespiteFixedTimeStepDoesNotHappen()
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.05), 1.0);
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.05));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 

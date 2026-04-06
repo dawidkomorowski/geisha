@@ -1311,7 +1311,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         [TestFixture]
         public class VariableTimeStepCoroutineSystemTests : CommonCoroutineSystemTests
         {
-            private readonly TimeStep _timeStep = new(TimeSpan.FromMilliseconds(16), 1.0);
+            private readonly TimeStep _timeStep = new(TimeSpan.FromMilliseconds(16));
 
             protected override CoroutineUpdateMode UpdateMode => CoroutineUpdateMode.VariableTimeStep;
 
@@ -1337,7 +1337,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 // Act
                 for (var i = 0; i < executionTimes; i++)
                 {
-                    _coroutineSystem.ProcessCoroutines(new TimeStep(TimeSpan.FromMilliseconds(deltaTime), 1.0));
+                    _coroutineSystem.ProcessCoroutines(new TimeStep(TimeSpan.FromMilliseconds(deltaTime)));
                 }
 
                 // Assert
@@ -1395,7 +1395,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         [TestFixture]
         public class AdditionalCoroutineSystemTests : CoroutineSystemTests
         {
-            private readonly TimeStep _timeStep = new(TimeSpan.FromMilliseconds(16), 1.0);
+            private readonly TimeStep _timeStep = new(TimeSpan.FromMilliseconds(16));
 
             [Test]
             public void ProcessCoroutines_ShouldThrowException_WhenFixedTimeStepCoroutineSwitchesToVariableTimeStepCoroutine()

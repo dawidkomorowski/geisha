@@ -8,13 +8,13 @@ namespace Geisha.Engine.Animation.Systems
 {
     internal sealed class AnimationSystem : IAnimationGameLoopStep, ISceneObserver
     {
-        private readonly AnimationState _animationState = new AnimationState();
+        private readonly AnimationState _animationState = new();
 
         #region Implementation of IAnimationGameLoopStep
 
-        public void ProcessAnimations(GameTime gameTime)
+        public void ProcessAnimations(in TimeStep timeStep)
         {
-            _animationState.Update(gameTime);
+            _animationState.Update(timeStep);
         }
 
         #endregion

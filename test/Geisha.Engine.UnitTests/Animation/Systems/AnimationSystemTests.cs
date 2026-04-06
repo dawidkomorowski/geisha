@@ -40,7 +40,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
@@ -60,7 +60,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
@@ -89,7 +89,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Position = initialPosition;
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(deltaTime)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));
@@ -115,7 +115,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             };
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(50)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(50)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(1.0));
@@ -152,7 +152,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             };
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(deltaTime)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.3).Within(1e-15));
@@ -176,10 +176,10 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = 0.8;
 
-            spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("anim"); };
+            spriteAnimationComponent.AnimationCompleted += (_, _) => { spriteAnimationComponent.PlayAnimation("anim"); };
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(50)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(50)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.0));
@@ -208,7 +208,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Position = position;
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames[expectedAnimationFrame].Sprite));
@@ -223,7 +223,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.Null);
@@ -243,7 +243,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Stop();
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames.First().Sprite));
@@ -262,7 +262,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteRendererComponent.Entity.RemoveComponent(spriteRendererComponent);
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.1));
@@ -282,7 +282,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Entity.RemoveComponent(spriteAnimationComponent);
 
             // Act
-            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
