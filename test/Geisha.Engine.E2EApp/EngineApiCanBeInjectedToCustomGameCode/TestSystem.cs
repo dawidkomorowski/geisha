@@ -52,7 +52,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         {
         }
 
-        public void ProcessUpdate(GameTime gameTime)
+        public void ProcessUpdate(in TimeStep timeStep)
         {
             E2ETest.Report("E7691D98-AF87-4268-9C39-43822A790377", $"Engine API Injected Into System: {_audioBackend.GetType()}");
             E2ETest.Report("FE445F35-E624-4BCF-800C-FAD91F3C0216", $"Engine API Injected Into System: {_engineManager.GetType()}");

@@ -10,6 +10,7 @@ namespace Geisha.Engine.Core;
 // TODO: Report ticket for showcasing TimeScale in Demo Application.
 // TODO: Add tests for timescale to be correctly respected by game loop and other systems.
 // TODO: Update documentation for BehaviorComponent.OnUpdate.
+// TODO: Update documentation for ICustomGameLoopStep.ProcessUpdate.
 // TODO: Investigate CA2208 warning for TimeSystem constructor.
 
 public interface ITimeSystem

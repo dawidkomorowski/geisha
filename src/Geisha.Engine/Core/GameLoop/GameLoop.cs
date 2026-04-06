@@ -44,7 +44,6 @@ internal sealed class GameLoop : IGameLoop
         var scene = _sceneManager.CurrentScene;
         var timeStep = _timeSystem.NextTimeStep();
         var fixedDeltaTime = _timeSystem.FixedDeltaTime;
-        var gameTime = new GameTime(timeStep.DeltaTime);
 
         _timeToSimulate += timeStep.DeltaTime;
         var fixedUpdatesPerFrame = 0;
@@ -100,7 +99,7 @@ internal sealed class GameLoop : IGameLoop
         foreach (var customStep in _gameLoopSteps.CustomSteps)
         {
             _performanceStatisticsRecorder.BeginStepDuration();
-            customStep.ProcessUpdate(gameTime);
+            customStep.ProcessUpdate(timeStep);
             _performanceStatisticsRecorder.EndStepDuration(customStep.Name);
         }
 

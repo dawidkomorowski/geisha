@@ -36,6 +36,6 @@
         ///     second as it is directly tied to frame rate. It is executed exactly once per frame.
         /// </summary>
         /// <param name="gameTime">Game time elapsed since previous frame.</param>
-        void ProcessUpdate(GameTime gameTime);
+        void ProcessUpdate(in TimeStep timeStep);
     }
 }

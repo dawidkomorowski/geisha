@@ -120,7 +120,7 @@ namespace Geisha.Engine.UnitTests
                 throw new NotSupportedException();
             }
 
-            public void ProcessUpdate(GameTime gameTime)
+            public void ProcessUpdate(in TimeStep timeStep)
             {
                 throw new NotSupportedException();
             }

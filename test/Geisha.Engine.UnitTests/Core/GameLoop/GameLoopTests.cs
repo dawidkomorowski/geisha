@@ -120,7 +120,6 @@ public class GameLoopTests
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
-        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -144,9 +143,9 @@ public class GameLoopTests
             _transformInterpolationStep.Received(1).InterpolateTransforms(0.5);
             _behaviorStep.Received(1).ProcessBehaviorUpdate(timeStep);
             _coroutineStep.Received(1).ProcessCoroutines(timeStep);
-            _customStep1.Received(1).ProcessUpdate(gameTime);
-            _customStep2.Received(1).ProcessUpdate(gameTime);
-            _customStep3.Received(1).ProcessUpdate(gameTime);
+            _customStep1.Received(1).ProcessUpdate(timeStep);
+            _customStep2.Received(1).ProcessUpdate(timeStep);
+            _customStep3.Received(1).ProcessUpdate(timeStep);
             _physicsStep.Received(1).PreparePhysicsDebugInformation();
             _audioStep.Received(1).ProcessAudio();
             _animationStep.Received(1).ProcessAnimations(timeStep);
@@ -167,7 +166,6 @@ public class GameLoopTests
         var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
-        var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTimeSeconds));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -199,9 +197,9 @@ public class GameLoopTests
             _transformInterpolationStep.Received(1).InterpolateTransforms(Arg.Any<double>());
             _behaviorStep.Received(1).ProcessBehaviorUpdate(timeStep);
             _coroutineStep.Received(1).ProcessCoroutines(timeStep);
-            _customStep1.Received(1).ProcessUpdate(gameTime);
-            _customStep2.Received(1).ProcessUpdate(gameTime);
-            _customStep3.Received(1).ProcessUpdate(gameTime);
+            _customStep1.Received(1).ProcessUpdate(timeStep);
+            _customStep2.Received(1).ProcessUpdate(timeStep);
+            _customStep3.Received(1).ProcessUpdate(timeStep);
             _physicsStep.Received(1).PreparePhysicsDebugInformation();
             _audioStep.Received(1).ProcessAudio();
             _animationStep.Received(1).ProcessAnimations(timeStep);
@@ -241,7 +239,6 @@ public class GameLoopTests
         var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
-        var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
 
         var scene = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(scene);
@@ -265,9 +262,9 @@ public class GameLoopTests
             _transformInterpolationStep.Received(1).InterpolateTransforms(0.5);
             _behaviorStep.Received(1).ProcessBehaviorUpdate(timeStep);
             _coroutineStep.Received(1).ProcessCoroutines(timeStep);
-            _customStep1.Received(1).ProcessUpdate(gameTime);
-            _customStep2.Received(1).ProcessUpdate(gameTime);
-            _customStep3.Received(1).ProcessUpdate(gameTime);
+            _customStep1.Received(1).ProcessUpdate(timeStep);
+            _customStep2.Received(1).ProcessUpdate(timeStep);
+            _customStep3.Received(1).ProcessUpdate(timeStep);
             _physicsStep.Received(1).PreparePhysicsDebugInformation();
             _audioStep.Received(1).ProcessAudio();
             _animationStep.Received(1).ProcessAnimations(timeStep);
