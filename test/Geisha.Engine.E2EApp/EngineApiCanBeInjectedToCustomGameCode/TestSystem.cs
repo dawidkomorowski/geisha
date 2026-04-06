@@ -21,6 +21,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ISceneSerializer _sceneSerializer;
         private readonly ICoroutineSystem _coroutineSystem;
         private readonly IPhysicsSystem _physicsSystem;
+        private readonly ITimeSystem _timeSystem;
 
         public TestSystem
         (
@@ -32,7 +33,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             ISceneManager sceneManager,
             ISceneSerializer sceneSerializer,
             ICoroutineSystem coroutineSystem,
-            IPhysicsSystem physicsSystem
+            IPhysicsSystem physicsSystem,
+            ITimeSystem timeSystem
         )
         {
             _audioBackend = audioBackend;
@@ -44,6 +46,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _sceneSerializer = sceneSerializer;
             _coroutineSystem = coroutineSystem;
             _physicsSystem = physicsSystem;
+            _timeSystem = timeSystem;
         }
 
         public string Name => "EngineApiCanBeInjectedToCustomGameCode-TestSystem";
@@ -63,6 +66,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             E2ETest.Report("DD6882F2-4A1B-42F3-993C-473593C46DE5", $"Engine API Injected Into System: {_sceneSerializer.GetType()}");
             E2ETest.Report("618427C0-D078-451C-8877-B3B81C99B5FF", $"Engine API Injected Into System: {_coroutineSystem.GetType()}");
             E2ETest.Report("932A0F77-F5F9-4CB5-B3EE-56FDF6139291", $"Engine API Injected Into System: {_physicsSystem.GetType()}");
+            E2ETest.Report("8AEB6833-DA48-48D7-ADCA-24DF92F4FB80", $"Engine API Injected Into System: {_timeSystem.GetType()}");
         }
 
         public void OnEntityCreated(Entity entity)

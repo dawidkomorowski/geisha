@@ -22,6 +22,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ISceneSerializer _sceneSerializer;
         private readonly ICoroutineSystem _coroutineSystem;
         private readonly IPhysicsSystem _physicsSystem;
+        private readonly ITimeSystem _timeSystem;
 
         public TestSceneBehaviorFactory
         (
@@ -33,7 +34,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             ISceneManager sceneManager,
             ISceneSerializer sceneSerializer,
             ICoroutineSystem coroutineSystem,
-            IPhysicsSystem physicsSystem
+            IPhysicsSystem physicsSystem,
+            ITimeSystem timeSystem
         )
         {
             _audioBackend = audioBackend;
@@ -45,6 +47,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _sceneSerializer = sceneSerializer;
             _coroutineSystem = coroutineSystem;
             _physicsSystem = physicsSystem;
+            _timeSystem = timeSystem;
         }
 
         public string BehaviorName => SceneBehaviorName;
@@ -60,7 +63,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 _sceneManager,
                 _sceneSerializer,
                 _coroutineSystem,
-                _physicsSystem
+                _physicsSystem,
+                _timeSystem
             );
 
         private sealed class TestSceneBehavior : SceneBehavior
@@ -74,6 +78,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             private readonly ISceneSerializer _sceneSerializer;
             private readonly ICoroutineSystem _coroutineSystem;
             private readonly IPhysicsSystem _physicsSystem;
+            private readonly ITimeSystem _timeSystem;
 
             public TestSceneBehavior
             (
@@ -86,7 +91,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 ISceneManager sceneManager,
                 ISceneSerializer sceneSerializer,
                 ICoroutineSystem coroutineSystem,
-                IPhysicsSystem physicsSystem
+                IPhysicsSystem physicsSystem,
+                ITimeSystem timeSystem
             ) : base(scene)
             {
                 _audioBackend = audioBackend;
@@ -98,6 +104,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 _sceneSerializer = sceneSerializer;
                 _coroutineSystem = coroutineSystem;
                 _physicsSystem = physicsSystem;
+                _timeSystem = timeSystem;
             }
 
             public override string Name => SceneBehaviorName;
@@ -116,6 +123,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 E2ETest.Report("56048FE9-5C59-44F5-8C4C-D96615B62D8C", $"Engine API Injected Into SceneBehavior: {_sceneSerializer.GetType()}");
                 E2ETest.Report("8DC6B886-CC5C-431E-821A-900D3671CB70", $"Engine API Injected Into SceneBehavior: {_coroutineSystem.GetType()}");
                 E2ETest.Report("59797ECF-0B77-4CA2-B389-020B884B9E8F", $"Engine API Injected Into SceneBehavior: {_physicsSystem.GetType()}");
+                E2ETest.Report("3AE47823-EBE5-4E2D-BCE1-926431D09C55", $"Engine API Injected Into SceneBehavior: {_timeSystem.GetType()}");
 
                 Scene.CreateEntity().CreateComponent<TestComponent>();
             }
