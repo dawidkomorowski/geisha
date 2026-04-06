@@ -52,16 +52,16 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
 
         public override void OnStart()
         {
-            E2ETest.Report("484E1AFA-EEFE-4E3A-9D8E-A304847C8C16", $"Engine API Injected Into Component: {_audioBackend.GetType()}");
-            E2ETest.Report("568407AA-0471-42BD-8CBD-6CB2A7526B76", $"Engine API Injected Into Component: {_engineManager.GetType()}");
-            E2ETest.Report("7B72B6EB-69BC-49F2-BEA5-CC073581F1D0", $"Engine API Injected Into Component: {_assetStore.GetType()}");
-            E2ETest.Report("4449A465-20AB-4E99-9C62-EB475387910D", $"Engine API Injected Into Component: {_debugRenderer.GetType()}");
-            E2ETest.Report("462F0430-A3D3-4E2D-91C6-A4C8EBBE24C8", $"Engine API Injected Into Component: {_sceneLoader.GetType()}");
-            E2ETest.Report("035F113D-43D8-4B92-B4DF-D1F6FDCBEEC9", $"Engine API Injected Into Component: {_sceneManager.GetType()}");
-            E2ETest.Report("899851F9-822D-4826-860B-7AB4C611DAC1", $"Engine API Injected Into Component: {_sceneSerializer.GetType()}");
-            E2ETest.Report("4AF66A42-E328-471B-BDB0-C0D987F5EAE1", $"Engine API Injected Into Component: {_coroutineSystem.GetType()}");
-            E2ETest.Report("11519AAE-5E1A-4462-973A-81B09672721D", $"Engine API Injected Into Component: {_physicsSystem.GetType()}");
-            E2ETest.Report("A2463B8D-8AED-44E7-851A-2E4BC750CD7B", $"Engine API Injected Into Component: {_timeSystem.GetType()}");
+            E2ETestApi.Report("484E1AFA-EEFE-4E3A-9D8E-A304847C8C16", $"Engine API Injected Into Component: {_audioBackend.GetType()}");
+            E2ETestApi.Report("568407AA-0471-42BD-8CBD-6CB2A7526B76", $"Engine API Injected Into Component: {_engineManager.GetType()}");
+            E2ETestApi.Report("7B72B6EB-69BC-49F2-BEA5-CC073581F1D0", $"Engine API Injected Into Component: {_assetStore.GetType()}");
+            E2ETestApi.Report("4449A465-20AB-4E99-9C62-EB475387910D", $"Engine API Injected Into Component: {_debugRenderer.GetType()}");
+            E2ETestApi.Report("462F0430-A3D3-4E2D-91C6-A4C8EBBE24C8", $"Engine API Injected Into Component: {_sceneLoader.GetType()}");
+            E2ETestApi.Report("035F113D-43D8-4B92-B4DF-D1F6FDCBEEC9", $"Engine API Injected Into Component: {_sceneManager.GetType()}");
+            E2ETestApi.Report("899851F9-822D-4826-860B-7AB4C611DAC1", $"Engine API Injected Into Component: {_sceneSerializer.GetType()}");
+            E2ETestApi.Report("4AF66A42-E328-471B-BDB0-C0D987F5EAE1", $"Engine API Injected Into Component: {_coroutineSystem.GetType()}");
+            E2ETestApi.Report("11519AAE-5E1A-4462-973A-81B09672721D", $"Engine API Injected Into Component: {_physicsSystem.GetType()}");
+            E2ETestApi.Report("A2463B8D-8AED-44E7-851A-2E4BC750CD7B", $"Engine API Injected Into Component: {_timeSystem.GetType()}");
         }
     }
 

@@ -9,7 +9,7 @@ namespace Geisha.Engine.E2ETests;
 
 public static class E2EApp
 {
-    public static string Run(string startUpSceneBehavior)
+    public static string Run(string startUpSceneBehavior, TimeSpan timeout)
     {
         const string engineConfigFilePath = "engine-config.json";
         var engineConfig = File.ReadAllText(engineConfigFilePath);
@@ -27,10 +27,10 @@ public static class E2EApp
         var errorTask = app.StandardError.ReadToEndAsync();
         var outputTask = app.StandardOutput.ReadToEndAsync();
 
-        if (!app.WaitForExit(30_000))
+        if (!app.WaitForExit((int)timeout.TotalMilliseconds))
         {
             app.Kill(true);
-            Assert.Fail("E2E app did not exit in time.");
+            Assert.Fail($"Timeout: E2E app did not exit in time ({timeout.TotalSeconds} seconds).");
         }
 
         Task.WaitAll(errorTask, outputTask);
