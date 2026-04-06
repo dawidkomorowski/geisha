@@ -35,7 +35,7 @@
         ///     Implement game loop step processing logic in this method. This method is executed at variable rate of updates per
         ///     second as it is directly tied to frame rate. It is executed exactly once per frame.
         /// </summary>
-        /// <param name="gameTime">Game time elapsed since previous frame.</param>
+        /// <param name="timeStep">Time step representing delta time elapsed since previous frame, including time scale.</param>
         void ProcessUpdate(in TimeStep timeStep);
     }
 }
