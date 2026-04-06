@@ -5,11 +5,6 @@ namespace Geisha.Engine.E2EApp;
 
 internal static class E2ETestApi
 {
-    public static void Report(string assertId, string assertName)
-    {
-        Console.WriteLine($"AssertId: {{{assertId}}} Name: {{{assertName}}}");
-    }
-
     public static void PublishMessage(string id, string content, string? value = null)
     {
         var e2EMessage = new E2EMessage
