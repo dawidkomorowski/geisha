@@ -9,7 +9,6 @@ namespace Geisha.Engine.Core;
 // TODO: Add tests verifying that time system can be injected into custom game code.
 // TODO: Report ticket for showcasing TimeScale in Demo Application.
 // TODO: Add tests for timescale to be correctly respected by game loop and other systems.
-// TODO: Investigate CA2208 warning for TimeSystem constructor.
 
 public interface ITimeSystem
 {
@@ -42,8 +41,8 @@ internal sealed class TimeSystem : ITimeSystemInternal
 
         if (configuration.FixedUpdatesPerSecond <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(configuration.FixedUpdatesPerSecond), configuration.FixedUpdatesPerSecond,
-                "FixedUpdatesPerSecond must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(configuration), configuration.FixedUpdatesPerSecond,
+                $"{nameof(CoreConfiguration)}.{nameof(CoreConfiguration.FixedUpdatesPerSecond)} must be greater than zero.");
         }
 
         StartUpTime = _now();

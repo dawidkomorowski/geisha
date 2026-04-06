@@ -137,24 +137,20 @@ namespace Geisha.Engine.Input.Systems
         private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
         {
             var hardwareInputVariant = hardwareAction.HardwareInputVariant;
-            switch (hardwareInputVariant.CurrentVariant)
+            return hardwareInputVariant.CurrentVariant switch
             {
-                case HardwareInputVariant.Variant.Keyboard:
-                    return hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()];
-                case HardwareInputVariant.Variant.Mouse:
-                    return hardwareInputVariant.AsMouse() switch
-                    {
-                        HardwareInputVariant.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
-                        HardwareInputVariant.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
-                        HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
-                        HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
-                        HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                HardwareInputVariant.Variant.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
+                HardwareInputVariant.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+                {
+                    HardwareInputVariant.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
+                    HardwareInputVariant.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
+                    HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
+                    HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
+                    HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         private static void ResetActionStates(InputComponent inputComponent)
@@ -204,21 +200,17 @@ namespace Geisha.Engine.Input.Systems
         private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
         {
             var hardwareInputVariant = hardwareAxis.HardwareInputVariant;
-            switch (hardwareInputVariant.CurrentVariant)
+            return hardwareInputVariant.CurrentVariant switch
             {
-                case HardwareInputVariant.Variant.Keyboard:
-                    return BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]);
-                case HardwareInputVariant.Variant.Mouse:
-                    return hardwareInputVariant.AsMouse() switch
-                    {
-                        HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
-                        HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                HardwareInputVariant.Variant.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
+                HardwareInputVariant.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+                {
+                    HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
+                    HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         private static void ResetAxisStates(InputComponent inputComponent)
