@@ -6,7 +6,6 @@ namespace Geisha.Engine.Core;
 // TODO: Demo application needs fixing input after moving input processing out of fixed update.
 // TODO: Profile input system as it now runs each frame - not only on simulation frames.
 // TODO: Add missing docs for new APIs.
-// TODO: Add tests verifying that time system can be injected into custom game code.
 // TODO: Report ticket for showcasing TimeScale in Demo Application.
 // TODO: Add tests for timescale to be correctly respected by game loop and other systems.
 
