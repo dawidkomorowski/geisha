@@ -147,9 +147,9 @@ namespace Geisha.Engine.Input.Systems
                     HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
                     HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
                     HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
                 },
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
             };
         }
 
@@ -207,9 +207,9 @@ namespace Geisha.Engine.Input.Systems
                 {
                     HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
                     HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
                 },
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
             };
         }
 
