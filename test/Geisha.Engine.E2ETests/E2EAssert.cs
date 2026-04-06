@@ -11,15 +11,22 @@ internal static class E2EAssert
     {
         var lines = appOutput.Split(Environment.NewLine);
         var linesWithJson = lines.Where(l => l.StartsWith("{") && l.EndsWith("}"));
-        var messages = linesWithJson.Select(DeserializeMessage).ToArray();
+        var messages = linesWithJson.Select(DeserializeMessage);
 
-        var message = messages.SingleOrDefault(m => m.Id == Guid.Parse(id));
+        var targetId = Guid.Parse(id);
+        var matchingMessages = messages.Where(m => m.Id == targetId).ToArray();
 
-        if (message.Id == Guid.Empty)
+        switch (matchingMessages.Length)
         {
-            Assert.Fail($"Message with Id {id} not found.");
+            case 0:
+                Assert.Fail($"Message with Id {id} not found.");
+                break;
+            case > 1:
+                Assert.Fail($"Message with Id {id} is duplicated. Found {matchingMessages.Length} messages with the same Id.");
+                break;
         }
 
+        var message = matchingMessages[0];
         Assert.That(message.Content, Is.EqualTo(expectedContent), "Message content not matched.");
         Assert.That(message.Value, Is.EqualTo(expectedValue), "Message value not matched.");
     }
