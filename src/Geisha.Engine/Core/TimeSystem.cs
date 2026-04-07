@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace Geisha.Engine.Core;
 
-// TODO: Demo application needs fixing input after moving input processing out of fixed update.
 // TODO: Profile input system as it now runs each frame - not only on simulation frames.
 // TODO: Add missing docs for new APIs.
 // TODO: Report ticket for showcasing TimeScale in Demo Application.

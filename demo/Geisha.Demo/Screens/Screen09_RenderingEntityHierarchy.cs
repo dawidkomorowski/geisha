@@ -238,21 +238,19 @@ Scale:
     }
 }
 
-/// <summary>
-/// Component that handles input-driven transformation updates with delta time scaling for frame independence.
-/// 
-/// This component demonstrates:
-/// 1. How to extend BehaviorComponent to implement custom game logic
-/// 2. How to use InputComponent to read mapped input axes
-/// 3. How to achieve frame-independent movement by scaling with delta time
-/// 4. How to clamp transform values to maintain boundaries
-/// 
-/// Frame independence is achieved by multiplying movement speeds by delta time (DeltaTimeSeconds).
-/// This ensures that movement speed is consistent regardless of frame rate. For example, if MoveSpeed
-/// is 200 units per second and delta time is 0.016 seconds (60 FPS), the entity moves 3.2 units per frame.
-/// At 30 FPS with delta time of 0.033 seconds, the entity still moves ~6.6 units per frame (twice the distance,
-/// but covering twice the time), maintaining the same 200 units per second speed.
-/// </summary>
+// Component that handles input-driven transformation updates with delta time scaling for frame independence.
+//
+// This component demonstrates:
+// 1. How to extend BehaviorComponent to implement custom game logic
+// 2. How to use InputComponent to read mapped input axes
+// 3. How to achieve frame-independent movement by scaling with delta time
+// 4. How to clamp transform values to maintain boundaries
+//
+// Frame independence is achieved by multiplying movement speeds by delta time (DeltaTimeSeconds).
+// This ensures that movement speed is consistent regardless of frame rate. For example, if MoveSpeed
+// is 200 units per second and delta time is 0.016 seconds (60 FPS), the entity moves 3.2 units per frame.
+// At 30 FPS with delta time of 0.033 seconds, the entity still moves ~6.6 units per frame (twice the distance,
+// but covering twice the time), maintaining the same 200 units per second speed.
 internal sealed class TransformControllerComponent : BehaviorComponent
 {
     private InputComponent _inputComponent = null!;

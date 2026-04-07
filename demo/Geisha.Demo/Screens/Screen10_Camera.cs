@@ -204,18 +204,16 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
     }
 }
 
-/// <summary>
-/// Component that handles input-driven camera position updates with delta time scaling for frame independence.
-/// 
-/// This component demonstrates:
-/// 1. How to implement a simple BehaviorComponent for a specific task (camera control)
-/// 2. How to achieve frame-independent camera movement by scaling with delta time
-/// 3. How to clamp camera position to constrain the view area
-/// 
-/// This is a simplified version compared to TransformControllerComponent (Screen09) as it only handles
-/// position updates without rotation or scaling. The frame independence principle remains the same:
-/// multiplying movement speed by delta time ensures consistent camera movement regardless of frame rate.
-/// </summary>
+// Component that handles input-driven camera position updates with delta time scaling for frame independence.
+//
+// This component demonstrates:
+// 1. How to implement a simple BehaviorComponent for a specific task (camera control)
+// 2. How to achieve frame-independent camera movement by scaling with delta time
+// 3. How to clamp camera position to constrain the view area
+//
+// This is a simplified version compared to TransformControllerComponent (Screen09) as it only handles
+// position updates without rotation or scaling. The frame independence principle remains the same:
+// multiplying movement speed by delta time ensures consistent camera movement regardless of frame rate.
 internal sealed class CameraControlComponent : BehaviorComponent
 {
     private InputComponent _inputComponent = null!;
