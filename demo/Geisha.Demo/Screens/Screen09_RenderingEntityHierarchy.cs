@@ -240,18 +240,37 @@ Scale:
 
 /// <summary>
 /// Component that handles input-driven transformation updates with delta time scaling for frame independence.
+/// 
+/// This component demonstrates:
+/// 1. How to extend BehaviorComponent to implement custom game logic
+/// 2. How to use InputComponent to read mapped input axes
+/// 3. How to achieve frame-independent movement by scaling with delta time
+/// 4. How to clamp transform values to maintain boundaries
+/// 
+/// Frame independence is achieved by multiplying movement speeds by delta time (DeltaTimeSeconds).
+/// This ensures that movement speed is consistent regardless of frame rate. For example, if MoveSpeed
+/// is 200 units per second and delta time is 0.016 seconds (60 FPS), the entity moves 3.2 units per frame.
+/// At 30 FPS with delta time of 0.033 seconds, the entity still moves ~6.6 units per frame (twice the distance,
+/// but covering twice the time), maintaining the same 200 units per second speed.
 /// </summary>
 internal sealed class TransformControllerComponent : BehaviorComponent
 {
     private InputComponent _inputComponent = null!;
     private Transform2DComponent _transform = null!;
 
-    // Movement parameters
-    private const double MoveSpeed = 200.0; // units per second
-    private const double RotateSpeed = 2.5; // radians per second
-    private const double ScaleSpeed = 0.6; // scale units per second
+    // Movement parameters define the speed of transformations in units/seconds or radians/seconds.
+    // These values are then scaled by delta time in OnUpdate to achieve frame-independent behavior.
+    private const double MoveSpeed = 200.0; // units per second - controls translation speed
+    private const double RotateSpeed = 2.5; // radians per second - controls rotation speed
+
+    private const double ScaleSpeed = 0.6; // scale units per second - controls scaling speed
+
+    // Scale bounds prevent the entity from becoming too large or too small.
     private const double MinScale = 0.3;
+
     private const double MaxScale = 1.0;
+
+    // Translation bounds keep the parent entity within the visible camera area.
     private static readonly Vector2 MinTranslation = new(100, -150);
     private static readonly Vector2 MaxTranslation = new(500, 50);
 
@@ -259,50 +278,93 @@ internal sealed class TransformControllerComponent : BehaviorComponent
     {
     }
 
+    // OnStart is called once when the component is first encountered by the engine during update.
+    // This is where we cache references to other components on the same entity for efficient access.
     public override void OnStart()
     {
+        // Retrieve the InputComponent to read axis states for movement input.
         _inputComponent = Entity.GetComponent<InputComponent>();
+        // Retrieve the Transform2DComponent so we can modify the entity's position, rotation, and scale.
         _transform = Entity.GetComponent<Transform2DComponent>();
     }
 
+    // OnUpdate is called once per frame. The timeStep parameter contains delta time information
+    // needed to implement frame-independent movement.
     public override void OnUpdate(in TimeStep timeStep)
     {
+        // Extract delta time in seconds. This is the time elapsed since the last frame.
+        // By multiplying movement speeds by this value, we ensure movement is frame-rate independent.
         var deltaSeconds = timeStep.DeltaTimeSeconds;
 
-        // Handle vertical movement
+        // Handle vertical movement using UP/DOWN keys.
+        // GetAxisState returns the axis value from the InputMapping configured for this entity.
+        // The value is non-zero if the axis is triggered and can be positive or negative.
         var moveVertical = _inputComponent.GetAxisState("MoveVertically");
         if (moveVertical != 0)
         {
+            // Calculate new translation by adding movement along Y axis.
+            // The formula: speed * axisValue * deltaTime gives us frame-independent movement.
             var newTranslation = _transform.Translation + Vector2.UnitY * MoveSpeed * moveVertical * deltaSeconds;
+            // Clamp the new position within boundaries to keep the entity visible on screen.
             _transform.Translation = Vector2.Max(Vector2.Min(newTranslation, MaxTranslation), MinTranslation);
         }
 
-        // Handle horizontal movement
+        // Handle horizontal movement using LEFT/RIGHT keys.
         var moveHorizontal = _inputComponent.GetAxisState("MoveHorizontally");
         if (moveHorizontal != 0)
         {
+            // Calculate new translation by adding movement along X axis.
             var newTranslation = _transform.Translation + Vector2.UnitX * MoveSpeed * moveHorizontal * deltaSeconds;
+            // Clamp the new position within boundaries.
             _transform.Translation = Vector2.Max(Vector2.Min(newTranslation, MaxTranslation), MinTranslation);
         }
 
-        // Handle rotation
+        // Handle rotation using A/D keys.
+        // Rotation is applied directly without clamping since rotation can wrap around.
         var rotateRight = _inputComponent.GetAxisState("RotateRight");
         if (rotateRight != 0)
         {
+            // Apply rotation change. The negative sign inverts the rotation direction.
+            // RotateSpeed * deltaTime ensures rotation speed is frame-independent in radians per second.
             _transform.Rotation -= rotateRight * RotateSpeed * deltaSeconds;
         }
 
-        // Handle scaling
+        // Handle scaling using W/S keys.
+        // Scaling adjusts the entity size while maintaining aspect ratio.
         var scaleUp = _inputComponent.GetAxisState("ScaleUp");
         if (scaleUp != 0)
         {
+            // Calculate new scale by adding uniform scaling along both X and Y axes.
+            // Vector2.One represents (1, 1) to apply the same scale change to both dimensions.
             var newScale = _transform.Scale + Vector2.One * ScaleSpeed * scaleUp * deltaSeconds;
+            // Clamp the scale to prevent the entity from becoming too large or disappearing.
             _transform.Scale = Vector2.Max(Vector2.Min(newScale, new Vector2(MaxScale, MaxScale)), new Vector2(MinScale, MinScale));
         }
     }
 }
 
+// Factory class for TransformControllerComponent.
+//
+// In the Geisha Engine, components must be registered through factories before they can be used.
+// The engine uses component factories to create instances of components when needed, rather than
+// instantiating components directly. This allows the engine to:
+//
+// 1. Manage component creation and initialization (with support for dependency injection if needed)
+// 2. Support component persistence (serialization/deserialization)
+// 3. Maintain type safety and component registration
+// 4. Enable the engine to dynamically create components based on configuration or scene data
+//
+// To make TransformControllerComponent available to the engine:
+// 1. Create this factory class inheriting from ComponentFactory<TComponent>
+// 2. Override CreateComponent to return a new instance of the component
+// 3. Register the factory in Game.RegisterComponents() using IComponentsRegistry.RegisterComponentFactory<TFactory>()
+//    (This is done in DemoApp.cs)
+//
+// The ComponentFactory<TComponent> base class automatically handles ComponentType and ComponentId generation,
+// so we only need to implement CreateComponent to specify how instances are created.
 internal sealed class TransformControllerComponentFactory : ComponentFactory<TransformControllerComponent>
 {
+    // Override CreateComponent to specify how new instances of TransformControllerComponent are created.
+    // The entity parameter is the entity to which the component will be attached.
     protected override TransformControllerComponent CreateComponent(Entity entity) => new(entity);
 }
