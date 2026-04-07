@@ -51,6 +51,7 @@ internal sealed class DemoApp : Game
 
         // Camera
         componentsRegistry.RegisterSceneBehaviorFactory<CameraSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<CameraControlComponentFactory>();
 
         // SpriteAnimation
         componentsRegistry.RegisterSceneBehaviorFactory<SpriteAnimationSceneBehaviorFactory>();

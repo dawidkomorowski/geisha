@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Demo.Common;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -98,18 +99,8 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                     }
                 }
             };
-            // Bind "MoveVertically" axis to call vertical camera movement logic.
-            inputComponent.BindAxis("MoveVertically", value =>
-            {
-                var newTranslation = cameraTransform.Translation + Vector2.UnitY * 10 * value;
-                cameraTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(250, 250)), new Vector2(-250, -250));
-            });
-            // Bind "MoveHorizontally" axis to call horizontal camera movement logic.
-            inputComponent.BindAxis("MoveHorizontally", value =>
-            {
-                var newTranslation = cameraTransform.Translation + Vector2.UnitX * 10 * value;
-                cameraTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(250, 250)), new Vector2(-250, -250));
-            });
+            // Add component that handles camera movement with frame-independent speed.
+            camera.CreateComponent<CameraControlComponent>();
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
@@ -211,4 +202,103 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
             textBlock2.Parent = camera;
         }
     }
+}
+
+/// <summary>
+/// Component that handles input-driven camera position updates with delta time scaling for frame independence.
+/// 
+/// This component demonstrates:
+/// 1. How to implement a simple BehaviorComponent for a specific task (camera control)
+/// 2. How to achieve frame-independent camera movement by scaling with delta time
+/// 3. How to clamp camera position to constrain the view area
+/// 
+/// This is a simplified version compared to TransformControllerComponent (Screen09) as it only handles
+/// position updates without rotation or scaling. The frame independence principle remains the same:
+/// multiplying movement speed by delta time ensures consistent camera movement regardless of frame rate.
+/// </summary>
+internal sealed class CameraControlComponent : BehaviorComponent
+{
+    private InputComponent _inputComponent = null!;
+    private Transform2DComponent _transform = null!;
+
+    // Camera movement speed in units per second.
+    // This is scaled by delta time to achieve frame-independent movement.
+    private const double MoveSpeed = 100.0; // units per second
+
+    // Camera position bounds constrain the camera view area.
+    // These bounds prevent the camera from moving too far away from the center.
+    private static readonly Vector2 MinPosition = new(-250, -250);
+    private static readonly Vector2 MaxPosition = new(250, 250);
+
+    public CameraControlComponent(Entity entity) : base(entity)
+    {
+    }
+
+    // OnStart is called once when the component is first encountered by the engine during update.
+    // This is where we cache references to other components on the same entity for efficient access.
+    public override void OnStart()
+    {
+        // Retrieve the InputComponent to read axis states for camera movement input.
+        _inputComponent = Entity.GetComponent<InputComponent>();
+        // Retrieve the Transform2DComponent so we can modify the camera's position.
+        _transform = Entity.GetComponent<Transform2DComponent>();
+    }
+
+    // OnUpdate is called once per frame. The timeStep parameter contains delta time information
+    // needed to implement frame-independent camera movement.
+    public override void OnUpdate(in TimeStep timeStep)
+    {
+        // Extract delta time in seconds. This is the time elapsed since the last frame.
+        // By multiplying movement speed by this value, we ensure camera movement is frame-rate independent.
+        var deltaSeconds = timeStep.DeltaTimeSeconds;
+
+        // Handle vertical camera movement using UP/DOWN keys.
+        // GetAxisState returns the axis value from the InputMapping configured for this entity.
+        // The value is non-zero if the axis is triggered and can be positive or negative.
+        var moveVertical = _inputComponent.GetAxisState("MoveVertically");
+        if (moveVertical != 0)
+        {
+            // Calculate new camera position by adding movement along Y axis.
+            // The formula: speed * axisValue * deltaTime gives us frame-independent movement.
+            var newPosition = _transform.Translation + Vector2.UnitY * MoveSpeed * moveVertical * deltaSeconds;
+            // Clamp the new position within boundaries to keep the camera view within acceptable limits.
+            _transform.Translation = Vector2.Max(Vector2.Min(newPosition, MaxPosition), MinPosition);
+        }
+
+        // Handle horizontal camera movement using LEFT/RIGHT keys.
+        var moveHorizontal = _inputComponent.GetAxisState("MoveHorizontally");
+        if (moveHorizontal != 0)
+        {
+            // Calculate new camera position by adding movement along X axis.
+            var newPosition = _transform.Translation + Vector2.UnitX * MoveSpeed * moveHorizontal * deltaSeconds;
+            // Clamp the new position within boundaries.
+            _transform.Translation = Vector2.Max(Vector2.Min(newPosition, MaxPosition), MinPosition);
+        }
+    }
+}
+
+// Factory class for CameraControlComponent.
+//
+// In the Geisha Engine, components must be registered through factories before they can be used.
+// The engine uses component factories to create instances of components when needed, rather than
+// instantiating components directly. This allows the engine to:
+//
+// 1. Manage component creation and initialization (with support for dependency injection if needed)
+// 2. Support component persistence (serialization/deserialization)
+// 3. Maintain type safety and component registration
+// 4. Enable the engine to dynamically create components based on configuration or scene data
+//
+// To make CameraControlComponent available to the engine:
+// 1. Create this factory class inheriting from ComponentFactory<TComponent>
+// 2. Override CreateComponent to return a new instance of the component
+// 3. Register the factory in Game.RegisterComponents() using IComponentsRegistry.RegisterComponentFactory<TFactory>()
+//    (This is done in DemoApp.cs)
+//
+// The ComponentFactory<TComponent> base class automatically handles ComponentType and ComponentId generation,
+// so we only need to implement CreateComponent to specify how instances are created.
+internal sealed class CameraControlComponentFactory : ComponentFactory<CameraControlComponent>
+{
+    // Override CreateComponent to specify how new instances of CameraControlComponent are created.
+    // The entity parameter is the entity to which the component will be attached.
+    protected override CameraControlComponent CreateComponent(Entity entity) => new(entity);
 }
