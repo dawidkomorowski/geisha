@@ -47,6 +47,7 @@ internal sealed class DemoApp : Game
 
         // RenderingEntityHierarchy
         componentsRegistry.RegisterSceneBehaviorFactory<RenderingEntityHierarchySceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<TransformControllerComponentFactory>();
 
         // Camera
         componentsRegistry.RegisterSceneBehaviorFactory<CameraSceneBehaviorFactory>();

@@ -1,10 +1,11 @@
 ﻿using Geisha.Demo.Common;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -179,26 +180,8 @@ Scale:
                     }
                 }
             };
-            // Bind "MoveVertically" axis to call vertical movement logic.
-            inputComponent.BindAxis("MoveVertically", value =>
-            {
-                var newTranslation = parentTransform.Translation + Vector2.UnitY * 10 * value;
-                parentTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(500, 50)), new Vector2(100, -150));
-            });
-            // Bind "MoveHorizontally" axis to call horizontal movement logic.
-            inputComponent.BindAxis("MoveHorizontally", value =>
-            {
-                var newTranslation = parentTransform.Translation + Vector2.UnitX * 10 * value;
-                parentTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(500, 50)), new Vector2(100, -150));
-            });
-            // Bind "RotateRight" axis to call rotation logic.
-            inputComponent.BindAxis("RotateRight", value => { parentTransform.Rotation -= value * 0.05; });
-            // Bind "ScaleUp" axis to call scaling logic.
-            inputComponent.BindAxis("ScaleUp", value =>
-            {
-                var newTranslation = parentTransform.Scale + Vector2.One * value * 0.03;
-                parentTransform.Scale = Vector2.Max(Vector2.Min(newTranslation, new Vector2(1, 1)), new Vector2(0.3, 0.3));
-            });
+            // Add component that handles transform updates based on input.
+            parent.CreateComponent<TransformControllerComponent>();
 
             // Create entity representing first child of parent entity.
             var child1 = parent.CreateChildEntity();
@@ -253,4 +236,73 @@ Scale:
             textRenderer2.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
         }
     }
+}
+
+/// <summary>
+/// Component that handles input-driven transformation updates with delta time scaling for frame independence.
+/// </summary>
+internal sealed class TransformControllerComponent : BehaviorComponent
+{
+    private InputComponent _inputComponent = null!;
+    private Transform2DComponent _transform = null!;
+
+    // Movement parameters
+    private const double MoveSpeed = 200.0; // units per second
+    private const double RotateSpeed = 2.5; // radians per second
+    private const double ScaleSpeed = 0.6; // scale units per second
+    private const double MinScale = 0.3;
+    private const double MaxScale = 1.0;
+    private static readonly Vector2 MinTranslation = new(100, -150);
+    private static readonly Vector2 MaxTranslation = new(500, 50);
+
+    public TransformControllerComponent(Entity entity) : base(entity)
+    {
+    }
+
+    public override void OnStart()
+    {
+        _inputComponent = Entity.GetComponent<InputComponent>();
+        _transform = Entity.GetComponent<Transform2DComponent>();
+    }
+
+    public override void OnUpdate(in TimeStep timeStep)
+    {
+        var deltaSeconds = timeStep.DeltaTimeSeconds;
+
+        // Handle vertical movement
+        var moveVertical = _inputComponent.GetAxisState("MoveVertically");
+        if (moveVertical != 0)
+        {
+            var newTranslation = _transform.Translation + Vector2.UnitY * MoveSpeed * moveVertical * deltaSeconds;
+            _transform.Translation = Vector2.Max(Vector2.Min(newTranslation, MaxTranslation), MinTranslation);
+        }
+
+        // Handle horizontal movement
+        var moveHorizontal = _inputComponent.GetAxisState("MoveHorizontally");
+        if (moveHorizontal != 0)
+        {
+            var newTranslation = _transform.Translation + Vector2.UnitX * MoveSpeed * moveHorizontal * deltaSeconds;
+            _transform.Translation = Vector2.Max(Vector2.Min(newTranslation, MaxTranslation), MinTranslation);
+        }
+
+        // Handle rotation
+        var rotateRight = _inputComponent.GetAxisState("RotateRight");
+        if (rotateRight != 0)
+        {
+            _transform.Rotation -= rotateRight * RotateSpeed * deltaSeconds;
+        }
+
+        // Handle scaling
+        var scaleUp = _inputComponent.GetAxisState("ScaleUp");
+        if (scaleUp != 0)
+        {
+            var newScale = _transform.Scale + Vector2.One * ScaleSpeed * scaleUp * deltaSeconds;
+            _transform.Scale = Vector2.Max(Vector2.Min(newScale, new Vector2(MaxScale, MaxScale)), new Vector2(MinScale, MinScale));
+        }
+    }
+}
+
+internal sealed class TransformControllerComponentFactory : ComponentFactory<TransformControllerComponent>
+{
+    protected override TransformControllerComponent CreateComponent(Entity entity) => new(entity);
 }
