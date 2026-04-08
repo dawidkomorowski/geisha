@@ -3,7 +3,10 @@ using System.Diagnostics;
 
 namespace Geisha.Engine.Core;
 
-// TODO: Profile input system as it now runs each frame - not only on simulation frames.
+// TODO: InputSystem was greatly optimized, but now it does not correctly support mutating InputMapping.
+//       - Consider making InputMapping immutable to avoid issues.
+//       - Consider using ImmutableArray for storing mappings in InputMapping to avoid issues with mutability and to improve performance.
+//       - InputSystem was optimized but IInputProvider implementations may still be inefficient, consider optimizing them as well.
 // TODO: Add missing docs for new APIs.
 // TODO: Report ticket for showcasing TimeScale in Demo Application.
 // TODO: Add tests for timescale to be correctly respected by game loop and other systems.
