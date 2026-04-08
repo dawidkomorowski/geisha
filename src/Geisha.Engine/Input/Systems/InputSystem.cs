@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
@@ -27,8 +26,10 @@ namespace Geisha.Engine.Input.Systems
         {
             var hardwareInput = _inputProvider.Capture();
 
-            foreach (var inputComponent in _inputComponents.Where(ic => ic.Enabled))
+            foreach (var inputComponent in _inputComponents)
             {
+                if (!inputComponent.Enabled) continue;
+
                 inputComponent.HardwareInput = hardwareInput;
 
                 HandleActionMappings(inputComponent);
@@ -88,27 +89,24 @@ namespace Geisha.Engine.Input.Systems
                 return;
             }
 
-            var previousActionStates = new Dictionary<string, bool>(inputComponent.ActionStates);
-            ResetActionStates(inputComponent);
-
             var actionMappings = inputComponent.InputMapping.ActionMappings;
 
             foreach (var actionMapping in actionMappings)
             {
                 var actionName = actionMapping.ActionName;
+                var previousState = inputComponent.ActionStates[actionName];
+                var currentState = false;
 
                 foreach (var hardwareAction in actionMapping.HardwareActions)
                 {
-                    var state = ComputeState(inputComponent.HardwareInput, hardwareAction);
-                    inputComponent.ActionStates[actionName] = state;
-                    if (state) break;
+                    currentState = ComputeState(inputComponent.HardwareInput, hardwareAction);
+                    inputComponent.ActionStates[actionName] = currentState;
+                    if (currentState) break;
                 }
 
-                if (inputComponent.ActionBindings.TryGetValue(actionName, out var binding))
+                if (!previousState && currentState)
                 {
-                    previousActionStates.TryGetValue(actionName, out var previousActionState);
-
-                    if (!previousActionState && inputComponent.GetActionState(actionName))
+                    if (inputComponent.ActionBindings.TryGetValue(actionName, out var binding))
                     {
                         binding();
                     }
@@ -153,21 +151,12 @@ namespace Geisha.Engine.Input.Systems
             };
         }
 
-        private static void ResetActionStates(InputComponent inputComponent)
-        {
-            foreach (var key in inputComponent.ActionStates.Keys)
-            {
-                inputComponent.ActionStates[key] = false;
-            }
-        }
-
         #endregion
 
         #region Axis mapping handling
 
         private static void HandleAxisMappings(InputComponent inputComponent)
         {
-            ResetAxisStates(inputComponent);
             if (inputComponent.InputMapping == null) return;
 
             var axisMappings = inputComponent.InputMapping.AxisMappings;
@@ -175,24 +164,19 @@ namespace Geisha.Engine.Input.Systems
             foreach (var axisMapping in axisMappings)
             {
                 var axisName = axisMapping.AxisName;
+                var currentState = 0d;
 
                 foreach (var hardwareAxis in axisMapping.HardwareAxes)
                 {
                     var state = ComputeState(inputComponent.HardwareInput, hardwareAxis);
-                    var scaledState = state * hardwareAxis.Scale;
-                    if (inputComponent.AxisStates.TryGetValue(axisName, out var currentState))
-                    {
-                        inputComponent.AxisStates[axisName] = currentState + scaledState;
-                    }
-                    else
-                    {
-                        inputComponent.AxisStates[axisName] = scaledState;
-                    }
+                    currentState += state * hardwareAxis.Scale;
                 }
+
+                inputComponent.AxisStates[axisName] = currentState;
 
                 if (inputComponent.AxisBindings.TryGetValue(axisName, out var binding))
                 {
-                    binding(inputComponent.GetAxisState(axisName));
+                    binding(currentState);
                 }
             }
         }
@@ -211,14 +195,6 @@ namespace Geisha.Engine.Input.Systems
                 },
                 _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
             };
-        }
-
-        private static void ResetAxisStates(InputComponent inputComponent)
-        {
-            foreach (var key in inputComponent.AxisStates.Keys)
-            {
-                inputComponent.AxisStates[key] = 0;
-            }
         }
 
         #endregion

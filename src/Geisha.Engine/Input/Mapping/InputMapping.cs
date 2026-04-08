@@ -10,12 +10,12 @@ namespace Geisha.Engine.Input.Mapping
         /// <summary>
         ///     List of action mappings.
         /// </summary>
-        public IList<ActionMapping> ActionMappings { get; } = new List<ActionMapping>();
+        public List<ActionMapping> ActionMappings { get; } = new();
 
         /// <summary>
         ///     List of axis mappings.
         /// </summary>
-        public IList<AxisMapping> AxisMappings { get; } = new List<AxisMapping>();
+        public List<AxisMapping> AxisMappings { get; } = new();
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Input.Mapping
         /// <summary>
         ///     List of hardware actions this logical action is based on.
         /// </summary>
-        public IList<HardwareAction> HardwareActions { get; } = new List<HardwareAction>();
+        public List<HardwareAction> HardwareActions { get; } = new();
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ namespace Geisha.Engine.Input.Mapping
         /// <summary>
         ///     List of hardware axes this logical axis is based on.
         /// </summary>
-        public IList<HardwareAxis> HardwareAxes { get; } = new List<HardwareAxis>();
+        public List<HardwareAxis> HardwareAxes { get; } = new();
     }
 
     /// <summary>

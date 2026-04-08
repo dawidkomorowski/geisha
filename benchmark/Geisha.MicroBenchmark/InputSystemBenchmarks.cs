@@ -274,10 +274,10 @@ public class InputSystemBenchmarks
     }
 
     [Benchmark]
-    public void ProcessInput_5Entities_60_000Frames()
+    public void ProcessInput_5Entities_120_000Frames()
     {
-        // Assuming 60 FPS this simulates 1000 seconds of input processing.
-        for (var i = 0; i < 60_000; i++)
+        // Assuming 60 FPS this simulates 2000 seconds of input processing.
+        for (var i = 0; i < 120_000; i++)
         {
             _inputProvider.CurrentInput = InputSequence[i % InputSequence.Length];
             _inputSystem.ProcessInput();
