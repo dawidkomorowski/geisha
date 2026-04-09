@@ -693,10 +693,10 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     )
                 };
 
-                var inputMapping = new InputMapping();
-                inputMapping.ActionMappings.Add(moveRight);
-                inputMapping.ActionMappings.Add(moveLeft);
-                inputMapping.ActionMappings.Add(jump);
+                var inputMapping = new InputMapping
+                {
+                    ActionMappings = ImmutableArray.Create(moveRight, moveLeft, jump)
+                };
 
                 var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
@@ -746,9 +746,10 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     )
                 };
 
-                var inputMapping = new InputMapping();
-                inputMapping.AxisMappings.Add(moveUp);
-                inputMapping.AxisMappings.Add(moveRight);
+                var inputMapping = new InputMapping
+                {
+                    AxisMappings = ImmutableArray.Create(moveUp, moveRight)
+                };
 
                 var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
@@ -809,11 +810,10 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     )
                 };
 
-                var inputMapping = new InputMapping();
-                inputMapping.ActionMappings.Add(fire);
-                inputMapping.ActionMappings.Add(zoom);
-                inputMapping.ActionMappings.Add(altFire);
-                inputMapping.ActionMappings.Add(melee);
+                var inputMapping = new InputMapping
+                {
+                    ActionMappings = ImmutableArray.Create(fire, zoom, altFire, melee)
+                };
 
                 var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
@@ -848,9 +848,10 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     )
                 };
 
-                var inputMapping = new InputMapping();
-                inputMapping.AxisMappings.Add(lookUp);
-                inputMapping.AxisMappings.Add(lookRight);
+                var inputMapping = new InputMapping
+                {
+                    AxisMappings = ImmutableArray.Create(lookUp, lookRight)
+                };
 
                 var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();

@@ -38,8 +38,8 @@ public sealed class CommonEntityFactory
 
         inputComponent.InputMapping = new InputMapping
         {
-            ActionMappings =
-            {
+            ActionMappings = ImmutableArray.Create
+            (
                 new ActionMapping
                 {
                     ActionName = "Exit",
@@ -51,7 +51,7 @@ public sealed class CommonEntityFactory
                         }
                     )
                 }
-            }
+            )
         };
 
         inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);

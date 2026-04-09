@@ -30,7 +30,7 @@ namespace Geisha.Engine.Input.Assets
             if (inputMappingAssetContent.AxisMappings == null)
                 throw new InvalidOperationException($"{nameof(InputMappingAssetContent)}.{nameof(InputMappingAssetContent.AxisMappings)} cannot be null.");
 
-            var inputMapping = new InputMapping();
+            var actionMappings = ImmutableArray.CreateBuilder<ActionMapping>();
 
             foreach (var (actionName, serializableHardwareActions) in inputMappingAssetContent.ActionMappings)
             {
@@ -73,13 +73,14 @@ namespace Geisha.Engine.Input.Assets
                     }
                 }
 
-                var actionMapping = new ActionMapping
+                actionMappings.Add(new ActionMapping
                 {
                     ActionName = actionName,
                     HardwareActions = hardwareActions.ToImmutable()
-                };
-                inputMapping.ActionMappings.Add(actionMapping);
+                });
             }
+
+            var axisMappings = ImmutableArray.CreateBuilder<AxisMapping>();
 
             foreach (var (axisName, serializableHardwareAxes) in inputMappingAssetContent.AxisMappings)
             {
@@ -120,16 +121,18 @@ namespace Geisha.Engine.Input.Assets
                     }
                 }
 
-                var axisMapping = new AxisMapping
+                axisMappings.Add(new AxisMapping
                 {
                     AxisName = axisName,
                     HardwareAxes = hardwareAxes.ToImmutable()
-                };
-
-                inputMapping.AxisMappings.Add(axisMapping);
+                });
             }
 
-            return inputMapping;
+            return new InputMapping
+            {
+                ActionMappings = actionMappings.ToImmutable(),
+                AxisMappings = axisMappings.ToImmutable()
+            };
         }
 
         public void UnloadAsset(object asset)

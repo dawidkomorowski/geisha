@@ -109,8 +109,8 @@ Scale:
             // Set input mapping so selected keys will trigger corresponding actions.
             inputComponent.InputMapping = new InputMapping
             {
-                AxisMappings =
-                {
+                AxisMappings = ImmutableArray.Create
+                (
                     new AxisMapping
                     {
                         AxisName = "MoveVertically",
@@ -179,7 +179,7 @@ Scale:
                             }
                         )
                     }
-                }
+                )
             };
             // Add component that handles transform updates based on input.
             parent.CreateComponent<TransformControllerComponent>();

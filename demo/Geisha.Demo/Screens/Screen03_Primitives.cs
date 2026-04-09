@@ -94,8 +94,8 @@ internal sealed class PrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so SPACE key will trigger "Cycle" action.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "Cycle",
@@ -107,7 +107,7 @@ internal sealed class PrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
                             }
                         )
                     }
-                }
+                )
             };
             // Bind "Cycle" action to call our cycle logic.
             inputComponent.BindAction("Cycle", () =>

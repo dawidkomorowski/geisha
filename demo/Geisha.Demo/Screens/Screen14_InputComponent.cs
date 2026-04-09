@@ -73,8 +73,8 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             // Create first input mapping scheme.
             var keymap1 = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "SwitchKeyMap",
@@ -119,13 +119,13 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             }
                         )
                     }
-                }
+                )
             };
             // Create second input mapping scheme.
             var keymap2 = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "SwitchKeyMap",
@@ -182,7 +182,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             }
                         )
                     }
-                }
+                )
             };
             // Set first input mapping scheme to be used with InputComponent.
             inputComponent.InputMapping = keymap1;

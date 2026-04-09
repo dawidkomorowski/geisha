@@ -86,8 +86,8 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
             // Set input mapping so selected keys will trigger corresponding actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "Cycle",
@@ -99,7 +99,7 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
                             }
                         )
                     }
-                }
+                )
             };
             // Bind "Cycle" action to call our cycle logic.
             inputComponent.BindAction("Cycle", () => { CycleAnimations(character); });

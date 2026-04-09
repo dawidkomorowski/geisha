@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
@@ -189,12 +190,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
-            var inputMapping = new InputMapping();
-
             var actionMapping1 = new ActionMapping { ActionName = "Action 1" };
             var actionMapping2 = new ActionMapping { ActionName = "Action 2" };
-            inputMapping.ActionMappings.Add(actionMapping1);
-            inputMapping.ActionMappings.Add(actionMapping2);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(actionMapping1, actionMapping2)
+            };
 
             // Act
             inputComponent.InputMapping = inputMapping;
@@ -211,12 +212,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
-            var inputMapping = new InputMapping();
-
             var axisMapping1 = new AxisMapping { AxisName = "Axis 1" };
             var axisMapping2 = new AxisMapping { AxisName = "Axis 2" };
-            inputMapping.AxisMappings.Add(axisMapping1);
-            inputMapping.AxisMappings.Add(axisMapping2);
+            var inputMapping = new InputMapping
+            {
+                AxisMappings = ImmutableArray.Create(axisMapping1, axisMapping2)
+            };
 
             // Act
             inputComponent.InputMapping = inputMapping;
@@ -308,12 +309,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
-            var inputMapping = new InputMapping();
-
             var actionMapping1 = new ActionMapping { ActionName = "Action 1" };
             var actionMapping2 = new ActionMapping { ActionName = "Action 2" };
-            inputMapping.ActionMappings.Add(actionMapping1);
-            inputMapping.ActionMappings.Add(actionMapping2);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(actionMapping1, actionMapping2)
+            };
             inputComponent.InputMapping = inputMapping;
 
             inputComponent.ActionStates[actionMapping1.ActionName] = true;
@@ -333,12 +334,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
-            var inputMapping = new InputMapping();
-
             var actionMapping1 = new ActionMapping { ActionName = "Action 1" };
             var actionMapping2 = new ActionMapping { ActionName = "Action 2" };
-            inputMapping.ActionMappings.Add(actionMapping1);
-            inputMapping.ActionMappings.Add(actionMapping2);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(actionMapping1, actionMapping2)
+            };
             inputComponent.InputMapping = inputMapping;
 
             inputComponent.ActionStates[actionMapping1.ActionName] = true;
@@ -358,12 +359,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
-            var inputMapping = new InputMapping();
-
             var axisMapping1 = new AxisMapping { AxisName = "Axis 1" };
             var axisMapping2 = new AxisMapping { AxisName = "Axis 2" };
-            inputMapping.AxisMappings.Add(axisMapping1);
-            inputMapping.AxisMappings.Add(axisMapping2);
+            var inputMapping = new InputMapping
+            {
+                AxisMappings = ImmutableArray.Create(axisMapping1, axisMapping2)
+            };
             inputComponent.InputMapping = inputMapping;
 
             inputComponent.AxisStates[axisMapping1.AxisName] = 1d;
@@ -383,12 +384,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
-            var inputMapping = new InputMapping();
-
             var axisMapping1 = new AxisMapping { AxisName = "Axis 1" };
             var axisMapping2 = new AxisMapping { AxisName = "Axis 2" };
-            inputMapping.AxisMappings.Add(axisMapping1);
-            inputMapping.AxisMappings.Add(axisMapping2);
+            var inputMapping = new InputMapping
+            {
+                AxisMappings = ImmutableArray.Create(axisMapping1, axisMapping2)
+            };
             inputComponent.InputMapping = inputMapping;
 
             inputComponent.AxisStates[axisMapping1.AxisName] = 1d;
@@ -411,7 +412,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
             const string actionName = "ActionName";
-            Action action = () => { };
+            var action = () => { };
 
             // Act
             inputComponent.BindAction(actionName, action);

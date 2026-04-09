@@ -34,8 +34,8 @@ public sealed class InfoComponent : BehaviorComponent
             var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "ToggleInfo",
@@ -47,7 +47,7 @@ public sealed class InfoComponent : BehaviorComponent
                             }
                         )
                     }
-                }
+                )
             };
 
             inputComponent.BindAction("ToggleInfo", ToggleInfo);

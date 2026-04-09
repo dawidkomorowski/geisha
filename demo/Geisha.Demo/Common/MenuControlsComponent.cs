@@ -27,8 +27,8 @@ namespace Geisha.Demo.Common
             var inputComponent = Entity.GetComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "Exit",
@@ -73,7 +73,7 @@ namespace Geisha.Demo.Common
                             }
                         )
                     }
-                }
+                )
             };
 
             inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);

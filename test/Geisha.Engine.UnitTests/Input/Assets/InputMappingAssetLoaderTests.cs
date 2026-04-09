@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -142,8 +142,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action Key.Space"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
@@ -165,8 +165,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action Key.C and Key.LeftCtrl"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(2));
@@ -189,8 +189,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.LeftButton"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
@@ -211,8 +211,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.MiddleButton"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
@@ -233,8 +233,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.RightButton"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
@@ -255,8 +255,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.XButton1"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
@@ -277,8 +277,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(1));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(1));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.XButton2"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
@@ -300,8 +300,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(0));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(0));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(1));
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis Key.Up and Key.Down"));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(2));
@@ -326,8 +326,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(0));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(0));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(1));
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis MouseAxis.AxisX"));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(1));
@@ -349,8 +349,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 mapping =>
                 {
-                    Assert.That(mapping.ActionMappings, Has.Count.EqualTo(0));
-                    Assert.That(mapping.AxisMappings, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings, Has.Length.EqualTo(0));
+                    Assert.That(mapping.AxisMappings, Has.Length.EqualTo(1));
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis MouseAxis.AxisY"));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(1));

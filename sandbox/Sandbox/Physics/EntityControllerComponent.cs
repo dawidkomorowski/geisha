@@ -32,8 +32,8 @@ public sealed class EntityControllerComponent : BehaviorComponent
             var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "ChangeToCircle",
@@ -122,7 +122,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                             }
                         )
                     }
-                }
+                )
             };
 
             inputComponent.BindAction("ChangeToCircle", () => SetCollider("Circle"));

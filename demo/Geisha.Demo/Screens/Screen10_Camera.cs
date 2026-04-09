@@ -62,8 +62,8 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so selected keys will trigger corresponding actions.
             inputComponent.InputMapping = new InputMapping
             {
-                AxisMappings =
-                {
+                AxisMappings = ImmutableArray.Create
+                (
                     new AxisMapping
                     {
                         AxisName = "MoveVertically",
@@ -98,7 +98,7 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                             }
                         )
                     }
-                }
+                )
             };
             // Add component that handles camera movement with frame-independent speed.
             camera.CreateComponent<CameraControlComponent>();

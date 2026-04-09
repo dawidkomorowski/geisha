@@ -81,8 +81,8 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so selected keys will trigger corresponding actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "PlaySound1",
@@ -138,7 +138,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                             }
                         )
                     }
-                }
+                )
             };
             // Get sound assets from IAssetStore.
             var sound1 = _assetStore.GetAsset<ISound>(AssetId.Parse("0a72baa4-22dd-41f1-b2c3-2f254501697a"));

@@ -33,8 +33,8 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "SetLayout1",
@@ -167,7 +167,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                             }
                         )
                     }
-                }
+                )
             };
             inputComponent.BindAction("SetLayout1", () => SetLayout(1));
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));

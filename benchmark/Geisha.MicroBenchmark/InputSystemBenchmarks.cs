@@ -71,8 +71,6 @@ public class InputSystemBenchmarks
         // Covers: keyboard actions (single hardware action), keyboard axes (multi hardware axis),
         //         multi hardware action mapping (Jump: Up OR Space), all bindings registered.
         {
-            var inputMapping = new InputMapping();
-
             var moveRight = new ActionMapping
             {
                 ActionName = "MoveRight",
@@ -95,10 +93,6 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.ActionMappings.Add(moveRight);
-            inputMapping.ActionMappings.Add(moveLeft);
-            inputMapping.ActionMappings.Add(jump);
-
             var moveX = new AxisMapping
             {
                 AxisName = "MoveX",
@@ -119,8 +113,11 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.AxisMappings.Add(moveX);
-            inputMapping.AxisMappings.Add(moveY);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(moveRight, moveLeft, jump),
+                AxisMappings = ImmutableArray.Create(moveX, moveY)
+            };
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -136,8 +133,6 @@ public class InputSystemBenchmarks
         // Covers: mouse button actions, multi hardware action mapping (Melee: XButton1 OR XButton2),
         //         mouse axis (AxisX, AxisY with negation), all bindings registered.
         {
-            var inputMapping = new InputMapping();
-
             var fire = new ActionMapping
             {
                 ActionName = "Fire",
@@ -190,11 +185,6 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.ActionMappings.Add(fire);
-            inputMapping.ActionMappings.Add(altFire);
-            inputMapping.ActionMappings.Add(zoom);
-            inputMapping.ActionMappings.Add(melee);
-
             var lookX = new AxisMapping
             {
                 AxisName = "LookX",
@@ -218,8 +208,11 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.AxisMappings.Add(lookX);
-            inputMapping.AxisMappings.Add(lookY);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(fire, altFire, zoom, melee),
+                AxisMappings = ImmutableArray.Create(lookX, lookY)
+            };
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -235,8 +228,6 @@ public class InputSystemBenchmarks
         // Entity 3: Mixed keyboard + mouse mappings, partial bindings
         // Covers: mixed input source actions, no-binding code path for some actions.
         {
-            var inputMapping = new InputMapping();
-
             var dash = new ActionMapping
             {
                 ActionName = "Dash",
@@ -267,10 +258,6 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.ActionMappings.Add(dash);
-            inputMapping.ActionMappings.Add(crouch);
-            inputMapping.ActionMappings.Add(primaryFire);
-
             var throttle = new AxisMapping
             {
                 AxisName = "Throttle",
@@ -281,7 +268,11 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.AxisMappings.Add(throttle);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(dash, crouch, primaryFire),
+                AxisMappings = ImmutableArray.Create(throttle)
+            };
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -294,8 +285,6 @@ public class InputSystemBenchmarks
         // Entity 4: Mixed keyboard + mouse axes, multi-axis accumulation, no bindings
         // Covers: multi-source axis accumulation, pure state tracking (no bindings registered).
         {
-            var inputMapping = new InputMapping();
-
             var action = new ActionMapping
             {
                 ActionName = "Action",
@@ -304,8 +293,6 @@ public class InputSystemBenchmarks
                     new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
                 )
             };
-
-            inputMapping.ActionMappings.Add(action);
 
             var combinedAxis = new AxisMapping
             {
@@ -321,7 +308,11 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.AxisMappings.Add(combinedAxis);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(action),
+                AxisMappings = ImmutableArray.Create(combinedAxis)
+            };
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -331,8 +322,6 @@ public class InputSystemBenchmarks
 
         // Entity 5: Duplicate of Entity 1 - simulates a second active entity with full input processing
         {
-            var inputMapping = new InputMapping();
-
             var moveRight = new ActionMapping
             {
                 ActionName = "MoveRight",
@@ -361,10 +350,6 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.ActionMappings.Add(moveRight);
-            inputMapping.ActionMappings.Add(moveLeft);
-            inputMapping.ActionMappings.Add(jump);
-
             var moveX = new AxisMapping
             {
                 AxisName = "MoveX",
@@ -385,8 +370,11 @@ public class InputSystemBenchmarks
                 )
             };
 
-            inputMapping.AxisMappings.Add(moveX);
-            inputMapping.AxisMappings.Add(moveY);
+            var inputMapping = new InputMapping
+            {
+                ActionMappings = ImmutableArray.Create(moveRight, moveLeft, jump),
+                AxisMappings = ImmutableArray.Create(moveX, moveY)
+            };
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();

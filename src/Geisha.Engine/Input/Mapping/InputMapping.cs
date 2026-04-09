@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Geisha.Engine.Input.Mapping;
@@ -6,17 +5,17 @@ namespace Geisha.Engine.Input.Mapping;
 /// <summary>
 ///     Defines mapping of hardware input to actions and axes.
 /// </summary>
-public class InputMapping
+public sealed class InputMapping
 {
     /// <summary>
     ///     List of action mappings.
     /// </summary>
-    public List<ActionMapping> ActionMappings { get; } = new();
+    public ImmutableArray<ActionMapping> ActionMappings { get; init; } = ImmutableArray<ActionMapping>.Empty;
 
     /// <summary>
     ///     List of axis mappings.
     /// </summary>
-    public List<AxisMapping> AxisMappings { get; } = new();
+    public ImmutableArray<AxisMapping> AxisMappings { get; init; } = ImmutableArray<AxisMapping>.Empty;
 }
 
 /// <summary>

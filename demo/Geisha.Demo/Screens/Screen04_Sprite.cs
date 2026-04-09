@@ -88,8 +88,8 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so UP and DOWN keys will trigger "IncreaseOpacity" and "DecreaseOpacity" actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "IncreaseOpacity",
@@ -112,7 +112,7 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
                             }
                         )
                     }
-                }
+                )
             };
             // Bind "IncreaseOpacity" action to call opacity handling logic.
             inputComponent.BindAction("IncreaseOpacity", () => { spriteRenderer.Opacity += 0.1; });
