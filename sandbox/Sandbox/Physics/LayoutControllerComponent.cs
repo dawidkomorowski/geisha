@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -37,134 +38,134 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                     new ActionMapping
                     {
                         ActionName = "SetLayout1",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SetLayout2",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SetLayout3",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SetLayout4",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D4)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "ToggleCollisionDetection",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "DeleteEntity",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnSquare",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F1)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnCircle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F2)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnWideRectangle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F3)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnTallRectangle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F4)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Save",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F9)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Load",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F12)
                             }
-                        }
+                        )
                     }
                 }
             };

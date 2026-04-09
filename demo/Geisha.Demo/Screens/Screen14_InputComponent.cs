@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Geisha.Demo.Common;
@@ -77,46 +78,46 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                     new ActionMapping
                     {
                         ActionName = "SwitchKeyMap",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Jump",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Attack",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Use",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift)
                             }
-                        }
+                        )
                     }
                 }
             };
@@ -128,19 +129,19 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                     new ActionMapping
                     {
                         ActionName = "SwitchKeyMap",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Jump",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
@@ -149,13 +150,13 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Attack",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.E)
@@ -164,13 +165,13 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.RightCtrl)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Use",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
@@ -179,7 +180,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.RightShift)
                             }
-                        }
+                        )
                     }
                 }
             };

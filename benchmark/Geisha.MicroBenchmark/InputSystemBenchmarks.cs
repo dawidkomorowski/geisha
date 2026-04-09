@@ -73,15 +73,27 @@ public class InputSystemBenchmarks
         {
             var inputMapping = new InputMapping();
 
-            var moveRight = new ActionMapping { ActionName = "MoveRight" };
-            moveRight.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right) });
+            var moveRight = new ActionMapping
+            {
+                ActionName = "MoveRight",
+                HardwareActions = ImmutableArray.Create(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right) })
+            };
 
-            var moveLeft = new ActionMapping { ActionName = "MoveLeft" };
-            moveLeft.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left) });
+            var moveLeft = new ActionMapping
+            {
+                ActionName = "MoveLeft",
+                HardwareActions = ImmutableArray.Create(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left) })
+            };
 
-            var jump = new ActionMapping { ActionName = "Jump" };
-            jump.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up) });
-            jump.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) });
+            var jump = new ActionMapping
+            {
+                ActionName = "Jump",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up) },
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
+                )
+            };
 
             inputMapping.ActionMappings.Add(moveRight);
             inputMapping.ActionMappings.Add(moveLeft);
@@ -126,23 +138,57 @@ public class InputSystemBenchmarks
         {
             var inputMapping = new InputMapping();
 
-            var fire = new ActionMapping { ActionName = "Fire" };
-            fire.HardwareActions.Add(new HardwareAction
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton) });
+            var fire = new ActionMapping
+            {
+                ActionName = "Fire",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
+                    }
+                )
+            };
 
-            var altFire = new ActionMapping { ActionName = "AltFire" };
-            altFire.HardwareActions.Add(new HardwareAction
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton) });
+            var altFire = new ActionMapping
+            {
+                ActionName = "AltFire",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
+                    }
+                )
+            };
 
-            var zoom = new ActionMapping { ActionName = "Zoom" };
-            zoom.HardwareActions.Add(new HardwareAction
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton) });
+            var zoom = new ActionMapping
+            {
+                ActionName = "Zoom",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)
+                    }
+                )
+            };
 
-            var melee = new ActionMapping { ActionName = "Melee" };
-            melee.HardwareActions.Add(new HardwareAction
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1) });
-            melee.HardwareActions.Add(new HardwareAction
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2) });
+            var melee = new ActionMapping
+            {
+                ActionName = "Melee",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)
+                    },
+                    new HardwareAction
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)
+                    }
+                )
+            };
 
             inputMapping.ActionMappings.Add(fire);
             inputMapping.ActionMappings.Add(altFire);
@@ -191,15 +237,35 @@ public class InputSystemBenchmarks
         {
             var inputMapping = new InputMapping();
 
-            var dash = new ActionMapping { ActionName = "Dash" };
-            dash.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift) });
+            var dash = new ActionMapping
+            {
+                ActionName = "Dash",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift) }
+                )
+            };
 
-            var crouch = new ActionMapping { ActionName = "Crouch" };
-            crouch.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftCtrl) });
+            var crouch = new ActionMapping
+            {
+                ActionName = "Crouch",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftCtrl) }
+                )
+            };
 
-            var primaryFire = new ActionMapping { ActionName = "PrimaryFire" };
-            primaryFire.HardwareActions.Add(new HardwareAction
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton) });
+            var primaryFire = new ActionMapping
+            {
+                ActionName = "PrimaryFire",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
+                    }
+                )
+            };
 
             inputMapping.ActionMappings.Add(dash);
             inputMapping.ActionMappings.Add(crouch);
@@ -230,8 +296,14 @@ public class InputSystemBenchmarks
         {
             var inputMapping = new InputMapping();
 
-            var action = new ActionMapping { ActionName = "Action" };
-            action.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) });
+            var action = new ActionMapping
+            {
+                ActionName = "Action",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
+                )
+            };
 
             inputMapping.ActionMappings.Add(action);
 
@@ -261,15 +333,33 @@ public class InputSystemBenchmarks
         {
             var inputMapping = new InputMapping();
 
-            var moveRight = new ActionMapping { ActionName = "MoveRight" };
-            moveRight.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right) });
+            var moveRight = new ActionMapping
+            {
+                ActionName = "MoveRight",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right) }
+                )
+            };
 
-            var moveLeft = new ActionMapping { ActionName = "MoveLeft" };
-            moveLeft.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left) });
+            var moveLeft = new ActionMapping
+            {
+                ActionName = "MoveLeft",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left) }
+                )
+            };
 
-            var jump = new ActionMapping { ActionName = "Jump" };
-            jump.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up) });
-            jump.HardwareActions.Add(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) });
+            var jump = new ActionMapping
+            {
+                ActionName = "Jump",
+                HardwareActions = ImmutableArray.Create
+                (
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up) },
+                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
+                )
+            };
 
             inputMapping.ActionMappings.Add(moveRight);
             inputMapping.ActionMappings.Add(moveLeft);

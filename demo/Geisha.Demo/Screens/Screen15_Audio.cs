@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
@@ -85,57 +86,57 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                     new ActionMapping
                     {
                         ActionName = "PlaySound1",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "PlaySound2",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "PlaySound3",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "IncreaseVolume",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "DecreaseVolume",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
-                        }
+                        )
                     }
                 }
             };

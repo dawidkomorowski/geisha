@@ -653,27 +653,45 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             public void AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
                 out ActionMapping jump)
             {
-                moveRight = new ActionMapping { ActionName = nameof(moveRight) };
-                moveRight.HardwareActions.Add(new HardwareAction
+                moveRight = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right)
-                });
+                    ActionName = nameof(moveRight),
+                    HardwareActions = ImmutableArray.Create
+                    (
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right)
+                        }
+                    )
+                };
 
-                moveLeft = new ActionMapping { ActionName = nameof(moveLeft) };
-                moveLeft.HardwareActions.Add(new HardwareAction
+                moveLeft = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left)
-                });
+                    ActionName = nameof(moveLeft),
+                    HardwareActions = ImmutableArray.Create
+                    (
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left)
+                        }
+                    )
+                };
 
-                jump = new ActionMapping { ActionName = nameof(jump) };
-                jump.HardwareActions.Add(new HardwareAction
+                jump = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
-                });
-                jump.HardwareActions.Add(new HardwareAction
-                {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
-                });
+                    ActionName = nameof(jump),
+                    HardwareActions = ImmutableArray.Create
+                    (
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                        },
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                        }
+                    )
+                };
 
                 var inputMapping = new InputMapping();
                 inputMapping.ActionMappings.Add(moveRight);
@@ -740,33 +758,56 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             public void AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
                 out ActionMapping altFire, out ActionMapping melee)
             {
-                fire = new ActionMapping { ActionName = nameof(fire) };
-                fire.HardwareActions.Add(new HardwareAction
+                fire = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
-                });
+                    ActionName = nameof(fire),
+                    HardwareActions = ImmutableArray.Create
+                    (
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
+                        }
+                    )
+                };
 
-                zoom = new ActionMapping { ActionName = nameof(zoom) };
-                zoom.HardwareActions.Add(new HardwareAction
+                zoom = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)
-                });
+                    ActionName = nameof(zoom),
+                    HardwareActions = ImmutableArray.Create
+                    (
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)
+                        }
+                    )
+                };
 
-                altFire = new ActionMapping { ActionName = nameof(altFire) };
-                altFire.HardwareActions.Add(new HardwareAction
+                altFire = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
-                });
+                    ActionName = nameof(altFire),
+                    HardwareActions = ImmutableArray.Create
+                    (
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
+                        }
+                    )
+                };
 
-                melee = new ActionMapping { ActionName = nameof(melee) };
-                melee.HardwareActions.Add(new HardwareAction
+                melee = new ActionMapping
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)
-                });
-                melee.HardwareActions.Add(new HardwareAction
-                {
-                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)
-                });
+                    ActionName = nameof(melee),
+                    HardwareActions = ImmutableArray.Create(
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)
+                        },
+                        new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)
+                        }
+                    )
+                };
 
                 var inputMapping = new InputMapping();
                 inputMapping.ActionMappings.Add(fire);

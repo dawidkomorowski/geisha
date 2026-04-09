@@ -146,7 +146,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action Key.Space"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Space)));
                 }),
@@ -169,7 +169,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action Key.C and Key.LeftCtrl"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(2));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(2));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.ElementAt(0).HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.C)));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.ElementAt(1).HardwareInputVariant,
@@ -193,7 +193,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.LeftButton"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)));
                 }),
@@ -215,7 +215,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.MiddleButton"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)));
                 }),
@@ -237,7 +237,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.RightButton"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)));
                 }),
@@ -259,7 +259,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.XButton1"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)));
                 }),
@@ -281,7 +281,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(0));
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.XButton2"));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Count.EqualTo(1));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)));
                 }),

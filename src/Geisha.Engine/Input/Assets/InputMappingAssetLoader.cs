@@ -34,10 +34,7 @@ namespace Geisha.Engine.Input.Assets
 
             foreach (var (actionName, serializableHardwareActions) in inputMappingAssetContent.ActionMappings)
             {
-                var actionMapping = new ActionMapping
-                {
-                    ActionName = actionName
-                };
+                var hardwareActions = ImmutableArray.CreateBuilder<HardwareAction>();
 
                 foreach (var serializableHardwareAction in serializableHardwareActions)
                 {
@@ -45,7 +42,7 @@ namespace Geisha.Engine.Input.Assets
                     {
                         case { Key: not null, MouseButton: null }:
                         {
-                            actionMapping.HardwareActions.Add(new HardwareAction
+                            hardwareActions.Add(new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key.Value)
                             });
@@ -65,7 +62,7 @@ namespace Geisha.Engine.Input.Assets
                                     "Unsupported mouse button found in input mapping.")
                             };
 
-                            actionMapping.HardwareActions.Add(new HardwareAction
+                            hardwareActions.Add(new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant)
                             });
@@ -76,6 +73,11 @@ namespace Geisha.Engine.Input.Assets
                     }
                 }
 
+                var actionMapping = new ActionMapping
+                {
+                    ActionName = actionName,
+                    HardwareActions = hardwareActions.ToImmutable()
+                };
                 inputMapping.ActionMappings.Add(actionMapping);
             }
 

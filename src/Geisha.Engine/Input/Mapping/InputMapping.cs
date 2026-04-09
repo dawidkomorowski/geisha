@@ -32,7 +32,7 @@ public readonly record struct ActionMapping()
     /// <summary>
     ///     List of hardware actions this logical action is based on.
     /// </summary>
-    public List<HardwareAction> HardwareActions { get; init; } = new();
+    public ImmutableArray<HardwareAction> HardwareActions { get; init; } = ImmutableArray<HardwareAction>.Empty;
 }
 
 /// <summary>

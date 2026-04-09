@@ -19,7 +19,7 @@ namespace Geisha.Engine.Input.Mapping
         ///     instance.
         /// </param>
         /// <returns><see cref="HardwareInputVariant" /> representing specified keyboard variant.</returns>
-        public static HardwareInputVariant CreateKeyboardVariant(Key keyboardVariant) => new HardwareInputVariant(keyboardVariant);
+        public static HardwareInputVariant CreateKeyboardVariant(Key keyboardVariant) => new(keyboardVariant);
 
         /// <summary>
         ///     Creates new instance of <see cref="HardwareInputVariant" /> that represents mouse input variant like a particular

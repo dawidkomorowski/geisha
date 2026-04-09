@@ -1,4 +1,5 @@
-﻿using Geisha.Demo.Common;
+﻿using System.Collections.Immutable;
+using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -121,13 +122,13 @@ internal sealed class TextSceneBehaviorFactory : ISceneBehaviorFactory
                     new ActionMapping
                     {
                         ActionName = "Cycle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                             }
-                        }
+                        )
                     }
                 }
             };

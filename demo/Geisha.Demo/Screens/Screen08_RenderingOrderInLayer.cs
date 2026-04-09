@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -109,24 +110,24 @@ Press [UP] and [DOWN] to change the order of rendering.";
                     new ActionMapping
                     {
                         ActionName = "PushUp",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "PullDown",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
-                        }
+                        )
                     }
                 }
             };

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -92,24 +93,24 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
                     new ActionMapping
                     {
                         ActionName = "IncreaseOpacity",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "DecreaseOpacity",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
-                        }
+                        )
                     }
                 }
             };

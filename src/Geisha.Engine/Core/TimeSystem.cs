@@ -7,6 +7,8 @@ namespace Geisha.Engine.Core;
 //       - Consider making InputMapping immutable to avoid issues.
 //       - Consider using ImmutableArray for storing mappings in InputMapping to avoid issues with mutability and to improve performance.
 //       - InputSystem was optimized but IInputProvider implementations may still be inefficient, consider optimizing them as well.
+// TODO: Report ticket for introducing utility factory methods for HardwareAction and HardwareAxis to make it less verbose to create them, e.g. HardwareAction.CreateKeyboardVariant(Key key) and HardwareAxis.CreateGamepadVariant(GamepadAxis gamepadAxis).
+// TODO: Report ticket to consider separating mouse buttons from mouse axes in hardware input variants to avoid confusion (MouseVariant).
 // TODO: Add missing docs for new APIs.
 // TODO: Report ticket for showcasing TimeScale in Demo Application.
 // TODO: Add tests for timescale to be correctly respected by game loop and other systems.
