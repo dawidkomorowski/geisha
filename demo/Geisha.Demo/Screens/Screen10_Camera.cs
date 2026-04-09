@@ -1,12 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Immutable;
+using System.Linq;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -66,8 +67,8 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                     new AxisMapping
                     {
                         AxisName = "MoveVertically",
-                        HardwareAxes =
-                        {
+                        HardwareAxes = ImmutableArray.Create
+                        (
                             new HardwareAxis
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
@@ -78,13 +79,13 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
                                 Scale = -1
                             }
-                        }
+                        )
                     },
                     new AxisMapping
                     {
                         AxisName = "MoveHorizontally",
-                        HardwareAxes =
-                        {
+                        HardwareAxes = ImmutableArray.Create
+                        (
                             new HardwareAxis
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
@@ -95,7 +96,7 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
                                 Scale = -1
                             }
-                        }
+                        )
                     }
                 }
             };

@@ -1,4 +1,5 @@
-﻿using Geisha.Demo.Common;
+﻿using System.Collections.Immutable;
+using Geisha.Demo.Common;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -113,8 +114,8 @@ Scale:
                     new AxisMapping
                     {
                         AxisName = "MoveVertically",
-                        HardwareAxes =
-                        {
+                        HardwareAxes = ImmutableArray.Create
+                        (
                             new HardwareAxis
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
@@ -125,13 +126,13 @@ Scale:
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
                                 Scale = -1
                             }
-                        }
+                        )
                     },
                     new AxisMapping
                     {
                         AxisName = "MoveHorizontally",
-                        HardwareAxes =
-                        {
+                        HardwareAxes = ImmutableArray.Create
+                        (
                             new HardwareAxis
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
@@ -142,13 +143,13 @@ Scale:
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
                                 Scale = -1
                             }
-                        }
+                        )
                     },
                     new AxisMapping
                     {
                         AxisName = "RotateRight",
-                        HardwareAxes =
-                        {
+                        HardwareAxes = ImmutableArray.Create
+                        (
                             new HardwareAxis
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D),
@@ -159,13 +160,13 @@ Scale:
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.A),
                                 Scale = -1
                             }
-                        }
+                        )
                     },
                     new AxisMapping
                     {
                         AxisName = "ScaleUp",
-                        HardwareAxes =
-                        {
+                        HardwareAxes = ImmutableArray.Create
+                        (
                             new HardwareAxis
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W),
@@ -176,7 +177,7 @@ Scale:
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.S),
                                 Scale = -1
                             }
-                        }
+                        )
                     }
                 }
             };

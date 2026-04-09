@@ -304,7 +304,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(1));
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis Key.Up and Key.Down"));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Count.EqualTo(2));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(2));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(0).HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Up)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(0).Scale, Is.EqualTo(1.02));
@@ -330,7 +330,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(1));
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis MouseAxis.AxisX"));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Count.EqualTo(1));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(1));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().Scale, Is.EqualTo(1.02));
@@ -353,7 +353,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings, Has.Count.EqualTo(1));
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis MouseAxis.AxisY"));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Count.EqualTo(1));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(1));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().HardwareInputVariant,
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().Scale, Is.EqualTo(1.02));

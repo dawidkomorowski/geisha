@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Input.Assets.Serialization;
@@ -40,34 +41,38 @@ namespace Geisha.Engine.Input.Assets
 
                 foreach (var serializableHardwareAction in serializableHardwareActions)
                 {
-                    if (serializableHardwareAction.Key != null && serializableHardwareAction.MouseButton == null)
+                    switch (serializableHardwareAction)
                     {
-                        actionMapping.HardwareActions.Add(new HardwareAction
+                        case { Key: not null, MouseButton: null }:
                         {
-                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key.Value)
-                        });
-                    }
-                    else if (serializableHardwareAction.Key == null && serializableHardwareAction.MouseButton != null)
-                    {
-                        var mouseVariant = serializableHardwareAction.MouseButton switch
+                            actionMapping.HardwareActions.Add(new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key.Value)
+                            });
+                            break;
+                        }
+                        case { Key: null, MouseButton: not null }:
                         {
-                            MouseButton.LeftButton => HardwareInputVariant.MouseVariant.LeftButton,
-                            MouseButton.MiddleButton => HardwareInputVariant.MouseVariant.MiddleButton,
-                            MouseButton.RightButton => HardwareInputVariant.MouseVariant.RightButton,
-                            MouseButton.XButton1 => HardwareInputVariant.MouseVariant.XButton1,
-                            MouseButton.XButton2 => HardwareInputVariant.MouseVariant.XButton2,
-                            _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton), serializableHardwareAction.MouseButton,
-                                "Unsupported mouse button found in input mapping.")
-                        };
+                            var mouseVariant = serializableHardwareAction.MouseButton switch
+                            {
+                                MouseButton.LeftButton => HardwareInputVariant.MouseVariant.LeftButton,
+                                MouseButton.MiddleButton => HardwareInputVariant.MouseVariant.MiddleButton,
+                                MouseButton.RightButton => HardwareInputVariant.MouseVariant.RightButton,
+                                MouseButton.XButton1 => HardwareInputVariant.MouseVariant.XButton1,
+                                MouseButton.XButton2 => HardwareInputVariant.MouseVariant.XButton2,
+                                _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton),
+                                    serializableHardwareAction.MouseButton,
+                                    "Unsupported mouse button found in input mapping.")
+                            };
 
-                        actionMapping.HardwareActions.Add(new HardwareAction
-                        {
-                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant)
-                        });
-                    }
-                    else
-                    {
-                        throw InvalidInputMappingAssetContentException.CreateForInvalidHardwareAction(inputMappingAssetContent);
+                            actionMapping.HardwareActions.Add(new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant)
+                            });
+                            break;
+                        }
+                        default:
+                            throw InvalidInputMappingAssetContentException.CreateForInvalidHardwareAction(inputMappingAssetContent);
                     }
                 }
 
@@ -76,42 +81,48 @@ namespace Geisha.Engine.Input.Assets
 
             foreach (var (axisName, serializableHardwareAxes) in inputMappingAssetContent.AxisMappings)
             {
-                var axisMapping = new AxisMapping
-                {
-                    AxisName = axisName
-                };
+                var hardwareAxes = ImmutableArray.CreateBuilder<HardwareAxis>();
 
                 foreach (var serializableHardwareAxis in serializableHardwareAxes)
                 {
-                    if (serializableHardwareAxis.Key != null && serializableHardwareAxis.MouseAxis == null)
+                    switch (serializableHardwareAxis)
                     {
-                        axisMapping.HardwareAxes.Add(new HardwareAxis
+                        case { Key: not null, MouseAxis: null }:
                         {
-                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAxis.Key.Value),
-                            Scale = serializableHardwareAxis.Scale
-                        });
-                    }
-                    else if (serializableHardwareAxis.Key == null && serializableHardwareAxis.MouseAxis != null)
-                    {
-                        var mouseVariant = serializableHardwareAxis.MouseAxis switch
+                            hardwareAxes.Add(new HardwareAxis
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAxis.Key.Value),
+                                Scale = serializableHardwareAxis.Scale
+                            });
+                            break;
+                        }
+                        case { Key: null, MouseAxis: not null }:
                         {
-                            MouseAxis.AxisX => HardwareInputVariant.MouseVariant.AxisX,
-                            MouseAxis.AxisY => HardwareInputVariant.MouseVariant.AxisY,
-                            _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
-                                "Unsupported mouse axis found in input mapping.")
-                        };
+                            var mouseVariant = serializableHardwareAxis.MouseAxis switch
+                            {
+                                MouseAxis.AxisX => HardwareInputVariant.MouseVariant.AxisX,
+                                MouseAxis.AxisY => HardwareInputVariant.MouseVariant.AxisY,
+                                _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
+                                    "Unsupported mouse axis found in input mapping.")
+                            };
 
-                        axisMapping.HardwareAxes.Add(new HardwareAxis
-                        {
-                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant),
-                            Scale = serializableHardwareAxis.Scale
-                        });
-                    }
-                    else
-                    {
-                        throw InvalidInputMappingAssetContentException.CreateForInvalidHardwareAxis(inputMappingAssetContent);
+                            hardwareAxes.Add(new HardwareAxis
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant),
+                                Scale = serializableHardwareAxis.Scale
+                            });
+                            break;
+                        }
+                        default:
+                            throw InvalidInputMappingAssetContentException.CreateForInvalidHardwareAxis(inputMappingAssetContent);
                     }
                 }
+
+                var axisMapping = new AxisMapping
+                {
+                    AxisName = axisName,
+                    HardwareAxes = hardwareAxes.ToImmutable()
+                };
 
                 inputMapping.AxisMappings.Add(axisMapping);
             }

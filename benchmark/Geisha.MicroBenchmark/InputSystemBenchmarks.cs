@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -86,13 +87,25 @@ public class InputSystemBenchmarks
             inputMapping.ActionMappings.Add(moveLeft);
             inputMapping.ActionMappings.Add(jump);
 
-            var moveX = new AxisMapping { AxisName = "MoveX" };
-            moveX.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 });
-            moveX.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 });
+            var moveX = new AxisMapping
+            {
+                AxisName = "MoveX",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 },
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 }
+                )
+            };
 
-            var moveY = new AxisMapping { AxisName = "MoveY" };
-            moveY.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 });
-            moveY.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 });
+            var moveY = new AxisMapping
+            {
+                AxisName = "MoveY",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 },
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 }
+                )
+            };
 
             inputMapping.AxisMappings.Add(moveX);
             inputMapping.AxisMappings.Add(moveY);
@@ -107,7 +120,7 @@ public class InputSystemBenchmarks
             inputComponent.BindAxis("MoveY", _ => { });
         }
 
-        // Entity 2: Mouse action mappings + mouse axis mappings + all bindings
+        // Entity 2: Mouse action mappings
         // Covers: mouse button actions, multi hardware action mapping (Melee: XButton1 OR XButton2),
         //         mouse axis (AxisX, AxisY with negation), all bindings registered.
         {
@@ -136,13 +149,28 @@ public class InputSystemBenchmarks
             inputMapping.ActionMappings.Add(zoom);
             inputMapping.ActionMappings.Add(melee);
 
-            var lookX = new AxisMapping { AxisName = "LookX" };
-            lookX.HardwareAxes.Add(new HardwareAxis
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX), Scale = 1.0 });
+            var lookX = new AxisMapping
+            {
+                AxisName = "LookX",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX), Scale = 1.0
+                    }
+                )
+            };
 
-            var lookY = new AxisMapping { AxisName = "LookY" };
-            lookY.HardwareAxes.Add(new HardwareAxis
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY), Scale = 1.0 });
+            var lookY = new AxisMapping
+            {
+                AxisName = "LookY", HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY), Scale = 1.0
+                    }
+                )
+            };
 
             inputMapping.AxisMappings.Add(lookX);
             inputMapping.AxisMappings.Add(lookY);
@@ -177,9 +205,15 @@ public class InputSystemBenchmarks
             inputMapping.ActionMappings.Add(crouch);
             inputMapping.ActionMappings.Add(primaryFire);
 
-            var throttle = new AxisMapping { AxisName = "Throttle" };
-            throttle.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 });
-            throttle.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 });
+            var throttle = new AxisMapping
+            {
+                AxisName = "Throttle",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 },
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 }
+                )
+            };
 
             inputMapping.AxisMappings.Add(throttle);
 
@@ -201,11 +235,19 @@ public class InputSystemBenchmarks
 
             inputMapping.ActionMappings.Add(action);
 
-            var combinedAxis = new AxisMapping { AxisName = "CombinedAxis" };
-            combinedAxis.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 });
-            combinedAxis.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 });
-            combinedAxis.HardwareAxes.Add(new HardwareAxis
-                { HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX), Scale = 0.5 });
+            var combinedAxis = new AxisMapping
+            {
+                AxisName = "CombinedAxis",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 },
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 },
+                    new HardwareAxis
+                    {
+                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX), Scale = 0.5
+                    }
+                )
+            };
 
             inputMapping.AxisMappings.Add(combinedAxis);
 
@@ -233,13 +275,25 @@ public class InputSystemBenchmarks
             inputMapping.ActionMappings.Add(moveLeft);
             inputMapping.ActionMappings.Add(jump);
 
-            var moveX = new AxisMapping { AxisName = "MoveX" };
-            moveX.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 });
-            moveX.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 });
+            var moveX = new AxisMapping
+            {
+                AxisName = "MoveX",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 },
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 }
+                )
+            };
 
-            var moveY = new AxisMapping { AxisName = "MoveY" };
-            moveY.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 });
-            moveY.HardwareAxes.Add(new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 });
+            var moveY = new AxisMapping
+            {
+                AxisName = "MoveY",
+                HardwareAxes = ImmutableArray.Create
+                (
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 },
+                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 }
+                )
+            };
 
             inputMapping.AxisMappings.Add(moveX);
             inputMapping.AxisMappings.Add(moveY);
@@ -274,10 +328,10 @@ public class InputSystemBenchmarks
     }
 
     [Benchmark]
-    public void ProcessInput_5Entities_120_000Frames()
+    public void ProcessInput_5Entities_216_000Frames()
     {
-        // Assuming 60 FPS this simulates 2000 seconds of input processing.
-        for (var i = 0; i < 120_000; i++)
+        // Assuming 60 FPS this simulates 1h (3600 seconds) of input processing.
+        for (var i = 0; i < 216_000; i++)
         {
             _inputProvider.CurrentInput = InputSequence[i % InputSequence.Length];
             _inputSystem.ProcessInput();
