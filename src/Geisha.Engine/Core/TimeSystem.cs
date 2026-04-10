@@ -4,7 +4,6 @@ using System.Diagnostics;
 namespace Geisha.Engine.Core;
 
 // TODO: Add missing docs for new APIs.
-// TODO: Add tests for timescale to be correctly respected by game loop and other systems.
 
 public interface ITimeSystem
 {

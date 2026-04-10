@@ -153,17 +153,23 @@ public class GameLoopTests
         });
     }
 
-    [TestCase(0.05, 0, 0)]
-    [TestCase(0.1, 0, 1)]
-    [TestCase(0.2, 0, 2)]
-    [TestCase(0.78, 0, 7)]
-    [TestCase(0.78, 10, 7)]
-    [TestCase(0.78, 3, 3)]
-    public void Update_ShouldExecuteFixedTimeStepGameLoopStepsCorrectNumberOfTimes(double deltaTimeSeconds, int fixedUpdatesPerFrameLimit,
+    [TestCase(0.05, 1.0, 0, 0)]
+    [TestCase(0.1, 1.0, 0, 1)]
+    [TestCase(0.2, 1.0, 0, 2)]
+    [TestCase(0.78, 1.0, 0, 7)]
+    [TestCase(0.78, 1.0, 10, 7)]
+    [TestCase(0.78, 1.0, 3, 3)]
+    [TestCase(0.1, 2.0, 0, 2)] // Faster time: 0.1 * 2.0 = 0.2s scaled → 2 fixed updates
+    [TestCase(0.1, 0.5, 0, 0)] // Slower time: 0.1 * 0.5 = 0.05s scaled → 0 fixed updates
+    [TestCase(0.2, 0.5, 0, 1)] // Slower time: 0.2 * 0.5 = 0.1s scaled → 1 fixed update
+    [TestCase(0.78, 2.0, 0, 15)] // Faster time: 0.78 * 2.0 = 1.56s scaled → 15 fixed updates
+    [TestCase(0.78, 2.0, 3, 3)] // Faster time with limit: limited to 3
+    [TestCase(0.1, 0.0, 0, 0)] // Paused: 0.1 * 0.0 = 0.0s scaled → 0 fixed updates
+    public void Update_ShouldExecuteFixedTimeStepGameLoopStepsCorrectNumberOfTimes(double dt, double timeScale, int fixedUpdatesPerFrameLimit,
         int expectedFixedUpdateCount)
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds));
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(dt), timeScale);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
@@ -207,16 +213,23 @@ public class GameLoopTests
         });
     }
 
-    [TestCase(0.05, 0, 0.5)]
-    [TestCase(0.07, 0, 0.7)]
-    [TestCase(0.12, 0, 0.2)]
-    [TestCase(0.38, 0, 0.8)]
-    [TestCase(0.38, 3, 0.8)]
-    [TestCase(0.38, 2, 1.0)]
-    public void Update_ShouldCallInterpolateTransformsWithCorrectAlpha(double deltaTimeSeconds, int fixedUpdatesPerFrameLimit, double expectedAlpha)
+    [TestCase(0.05, 1.0, 0, 0.5)]
+    [TestCase(0.07, 1.0, 0, 0.7)]
+    [TestCase(0.12, 1.0, 0, 0.2)]
+    [TestCase(0.38, 1.0, 0, 0.8)]
+    [TestCase(0.38, 1.0, 3, 0.8)]
+    [TestCase(0.38, 1.0, 2, 1.0)]
+    [TestCase(0.1, 2.0, 0, 0.0)] // Faster time: 0.1 * 2.0 = 0.2s → 2 fixed, remaining=0.0, alpha=0.0
+    [TestCase(0.1, 0.5, 0, 0.5)] // Slower time: 0.1 * 0.5 = 0.05s → 0 fixed, remaining=0.05, alpha=0.5
+    [TestCase(0.14, 0.5, 0, 0.7)] // Slower time: 0.14 * 0.5 = 0.07s → 0 fixed, remaining=0.07, alpha=0.7
+    [TestCase(0.24, 0.5, 0, 0.2)] // Slower time: 0.24 * 0.5 = 0.12s → 1 fixed, remaining=0.02, alpha=0.2
+    [TestCase(0.38, 2.0, 0, 0.6)] // Faster time: 0.38 * 2.0 = 0.76s → 7 fixed, remaining=0.06, alpha=0.6
+    [TestCase(0.38, 2.0, 2, 1.0)] // Faster time with limit: 0.76s, limit=2, remaining=0.56, alpha=1.0
+    [TestCase(0.1, 0.0, 0, 0.0)] // Paused: 0.1 * 0.0 = 0.0s → 0 fixed, remaining=0.0, alpha=0.0
+    public void Update_ShouldCallInterpolateTransformsWithCorrectAlpha(double dt, double timeScale, int fixedUpdatesPerFrameLimit, double expectedAlpha)
     {
         // Arrange
-        var timeStep = new TimeStep(TimeSpan.FromSeconds(deltaTimeSeconds));
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(dt), timeScale);
         _timeSystem.Configure().NextTimeStep().Returns(timeStep);
         _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
