@@ -3,12 +3,6 @@ using System.Diagnostics;
 
 namespace Geisha.Engine.Core;
 
-// TODO: Report ticket: InputSystem was optimized but IInputProvider implementations may still be inefficient (memory?), consider optimizing them as well.
-// TODO: Report ticket for introducing utility factory methods for HardwareAction and HardwareAxis to make it less verbose to create them,
-//       e.g. HardwareAction.CreateKeyboardVariant(Key key) and HardwareAxis.CreateGamepadVariant(GamepadAxis gamepadAxis).
-//       Maybe some higher level builder for input mapping would be even better?
-// TODO: Report ticket to consider separating mouse buttons from mouse axes in hardware input variants to avoid confusion (MouseVariant).
-//       Something like that is already done for serialization of the input mapping asset.
 // TODO: Report ticket for showcasing TimeScale in Demo Application.
 // TODO: Add missing docs for new APIs.
 // TODO: Add tests for timescale to be correctly respected by game loop and other systems.
