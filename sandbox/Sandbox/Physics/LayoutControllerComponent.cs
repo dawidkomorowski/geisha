@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -188,8 +189,6 @@ public sealed class LayoutControllerComponent : BehaviorComponent
 
     public override void OnFixedUpdate()
     {
-        UpdateSpawnSizeFactor();
-
         if (Scene.RootEntities.Any(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
             return;
@@ -212,6 +211,11 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             default:
                 throw new InvalidOperationException($"Unsupported layout: {_layout}");
         }
+    }
+
+    public override void OnUpdate(in TimeStep timeStep)
+    {
+        UpdateSpawnSizeFactor();
     }
 
     private void SetLayout(int layout)
@@ -356,9 +360,9 @@ public sealed class LayoutControllerComponent : BehaviorComponent
     }
 
     // TODO This is a temporary solution. Scene serialization API should be improved to support serialization of subset of entities.
-    // The issue with full scene serialization is that it serializes all entities, including those that are not relevant for the layout.
-    // It also does not provide easy way to serialize some components that rely on additional data (e.g. textures) when those are created fully programmatically.
-    // For example, InputMapping is assumed to be an external resource, but it is created programmatically in this case.
+    //      The issue with full scene serialization is that it serializes all entities, including those that are not relevant for the layout.
+    //      It also does not provide easy way to serialize some components that rely on additional data (e.g. textures) when those are created fully programmatically.
+    //      For example, InputMapping is assumed to be an external resource, but it is created programmatically in this case.
     private void SaveLayout()
     {
         if (!Directory.Exists(LayoutsDirectory))
