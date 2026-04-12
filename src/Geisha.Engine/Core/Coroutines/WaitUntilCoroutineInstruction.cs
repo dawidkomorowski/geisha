@@ -1,20 +1,19 @@
 ﻿using System;
 
-namespace Geisha.Engine.Core.Coroutines
+namespace Geisha.Engine.Core.Coroutines;
+
+internal sealed class WaitUntilCoroutineInstruction : CoroutineInstruction
 {
-    internal sealed class WaitUntilCoroutineInstruction : CoroutineInstruction
+    private readonly Func<bool> _condition;
+
+    public WaitUntilCoroutineInstruction(Func<bool> condition)
     {
-        private readonly Func<bool> _condition;
+        _condition = condition;
+    }
 
-        public WaitUntilCoroutineInstruction(Func<bool> condition)
-        {
-            _condition = condition;
-        }
+    internal override bool IsCompleted(in TimeStep timeStep) => _condition();
 
-        internal override bool IsCompleted(in TimeStep timeStep) => _condition();
-
-        internal override void Execute(Coroutine coroutine)
-        {
-        }
+    internal override void Execute(Coroutine coroutine)
+    {
     }
 }

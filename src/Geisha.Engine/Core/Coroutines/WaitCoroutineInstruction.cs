@@ -1,25 +1,24 @@
 ﻿using System;
 
-namespace Geisha.Engine.Core.Coroutines
+namespace Geisha.Engine.Core.Coroutines;
+
+internal sealed class WaitCoroutineInstruction : CoroutineInstruction
 {
-    internal sealed class WaitCoroutineInstruction : CoroutineInstruction
+    private readonly TimeSpan _waitTime;
+    private TimeSpan _timeWaited = TimeSpan.Zero;
+
+    public WaitCoroutineInstruction(TimeSpan waitTime)
     {
-        private readonly TimeSpan _waitTime;
-        private TimeSpan _timeWaited = TimeSpan.Zero;
+        _waitTime = waitTime;
+    }
 
-        public WaitCoroutineInstruction(TimeSpan waitTime)
-        {
-            _waitTime = waitTime;
-        }
+    internal override bool IsCompleted(in TimeStep timeStep)
+    {
+        _timeWaited += timeStep.DeltaTime;
+        return _timeWaited >= _waitTime;
+    }
 
-        internal override bool IsCompleted(in TimeStep timeStep)
-        {
-            _timeWaited += timeStep.DeltaTime;
-            return _timeWaited >= _waitTime;
-        }
-
-        internal override void Execute(Coroutine coroutine)
-        {
-        }
+    internal override void Execute(Coroutine coroutine)
+    {
     }
 }

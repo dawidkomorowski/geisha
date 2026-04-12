@@ -1,33 +1,32 @@
-﻿namespace Geisha.Engine.Core.Coroutines
+﻿namespace Geisha.Engine.Core.Coroutines;
+
+/// <summary>
+///     Specifies state of <see cref="Coroutine" />.
+/// </summary>
+public enum CoroutineState
 {
     /// <summary>
-    ///     Specifies state of <see cref="Coroutine" />.
+    ///     <see cref="Coroutine" /> is ready to be started.
     /// </summary>
-    public enum CoroutineState
-    {
-        /// <summary>
-        ///     <see cref="Coroutine" /> is ready to be started.
-        /// </summary>
-        Pending,
+    Pending,
 
-        /// <summary>
-        ///     <see cref="Coroutine" /> is running.
-        /// </summary>
-        Running,
+    /// <summary>
+    ///     <see cref="Coroutine" /> is running.
+    /// </summary>
+    Running,
 
-        /// <summary>
-        ///     <see cref="Coroutine" /> is paused.
-        /// </summary>
-        Paused,
+    /// <summary>
+    ///     <see cref="Coroutine" /> is paused.
+    /// </summary>
+    Paused,
 
-        /// <summary>
-        ///     <see cref="Coroutine" /> has completed.
-        /// </summary>
-        Completed,
+    /// <summary>
+    ///     <see cref="Coroutine" /> has completed.
+    /// </summary>
+    Completed,
 
-        /// <summary>
-        ///     <see cref="Coroutine" /> was aborted.
-        /// </summary>
-        Aborted
-    }
+    /// <summary>
+    ///     <see cref="Coroutine" /> was aborted.
+    /// </summary>
+    Aborted
 }
