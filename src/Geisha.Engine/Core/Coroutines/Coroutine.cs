@@ -4,6 +4,11 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
 {
+    // TODO: Current coroutine implementation has unclear semantics in case of nested calls in regard to if the call is made in the same frame or not.
+    //       For example, if coroutine A calls coroutine B and B have WaitForNextFrame instruction as not a first instruction, then it is not clear if the execution of B starts in the same frame as A or in the next frame.
+    //       It is also not clear if the first instruction of B is executed in the same frame as A or in the next frame. This may lead to confusion and bugs. Consider clarifying this behavior and making it consistent.
+    //       The same applies to SwitchTo instruction.
+
     /// <summary>
     ///     Represents coroutine managed by coroutine system. <see cref="Coroutine" /> class provides APIs to control execution
     ///     of coroutine. To create or start new <see cref="Coroutine" /> use APIs provided by <see cref="ICoroutineSystem" />.
