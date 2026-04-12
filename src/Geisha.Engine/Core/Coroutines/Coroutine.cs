@@ -9,6 +9,12 @@ namespace Geisha.Engine.Core.Coroutines;
 //       The same applies to SwitchTo instruction.
 // TODO: Current implementation of coroutine system results with excessive number of allocations as each instruction is a separate object.
 //       Consider implementing some kind of pooling or struct-based instructions to reduce the number of allocations and GC pressure.
+// TODO: Review current approach to coroutines running in variable or fixed time step. WaitForRealTime instruction behaves differently in variable and fixed time step which may be confusing.
+//       Consider if it is possible to unify the behavior of WaitRealTime instruction regardless of selected update mode.
+//       Or consider if it is possible to allow to select update mode on per instruction basis instead of per coroutine basis which would allow to have more flexibility and avoid confusion.
+//       Some instructions may have no sense in fixed time step while some instructions may have no sense in variable time step.
+//       Consider if it is possible to enforce that certain instructions can be used only in certain update mode which would allow to avoid confusion and bugs.
+//       Or consider removing the concept of update mode from coroutine and instead make the instructions themselves responsible for selecting the time step they use which would allow to have more flexibility and avoid confusion.
 
 /// <summary>
 ///     Represents coroutine managed by coroutine system. <see cref="Coroutine" /> class provides APIs to control execution
@@ -99,21 +105,58 @@ public sealed class Coroutine
     }
 
     /// <summary>
-    ///     Creates Wait instruction that allows to suspend execution of current coroutine for specified timespan.
+    ///     Creates Wait instruction that allows to suspend execution of current coroutine for specified timespan of game
+    ///     time.
     /// </summary>
-    /// <param name="waitTime"><see cref="TimeSpan" /> of the wait.</param>
+    /// <param name="waitTime"><see cref="TimeSpan" /> of the wait in game time.</param>
     /// <returns><see cref="CoroutineInstruction" /> representing Wait instruction.</returns>
     /// <remarks>
-    ///     Actual time of wait may vary from the specified <paramref name="waitTime" />. It is due to discrete nature of
-    ///     finite number of updates per second. Each update moves the logical clock by elapsed delta time or fixed delta time,
-    ///     depending on selected <see cref="CoroutineUpdateMode" />. Wait instruction guarantees that at least specified
-    ///     <paramref name="waitTime" /> elapsed before resuming the coroutine. However, the actual elapsed time may be longer.
+    ///     <para>
+    ///         Wait instruction uses game time (<see cref="TimeStep.DeltaTime" />) which is affected by
+    ///         <see cref="ITimeSystem.TimeScale" />. When <see cref="ITimeSystem.TimeScale" /> is <c>0.0</c>, no game
+    ///         time accumulates and Wait will never complete. For waiting in real time regardless of time scale, use
+    ///         <see cref="WaitRealTime" />.
+    ///     </para>
+    ///     <para>
+    ///         Actual time of wait may vary from the specified <paramref name="waitTime" />. It is due to discrete nature of
+    ///         finite number of updates per second. Each update moves the logical clock by elapsed delta time or fixed delta
+    ///         time, depending on selected <see cref="CoroutineUpdateMode" />. Wait instruction guarantees that at least
+    ///         specified <paramref name="waitTime" /> elapsed before resuming the coroutine. However, the actual elapsed time
+    ///         may be longer.
+    ///     </para>
     /// </remarks>
+    /// <seealso cref="WaitRealTime" />
     public static CoroutineInstruction Wait(TimeSpan waitTime)
     {
         return new WaitCoroutineInstruction(waitTime);
     }
 
+    /// <summary>
+    ///     Creates WaitRealTime instruction that allows to suspend execution of current coroutine for specified timespan of
+    ///     real time.
+    /// </summary>
+    /// <param name="waitTime"><see cref="TimeSpan" /> of the wait in real time.</param>
+    /// <returns><see cref="CoroutineInstruction" /> representing WaitRealTime instruction.</returns>
+    /// <remarks>
+    ///     <para>
+    ///         WaitRealTime is similar to <see cref="Wait" /> but uses real elapsed time
+    ///         (<see cref="TimeStep.UnscaledDeltaTime" />) instead of game time (<see cref="TimeStep.DeltaTime" />). This
+    ///         means <see cref="ITimeSystem.TimeScale" /> does not affect the wait duration, making it suitable for
+    ///         scenarios such as pause menus or UI animations that should continue regardless of game simulation speed.
+    ///     </para>
+    ///     <para>
+    ///         Actual time of wait may vary from the specified <paramref name="waitTime" />. It is due to discrete nature of
+    ///         finite number of updates per second. WaitRealTime instruction guarantees that at least specified
+    ///         <paramref name="waitTime" /> of real time elapsed before resuming the coroutine. However, the actual elapsed
+    ///         time may be longer.
+    ///     </para>
+    ///     <para>
+    ///         For coroutines using <see cref="CoroutineUpdateMode.FixedTimeStep" />, WaitRealTime behaves identically to
+    ///         <see cref="Wait" /> because fixed time step updates are not affected by
+    ///         <see cref="ITimeSystem.TimeScale" /> at the per-call level.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Wait" />
     public static CoroutineInstruction WaitRealTime(TimeSpan waitTime)
     {
         return new WaitRealTimeCoroutineInstruction(waitTime);

@@ -64,6 +64,18 @@ public abstract class CoroutineSystemTests
         // ReSharper disable once IteratorNeverReturns
     }
 
+    private static IEnumerator<CoroutineInstruction> WaitRealTimeCoroutine(Data data)
+    {
+        var i = 0;
+        while (true)
+        {
+            i++;
+            data.Log.Add($"{nameof(WaitRealTimeCoroutine)} - {i}");
+            yield return Coroutine.WaitRealTime(TimeSpan.FromMilliseconds(100));
+        }
+        // ReSharper disable once IteratorNeverReturns
+    }
+
     private static IEnumerator<CoroutineInstruction> WaitUntilCoroutine(Data data)
     {
         var i = 0;
@@ -1320,28 +1332,55 @@ public abstract class CoroutineSystemTests
             _coroutineSystem.ProcessCoroutines(_timeStep);
         }
 
-        [TestCase(1, 40, 1)]
-        [TestCase(2, 40, 1)]
-        [TestCase(3, 40, 1)]
-        [TestCase(4, 40, 2)]
-        [TestCase(12, 40, 4)]
-        [TestCase(3, 100, 3)]
-        [TestCase(3, 200, 3)]
-        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int executionTimes, int deltaTime,
-            int expectedProgressCount)
+        [TestCase(1, 40, 1.0, 1)]
+        [TestCase(2, 40, 1.0, 1)]
+        [TestCase(3, 40, 1.0, 1)]
+        [TestCase(4, 40, 1.0, 2)]
+        [TestCase(12, 40, 1.0, 4)]
+        [TestCase(3, 100, 1.0, 3)]
+        [TestCase(3, 200, 1.0, 3)]
+        [TestCase(10, 40, 0.0, 1)]
+        [TestCase(6, 40, 0.5, 2)]
+        [TestCase(3, 40, 2.0, 2)]
+        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int updates, int deltaTime, double timeScale,
+            int expectedProgress)
         {
             // Arrange
             var data = new Data();
             _coroutineSystem.StartCoroutine(WaitTimeCoroutine(data), UpdateMode);
 
             // Act
-            for (var i = 0; i < executionTimes; i++)
+            for (var i = 0; i < updates; i++)
             {
-                _coroutineSystem.ProcessCoroutines(new TimeStep(TimeSpan.FromMilliseconds(deltaTime)));
+                _coroutineSystem.ProcessCoroutines(new TimeStep(TimeSpan.FromMilliseconds(deltaTime), timeScale));
             }
 
             // Assert
-            Assert.That(data.Log.Count, Is.EqualTo(expectedProgressCount));
+            Assert.That(data.Log.Count, Is.EqualTo(expectedProgress));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+        }
+
+        [TestCase(1, 40, 1.0, 1)]
+        [TestCase(4, 40, 1.0, 2)]
+        [TestCase(12, 40, 1.0, 4)]
+        [TestCase(4, 40, 0.0, 2)]
+        [TestCase(4, 40, 0.5, 2)]
+        [TestCase(4, 40, 2.0, 2)]
+        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitRealTime100MS(int updates, int deltaTime, double timeScale,
+            int expectedProgress)
+        {
+            // Arrange
+            var data = new Data();
+            _coroutineSystem.StartCoroutine(WaitRealTimeCoroutine(data), UpdateMode);
+
+            // Act
+            for (var i = 0; i < updates; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(new TimeStep(TimeSpan.FromMilliseconds(deltaTime), timeScale));
+            }
+
+            // Assert
+            Assert.That(data.Log.Count, Is.EqualTo(expectedProgress));
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
     }
@@ -1367,8 +1406,7 @@ public abstract class CoroutineSystemTests
         [TestCase(12, 40, 4)]
         [TestCase(3, 100, 3)]
         [TestCase(3, 200, 3)]
-        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int executionTimes, int fixedDeltaTime,
-            int expectedProgressCount)
+        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int updates, int fixedDeltaTime, int expectedProgress)
         {
             // Arrange
             var data = new Data();
@@ -1377,13 +1415,40 @@ public abstract class CoroutineSystemTests
             _timeSystem.FixedDeltaTime.Returns(TimeSpan.FromMilliseconds(fixedDeltaTime));
 
             // Act
-            for (var i = 0; i < executionTimes; i++)
+            for (var i = 0; i < updates; i++)
             {
                 _coroutineSystem.ProcessCoroutines();
             }
 
             // Assert
-            Assert.That(data.Log.Count, Is.EqualTo(expectedProgressCount));
+            Assert.That(data.Log.Count, Is.EqualTo(expectedProgress));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+        }
+
+        [TestCase(1, 40, 1)]
+        [TestCase(2, 40, 1)]
+        [TestCase(3, 40, 1)]
+        [TestCase(4, 40, 2)]
+        [TestCase(12, 40, 4)]
+        [TestCase(3, 100, 3)]
+        [TestCase(3, 200, 3)]
+        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitRealTime100MS(int updates, int fixedDeltaTime,
+            int expectedProgress)
+        {
+            // Arrange
+            var data = new Data();
+            _coroutineSystem.StartCoroutine(WaitRealTimeCoroutine(data), UpdateMode);
+
+            _timeSystem.FixedDeltaTime.Returns(TimeSpan.FromMilliseconds(fixedDeltaTime));
+
+            // Act
+            for (var i = 0; i < updates; i++)
+            {
+                _coroutineSystem.ProcessCoroutines();
+            }
+
+            // Assert
+            Assert.That(data.Log.Count, Is.EqualTo(expectedProgress));
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
     }

@@ -11,6 +11,7 @@
 /// <seealso cref="Coroutine.SwitchTo"/>
 /// <seealso cref="Coroutine.WaitForNextFrame"/>
 /// <seealso cref="Coroutine.Wait"/>
+/// <seealso cref="Coroutine.WaitRealTime"/>
 /// <seealso cref="Coroutine.WaitUntil"/>
 public abstract class CoroutineInstruction
 {
