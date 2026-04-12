@@ -114,6 +114,11 @@ public sealed class Coroutine
         return new WaitCoroutineInstruction(waitTime);
     }
 
+    public static CoroutineInstruction WaitRealTime(TimeSpan waitTime)
+    {
+        return new WaitRealTimeCoroutineInstruction(waitTime);
+    }
+
     /// <summary>
     ///     Creates WaitUntil instruction that allows to suspend execution of current coroutine until specified condition is
     ///     met.
