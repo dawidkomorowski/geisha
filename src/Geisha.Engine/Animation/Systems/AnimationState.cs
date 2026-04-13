@@ -4,87 +4,86 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Engine.Animation.Systems
+namespace Geisha.Engine.Animation.Systems;
+
+internal sealed class AnimationState
 {
-    internal sealed class AnimationState
+    private readonly List<AnimationNode> _nodes = new();
+    private readonly Dictionary<Entity, AnimationNode> _index = new();
+    private readonly Dictionary<Entity, SpriteRendererComponent> _pendingSpriteRendererComponents = new();
+
+    public void CreateStateFor(SpriteAnimationComponent spriteAnimationComponent)
     {
-        private readonly List<AnimationNode> _nodes = new();
-        private readonly Dictionary<Entity, AnimationNode> _index = new();
-        private readonly Dictionary<Entity, SpriteRendererComponent> _pendingSpriteRendererComponents = new();
+        var node = new AnimationNode(spriteAnimationComponent);
+        _nodes.Add(node);
+        _index.Add(node.Entity, node);
 
-        public void CreateStateFor(SpriteAnimationComponent spriteAnimationComponent)
+        if (_pendingSpriteRendererComponents.TryGetValue(node.Entity, out var spriteRendererComponent))
         {
-            var node = new AnimationNode(spriteAnimationComponent);
-            _nodes.Add(node);
-            _index.Add(node.Entity, node);
+            node.SpriteRendererComponent = spriteRendererComponent;
+            _pendingSpriteRendererComponents.Remove(node.Entity);
+        }
+    }
 
-            if (_pendingSpriteRendererComponents.TryGetValue(node.Entity, out var spriteRendererComponent))
-            {
-                node.SpriteRendererComponent = spriteRendererComponent;
-                _pendingSpriteRendererComponents.Remove(node.Entity);
-            }
+    public void CreateStateFor(SpriteRendererComponent spriteRendererComponent)
+    {
+        if (_index.TryGetValue(spriteRendererComponent.Entity, out var node))
+        {
+            node.SpriteRendererComponent = spriteRendererComponent;
+        }
+        else
+        {
+            _pendingSpriteRendererComponents.Add(spriteRendererComponent.Entity, spriteRendererComponent);
+        }
+    }
+
+    public void RemoveStateFor(SpriteAnimationComponent spriteAnimationComponent)
+    {
+        var node = _index[spriteAnimationComponent.Entity];
+        _nodes.Remove(node);
+        _index.Remove(node.Entity);
+    }
+
+    public void RemoveStateFor(SpriteRendererComponent spriteRendererComponent)
+    {
+        if (_index.TryGetValue(spriteRendererComponent.Entity, out var node))
+        {
+            node.SpriteRendererComponent = null;
+        }
+        else
+        {
+            _pendingSpriteRendererComponents.Remove(spriteRendererComponent.Entity);
+        }
+    }
+
+    public void Update(in TimeStep timeStep)
+    {
+        foreach (var node in _nodes)
+        {
+            node.Update(timeStep);
+        }
+    }
+
+    private sealed class AnimationNode
+    {
+        public AnimationNode(SpriteAnimationComponent spriteAnimationComponent)
+        {
+            Entity = spriteAnimationComponent.Entity;
+            SpriteAnimationComponent = spriteAnimationComponent;
         }
 
-        public void CreateStateFor(SpriteRendererComponent spriteRendererComponent)
-        {
-            if (_index.TryGetValue(spriteRendererComponent.Entity, out var node))
-            {
-                node.SpriteRendererComponent = spriteRendererComponent;
-            }
-            else
-            {
-                _pendingSpriteRendererComponents.Add(spriteRendererComponent.Entity, spriteRendererComponent);
-            }
-        }
-
-        public void RemoveStateFor(SpriteAnimationComponent spriteAnimationComponent)
-        {
-            var node = _index[spriteAnimationComponent.Entity];
-            _nodes.Remove(node);
-            _index.Remove(node.Entity);
-        }
-
-        public void RemoveStateFor(SpriteRendererComponent spriteRendererComponent)
-        {
-            if (_index.TryGetValue(spriteRendererComponent.Entity, out var node))
-            {
-                node.SpriteRendererComponent = null;
-            }
-            else
-            {
-                _pendingSpriteRendererComponents.Remove(spriteRendererComponent.Entity);
-            }
-        }
+        public Entity Entity { get; }
+        private SpriteAnimationComponent SpriteAnimationComponent { get; }
+        public SpriteRendererComponent? SpriteRendererComponent { get; set; }
 
         public void Update(in TimeStep timeStep)
         {
-            foreach (var node in _nodes)
+            SpriteAnimationComponent.AdvanceAnimation(timeStep.DeltaTime);
+
+            if (SpriteRendererComponent is not null)
             {
-                node.Update(timeStep);
-            }
-        }
-
-        private sealed class AnimationNode
-        {
-            public AnimationNode(SpriteAnimationComponent spriteAnimationComponent)
-            {
-                Entity = spriteAnimationComponent.Entity;
-                SpriteAnimationComponent = spriteAnimationComponent;
-            }
-
-            public Entity Entity { get; }
-            private SpriteAnimationComponent SpriteAnimationComponent { get; }
-            public SpriteRendererComponent? SpriteRendererComponent { get; set; }
-
-            public void Update(in TimeStep timeStep)
-            {
-                SpriteAnimationComponent.AdvanceAnimation(timeStep.DeltaTime);
-
-                if (SpriteRendererComponent != null)
-                {
-                    var sprite = SpriteAnimationComponent.ComputeCurrentAnimationFrame();
-                    SpriteRendererComponent.Sprite = sprite;
-                }
+                var sprite = SpriteAnimationComponent.ComputeCurrentAnimationFrame();
+                SpriteRendererComponent.Sprite = sprite;
             }
         }
     }
