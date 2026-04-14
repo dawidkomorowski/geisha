@@ -77,7 +77,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         [TestCase(100, 20, 2.0, 0.0, 0.4)]
         // position reaches the end
         [TestCase(100, 50, 1.0, 0.8, 1.0)]
-        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int deltaTime, double playbackSpeed,
+        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int dt, double playbackSpeed,
             double initialPosition, double expectedPosition)
         {
             // Arrange
@@ -89,7 +89,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Position = initialPosition;
 
             // Act
-            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(dt)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));
