@@ -67,18 +67,27 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         }
 
         // deltaTime relation to animationDuration
-        [TestCase(10, 0, 1.0, 0.0, 0.0)]
-        [TestCase(20, 10, 1.0, 0.0, 0.5)]
-        [TestCase(30, 30, 1.0, 0.0, 1.0)]
+        [TestCase(10, 0, 1.0, false, 1.0, 0.0, 0.0)]
+        [TestCase(20, 10, 1.0, false, 1.0, 0.0, 0.5)]
+        [TestCase(30, 30, 1.0, false, 1.0, 0.0, 1.0)]
         // initialPosition is not 0.0
-        [TestCase(20, 10, 1.0, 0.3, 0.8)]
+        [TestCase(20, 10, 1.0, false, 1.0, 0.3, 0.8)]
         // playbackSpeed is not 1.0
-        [TestCase(100, 20, 0.5, 0.0, 0.1)]
-        [TestCase(100, 20, 2.0, 0.0, 0.4)]
+        [TestCase(100, 20, 1.0, false, 0.5, 0.0, 0.1)]
+        [TestCase(100, 20, 1.0, false, 2.0, 0.0, 0.4)]
         // position reaches the end
-        [TestCase(100, 50, 1.0, 0.8, 1.0)]
-        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int dt, double playbackSpeed,
-            double initialPosition, double expectedPosition)
+        [TestCase(100, 50, 1.0, false, 1.0, 0.8, 1.0)]
+        // time scale affects animations
+        [TestCase(100, 20, 0.0, false, 1.0, 0.0, 0.0)] // timeScale=0.0 pauses animation
+        [TestCase(100, 20, 0.5, false, 1.0, 0.0, 0.1)] // timeScale=0.5: DeltaTime=10, progress=10/100=0.1
+        [TestCase(100, 20, 1.0, false, 1.0, 0.0, 0.2)] // timeScale=1.0: DeltaTime=20, progress=20/100=0.2
+        [TestCase(100, 20, 2.0, false, 1.0, 0.0, 0.4)] // timeScale=2.0: DeltaTime=40, progress=40/100=0.4
+        // IgnoreTimeScale makes animations unaffected by time scale - always uses UnscaledDeltaTime
+        [TestCase(100, 20, 0.0, true, 1.0, 0.0, 0.2)] // timeScale=0.0 is ignored, UnscaledDeltaTime=20, progress=0.2
+        [TestCase(100, 20, 0.5, true, 1.0, 0.0, 0.2)] // timeScale=0.5 is ignored, UnscaledDeltaTime=20, progress=0.2
+        [TestCase(100, 20, 2.0, true, 1.0, 0.0, 0.2)] // timeScale=2.0 is ignored, UnscaledDeltaTime=20, progress=0.2
+        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int dt, double timeScale,
+            bool ignoreTimeScale, double playbackSpeed, double initialPosition, double expectedPosition)
         {
             // Arrange
             var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
@@ -86,10 +95,11 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.PlaybackSpeed = playbackSpeed;
+            spriteAnimationComponent.IgnoreTimeScale = ignoreTimeScale;
             spriteAnimationComponent.Position = initialPosition;
 
             // Act
-            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(dt)));
+            _animationSystem.ProcessAnimations(new TimeStep(TimeSpan.FromMilliseconds(dt), timeScale));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));

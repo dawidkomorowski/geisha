@@ -76,8 +76,6 @@ public sealed class SpriteAnimationComponent : Component
         }
     }
 
-    // TODO: Implement logic.
-    // TODO: Add unit tests for core logic.
     // TODO: Add auxiliary unit tests.
     // TODO: Add integration tests.
     // TODO: Include in serialization.

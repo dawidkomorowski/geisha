@@ -78,7 +78,8 @@ internal sealed class AnimationState
 
         public void Update(in TimeStep timeStep)
         {
-            SpriteAnimationComponent.AdvanceAnimation(timeStep.DeltaTime);
+            var deltaTime = SpriteAnimationComponent.IgnoreTimeScale ? timeStep.UnscaledDeltaTime : timeStep.DeltaTime;
+            SpriteAnimationComponent.AdvanceAnimation(deltaTime);
 
             if (SpriteRendererComponent is not null)
             {
