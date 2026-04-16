@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -77,7 +78,19 @@ public sealed class SpriteAnimationComponent : Component
     }
 
     // TODO: Test in sandbox.
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Gets or sets a value indicating whether the animation ignores <see cref="ITimeSystem.TimeScale" /> and always
+    ///     advances in real time.
+    /// </summary>
+    /// <value><c>true</c> if the animation ignores time scale; <c>false</c> otherwise. The default is <c>false</c>.</value>
+    /// <remarks>
+    ///     When <c>false</c>, the animation advances using game time (<see cref="TimeStep.DeltaTime" />) which is affected
+    ///     by <see cref="ITimeSystem.TimeScale" />. Setting <see cref="ITimeSystem.TimeScale" /> to <c>0.0</c> will pause
+    ///     the animation. When <c>true</c>, the animation advances using real elapsed time
+    ///     (<see cref="TimeStep.UnscaledDeltaTime" />) regardless of <see cref="ITimeSystem.TimeScale" />, making it
+    ///     suitable for animations that should continue independently of game simulation speed, such as UI animations
+    ///     during a paused game.
+    /// </remarks>
     public bool IgnoreTimeScale { get; set; }
 
     /// <summary>
