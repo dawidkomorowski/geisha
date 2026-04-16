@@ -140,12 +140,14 @@ namespace Geisha.Engine.IntegrationTests.Core
             spriteAnimationComponent1.Position = 0.7;
             spriteAnimationComponent1.PlaybackSpeed = 1.3;
             spriteAnimationComponent1.PlayInLoop = true;
+            spriteAnimationComponent1.IgnoreTimeScale = true;
 
             var entity2 = CreateEntity(scene, "Entity2");
             var spriteAnimationComponent2 = entity2.CreateComponent<SpriteAnimationComponent>();
             spriteAnimationComponent2.AddAnimation("animation2", SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(AssetsIds.TestSpriteAnimation));
             spriteAnimationComponent2.PlaybackSpeed = 2.5;
             spriteAnimationComponent2.PlayInLoop = false;
+            spriteAnimationComponent2.IgnoreTimeScale = false;
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -169,6 +171,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             Assert.That(loadedComponent1.Position, Is.EqualTo(spriteAnimationComponent1.Position));
             Assert.That(loadedComponent1.PlaybackSpeed, Is.EqualTo(spriteAnimationComponent1.PlaybackSpeed));
             Assert.That(loadedComponent1.PlayInLoop, Is.EqualTo(spriteAnimationComponent1.PlayInLoop));
+            Assert.That(loadedComponent1.IgnoreTimeScale, Is.EqualTo(spriteAnimationComponent1.IgnoreTimeScale));
 
             var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
             AssertEntitiesAreEqual(loadedEntity2, entity2);
@@ -182,6 +185,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             Assert.That(loadedComponent2.Position, Is.EqualTo(spriteAnimationComponent2.Position));
             Assert.That(loadedComponent2.PlaybackSpeed, Is.EqualTo(spriteAnimationComponent2.PlaybackSpeed));
             Assert.That(loadedComponent2.PlayInLoop, Is.EqualTo(spriteAnimationComponent2.PlayInLoop));
+            Assert.That(loadedComponent2.IgnoreTimeScale, Is.EqualTo(spriteAnimationComponent2.IgnoreTimeScale));
         }
 
         #endregion

@@ -76,9 +76,6 @@ public sealed class SpriteAnimationComponent : Component
         }
     }
 
-    // TODO: Add auxiliary unit tests.
-    // TODO: Add integration tests.
-    // TODO: Include in serialization.
     // TODO: Test in sandbox.
     // TODO: Add documentation.
     public bool IgnoreTimeScale { get; set; }
@@ -186,6 +183,7 @@ public sealed class SpriteAnimationComponent : Component
         writer.WriteDouble("Position", Position);
         writer.WriteDouble("PlaybackSpeed", PlaybackSpeed);
         writer.WriteBool("PlayInLoop", PlayInLoop);
+        writer.WriteBool("IgnoreTimeScale", IgnoreTimeScale);
     }
 
     /// <inheritdoc />
@@ -210,6 +208,7 @@ public sealed class SpriteAnimationComponent : Component
         Position = reader.ReadDouble("Position");
         PlaybackSpeed = reader.ReadDouble("PlaybackSpeed");
         PlayInLoop = reader.ReadBool("PlayInLoop");
+        IgnoreTimeScale = reader.ReadBool("IgnoreTimeScale");
     }
 
     internal void AdvanceAnimation(TimeSpan deltaTime)
