@@ -77,7 +77,6 @@ public sealed class SpriteAnimationComponent : Component
         }
     }
 
-    // TODO: Test in sandbox.
     /// <summary>
     ///     Gets or sets a value indicating whether the animation ignores <see cref="ITimeSystem.TimeScale" /> and always
     ///     advances in real time.
