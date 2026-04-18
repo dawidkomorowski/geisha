@@ -18,6 +18,7 @@ public class PhysicsSystemBenchmarks
 {
     private Scene _scene = null!;
     private PhysicsSystem _physicsSystem = null!;
+    private ITimeSystem _timeSystem = null!;
     private IDebugRendererForTests _debugRenderer = null!;
     private readonly List<KinematicRigidBody2DComponent> _kinematicComponents = new();
 
@@ -25,14 +26,14 @@ public class PhysicsSystemBenchmarks
     {
         _kinematicComponents.Clear();
 
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(1d / 60d);
         _scene = TestSceneFactory.Create();
+        _timeSystem = new TimeSystem(new CoreConfiguration { FixedUpdatesPerSecond = 60 });
         _debugRenderer = TestKit.CreateDebugRenderer();
         var physicsConfiguration = new PhysicsConfiguration
         {
             EnableDebugRendering = true
         };
-        _physicsSystem = new PhysicsSystem(physicsConfiguration, _debugRenderer);
+        _physicsSystem = new PhysicsSystem(physicsConfiguration, _timeSystem, _debugRenderer);
         _scene.AddObserver(_physicsSystem);
     }
 
@@ -166,7 +167,7 @@ public class PhysicsSystemBenchmarks
     public void SimulatePhysics_10Seconds_638K_Fall_CR_Enabled()
     {
         var gravity = new Vector2(0, -981.0);
-        var dt = GameTime.FixedDeltaTime.TotalSeconds;
+        var dt = _timeSystem.FixedDeltaTime.TotalSeconds;
 
         // Assuming 60FPS it simulates 10s.
         for (var i = 0; i < 600; i++)

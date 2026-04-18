@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -104,31 +105,31 @@ Press [UP] and [DOWN] to change the order of rendering.";
             // Set input mapping so UP and DOWN keys will trigger "PushUp" and "PullDown" actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "PushUp",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "PullDown",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Bind "PushUp" action to call order in layer handling logic.
             inputComponent.BindAction("PushUp", () => { rectangleRenderer2.OrderInLayer = Math.Min(4, rectangleRenderer2.OrderInLayer + 2); });

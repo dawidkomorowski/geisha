@@ -16,9 +16,8 @@ namespace Geisha.Engine.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
-            builder.RegisterType<GameTimeProvider>().As<IGameTimeProvider>().SingleInstance();
+            builder.RegisterType<TimeSystem>().As<ITimeSystemInternal>().As<ITimeSystem>().SingleInstance();
 
             // Assets
             builder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();

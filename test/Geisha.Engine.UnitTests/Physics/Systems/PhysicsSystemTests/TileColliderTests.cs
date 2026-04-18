@@ -1,14 +1,15 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
+using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
@@ -717,7 +718,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingRight()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -748,7 +749,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingLeft()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -779,7 +780,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingUp()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -810,7 +811,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingDown()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -841,7 +842,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingRight()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -872,7 +873,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingLeft()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -903,7 +904,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingUp()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),
@@ -934,7 +935,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingDown()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             TileSize = new SizeD(10, 10),

@@ -44,8 +44,8 @@ namespace Geisha.Engine.Core.Components
         /// <summary>
         ///     Override this method to provide custom behavior on each update of the game loop for this component.
         /// </summary>
-        /// <param name="gameTime"><see cref="GameTime" /> this game loop update is run with.</param>
-        public virtual void OnUpdate(GameTime gameTime)
+        /// <param name="timeStep">Time step representing delta time elapsed since previous frame, including time scale.</param>
+        public virtual void OnUpdate(in TimeStep timeStep)
         {
         }
 

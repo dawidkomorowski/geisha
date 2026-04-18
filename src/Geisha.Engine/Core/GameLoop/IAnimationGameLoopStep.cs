@@ -2,6 +2,6 @@
 {
     internal interface IAnimationGameLoopStep
     {
-        void ProcessAnimations(GameTime gameTime);
+        void ProcessAnimations(in TimeStep timeStep);
     }
 }

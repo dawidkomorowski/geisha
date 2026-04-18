@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core;
@@ -26,53 +27,53 @@ namespace Geisha.Demo.Common
             var inputComponent = Entity.GetComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "Exit",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Escape)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Next",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Enter)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Previous",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Backspace)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "GoToUrl",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F1)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
 
             inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);

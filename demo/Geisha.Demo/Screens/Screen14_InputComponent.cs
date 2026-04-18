@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Geisha.Demo.Common;
@@ -72,75 +73,75 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             // Create first input mapping scheme.
             var keymap1 = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "SwitchKeyMap",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Jump",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Attack",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Use",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Create second input mapping scheme.
             var keymap2 = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "SwitchKeyMap",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Jump",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
@@ -149,13 +150,13 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Attack",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.E)
@@ -164,13 +165,13 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.RightCtrl)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Use",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
@@ -179,9 +180,9 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.RightShift)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Set first input mapping scheme to be used with InputComponent.
             inputComponent.InputMapping = keymap1;
@@ -287,7 +288,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
     }
 
     // We implement OnUpdate method to run custom logic once per frame.
-    public override void OnUpdate(GameTime gameTime)
+    public override void OnUpdate(in TimeStep timeStep)
     {
         var stringBuilder = new StringBuilder();
 

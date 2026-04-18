@@ -1,8 +1,8 @@
 ﻿using System;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics.Components;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -14,7 +14,7 @@ public class CollisionResponseWhenKinematicBodyMovingTests : PhysicsSystemTestsB
     public void CollisionResponseDisabled_KinematicBody_And_StaticBody()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(-6, 5, 10, 10);
@@ -41,7 +41,7 @@ public class CollisionResponseWhenKinematicBodyMovingTests : PhysicsSystemTestsB
     public void CollisionResponseDisabled_KinematicBody_And_KinematicBody()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody1 = CreateRectangleKinematicBody(-6, 5, 10, 10);
@@ -75,7 +75,7 @@ public class CollisionResponseWhenKinematicBodyMovingTests : PhysicsSystemTestsB
     public void CollisionResponseEnabled_KinematicBody_And_StaticBody()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(-6, 5, 10, 10);
@@ -102,7 +102,7 @@ public class CollisionResponseWhenKinematicBodyMovingTests : PhysicsSystemTestsB
     public void CollisionResponseEnabled_KinematicBody_And_MultipleStaticBodies()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(-6, 11, 10, 10);
@@ -130,7 +130,7 @@ public class CollisionResponseWhenKinematicBodyMovingTests : PhysicsSystemTestsB
     public void CollisionResponseEnabled_ForOneBody_KinematicBody_And_KinematicBody()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody1 = CreateRectangleKinematicBody(-6, 5, 10, 10);
@@ -164,7 +164,7 @@ public class CollisionResponseWhenKinematicBodyMovingTests : PhysicsSystemTestsB
     public void CollisionResponseEnabled_ForBothBodies_KinematicBody_And_KinematicBody()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody1 = CreateRectangleKinematicBody(-6, 5, 10, 10);

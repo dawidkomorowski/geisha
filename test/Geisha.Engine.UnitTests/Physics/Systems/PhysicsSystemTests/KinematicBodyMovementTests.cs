@@ -1,8 +1,8 @@
 ﻿using System;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics.Components;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -17,7 +17,7 @@ public class KinematicBodyMovementTests : PhysicsSystemTestsBase
     public void ProcessPhysics_ShouldUpdatePosition_WhenKinematicBodyHasLinearVelocity(double vx, double vy, double dt, double tx, double ty)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(dt);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(dt));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 10);
@@ -38,7 +38,7 @@ public class KinematicBodyMovementTests : PhysicsSystemTestsBase
     public void ProcessPhysics_ShouldUpdateRotation_WhenKinematicBodyHasAngularVelocity(double vr, double dt, double r)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(dt);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(dt));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 10);
@@ -57,7 +57,7 @@ public class KinematicBodyMovementTests : PhysicsSystemTestsBase
     public void ProcessPhysics_ShouldUpdatePositionAndRotation_WhenKinematicBodyHasLinearVelocityAndAngularVelocity()
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
 
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 10);

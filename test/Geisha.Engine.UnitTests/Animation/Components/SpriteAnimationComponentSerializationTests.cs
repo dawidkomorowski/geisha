@@ -24,6 +24,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             const double position = 0.7;
             const double playbackSpeed = 1.3;
             const bool playInLoop = true;
+            const bool ignoreTimeScale = true;
 
             AssetStore.GetAssetId(animation).Returns(animationAssetId);
             AssetStore.GetAsset<SpriteAnimation>(animationAssetId).Returns(animation);
@@ -36,6 +37,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
                 component.Position = position;
                 component.PlaybackSpeed = playbackSpeed;
                 component.PlayInLoop = playInLoop;
+                component.IgnoreTimeScale = ignoreTimeScale;
             });
 
             // Assert
@@ -49,6 +51,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             Assert.That(actual.Position, Is.EqualTo(position));
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(playbackSpeed));
             Assert.That(actual.PlayInLoop, Is.EqualTo(playInLoop));
+            Assert.That(actual.IgnoreTimeScale, Is.EqualTo(ignoreTimeScale));
         }
 
         [Test]
@@ -61,6 +64,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             const double position = 0.7;
             const double playbackSpeed = 1.3;
             const bool playInLoop = true;
+            const bool ignoreTimeScale = true;
 
             AssetStore.GetAssetId(animation).Returns(animationAssetId);
             AssetStore.GetAsset<SpriteAnimation>(animationAssetId).Returns(animation);
@@ -72,6 +76,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
                 component.Position = position;
                 component.PlaybackSpeed = playbackSpeed;
                 component.PlayInLoop = playInLoop;
+                component.IgnoreTimeScale = ignoreTimeScale;
             });
 
             // Assert
@@ -83,6 +88,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             Assert.That(actual.Position, Is.EqualTo(position));
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(playbackSpeed));
             Assert.That(actual.PlayInLoop, Is.EqualTo(playInLoop));
+            Assert.That(actual.IgnoreTimeScale, Is.EqualTo(ignoreTimeScale));
         }
 
         private static SpriteAnimation CreateAnimation()

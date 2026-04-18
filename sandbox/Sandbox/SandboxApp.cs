@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine;
+using Sandbox.Animation;
 using Sandbox.Common;
 using Sandbox.Physics;
 
@@ -11,6 +12,10 @@ public sealed class SandboxApp : Game
     public override void RegisterComponents(IComponentsRegistry componentsRegistry)
     {
         componentsRegistry.RegisterSingleInstance<CommonEntityFactory>();
+
+        // Animation
+        componentsRegistry.RegisterSceneBehaviorFactory<AnimationSandboxSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<AnimationControllerComponentFactory>();
 
         // Physics
         componentsRegistry.RegisterSceneBehaviorFactory<PhysicsSandboxSceneBehaviorFactory>();

@@ -1,10 +1,11 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
+using NSubstitute;
 using NUnit.Framework;
-using System;
-using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
@@ -41,7 +42,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     public void SubstepsTest_IncreasingSubsteps_PreventsHighVelocityBodyFromTunneling(int substeps, double targetX)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             Substeps = substeps,
@@ -98,7 +99,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     public void VelocityIterationsTest_IncreasingVelocityIterations_MakesVelocitiesOfBodiesMoreAccurate(int velocityIterations, double expectedVelocityX)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             VelocityIterations = velocityIterations,
@@ -164,7 +165,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         double expectedPositionY)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             PositionIterations = positionIterations,
@@ -220,7 +221,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     public void PenetrationToleranceTest_IncreasingPenetrationTolerance_PermitsBiggerPenetration(double penetrationTolerance)
     {
         // Arrange
-        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
         var physicsConfiguration = new PhysicsConfiguration
         {
             PenetrationTolerance = penetrationTolerance,

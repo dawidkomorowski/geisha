@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core;
+﻿using System.Collections.Immutable;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -37,20 +38,20 @@ public sealed class CommonEntityFactory
 
         inputComponent.InputMapping = new InputMapping
         {
-            ActionMappings =
-            {
+            ActionMappings = ImmutableArray.Create
+            (
                 new ActionMapping
                 {
                     ActionName = "Exit",
-                    HardwareActions =
-                    {
+                    HardwareActions = ImmutableArray.Create
+                    (
                         new HardwareAction
                         {
                             HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Escape)
                         }
-                    }
+                    )
                 }
-            }
+            )
         };
 
         inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);

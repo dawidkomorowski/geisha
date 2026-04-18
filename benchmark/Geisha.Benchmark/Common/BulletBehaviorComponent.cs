@@ -24,8 +24,8 @@ internal sealed class BulletBehaviorComponent : BehaviorComponent
 
     public override void OnFixedUpdate()
     {
-        _transform2DComponent.Translation += Velocity * GameTime.FixedDeltaTime.TotalSeconds;
-        _lifeTime += GameTime.FixedDeltaTime;
+        _transform2DComponent.Translation += Velocity * TimeStep.FixedDeltaTime.TotalSeconds;
+        _lifeTime += TimeStep.FixedDeltaTime;
 
         if (_lifeTime > TimeSpan.FromSeconds(2))
         {

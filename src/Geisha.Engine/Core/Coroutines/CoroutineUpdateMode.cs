@@ -1,18 +1,17 @@
-﻿namespace Geisha.Engine.Core.Coroutines
+﻿namespace Geisha.Engine.Core.Coroutines;
+
+/// <summary>
+///     Specifies update mode of <see cref="Coroutine" />.
+/// </summary>
+public enum CoroutineUpdateMode
 {
     /// <summary>
-    ///     Specifies update mode of <see cref="Coroutine" />.
+    ///     <see cref="Coroutine" /> is executed as part of fixed time step update in game loop.
     /// </summary>
-    public enum CoroutineUpdateMode
-    {
-        /// <summary>
-        ///     <see cref="Coroutine" /> is executed as part of fixed time step update in game loop.
-        /// </summary>
-        FixedTimeStep,
+    FixedTimeStep,
 
-        /// <summary>
-        ///     <see cref="Coroutine" /> is executed as part of variable time step update in game loop.
-        /// </summary>
-        VariableTimeStep
-    }
+    /// <summary>
+    ///     <see cref="Coroutine" /> is executed as part of variable time step update in game loop.
+    /// </summary>
+    VariableTimeStep
 }

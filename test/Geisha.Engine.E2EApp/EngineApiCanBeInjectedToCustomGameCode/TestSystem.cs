@@ -21,6 +21,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ISceneSerializer _sceneSerializer;
         private readonly ICoroutineSystem _coroutineSystem;
         private readonly IPhysicsSystem _physicsSystem;
+        private readonly ITimeSystem _timeSystem;
 
         public TestSystem
         (
@@ -32,7 +33,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             ISceneManager sceneManager,
             ISceneSerializer sceneSerializer,
             ICoroutineSystem coroutineSystem,
-            IPhysicsSystem physicsSystem
+            IPhysicsSystem physicsSystem,
+            ITimeSystem timeSystem
         )
         {
             _audioBackend = audioBackend;
@@ -44,6 +46,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _sceneSerializer = sceneSerializer;
             _coroutineSystem = coroutineSystem;
             _physicsSystem = physicsSystem;
+            _timeSystem = timeSystem;
         }
 
         public string Name => "EngineApiCanBeInjectedToCustomGameCode-TestSystem";
@@ -52,17 +55,28 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         {
         }
 
-        public void ProcessUpdate(GameTime gameTime)
+        public void ProcessUpdate(in TimeStep timeStep)
         {
-            E2ETest.Report("E7691D98-AF87-4268-9C39-43822A790377", $"Engine API Injected Into System: {_audioBackend.GetType()}");
-            E2ETest.Report("FE445F35-E624-4BCF-800C-FAD91F3C0216", $"Engine API Injected Into System: {_engineManager.GetType()}");
-            E2ETest.Report("A9236158-3810-41A0-B14B-8516A39E404B", $"Engine API Injected Into System: {_assetStore.GetType()}");
-            E2ETest.Report("9F0D1065-B9AF-4DD6-9ED7-06D3462E5795", $"Engine API Injected Into System: {_debugRenderer.GetType()}");
-            E2ETest.Report("FF5B94ED-12B5-43E6-9F3F-0A57BEB162BA", $"Engine API Injected Into System: {_sceneLoader.GetType()}");
-            E2ETest.Report("D89648A6-5676-492E-ADB8-6296C1B8BEE6", $"Engine API Injected Into System: {_sceneManager.GetType()}");
-            E2ETest.Report("DD6882F2-4A1B-42F3-993C-473593C46DE5", $"Engine API Injected Into System: {_sceneSerializer.GetType()}");
-            E2ETest.Report("618427C0-D078-451C-8877-B3B81C99B5FF", $"Engine API Injected Into System: {_coroutineSystem.GetType()}");
-            E2ETest.Report("932A0F77-F5F9-4CB5-B3EE-56FDF6139291", $"Engine API Injected Into System: {_physicsSystem.GetType()}");
+            E2ETestApi.PublishMessage("E7691D98-AF87-4268-9C39-43822A790377",
+                "Engine API Injected Into System", _audioBackend.GetType().ToString());
+            E2ETestApi.PublishMessage("FE445F35-E624-4BCF-800C-FAD91F3C0216",
+                "Engine API Injected Into System", _engineManager.GetType().ToString());
+            E2ETestApi.PublishMessage("A9236158-3810-41A0-B14B-8516A39E404B",
+                "Engine API Injected Into System", _assetStore.GetType().ToString());
+            E2ETestApi.PublishMessage("9F0D1065-B9AF-4DD6-9ED7-06D3462E5795",
+                "Engine API Injected Into System", _debugRenderer.GetType().ToString());
+            E2ETestApi.PublishMessage("FF5B94ED-12B5-43E6-9F3F-0A57BEB162BA",
+                "Engine API Injected Into System", _sceneLoader.GetType().ToString());
+            E2ETestApi.PublishMessage("D89648A6-5676-492E-ADB8-6296C1B8BEE6",
+                "Engine API Injected Into System", _sceneManager.GetType().ToString());
+            E2ETestApi.PublishMessage("DD6882F2-4A1B-42F3-993C-473593C46DE5",
+                "Engine API Injected Into System", _sceneSerializer.GetType().ToString());
+            E2ETestApi.PublishMessage("618427C0-D078-451C-8877-B3B81C99B5FF",
+                "Engine API Injected Into System", _coroutineSystem.GetType().ToString());
+            E2ETestApi.PublishMessage("932A0F77-F5F9-4CB5-B3EE-56FDF6139291",
+                "Engine API Injected Into System", _physicsSystem.GetType().ToString());
+            E2ETestApi.PublishMessage("8AEB6833-DA48-48D7-ADCA-24DF92F4FB80",
+                "Engine API Injected Into System", _timeSystem.GetType().ToString());
         }
 
         public void OnEntityCreated(Entity entity)

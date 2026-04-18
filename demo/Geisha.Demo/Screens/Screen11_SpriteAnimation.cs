@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
@@ -85,20 +86,20 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
             // Set input mapping so selected keys will trigger corresponding actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "Cycle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Bind "Cycle" action to call our cycle logic.
             inputComponent.BindAction("Cycle", () => { CycleAnimations(character); });

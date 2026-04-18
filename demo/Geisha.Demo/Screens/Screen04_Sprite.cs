@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -87,31 +88,31 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so UP and DOWN keys will trigger "IncreaseOpacity" and "DecreaseOpacity" actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "IncreaseOpacity",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "DecreaseOpacity",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Bind "IncreaseOpacity" action to call opacity handling logic.
             inputComponent.BindAction("IncreaseOpacity", () => { spriteRenderer.Opacity += 0.1; });

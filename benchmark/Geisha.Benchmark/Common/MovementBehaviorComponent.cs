@@ -34,7 +34,7 @@ namespace Geisha.Benchmark.Common
 
         public override void OnFixedUpdate()
         {
-            _time += GameTime.FixedDeltaTime.TotalSeconds;
+            _time += TimeStep.FixedDeltaTime.TotalSeconds;
 
             var translationVector = new Vector2(32 * Math.Sin(_time), 32 * Math.Cos(_time));
             var scaleValue = 0.5 + Math.Sin(_time);

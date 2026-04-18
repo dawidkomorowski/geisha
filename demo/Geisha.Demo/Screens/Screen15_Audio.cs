@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
@@ -80,64 +81,64 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so selected keys will trigger corresponding actions.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "PlaySound1",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "PlaySound2",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "PlaySound3",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "IncreaseVolume",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "DecreaseVolume",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Get sound assets from IAssetStore.
             var sound1 = _assetStore.GetAsset<ISound>(AssetId.Parse("0a72baa4-22dd-41f1-b2c3-2f254501697a"));

@@ -11,8 +11,8 @@ internal interface IGameLoop
 
 internal sealed class GameLoop : IGameLoop
 {
+    private readonly ITimeSystemInternal _timeSystem;
     private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
-    private readonly IGameTimeProvider _gameTimeProvider;
     private readonly IGameLoopSteps _gameLoopSteps;
     private readonly ISceneManagerInternal _sceneManager;
     private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
@@ -21,15 +21,15 @@ internal sealed class GameLoop : IGameLoop
     private TimeSpan _timeToSimulate;
 
     public GameLoop(
+        ITimeSystemInternal timeSystem,
         ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
-        IGameTimeProvider gameTimeProvider,
         IGameLoopSteps gameLoopSteps,
         ISceneManagerInternal sceneManager,
         IPerformanceStatisticsRecorder performanceStatisticsRecorder,
         CoreConfiguration configuration)
     {
+        _timeSystem = timeSystem;
         _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
-        _gameTimeProvider = gameTimeProvider;
         _gameLoopSteps = gameLoopSteps;
         _sceneManager = sceneManager;
         _performanceStatisticsRecorder = performanceStatisticsRecorder;
@@ -42,17 +42,18 @@ internal sealed class GameLoop : IGameLoop
         _sceneManager.OnNextFrame();
 
         var scene = _sceneManager.CurrentScene;
-        var gameTime = _gameTimeProvider.GetGameTime();
+        var timeStep = _timeSystem.NextTimeStep();
+        var fixedDeltaTime = _timeSystem.FixedDeltaTime;
 
-        _timeToSimulate += gameTime.DeltaTime;
+        _timeToSimulate += timeStep.DeltaTime;
         var fixedUpdatesPerFrame = 0;
 
-        while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
-        {
-            _performanceStatisticsRecorder.BeginStepDuration();
-            _gameLoopSteps.InputStep.ProcessInput();
-            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
+        _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.InputStep.ProcessInput();
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
 
+        while (_timeToSimulate >= fixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
+        {
             _performanceStatisticsRecorder.BeginStepDuration();
             _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
             _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
@@ -78,27 +79,27 @@ internal sealed class GameLoop : IGameLoop
 
             scene.RemoveEntitiesAfterFixedTimeStep();
 
-            _timeToSimulate -= GameTime.FixedDeltaTime;
+            _timeToSimulate -= fixedDeltaTime;
             fixedUpdatesPerFrame++;
         }
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        var alpha = System.Math.Min(_timeToSimulate.TotalSeconds / GameTime.FixedDeltaTime.TotalSeconds, 1d);
+        var alpha = System.Math.Min(_timeToSimulate.TotalSeconds / fixedDeltaTime.TotalSeconds, 1d);
         _gameLoopSteps.TransformInterpolationStep.InterpolateTransforms(alpha);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
+        _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(timeStep);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.BehaviorStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.CoroutineStep.ProcessCoroutines(gameTime);
+        _gameLoopSteps.CoroutineStep.ProcessCoroutines(timeStep);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.CoroutineStepName);
 
         foreach (var customStep in _gameLoopSteps.CustomSteps)
         {
             _performanceStatisticsRecorder.BeginStepDuration();
-            customStep.ProcessUpdate(gameTime);
+            customStep.ProcessUpdate(timeStep);
             _performanceStatisticsRecorder.EndStepDuration(customStep.Name);
         }
 
@@ -111,7 +112,7 @@ internal sealed class GameLoop : IGameLoop
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AudioStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
+        _gameLoopSteps.AnimationStep.ProcessAnimations(timeStep);
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.AnimationStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();

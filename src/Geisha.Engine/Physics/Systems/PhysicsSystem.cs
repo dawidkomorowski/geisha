@@ -12,10 +12,11 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISceneObserver
 {
+    private readonly ITimeSystem _timeSystem;
     private readonly IDebugRenderer _debugRenderer;
     private readonly PhysicsSystemState _physicsSystemState;
 
-    public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
+    public PhysicsSystem(PhysicsConfiguration physicsConfiguration, ITimeSystem timeSystem, IDebugRenderer debugRenderer)
     {
         if (physicsConfiguration.Substeps < 1)
         {
@@ -48,6 +49,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         EnableDebugRendering = physicsConfiguration.EnableDebugRendering;
 
+        _timeSystem = timeSystem;
         _debugRenderer = debugRenderer;
 
         PhysicsScene2D = new PhysicsScene2D(physicsConfiguration.TileSize)
@@ -81,7 +83,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             proxy.SynchronizeBody();
         }
 
-        PhysicsScene2D.Simulate(GameTime.FixedDeltaTime);
+        PhysicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
 
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {

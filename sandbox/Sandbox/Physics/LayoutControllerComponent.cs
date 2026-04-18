@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -32,141 +34,141 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "SetLayout1",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SetLayout2",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SetLayout3",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SetLayout4",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D4)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "ToggleCollisionDetection",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "DeleteEntity",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnSquare",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F1)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnCircle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F2)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnWideRectangle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F3)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "SpawnTallRectangle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F4)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Save",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F9)
                             }
-                        }
+                        )
                     },
                     new ActionMapping
                     {
                         ActionName = "Load",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F12)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             inputComponent.BindAction("SetLayout1", () => SetLayout(1));
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
@@ -187,8 +189,6 @@ public sealed class LayoutControllerComponent : BehaviorComponent
 
     public override void OnFixedUpdate()
     {
-        UpdateSpawnSizeFactor();
-
         if (Scene.RootEntities.Any(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
             return;
@@ -211,6 +211,11 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             default:
                 throw new InvalidOperationException($"Unsupported layout: {_layout}");
         }
+    }
+
+    public override void OnUpdate(in TimeStep timeStep)
+    {
+        UpdateSpawnSizeFactor();
     }
 
     private void SetLayout(int layout)
@@ -355,9 +360,9 @@ public sealed class LayoutControllerComponent : BehaviorComponent
     }
 
     // TODO This is a temporary solution. Scene serialization API should be improved to support serialization of subset of entities.
-    // The issue with full scene serialization is that it serializes all entities, including those that are not relevant for the layout.
-    // It also does not provide easy way to serialize some components that rely on additional data (e.g. textures) when those are created fully programmatically.
-    // For example, InputMapping is assumed to be an external resource, but it is created programmatically in this case.
+    //      The issue with full scene serialization is that it serializes all entities, including those that are not relevant for the layout.
+    //      It also does not provide easy way to serialize some components that rely on additional data (e.g. textures) when those are created fully programmatically.
+    //      For example, InputMapping is assumed to be an external resource, but it is created programmatically in this case.
     private void SaveLayout()
     {
         if (!Directory.Exists(LayoutsDirectory))

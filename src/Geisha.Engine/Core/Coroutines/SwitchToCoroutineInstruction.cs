@@ -1,19 +1,18 @@
-﻿namespace Geisha.Engine.Core.Coroutines
+﻿namespace Geisha.Engine.Core.Coroutines;
+
+internal sealed class SwitchToCoroutineInstruction : CoroutineInstruction
 {
-    internal sealed class SwitchToCoroutineInstruction : CoroutineInstruction
+    public SwitchToCoroutineInstruction(Coroutine coroutine)
     {
-        public SwitchToCoroutineInstruction(Coroutine coroutine)
-        {
-            Coroutine = coroutine;
-        }
+        Coroutine = coroutine;
+    }
 
-        public Coroutine Coroutine { get; }
+    public Coroutine Coroutine { get; }
 
-        internal override bool IsCompleted(GameTime gameTime) => true;
+    internal override bool IsCompleted(in TimeStep timeStep) => true;
 
-        internal override void Execute(Coroutine coroutine)
-        {
-            coroutine.HandleSwitchToInstruction(this);
-        }
+    internal override void Execute(Coroutine coroutine)
+    {
+        coroutine.HandleSwitchToInstruction(this);
     }
 }

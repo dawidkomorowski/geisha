@@ -22,6 +22,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ISceneSerializer _sceneSerializer;
         private readonly ICoroutineSystem _coroutineSystem;
         private readonly IPhysicsSystem _physicsSystem;
+        private readonly ITimeSystem _timeSystem;
 
         public TestSceneBehaviorFactory
         (
@@ -33,7 +34,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             ISceneManager sceneManager,
             ISceneSerializer sceneSerializer,
             ICoroutineSystem coroutineSystem,
-            IPhysicsSystem physicsSystem
+            IPhysicsSystem physicsSystem,
+            ITimeSystem timeSystem
         )
         {
             _audioBackend = audioBackend;
@@ -45,6 +47,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _sceneSerializer = sceneSerializer;
             _coroutineSystem = coroutineSystem;
             _physicsSystem = physicsSystem;
+            _timeSystem = timeSystem;
         }
 
         public string BehaviorName => SceneBehaviorName;
@@ -60,7 +63,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 _sceneManager,
                 _sceneSerializer,
                 _coroutineSystem,
-                _physicsSystem
+                _physicsSystem,
+                _timeSystem
             );
 
         private sealed class TestSceneBehavior : SceneBehavior
@@ -74,6 +78,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             private readonly ISceneSerializer _sceneSerializer;
             private readonly ICoroutineSystem _coroutineSystem;
             private readonly IPhysicsSystem _physicsSystem;
+            private readonly ITimeSystem _timeSystem;
 
             public TestSceneBehavior
             (
@@ -86,7 +91,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 ISceneManager sceneManager,
                 ISceneSerializer sceneSerializer,
                 ICoroutineSystem coroutineSystem,
-                IPhysicsSystem physicsSystem
+                IPhysicsSystem physicsSystem,
+                ITimeSystem timeSystem
             ) : base(scene)
             {
                 _audioBackend = audioBackend;
@@ -98,6 +104,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 _sceneSerializer = sceneSerializer;
                 _coroutineSystem = coroutineSystem;
                 _physicsSystem = physicsSystem;
+                _timeSystem = timeSystem;
             }
 
             public override string Name => SceneBehaviorName;
@@ -107,15 +114,26 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 var exitTestAppComponent = Scene.CreateEntity().CreateComponent<ExitTestAppComponent>();
                 exitTestAppComponent.ExitOnFrame = 1;
 
-                E2ETest.Report("3211DA7A-5A4C-409D-B8F6-D82816D7CFA2", $"Engine API Injected Into SceneBehavior: {_audioBackend.GetType()}");
-                E2ETest.Report("C7897578-6670-4DEA-A32F-689629FE651E", $"Engine API Injected Into SceneBehavior: {_engineManager.GetType()}");
-                E2ETest.Report("B94536CE-5369-4105-B901-EC878E20E71F", $"Engine API Injected Into SceneBehavior: {_assetStore.GetType()}");
-                E2ETest.Report("2F59C6C4-5183-4B33-9433-9AD9995F0923", $"Engine API Injected Into SceneBehavior: {_debugRenderer.GetType()}");
-                E2ETest.Report("A3DB27E0-2A71-4728-9BE8-5C060F406EC8", $"Engine API Injected Into SceneBehavior: {_sceneLoader.GetType()}");
-                E2ETest.Report("5C9C1856-8DF1-4E2D-BEF3-BB524FC62544", $"Engine API Injected Into SceneBehavior: {_sceneManager.GetType()}");
-                E2ETest.Report("56048FE9-5C59-44F5-8C4C-D96615B62D8C", $"Engine API Injected Into SceneBehavior: {_sceneSerializer.GetType()}");
-                E2ETest.Report("8DC6B886-CC5C-431E-821A-900D3671CB70", $"Engine API Injected Into SceneBehavior: {_coroutineSystem.GetType()}");
-                E2ETest.Report("59797ECF-0B77-4CA2-B389-020B884B9E8F", $"Engine API Injected Into SceneBehavior: {_physicsSystem.GetType()}");
+                E2ETestApi.PublishMessage("3211DA7A-5A4C-409D-B8F6-D82816D7CFA2",
+                    "Engine API Injected Into SceneBehavior", _audioBackend.GetType().ToString());
+                E2ETestApi.PublishMessage("C7897578-6670-4DEA-A32F-689629FE651E",
+                    "Engine API Injected Into SceneBehavior", _engineManager.GetType().ToString());
+                E2ETestApi.PublishMessage("B94536CE-5369-4105-B901-EC878E20E71F",
+                    "Engine API Injected Into SceneBehavior", _assetStore.GetType().ToString());
+                E2ETestApi.PublishMessage("2F59C6C4-5183-4B33-9433-9AD9995F0923",
+                    "Engine API Injected Into SceneBehavior", _debugRenderer.GetType().ToString());
+                E2ETestApi.PublishMessage("A3DB27E0-2A71-4728-9BE8-5C060F406EC8",
+                    "Engine API Injected Into SceneBehavior", _sceneLoader.GetType().ToString());
+                E2ETestApi.PublishMessage("5C9C1856-8DF1-4E2D-BEF3-BB524FC62544",
+                    "Engine API Injected Into SceneBehavior", _sceneManager.GetType().ToString());
+                E2ETestApi.PublishMessage("56048FE9-5C59-44F5-8C4C-D96615B62D8C",
+                    "Engine API Injected Into SceneBehavior", _sceneSerializer.GetType().ToString());
+                E2ETestApi.PublishMessage("8DC6B886-CC5C-431E-821A-900D3671CB70",
+                    "Engine API Injected Into SceneBehavior", _coroutineSystem.GetType().ToString());
+                E2ETestApi.PublishMessage("59797ECF-0B77-4CA2-B389-020B884B9E8F",
+                    "Engine API Injected Into SceneBehavior", _physicsSystem.GetType().ToString());
+                E2ETestApi.PublishMessage("3AE47823-EBE5-4E2D-BCE1-926431D09C55",
+                    "Engine API Injected Into SceneBehavior", _timeSystem.GetType().ToString());
 
                 Scene.CreateEntity().CreateComponent<TestComponent>();
             }

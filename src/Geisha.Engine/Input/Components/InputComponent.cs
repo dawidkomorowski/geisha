@@ -21,10 +21,10 @@ namespace Geisha.Engine.Input.Components
         {
         }
 
-        internal IDictionary<string, Action> ActionBindings { get; } = new Dictionary<string, Action>();
-        internal IDictionary<string, Action<double>> AxisBindings { get; } = new Dictionary<string, Action<double>>();
-        internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
-        internal IDictionary<string, double> AxisStates { get; } = new Dictionary<string, double>();
+        internal Dictionary<string, Action> ActionBindings { get; } = new();
+        internal Dictionary<string, Action<double>> AxisBindings { get; } = new();
+        internal Dictionary<string, bool> ActionStates { get; } = new();
+        internal Dictionary<string, double> AxisStates { get; } = new();
         internal bool HasActionStatesInitialized { get; set; }
 
         /// <summary>

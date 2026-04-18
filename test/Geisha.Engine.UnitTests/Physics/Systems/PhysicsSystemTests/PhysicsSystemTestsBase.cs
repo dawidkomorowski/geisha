@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -19,6 +20,7 @@ public abstract class PhysicsSystemTestsBase
     private const bool EnableVisualOutput = false;
     private IDebugRendererForTests _debugRendererForTests = null!;
     private protected Scene Scene = null!;
+    private protected ITimeSystem TimeSystem = null!;
     private protected IDebugRenderer DebugRenderer = null!;
 
     private protected const double Epsilon = 1e-6;
@@ -31,6 +33,8 @@ public abstract class PhysicsSystemTestsBase
     public void SetUp()
     {
         Scene = TestSceneFactory.Create();
+        TimeSystem = Substitute.For<ITimeSystem>();
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(1.0 / 60.0));
         DebugRenderer = Substitute.For<IDebugRenderer>();
         _debugRendererForTests = TestKit.CreateDebugRenderer(DebugRenderer, EnableVisualOutput);
     }
@@ -53,7 +57,7 @@ public abstract class PhysicsSystemTestsBase
 
     private protected PhysicsSystem GetPhysicsSystem(PhysicsConfiguration configuration)
     {
-        var physicsSystem = new PhysicsSystem(configuration, _debugRendererForTests);
+        var physicsSystem = new PhysicsSystem(configuration, TimeSystem, _debugRendererForTests);
         Scene.AddObserver(physicsSystem);
         return physicsSystem;
     }

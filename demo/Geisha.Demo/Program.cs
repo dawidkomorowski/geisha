@@ -1,17 +1,16 @@
 using System;
 using Geisha.Engine.Windows;
 
-namespace Geisha.Demo
+namespace Geisha.Demo;
+
+internal static class Program
 {
-    internal static class Program
+    /// <summary>
+    ///  The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            WindowsApplication.Run(new DemoApp());
-        }
+        WindowsApplication.Run(new DemoApp());
     }
 }

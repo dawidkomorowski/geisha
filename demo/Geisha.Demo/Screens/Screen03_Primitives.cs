@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -93,20 +94,20 @@ internal sealed class PrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
             // Set input mapping so SPACE key will trigger "Cycle" action.
             inputComponent.InputMapping = new InputMapping
             {
-                ActionMappings =
-                {
+                ActionMappings = ImmutableArray.Create
+                (
                     new ActionMapping
                     {
                         ActionName = "Cycle",
-                        HardwareActions =
-                        {
+                        HardwareActions = ImmutableArray.Create
+                        (
                             new HardwareAction
                             {
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                             }
-                        }
+                        )
                     }
-                }
+                )
             };
             // Bind "Cycle" action to call our cycle logic.
             inputComponent.BindAction("Cycle", () =>
