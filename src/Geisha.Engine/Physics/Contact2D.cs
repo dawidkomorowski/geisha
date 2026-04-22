@@ -13,7 +13,7 @@ namespace Geisha.Engine.Physics;
 ///     corresponding contact can be obtained from the perspective of <see cref="OtherCollider" /> by retrieving the
 ///     contacts from the other collider.
 /// </remarks>
-public class Contact2D
+public readonly record struct Contact2D
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="Contact2D" /> class.

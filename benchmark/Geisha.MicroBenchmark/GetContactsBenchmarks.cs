@@ -1,3 +1,5 @@
+using System;
+using System.Buffers;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using Geisha.Engine.Core;
@@ -76,7 +78,7 @@ public class GetContactsBenchmarks
     }
 
     /// <summary>
-    ///     Baseline: calls <see cref="Collider2DComponent.GetContacts" /> on every collider in the scene once.
+    ///     Baseline: calls <see cref="Collider2DComponent.GetContacts()" /> on every collider in the scene once.
     /// </summary>
     [Benchmark(Baseline = true)]
     public int GetContacts_AllColliders()
@@ -85,6 +87,45 @@ public class GetContactsBenchmarks
         foreach (var collider in _colliders)
         {
             totalContacts += collider.GetContacts().Length;
+        }
+
+        return totalContacts;
+    }
+
+    [Benchmark]
+    public int GetContacts_AllColliders_Array()
+    {
+        var maxContacts = 0;
+
+        foreach (var collider in _colliders)
+        {
+            maxContacts = Math.Max(maxContacts, collider.ContactCount);
+        }
+
+        var contacts = new Contact2D[maxContacts];
+
+        var totalContacts = 0;
+        foreach (var collider in _colliders)
+        {
+            collider.GetContacts(contacts);
+            totalContacts += contacts.Length;
+        }
+
+        return totalContacts;
+    }
+
+    [Benchmark]
+    public int GetContacts_AllColliders_List()
+    {
+        var maxContacts = 0;
+
+        var contacts = new List<Contact2D>();
+
+        var totalContacts = 0;
+        foreach (var collider in _colliders)
+        {
+            collider.GetContacts(contacts);
+            totalContacts += contacts.Count;
         }
 
         return totalContacts;

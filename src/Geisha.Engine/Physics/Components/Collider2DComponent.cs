@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -62,6 +64,8 @@ public abstract class Collider2DComponent : Component
     /// </summary>
     public bool IsColliding => PhysicsBodyProxy?.IsColliding ?? false;
 
+    public int ContactCount => PhysicsBodyProxy?.ContactCount ?? 0;
+
     /// <summary>
     ///     Retrieves all contacts currently involving this collider. A contact exists when two colliders are overlapping.
     /// </summary>
@@ -78,7 +82,30 @@ public abstract class Collider2DComponent : Component
     ///         the result and reusing it when needed.
     ///     </para>
     /// </remarks>
-    public Contact2D[] GetContacts() => PhysicsBodyProxy?.GetContacts() ?? Array.Empty<Contact2D>();
+    public Contact2D[] GetContacts()
+    {
+        if (PhysicsBodyProxy is null)
+        {
+            return Array.Empty<Contact2D>();
+        }
+
+        var contacts = new Contact2D[PhysicsBodyProxy.ContactCount];
+        PhysicsBodyProxy.GetContacts(contacts);
+
+        return contacts;
+    }
+
+    public void GetContacts(Span<Contact2D> contacts) => PhysicsBodyProxy?.GetContacts(contacts);
+
+    public void GetContacts(List<Contact2D> contacts)
+    {
+        while (contacts.Count < ContactCount)
+        {
+            contacts.Add(default);
+        }
+
+        PhysicsBodyProxy?.GetContacts(CollectionsMarshal.AsSpan(contacts));
+    }
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
