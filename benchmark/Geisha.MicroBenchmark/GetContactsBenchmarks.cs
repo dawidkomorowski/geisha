@@ -1,5 +1,3 @@
-using System;
-using System.Buffers;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using Geisha.Engine.Core;
@@ -30,6 +28,8 @@ public class GetContactsBenchmarks
     private Scene _scene = null!;
     private PhysicsSystem _physicsSystem = null!;
     private readonly List<Collider2DComponent> _colliders = new();
+    private readonly Contact2D[] _contactsArray = new Contact2D[16];
+    private readonly List<Contact2D> _contactsList = new();
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -93,22 +93,12 @@ public class GetContactsBenchmarks
     }
 
     [Benchmark]
-    public int GetContacts_AllColliders_Array()
+    public int GetContacts_AllColliders_Span()
     {
-        var maxContacts = 0;
-
-        foreach (var collider in _colliders)
-        {
-            maxContacts = Math.Max(maxContacts, collider.ContactCount);
-        }
-
-        var contacts = new Contact2D[maxContacts];
-
         var totalContacts = 0;
         foreach (var collider in _colliders)
         {
-            collider.GetContacts(contacts);
-            totalContacts += contacts.Length;
+            totalContacts += collider.GetContacts(_contactsArray);
         }
 
         return totalContacts;
@@ -117,15 +107,34 @@ public class GetContactsBenchmarks
     [Benchmark]
     public int GetContacts_AllColliders_List()
     {
-        var maxContacts = 0;
-
-        var contacts = new List<Contact2D>();
-
         var totalContacts = 0;
         foreach (var collider in _colliders)
         {
-            collider.GetContacts(contacts);
-            totalContacts += contacts.Count;
+            totalContacts += collider.GetContacts(_contactsList);
+        }
+
+        return totalContacts;
+    }
+
+    [Benchmark]
+    public int GetContactsAsSpan_AllColliders_Span()
+    {
+        var totalContacts = 0;
+        foreach (var collider in _colliders)
+        {
+            totalContacts += collider.GetContactsAsSpan(_contactsArray).Length;
+        }
+
+        return totalContacts;
+    }
+
+    [Benchmark]
+    public int GetContactsAsSpan_AllColliders_List()
+    {
+        var totalContacts = 0;
+        foreach (var collider in _colliders)
+        {
+            totalContacts += collider.GetContactsAsSpan(_contactsList).Length;
         }
 
         return totalContacts;
