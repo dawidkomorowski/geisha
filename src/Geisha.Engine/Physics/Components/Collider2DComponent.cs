@@ -64,8 +64,6 @@ public abstract class Collider2DComponent : Component
     /// </summary>
     public bool IsColliding => PhysicsBodyProxy is not null && PhysicsBodyProxy.ContactCount > 0;
 
-    // TODO: Is this API useful if stackalloc cannot be used for Contact2D? If kept add tests.
-    //       Theoretically, it can be used with array pooling, but that would require additional API to rent and return arrays from pool. It may be simpler to just have GetContacts that takes List<Contact2D> and fills it, as List<T> is already optimized for reuse.
     // TODO: Tests in Collider2DComponentTests are semantically inaccurate as they rely on the fact that physics system is not running and contacts are not generated.
     //       These tests should cover only the API behavior when component is detached from physics system, e.g. before physics body proxy is created.
     // TODO: Add/update documentation for new APIs.

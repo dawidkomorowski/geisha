@@ -31,6 +31,9 @@ public class GetContactsTests : PhysicsSystemTestsBase
 
         var contacts = new Contact2D[bufferSize];
 
+        // Assume
+        Assert.That(circleCollider.ContactCount, Is.EqualTo(bodies));
+
         // Act
         var contactsCount = circleCollider.GetContacts(contacts);
 
@@ -60,6 +63,7 @@ public class GetContactsTests : PhysicsSystemTestsBase
         var contacts = new List<Contact2D>(Enumerable.Repeat(new Contact2D(), initialListSize));
 
         // Assume
+        Assert.That(circleCollider.ContactCount, Is.EqualTo(bodies));
         Assert.That(contacts.Count, Is.EqualTo(initialListSize));
 
         // Act
@@ -91,6 +95,9 @@ public class GetContactsTests : PhysicsSystemTestsBase
 
         var contacts = new Contact2D[bufferSize];
 
+        // Assume
+        Assert.That(circleCollider.ContactCount, Is.EqualTo(bodies));
+
         // Act
         var contactsView = circleCollider.GetContactsAsSpan(contacts);
 
@@ -121,6 +128,7 @@ public class GetContactsTests : PhysicsSystemTestsBase
         var contacts = new List<Contact2D>(Enumerable.Repeat(new Contact2D(), initialListSize));
 
         // Assume
+        Assert.That(circleCollider.ContactCount, Is.EqualTo(bodies));
         Assert.That(contacts.Count, Is.EqualTo(initialListSize));
 
         // Act
