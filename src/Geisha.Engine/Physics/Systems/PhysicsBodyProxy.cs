@@ -94,9 +94,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
         return contacts;
     }
 
-    public void GetContacts(Span<Contact2D> contacts)
+    public int GetContacts(Span<Contact2D> contacts)
     {
-        for (var i = 0; i < _body.Contacts.Count; i++)
+        var writeCount = Math.Min(_body.Contacts.Count, contacts.Length);
+
+        for (var i = 0; i < writeCount; i++)
         {
             var contact = _body.Contacts[i];
             var thisIsBody1 = _body == contact.Body1;
@@ -121,6 +123,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
             contacts[i] = new Contact2D(Collider, otherBody.Proxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
         }
+
+        return writeCount;
     }
 
     public void Dispose()
