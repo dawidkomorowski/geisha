@@ -9,11 +9,11 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class GetContactsTests : PhysicsSystemTestsBase
 {
-    [TestCase(0, 0, 0)]
-    [TestCase(5, 0, 0)]
-    [TestCase(5, 2, 2)]
-    [TestCase(5, 5, 5)]
-    [TestCase(5, 8, 5)]
+    [TestCase(0, 0, 0)] // No other bodies: 0 contacts, empty buffer → 0 contacts written
+    [TestCase(5, 0, 0)] // 5 other bodies (5 contacts), buffer size 0 → 0 contacts written (buffer full)
+    [TestCase(5, 2, 2)] // 5 other bodies (5 contacts), buffer size 2 → 2 contacts written (buffer full)
+    [TestCase(5, 5, 5)] // 5 other bodies (5 contacts), buffer size 5 → 5 contacts written (exact fit)
+    [TestCase(5, 8, 5)] // 5 other bodies (5 contacts), buffer size 8 → 5 contacts written (buffer has room)
     public void GetContacts_ShouldWriteContactsIntoSpan(int bodies, int bufferSize, int contactsWritten)
     {
         // Arrange
@@ -37,11 +37,11 @@ public class GetContactsTests : PhysicsSystemTestsBase
         Assert.That(contactsCount, Is.EqualTo(contactsWritten));
     }
 
-    [TestCase(0, 0, 0, 0)]
-    [TestCase(5, 0, 5, 5)]
-    [TestCase(5, 2, 5, 5)]
-    [TestCase(5, 5, 5, 5)]
-    [TestCase(5, 8, 5, 8)]
+    [TestCase(0, 0, 0, 0)] // No other bodies: 0 contacts, empty list → 0 contacts written, list stays empty
+    [TestCase(5, 0, 5, 5)] // 5 other bodies (5 contacts), empty list → 5 contacts written, list grows to 5
+    [TestCase(5, 2, 5, 5)] // 5 other bodies (5 contacts), list size 2 → 5 contacts written, list grows to 5
+    [TestCase(5, 5, 5, 5)] // 5 other bodies (5 contacts), list size 5 → 5 contacts written, list stays at 5
+    [TestCase(5, 8, 5, 8)] // 5 other bodies (5 contacts), list size 8 → 5 contacts written, list stays at 8
     public void GetContacts_ShouldWriteContactsIntoList(int bodies, int initialListSize, int contactsWritten, int finalListSize)
     {
         // Arrange
