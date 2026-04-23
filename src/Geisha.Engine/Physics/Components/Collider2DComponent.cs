@@ -64,8 +64,6 @@ public abstract class Collider2DComponent : Component
     /// </summary>
     public bool IsColliding => PhysicsBodyProxy is not null && PhysicsBodyProxy.ContactCount > 0;
 
-    // TODO: Tests in Collider2DComponentTests are semantically inaccurate as they rely on the fact that physics system is not running and contacts are not generated.
-    //       These tests should cover only the API behavior when component is detached from physics system, e.g. before physics body proxy is created.
     // TODO: Add/update documentation for new APIs.
     // TODO: Convert usages of GetContacts (allocating) to use new APIs.
     // TODO: Revisit whether GetContacts that allocates should be kept or removed in favor of APIs that do not allocate.
