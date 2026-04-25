@@ -19,7 +19,7 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     //"StartUpScene": ""
-    "StartUpSceneBehavior": "AnimationSandbox"
+    "StartUpSceneBehavior": "PhysicsSandbox"
   },
   "Physics": {
     "Substeps": 1,

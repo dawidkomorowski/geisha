@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Engine.Core.Components;
@@ -7,6 +8,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 
 namespace Sandbox.Physics;
@@ -14,6 +16,7 @@ namespace Sandbox.Physics;
 public sealed class EntityControllerComponent : BehaviorComponent
 {
     private const double AngularVelocity = Math.PI / 4;
+    private readonly List<Contact2D> _contacts = new();
     private double _linearVelocity = 400;
     private double _sizeFactor = 1d;
     private string _type = "Square";
@@ -236,7 +239,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
         var canJump = false;
         if (colliderComponent.IsColliding)
         {
-            foreach (var contact in colliderComponent.GetContacts())
+            foreach (var contact in colliderComponent.GetContactsAsSpan(_contacts))
             {
                 if (contact.CollisionNormal.Y > 0)
                 {
