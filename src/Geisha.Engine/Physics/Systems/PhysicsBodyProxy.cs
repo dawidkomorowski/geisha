@@ -55,44 +55,6 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
     public int ContactCount => _body.Contacts.Count;
 
-    public Contact2D[] GetContacts()
-    {
-        if (_body.Contacts.Count == 0)
-        {
-            return Array.Empty<Contact2D>();
-        }
-
-        var contacts = new Contact2D[_body.Contacts.Count];
-
-        for (var i = 0; i < _body.Contacts.Count; i++)
-        {
-            var contact = _body.Contacts[i];
-            var thisIsBody1 = _body == contact.Body1;
-            var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
-            Debug.Assert(otherBody.Proxy != null, "otherBody.Proxy != null");
-
-            FixedList2<ContactPoint2D> contactPoints2D = default;
-            for (var j = 0; j < contact.ContactPoints.Count; j++)
-            {
-                var cp = contact.ContactPoints[j];
-                var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
-                var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
-
-                // Convert local positions to be oriented according to body rotations.
-                thisLocalPosition = (Matrix3x3.CreateRotation(-_body.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
-                otherLocalPosition = (Matrix3x3.CreateRotation(-otherBody.Rotation) * otherLocalPosition.Homogeneous).ToVector2();
-
-                contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
-            }
-
-            var collisionNormal = thisIsBody1 ? contact.CollisionNormal : -contact.CollisionNormal;
-
-            contacts[i] = new Contact2D(Collider, otherBody.Proxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
-        }
-
-        return contacts;
-    }
-
     public int GetContacts(Span<Contact2D> contacts)
     {
         var writeCount = Math.Min(_body.Contacts.Count, contacts.Length);
