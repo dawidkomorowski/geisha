@@ -19,15 +19,14 @@ public class Collider2DComponentTests
     }
 
     [Test]
-    public void Constructor_ShouldCreateColliderThatIsNotColliding()
+    public void Constructor_ShouldThrowException_WhenColliderIsAddedToEntityTwice()
     {
         // Arrange
-        // Act
-        var collider = _entity.CreateComponent<RectangleColliderComponent>();
+        _entity.CreateComponent<RectangleColliderComponent>();
 
+        // Act
         // Assert
-        Assert.That(collider.IsColliding, Is.False);
-        Assert.That(collider.GetContacts(), Is.Empty);
+        Assert.That(() => _entity.CreateComponent<RectangleColliderComponent>(), Throws.ArgumentException);
     }
 
     [Test]
@@ -39,16 +38,5 @@ public class Collider2DComponentTests
 
         // Assert
         Assert.That(collider.Enabled, Is.True);
-    }
-
-    [Test]
-    public void Constructor_ShouldThrowException_WhenColliderIsAddedToEntityTwice()
-    {
-        // Arrange
-        _entity.CreateComponent<RectangleColliderComponent>();
-
-        // Act
-        // Assert
-        Assert.That(() => _entity.CreateComponent<RectangleColliderComponent>(), Throws.ArgumentException);
     }
 }

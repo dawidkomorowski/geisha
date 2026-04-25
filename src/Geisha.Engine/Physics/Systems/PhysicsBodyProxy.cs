@@ -53,18 +53,13 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public Collider2DComponent Collider { get; }
     public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
 
-    public bool IsColliding => _body.Contacts.Count > 0;
+    public int ContactCount => _body.Contacts.Count;
 
-    public Contact2D[] GetContacts()
+    public int GetContacts(Span<Contact2D> contacts)
     {
-        if (_body.Contacts.Count == 0)
-        {
-            return Array.Empty<Contact2D>();
-        }
+        var writeCount = Math.Min(_body.Contacts.Count, contacts.Length);
 
-        var contacts = new Contact2D[_body.Contacts.Count];
-
-        for (var i = 0; i < _body.Contacts.Count; i++)
+        for (var i = 0; i < writeCount; i++)
         {
             var contact = _body.Contacts[i];
             var thisIsBody1 = _body == contact.Body1;
@@ -90,7 +85,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             contacts[i] = new Contact2D(Collider, otherBody.Proxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
         }
 
-        return contacts;
+        return writeCount;
     }
 
     public void Dispose()

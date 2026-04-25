@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
@@ -200,7 +201,9 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         DebugRenderer.Received(1).DrawRectangle(rectangle, _staticBodyColor, transform);
 
         // Contact point
-        var contact2D = circleEntity.GetComponent<CircleColliderComponent>().GetContacts()[0];
+        var circleColliderContacts = new List<Contact2D>();
+        circleEntity.GetComponent<CircleColliderComponent>().GetContacts(circleColliderContacts);
+        var contact2D = circleColliderContacts[0];
         var contactPoint = new Circle(contact2D.ContactPoints[0].WorldPosition, 3);
         DebugRenderer.Received(1).DrawCircle(contactPoint, _contactPointColor);
 

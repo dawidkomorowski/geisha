@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
 
@@ -31,11 +33,15 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var rectangle1Contacts = new List<Contact2D>();
         Assert.That(rectangle1Collider.IsColliding, Is.False);
-        Assert.That(rectangle1Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle1Collider.GetContacts(rectangle1Contacts), Is.Zero);
+        Assert.That(rectangle1Contacts, Has.Count.Zero);
 
+        var rectangle2Contacts = new List<Contact2D>();
         Assert.That(rectangle2Collider.IsColliding, Is.False);
-        Assert.That(rectangle2Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle2Collider.GetContacts(rectangle2Contacts), Is.Zero);
+        Assert.That(rectangle2Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -63,11 +69,15 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var rectangle1Contacts = new List<Contact2D>();
         Assert.That(rectangle1Collider.IsColliding, Is.False);
-        Assert.That(rectangle1Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle1Collider.GetContacts(rectangle1Contacts), Is.Zero);
+        Assert.That(rectangle1Contacts, Has.Count.Zero);
 
+        var rectangle2Contacts = new List<Contact2D>();
         Assert.That(rectangle2Collider.IsColliding, Is.False);
-        Assert.That(rectangle2Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle2Collider.GetContacts(rectangle2Contacts), Is.Zero);
+        Assert.That(rectangle2Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -92,15 +102,17 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var r1Contacts = new List<Contact2D>();
         Assert.That(rectangle1Collider.IsColliding, Is.True);
-        var r1Contacts = rectangle1Collider.GetContacts();
-        Assert.That(r1Contacts, Has.Length.EqualTo(1));
+        Assert.That(rectangle1Collider.GetContacts(r1Contacts), Is.EqualTo(1));
+        Assert.That(r1Contacts, Has.Count.EqualTo(1));
         Assert.That(r1Contacts[0].ThisCollider, Is.EqualTo(rectangle1Collider));
         Assert.That(r1Contacts[0].OtherCollider, Is.EqualTo(rectangle2Collider));
 
+        var r2Contacts = new List<Contact2D>();
         Assert.That(rectangle2Collider.IsColliding, Is.True);
-        var r2Contacts = rectangle2Collider.GetContacts();
-        Assert.That(r2Contacts, Has.Length.EqualTo(1));
+        Assert.That(rectangle2Collider.GetContacts(r2Contacts), Is.EqualTo(1));
+        Assert.That(r2Contacts, Has.Count.EqualTo(1));
         Assert.That(r2Contacts[0].ThisCollider, Is.EqualTo(rectangle2Collider));
         Assert.That(r2Contacts[0].OtherCollider, Is.EqualTo(rectangle1Collider));
     }
@@ -127,15 +139,17 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var c1Contacts = new List<Contact2D>();
         Assert.That(circle1Collider.IsColliding, Is.True);
-        var c1Contacts = circle1Collider.GetContacts();
-        Assert.That(c1Contacts, Has.Length.EqualTo(1));
+        Assert.That(circle1Collider.GetContacts(c1Contacts), Is.EqualTo(1));
+        Assert.That(c1Contacts, Has.Count.EqualTo(1));
         Assert.That(c1Contacts[0].ThisCollider, Is.EqualTo(circle1Collider));
         Assert.That(c1Contacts[0].OtherCollider, Is.EqualTo(circle2Collider));
 
+        var c2Contacts = new List<Contact2D>();
         Assert.That(circle2Collider.IsColliding, Is.True);
-        var c2Contacts = circle2Collider.GetContacts();
-        Assert.That(c2Contacts, Has.Length.EqualTo(1));
+        Assert.That(circle2Collider.GetContacts(c2Contacts), Is.EqualTo(1));
+        Assert.That(c2Contacts, Has.Count.EqualTo(1));
         Assert.That(c2Contacts[0].ThisCollider, Is.EqualTo(circle2Collider));
         Assert.That(c2Contacts[0].OtherCollider, Is.EqualTo(circle1Collider));
     }
@@ -178,44 +192,51 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var c1Contacts = new List<Contact2D>();
         Assert.That(circle1Collider.IsColliding, Is.True);
-        var c1Contacts = circle1Collider.GetContacts();
-        Assert.That(c1Contacts, Has.Length.EqualTo(2));
+        Assert.That(circle1Collider.GetContacts(c1Contacts), Is.EqualTo(2));
+        Assert.That(c1Contacts, Has.Count.EqualTo(2));
         Assert.That(c1Contacts[0].ThisCollider, Is.EqualTo(circle1Collider));
         Assert.That(c1Contacts[1].ThisCollider, Is.EqualTo(circle1Collider));
         Assert.That(c1Contacts.Any(c => c.OtherCollider == circle2Collider), Is.True);
         Assert.That(c1Contacts.Any(c => c.OtherCollider == rectangle1Collider), Is.True);
 
+        var c2Contacts = new List<Contact2D>();
         Assert.That(circle2Collider.IsColliding, Is.True);
-        var c2Contacts = circle2Collider.GetContacts();
-        Assert.That(c2Contacts, Has.Length.EqualTo(2));
+        Assert.That(circle2Collider.GetContacts(c2Contacts), Is.EqualTo(2));
+        Assert.That(c2Contacts, Has.Count.EqualTo(2));
         Assert.That(c2Contacts[0].ThisCollider, Is.EqualTo(circle2Collider));
         Assert.That(c2Contacts[1].ThisCollider, Is.EqualTo(circle2Collider));
         Assert.That(c2Contacts.Any(c => c.OtherCollider == circle1Collider), Is.True);
         Assert.That(c2Contacts.Any(c => c.OtherCollider == rectangle1Collider), Is.True);
 
+        var c3Contacts = new List<Contact2D>();
         Assert.That(circle3Collider.IsColliding, Is.True);
-        var c3Contacts = circle3Collider.GetContacts();
-        Assert.That(c3Contacts, Has.Length.EqualTo(1));
+        Assert.That(circle3Collider.GetContacts(c3Contacts), Is.EqualTo(1));
+        Assert.That(c3Contacts, Has.Count.EqualTo(1));
         Assert.That(c3Contacts[0].ThisCollider, Is.EqualTo(circle3Collider));
         Assert.That(c3Contacts[0].OtherCollider, Is.EqualTo(rectangle2Collider));
 
+        var r1Contacts = new List<Contact2D>();
         Assert.That(rectangle1Collider.IsColliding, Is.True);
-        var r1Contacts = rectangle1Collider.GetContacts();
-        Assert.That(r1Contacts, Has.Length.EqualTo(2));
+        Assert.That(rectangle1Collider.GetContacts(r1Contacts), Is.EqualTo(2));
+        Assert.That(r1Contacts, Has.Count.EqualTo(2));
         Assert.That(r1Contacts[0].ThisCollider, Is.EqualTo(rectangle1Collider));
         Assert.That(r1Contacts[1].ThisCollider, Is.EqualTo(rectangle1Collider));
         Assert.That(r1Contacts.Any(c => c.OtherCollider == circle1Collider), Is.True);
         Assert.That(r1Contacts.Any(c => c.OtherCollider == circle2Collider), Is.True);
 
+        var r2Contacts = new List<Contact2D>();
         Assert.That(rectangle2Collider.IsColliding, Is.True);
-        var r2Contacts = rectangle2Collider.GetContacts();
-        Assert.That(r2Contacts, Has.Length.EqualTo(1));
+        Assert.That(rectangle2Collider.GetContacts(r2Contacts), Is.EqualTo(1));
+        Assert.That(r2Contacts, Has.Count.EqualTo(1));
         Assert.That(r2Contacts[0].ThisCollider, Is.EqualTo(rectangle2Collider));
         Assert.That(r2Contacts[0].OtherCollider, Is.EqualTo(circle3Collider));
 
+        var rectangle3Contacts = new List<Contact2D>();
         Assert.That(rectangle3Collider.IsColliding, Is.False);
-        Assert.That(rectangle3Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle3Collider.GetContacts(rectangle3Contacts), Is.Zero);
+        Assert.That(rectangle3Contacts, Has.Count.Zero);
     }
 
     [TestCase(false, true)]
@@ -242,10 +263,14 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var rectangle1Contacts = new List<Contact2D>();
         Assert.That(rectangle1Collider.IsColliding, Is.False);
-        Assert.That(rectangle1Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle1Collider.GetContacts(rectangle1Contacts), Is.Zero);
+        Assert.That(rectangle1Contacts, Has.Count.Zero);
 
+        var rectangle2Contacts = new List<Contact2D>();
         Assert.That(rectangle2Collider.IsColliding, Is.False);
-        Assert.That(rectangle2Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangle2Collider.GetContacts(rectangle2Contacts), Is.Zero);
+        Assert.That(rectangle2Contacts, Has.Count.Zero);
     }
 }
