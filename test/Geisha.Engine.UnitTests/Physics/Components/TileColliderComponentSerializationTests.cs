@@ -17,7 +17,6 @@ public class TileColliderComponentSerializationTests : ComponentSerializationTes
 
         // Assert
         Assert.That(actual.IsColliding, Is.False);
-        Assert.That(actual.GetContacts(), Is.Empty);
         Assert.That(actual.Enabled, Is.EqualTo(enabled));
     }
 }

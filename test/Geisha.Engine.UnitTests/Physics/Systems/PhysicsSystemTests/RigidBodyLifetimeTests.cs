@@ -1,4 +1,6 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System.Collections.Generic;
+using Geisha.Engine.Core.Components;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
 using NUnit.Framework;
@@ -435,11 +437,15 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var staticRectangleContacts = new List<Contact2D>();
         Assert.That(staticRectangleCollider.IsColliding, Is.False);
-        Assert.That(staticRectangleCollider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticRectangleCollider.GetContacts(staticRectangleContacts), Is.Zero);
+        Assert.That(staticRectangleContacts, Has.Count.Zero);
 
+        var kinematicRectangleContacts = new List<Contact2D>();
         Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
-        Assert.That(kinematicRectangleCollider.GetContacts(), Has.Length.Zero);
+        Assert.That(kinematicRectangleCollider.GetContacts(kinematicRectangleContacts), Is.Zero);
+        Assert.That(kinematicRectangleContacts, Has.Count.Zero);
     }
 
     #endregion
@@ -682,11 +688,15 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var rectangleContacts1 = new List<Contact2D>();
         Assert.That(rectangleCollider1.IsColliding, Is.False);
-        Assert.That(rectangleCollider1.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangleCollider1.GetContacts(rectangleContacts1), Is.Zero);
+        Assert.That(rectangleContacts1, Has.Count.Zero);
 
+        var rectangleContacts2 = new List<Contact2D>();
         Assert.That(rectangleCollider2.IsColliding, Is.False);
-        Assert.That(rectangleCollider2.GetContacts(), Has.Length.Zero);
+        Assert.That(rectangleCollider2.GetContacts(rectangleContacts2), Is.Zero);
+        Assert.That(rectangleContacts2, Has.Count.Zero);
     }
 
     #endregion

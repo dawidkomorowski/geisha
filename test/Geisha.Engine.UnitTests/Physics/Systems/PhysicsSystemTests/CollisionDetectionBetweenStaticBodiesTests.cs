@@ -1,4 +1,6 @@
-﻿using Geisha.Engine.Physics.Components;
+﻿using System.Collections.Generic;
+using Geisha.Engine.Physics;
+using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -28,11 +30,15 @@ public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var staticBody1Contacts = new List<Contact2D>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticBody1Collider.GetContacts(staticBody1Contacts), Is.Zero);
+        Assert.That(staticBody1Contacts, Has.Count.Zero);
 
+        var staticBody2Contacts = new List<Contact2D>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticBody2Collider.GetContacts(staticBody2Contacts), Is.Zero);
+        Assert.That(staticBody2Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -57,11 +63,15 @@ public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var staticBody1Contacts = new List<Contact2D>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticBody1Collider.GetContacts(staticBody1Contacts), Is.Zero);
+        Assert.That(staticBody1Contacts, Has.Count.Zero);
 
+        var staticBody2Contacts = new List<Contact2D>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticBody2Collider.GetContacts(staticBody2Contacts), Is.Zero);
+        Assert.That(staticBody2Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -86,10 +96,14 @@ public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
+        var staticBody1Contacts = new List<Contact2D>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticBody1Collider.GetContacts(staticBody1Contacts), Is.Zero);
+        Assert.That(staticBody1Contacts, Has.Count.Zero);
 
+        var staticBody2Contacts = new List<Contact2D>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.GetContacts(), Has.Length.Zero);
+        Assert.That(staticBody2Collider.GetContacts(staticBody2Contacts), Is.Zero);
+        Assert.That(staticBody2Contacts, Has.Count.Zero);
     }
 }
