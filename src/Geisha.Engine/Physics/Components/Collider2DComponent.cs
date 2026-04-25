@@ -8,8 +8,6 @@ using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.Components;
 
-// TODO: Revisit whether GetContacts that allocates should be kept or removed in favor of APIs that do not allocate.
-
 /// <summary>
 ///     Serves as the abstract base class for all 2D collider components.
 /// </summary>
@@ -75,35 +73,6 @@ public abstract class Collider2DComponent : Component
     ///     For a simple yes/no check prefer <see cref="IsColliding" />.
     /// </remarks>
     public int ContactCount => PhysicsBodyProxy?.ContactCount ?? 0;
-
-    /// <summary>
-    ///     Retrieves all contacts currently involving this collider. A contact exists when two colliders are overlapping.
-    /// </summary>
-    /// <returns>An array containing all current contacts involving this collider.</returns>
-    /// <remarks>
-    ///     <para>
-    ///         <see cref="GetContacts" /> returns all current contacts involving this collider. If you are only interested in
-    ///         whether the collider is colliding with any other collider, use <see cref="IsColliding" /> instead for better
-    ///         performance.
-    ///     </para>
-    ///     <para>
-    ///         <see cref="GetContacts" /> allocates an array every time it is called and converts internal contacts to
-    ///         <see cref="Contact2D" />. It is recommended to avoid calling this method frequently. Instead, consider caching
-    ///         the result and reusing it when needed.
-    ///     </para>
-    /// </remarks>
-    public Contact2D[] GetContacts()
-    {
-        if (PhysicsBodyProxy is null)
-        {
-            return Array.Empty<Contact2D>();
-        }
-
-        var contacts = new Contact2D[PhysicsBodyProxy.ContactCount];
-        PhysicsBodyProxy.GetContacts(contacts);
-
-        return contacts;
-    }
 
     /// <summary>
     ///     Writes all current contacts involving this collider into the provided <paramref name="contacts" /> span and

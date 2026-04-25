@@ -12,10 +12,10 @@ using Geisha.TestUtils;
 namespace Geisha.MicroBenchmark;
 
 /// <summary>
-///     Focused micro benchmark for <see cref="Collider2DComponent.GetContacts" /> API.
+///     Focused micro benchmark for GetContacts API.
 ///     The scene is intentionally dense so every collider has multiple contacts.
 ///     This benchmark is temporary and targets the memory-allocation optimization tracked
-///     in issue 649-optimize-memory-allocation-of-collider2dcomponentgetcontacts.
+///     in issue https://github.com/dawidkomorowski/geisha/issues/649.
 /// </summary>
 [MemoryDiagnoser]
 public class GetContactsBenchmarks
@@ -75,21 +75,6 @@ public class GetContactsBenchmarks
         _scene.RemoveObserver(_physicsSystem);
         _physicsSystem = null!;
         _scene = null!;
-    }
-
-    /// <summary>
-    ///     Baseline: calls <see cref="Collider2DComponent.GetContacts()" /> on every collider in the scene once.
-    /// </summary>
-    [Benchmark(Baseline = true)]
-    public int GetContacts_AllColliders()
-    {
-        var totalContacts = 0;
-        foreach (var collider in _colliders)
-        {
-            totalContacts += collider.GetContacts().Length;
-        }
-
-        return totalContacts;
     }
 
     [Benchmark]
