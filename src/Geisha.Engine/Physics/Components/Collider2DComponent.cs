@@ -68,9 +68,7 @@ public abstract class Collider2DComponent : Component
     // TODO: Allocation free APIs reuse existing buffers provided by the caller, avoiding allocations on each call.
     //       The buffer indirectly keeps managed references that prevents GC from collecting the colliders involved in contacts, which is a common issue when using structs that contain references.
     //       This trade-off should be documented that manual buffer clearing is required to allow GC to collect related objects.
-    // TODO: Convert usages of GetContacts (allocating) to use new APIs.
     // TODO: Revisit whether GetContacts that allocates should be kept or removed in favor of APIs that do not allocate.
-    // TODO: Update documentation after the Contact2D was changed to be a struct.
     public int ContactCount => PhysicsBodyProxy?.ContactCount ?? 0;
 
     /// <summary>

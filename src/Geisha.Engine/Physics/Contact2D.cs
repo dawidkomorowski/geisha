@@ -16,7 +16,7 @@ namespace Geisha.Engine.Physics;
 public readonly record struct Contact2D
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Contact2D" /> class.
+    ///     Initializes a new instance of the <see cref="Contact2D" /> struct.
     /// </summary>
     /// <param name="thisCollider">The collider involved in the contact.</param>
     /// <param name="otherCollider">The other collider involved in the contact.</param>
