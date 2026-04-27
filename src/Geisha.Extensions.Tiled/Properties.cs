@@ -30,21 +30,10 @@ public sealed class Properties
         }
     }
 
-    public Property this[string name]
-    {
-        get
-        {
-            if (_properties.TryGetValue(name, out var property))
-            {
-                return property;
-            }
+    public Property this[string name] =>
+        _properties.TryGetValue(name, out var property) ? property : throw new KeyNotFoundException($"Property '{name}' not found.");
 
-            throw new KeyNotFoundException($"Property '{name}' not found.");
-        }
-    }
+    public Property? GetPropertyOrNull(string name) => _properties.GetValueOrDefault(name);
 
-    public bool TryGetProperty(string name, [NotNullWhen(true)] out Property? property)
-    {
-        return _properties.TryGetValue(name, out property);
-    }
+    public bool TryGetProperty(string name, [NotNullWhen(true)] out Property? property) => _properties.TryGetValue(name, out property);
 }
