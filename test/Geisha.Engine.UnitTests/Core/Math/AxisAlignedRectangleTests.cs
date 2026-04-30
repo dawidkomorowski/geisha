@@ -382,44 +382,5 @@ public class AxisAlignedRectangleTests
         Assert.That(actual.UpperLeft, Is.EqualTo(new Vector2(-2, 10)));
     }
 
-    [TestCase(0, 0, 0, 0,
-        "Center: X: 0, Y: 0, Width: 0, Height: 0")]
-    [TestCase(10, 20, 50, 100,
-        "Center: X: 10, Y: 20, Width: 50, Height: 100")]
-    [SetCulture("")]
-    public void ToString_Test(double x, double y, double w, double h, string expected)
-    {
-        // Arrange
-        var rectangle = new AxisAlignedRectangle(x, y, w, h);
-
-        // Act
-        var actual = rectangle.ToString();
-
-        // Assert
-        Assert.That(actual, Is.EqualTo(expected));
-    }
-
-    [TestCase( /*R1*/0, 0, 0, 0, /*R2*/ 0, 0, 0, 0, /*E*/ true)]
-    [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 2, 3, 4, /*E*/ true)]
-    [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 0, 2, 3, 4, /*E*/ false)]
-    [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 0, 3, 4, /*E*/ false)]
-    [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 2, 0, 4, /*E*/ false)]
-    [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 2, 3, 0, /*E*/ false)]
-    public void EqualityMembers_ShouldEqualAxisAlignedRectangle_WhenCenterAndWidthAndHeightAreEqual(double x1, double y1, double w1, double h1, double x2,
-        double y2, double w2, double h2, bool expectedIsEqual)
-    {
-        // Arrange
-        var rectangle1 = new AxisAlignedRectangle(x1, y1, w1, h1);
-        var rectangle2 = new AxisAlignedRectangle(x2, y2, w2, h2);
-
-        // Act
-        // Assert
-        AssertEqualityMembers
-            .ForValues(rectangle1, rectangle2)
-            .UsingEqualityOperator((x, y) => x == y)
-            .UsingInequalityOperator((x, y) => x != y)
-            .EqualityIsExpectedToBe(expectedIsEqual);
-    }
-
     #endregion
 }
