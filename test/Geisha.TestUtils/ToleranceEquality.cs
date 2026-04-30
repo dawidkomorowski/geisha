@@ -12,6 +12,9 @@ public static class ToleranceEquality
     public static Func<Matrix3x3, Matrix3x3, bool> ForMatrix3x3(double tolerance) => (m1, m2) => AlmostEquals(m1, m2, tolerance);
     public static Func<Transform2D, Transform2D, bool> ForTransform2D(double tolerance) => (t1, t2) => AlmostEquals(t1, t2, tolerance);
 
+    public static Func<AxisAlignedRectangle, AxisAlignedRectangle, bool> ForAxisAlignedRectangle(double tolerance) =>
+        (r1, r2) => AlmostEquals(r1, r2, tolerance);
+
     private static bool AlmostEquals(double x, double y, double tolerance) => Math.Abs(x - y) <= tolerance;
 
     private static bool AlmostEquals(in Vector2 v1, in Vector2 v2, double tolerance) =>
@@ -29,4 +32,8 @@ public static class ToleranceEquality
         AlmostEquals(t1.Translation, t2.Translation, tolerance) &&
         AlmostEquals(t1.Rotation, t2.Rotation, tolerance) &&
         AlmostEquals(t1.Scale, t2.Scale, tolerance);
+
+    private static bool AlmostEquals(in AxisAlignedRectangle r1, in AxisAlignedRectangle r2, double tolerance) =>
+        AlmostEquals(r1.Center, r2.Center, tolerance) &&
+        AlmostEquals(r1.Dimensions, r2.Dimensions, tolerance);
 }
