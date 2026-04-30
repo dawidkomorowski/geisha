@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
@@ -8,8 +9,36 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class GetContactsTests : PhysicsSystemTestsBase
+public class Collider2DComponentTests : PhysicsSystemTestsBase
 {
+    #region BoundingRectangle
+
+    [TestCase(0, 0, 10, 0, 0, 20, 20)]
+    public void BoundingRectangle_Circle(double cx, double cy, double cr, double brX, double brY, double brW, double brH)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+
+        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        //Assert.That(circleCollider.ContactCount, Is.EqualTo(bodies));
+
+        // Act
+        var boundingRectangle = circleCollider.BoundingRectangle;
+
+        // Assert
+        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));
+    }
+
+    #endregion
+
+    #region GetContacts
+
     [TestCase(0, 0, 0)] // No other bodies: 0 contacts, empty buffer → 0 contacts written
     [TestCase(5, 0, 0)] // 5 other bodies (5 contacts), buffer size 0 → 0 contacts written (buffer full)
     [TestCase(5, 2, 2)] // 5 other bodies (5 contacts), buffer size 2 → 2 contacts written (buffer full)
@@ -139,4 +168,6 @@ public class GetContactsTests : PhysicsSystemTestsBase
         Assert.That(contactsView.ToArray(), Is.EqualTo(contacts.ToArray().AsSpan(0, contactsWritten).ToArray()));
         Assert.That(contacts.Count, Is.EqualTo(finalListSize));
     }
+
+    #endregion
 }

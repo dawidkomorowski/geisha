@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Physics.Systems;
@@ -58,6 +59,17 @@ public abstract class Collider2DComponent : Component
     ///     </para>
     /// </remarks>
     public bool Enabled { get; set; } = true;
+
+    // TODO: Cover extensively in tests.
+    // TODO: Consider refactoring AxisAlignedRectangle to record struct.
+    // BUG:  It seems that position and bounding rectangle might not be correct for kinematic bodies just after solving position constraints.
+    //       This might be related to the fact that position constraints are solved per body and not per contact (it is probably already reported),
+    //       and after each body the position and bounding rectangle are updated, but the next body might still have contacts with the previous body that are not solved yet.
+    //       This is just a theory, but it should be investigated and if confirmed, it should be fixed.
+    // TODO: It is not available right after creation of the collider component, but only after the first physics processing step.
+    //       Document this behavior and consider whether it can be improved.
+    // TODO: Add XML docs.
+    public AxisAlignedRectangle BoundingRectangle => PhysicsBodyProxy?.BoundingRectangle ?? default;
 
     /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
