@@ -77,17 +77,15 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
-        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        foreach (var proxy in physicsBodyProxies)
         {
-            var proxy = physicsBodyProxies[i];
             proxy.SynchronizeBody();
         }
 
         PhysicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
 
-        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        foreach (var proxy in physicsBodyProxies)
         {
-            var proxy = physicsBodyProxies[i];
             proxy.SynchronizeComponents();
         }
     }
@@ -235,9 +233,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
-        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        foreach (var proxy in physicsBodyProxies)
         {
-            var proxy = physicsBodyProxies[i];
             proxy.SynchronizeBody();
         }
     }

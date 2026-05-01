@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
@@ -20,7 +21,7 @@ internal sealed class PhysicsSystemState
         _physicsScene2D = physicsScene2D;
     }
 
-    public IReadOnlyList<PhysicsBodyProxy> GetPhysicsBodyProxies() => _physicsBodyProxies;
+    public ReadOnlySpan<PhysicsBodyProxy> GetPhysicsBodyProxies() => CollectionsMarshal.AsSpan(_physicsBodyProxies);
 
     public void OnEntityParentChanged(Entity entity)
     {
