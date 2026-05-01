@@ -25,7 +25,7 @@ internal sealed class PhysicsScene2D
     public double PenetrationTolerance { get; set; } = 0.01;
     public SizeD TileSize { get; }
 
-    public IReadOnlyList<RigidBody2D> Bodies => _bodies;
+    public ReadOnlySpan<RigidBody2D> Bodies => CollectionsMarshal.AsSpan(_bodies);
 
     public RigidBody2D CreateBody(BodyType bodyType, double circleColliderRadius)
     {

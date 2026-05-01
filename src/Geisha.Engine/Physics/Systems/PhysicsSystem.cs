@@ -102,9 +102,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         Span<Vector2> points = stackalloc Vector2[2];
 
-        for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
+        foreach (var body in PhysicsScene2D.Bodies)
         {
-            var body = PhysicsScene2D.Bodies[i];
             var color = body.Type switch
             {
                 BodyType.Static => staticBodyColor,
@@ -151,9 +150,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             }
         }
 
-        for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
+        foreach (var body in PhysicsScene2D.Bodies)
         {
-            var body = PhysicsScene2D.Bodies[i];
             if (body.Type is not BodyType.Kinematic) continue;
 
             foreach (var contact in body.Contacts)

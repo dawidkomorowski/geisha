@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
@@ -200,9 +198,9 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         // Assume
         physicsSystem.ProcessPhysics();
 
-        var body1 = physicsSystem.PhysicsScene2D.Bodies.Single(b => b.RectangleColliderSize == new SizeD(10, 20));
-        var body2 = physicsSystem.PhysicsScene2D.Bodies.Single(b => b.RectangleColliderSize == new SizeD(30, 40));
-        var body3 = physicsSystem.PhysicsScene2D.Bodies.Single(b => b.RectangleColliderSize == new SizeD(50, 60));
+        var body1 = GetBodyForEntity(physicsSystem, entity1);
+        var body2 = GetBodyForEntity(physicsSystem, entity2);
+        var body3 = GetBodyForEntity(physicsSystem, entity3);
 
         Assert.That(body1.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body1.ColliderType, Is.EqualTo(ColliderType.Rectangle));

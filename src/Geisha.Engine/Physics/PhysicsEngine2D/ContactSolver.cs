@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
