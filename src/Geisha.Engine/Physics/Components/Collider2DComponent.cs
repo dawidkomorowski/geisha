@@ -60,10 +60,6 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
-    // BUG:  It seems that position and bounding rectangle might not be correct for kinematic bodies just after solving position constraints.
-    //       This might be related to the fact that position constraints are solved per body and not per contact (it is probably already reported),
-    //       and after each body the position and bounding rectangle are updated, but the next body might still have contacts with the previous body that are not solved yet.
-    //       This is just a theory, but it should be investigated and if confirmed, it should be fixed.
     /// <summary>
     ///     Gets the axis-aligned bounding rectangle of this collider as computed at the last physics simulation step.
     /// </summary>
