@@ -64,9 +64,39 @@ public abstract class Collider2DComponent : Component
     //       This might be related to the fact that position constraints are solved per body and not per contact (it is probably already reported),
     //       and after each body the position and bounding rectangle are updated, but the next body might still have contacts with the previous body that are not solved yet.
     //       This is just a theory, but it should be investigated and if confirmed, it should be fixed.
-    // TODO: It is not available right after creation of the collider component, but only after the first physics processing step.
-    //       Document this behavior and consider whether it can be improved.
-    // TODO: Add XML docs.
+    /// <summary>
+    ///     Gets the axis-aligned bounding rectangle of this collider as computed at the last physics simulation step.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         The bounding rectangle is an <see cref="AxisAlignedRectangle" /> that fully encloses the collider geometry
+    ///         in world space, taking into account the collider's shape, position, and rotation.
+    ///     </para>
+    ///     <para>
+    ///         <b>Synchronization behavior:</b> This property reflects the state from the most recently completed physics
+    ///         simulation step. Any changes made to the entity's <see cref="Core.Components.Transform2DComponent" /> or
+    ///         to the collider's shape properties (such as <see cref="CircleColliderComponent.Radius" /> or
+    ///         <see cref="RectangleColliderComponent.Dimensions" />) after the last simulation step will not be reflected
+    ///         until the next physics simulation step completes. This means that within a single game loop iteration, if
+    ///         game code modifies the transform or collider and then immediately reads <see cref="BoundingRectangle" />,
+    ///         the returned value will still correspond to the state before the modification.
+    ///     </para>
+    ///     <para>
+    ///         <b>Before first simulation step:</b> When the physics body is first registered — that is, when both
+    ///         <see cref="Core.Components.Transform2DComponent" /> and the collider component are present on the entity
+    ///         — an initial value is computed from the component state at that moment. This means the value depends on
+    ///         the order in which components are created and configured: properties set before the physics body is
+    ///         registered are reflected immediately, while properties set after are not visible until the first
+    ///         simulation step completes. If <see cref="Core.Components.Transform2DComponent" /> is not yet present on
+    ///         the entity, this property returns a <see langword="default" /> <see cref="AxisAlignedRectangle" />.
+    ///     </para>
+    ///     <para>
+    ///         <b>Consistency across entities:</b> Because all values are taken from the same completed simulation step,
+    ///         reading <see cref="BoundingRectangle" /> from multiple colliders within the same game loop iteration
+    ///         provides a globally consistent snapshot of the physics state, unaffected by the order in which individual
+    ///         entities are updated during that iteration.
+    ///     </para>
+    /// </remarks>
     public AxisAlignedRectangle BoundingRectangle => PhysicsBodyProxy?.BoundingRectangle ?? default;
 
     /// <summary>
