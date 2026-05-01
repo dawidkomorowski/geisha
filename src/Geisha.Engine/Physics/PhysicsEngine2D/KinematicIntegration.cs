@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class KinematicIntegration
 {
-    public static void IntegrateKinematicMotion(IReadOnlyList<RigidBody2D> kinematicBodies, double deltaTimeSeconds)
+    public static void IntegrateKinematicMotion(ReadOnlySpan<RigidBody2D> kinematicBodies, double deltaTimeSeconds)
     {
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        foreach (var body in kinematicBodies)
         {
-            var body = kinematicBodies[i];
-
             body.Position += body.LinearVelocity * deltaTimeSeconds;
             body.Rotation += body.AngularVelocity * deltaTimeSeconds;
         }

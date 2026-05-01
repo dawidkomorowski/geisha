@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class ContactSolver
 {
-    public static void SolveVelocityConstraints(IReadOnlyList<RigidBody2D> kinematicBodies)
+    public static void SolveVelocityConstraints(ReadOnlySpan<RigidBody2D> kinematicBodies)
     {
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        foreach (var kinematicBody in kinematicBodies)
         {
-            var kinematicBody = kinematicBodies[i];
-
             if (kinematicBody.EnableCollisionResponse is false)
             {
                 continue;
@@ -54,12 +53,10 @@ internal static class ContactSolver
         return -relativeVelocity.Dot(contact.CollisionNormal);
     }
 
-    public static void SolvePositionConstraints(IReadOnlyList<RigidBody2D> kinematicBodies, double penetrationTolerance)
+    public static void SolvePositionConstraints(ReadOnlySpan<RigidBody2D> kinematicBodies, double penetrationTolerance)
     {
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        foreach (var kinematicBody in kinematicBodies)
         {
-            var kinematicBody = kinematicBodies[i];
-
             if (kinematicBody.EnableCollisionResponse is false)
             {
                 continue;
