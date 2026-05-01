@@ -53,6 +53,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public Collider2DComponent Collider { get; }
     public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
 
+    public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
     public int ContactCount => _body.Contacts.Count;
 
     public int GetContacts(Span<Contact2D> contacts)
