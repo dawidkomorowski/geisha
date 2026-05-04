@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
@@ -29,6 +30,21 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
     public class StateSynchronizationViaSynchronizePhysicsStateTests : StateSynchronizationTests
     {
         protected override void PerformSynchronization(PhysicsSystem physicsSystem) => physicsSystem.SynchronizePhysicsState();
+    }
+
+    [TestFixture]
+    public class StateSynchronizationViaCollider2DComponentSynchronizePhysicsStateTests : StateSynchronizationTests
+    {
+        protected override void PerformSynchronization(PhysicsSystem physicsSystem)
+        {
+            foreach (var entity in Scene.AllEntities)
+            {
+                foreach (var collider in entity.Components.OfType<Collider2DComponent>())
+                {
+                    collider.SynchronizePhysicsState();
+                }
+            }
+        }
     }
 
     [Test]

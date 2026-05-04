@@ -15,6 +15,7 @@ public interface IPhysicsSystem
     /// </remarks>
     bool EnableDebugRendering { get; set; }
 
-    // TODO Add documentation for the method below.
+    // TODO Add documentation.
+    // TODO Add documentation for method in Collider2DComponent.
     void SynchronizePhysicsState();
 }

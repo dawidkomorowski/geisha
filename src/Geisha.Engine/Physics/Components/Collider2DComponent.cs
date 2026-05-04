@@ -273,6 +273,8 @@ public abstract class Collider2DComponent : Component
         return CollectionsMarshal.AsSpan(contacts).Slice(0, written);
     }
 
+    public void SynchronizePhysicsState() => PhysicsBodyProxy?.SynchronizeBody();
+
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
