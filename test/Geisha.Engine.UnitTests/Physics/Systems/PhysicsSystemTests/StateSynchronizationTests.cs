@@ -45,6 +45,41 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
                 }
             }
         }
+
+        [Test]
+        public void SynchronizePhysicsState_ShouldSynchronizeOnlySingleBody()
+        {
+            // Arrange
+            var physicsSystem = GetPhysicsSystem();
+            var entity1 = CreateRectangleStaticBody(0, 0, 10, 20);
+            var entity2 = CreateRectangleStaticBody(0, 0, 30, 40);
+
+            var transform2DComponent1 = entity1.GetComponent<Transform2DComponent>();
+            var collider1 = entity1.GetComponent<RectangleColliderComponent>();
+
+            var transform2DComponent2 = entity2.GetComponent<Transform2DComponent>();
+
+            // Assume
+            collider1.SynchronizePhysicsState();
+            entity2.GetComponent<RectangleColliderComponent>().SynchronizePhysicsState();
+
+            var body1 = GetBodyForEntity(physicsSystem, entity1);
+            var body2 = GetBodyForEntity(physicsSystem, entity2);
+
+            Assert.That(body1.Position, Is.EqualTo(new Vector2(0, 0)));
+            Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
+
+            // Act
+            transform2DComponent1.Translation = new Vector2(10, 5);
+            transform2DComponent2.Translation = new Vector2(20, 15);
+
+            collider1.SynchronizePhysicsState();
+            // entity2's collider is intentionally not synced
+
+            // Assert
+            Assert.That(body1.Position, Is.EqualTo(new Vector2(10, 5)));
+            Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
+        }
     }
 
     [Test]
