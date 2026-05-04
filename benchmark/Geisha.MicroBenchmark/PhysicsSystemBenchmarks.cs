@@ -281,7 +281,7 @@ public class PhysicsSystemBenchmarks
     private void SaveVisualOutput(PhysicsSystem physicsSystem, string fileName, double scale = 1d)
     {
         _debugRenderer.BeginDraw(scale);
-        physicsSystem.SynchronizeBodies();
+        physicsSystem.SynchronizePhysicsState();
         physicsSystem.PreparePhysicsDebugInformation();
 
         var outputPath = Path.Combine("..", "..", "..", "..");

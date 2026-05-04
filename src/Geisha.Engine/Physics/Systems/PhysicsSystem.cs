@@ -69,6 +69,16 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public bool EnableDebugRendering { get; set; }
 
+    public void SynchronizePhysicsState()
+    {
+        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
+
+        foreach (var proxy in physicsBodyProxies)
+        {
+            proxy.SynchronizeBody();
+        }
+    }
+
     #endregion
 
     #region Implementation of IPhysicsGameLoopStep
@@ -225,15 +235,4 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     }
 
     #endregion
-
-    // This method is a workaround for the issue: https://github.com/dawidkomorowski/geisha/issues/563
-    public void SynchronizeBodies()
-    {
-        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
-
-        foreach (var proxy in physicsBodyProxies)
-        {
-            proxy.SynchronizeBody();
-        }
-    }
 }

@@ -14,4 +14,7 @@ public interface IPhysicsSystem
     ///     standard graphics output to assist with debugging.
     /// </remarks>
     bool EnableDebugRendering { get; set; }
+
+    // TODO Add documentation for the method below.
+    void SynchronizePhysicsState();
 }
