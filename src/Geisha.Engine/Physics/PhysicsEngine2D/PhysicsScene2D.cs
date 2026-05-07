@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
@@ -24,7 +25,7 @@ internal sealed class PhysicsScene2D
     public double PenetrationTolerance { get; set; } = 0.01;
     public SizeD TileSize { get; }
 
-    public IReadOnlyList<RigidBody2D> Bodies => _bodies;
+    public ReadOnlySpan<RigidBody2D> Bodies => CollectionsMarshal.AsSpan(_bodies);
 
     public RigidBody2D CreateBody(BodyType bodyType, double circleColliderRadius)
     {
@@ -73,31 +74,37 @@ internal sealed class PhysicsScene2D
     {
         var deltaTimeSeconds = timeStep.TotalSeconds / Substeps;
 
+        var staticBodies = GetStaticBodiesAsSpan();
+        var kinematicBodies = GetKinematicBodiesAsSpan();
+
         for (var substep = 0; substep < Substeps; substep++)
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
             // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < VelocityIterations; i++)
             {
-                ContactSolver.SolveVelocityConstraints(_kinematicBodies);
+                ContactSolver.SolveVelocityConstraints(kinematicBodies);
             }
 
-            KinematicIntegration.IntegrateKinematicMotion(_kinematicBodies, deltaTimeSeconds);
+            KinematicIntegration.IntegrateKinematicMotion(kinematicBodies, deltaTimeSeconds);
 
-            foreach (var kinematicBody in _kinematicBodies)
+            foreach (var kinematicBody in kinematicBodies)
             {
                 kinematicBody.RecomputeCollider();
             }
 
-            CollisionDetection.DetectCollisions(_staticBodies, _kinematicBodies);
+            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
             {
-                ContactSolver.SolvePositionConstraints(_kinematicBodies, PenetrationTolerance);
+                ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
             }
         }
     }
+
+    private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
+    private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
 
     private void AddBodyToScene(RigidBody2D body)
     {

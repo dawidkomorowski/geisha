@@ -29,6 +29,9 @@ public abstract class PhysicsSystemTestsBase
     // ReSharper disable once InconsistentNaming
     private protected static Func<Matrix3x3, Matrix3x3, bool> Matrix3x3Equality => ToleranceEquality.ForMatrix3x3(Epsilon);
 
+    private protected static Func<AxisAlignedRectangle, AxisAlignedRectangle, bool> AxisAlignedRectangleEquality =>
+        ToleranceEquality.ForAxisAlignedRectangle(Epsilon);
+
     [SetUp]
     public void SetUp()
     {
@@ -65,7 +68,7 @@ public abstract class PhysicsSystemTestsBase
     private protected void SaveVisualOutput(PhysicsSystem physicsSystem, int stage = 0, double scale = 1d)
     {
         _debugRendererForTests.BeginDraw(scale);
-        physicsSystem.SynchronizeBodies();
+        physicsSystem.SynchronizePhysicsState();
         physicsSystem.PreparePhysicsDebugInformation();
         _debugRendererForTests.EndDrawUsingTestContext(stage);
         DebugRenderer.ClearReceivedCalls();
@@ -80,7 +83,7 @@ public abstract class PhysicsSystemTestsBase
     }
 
     private protected static RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
-        physicsSystem.PhysicsScene2D.Bodies.Single(b => b.Proxy is not null && b.Proxy.Entity == entity);
+        physicsSystem.PhysicsScene2D.Bodies.ToArray().Single(b => b.Proxy is not null && b.Proxy.Entity == entity);
 
     private protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
         CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);

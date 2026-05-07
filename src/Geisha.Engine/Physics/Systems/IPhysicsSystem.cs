@@ -14,4 +14,38 @@ public interface IPhysicsSystem
     ///     standard graphics output to assist with debugging.
     /// </remarks>
     bool EnableDebugRendering { get; set; }
+
+    /// <summary>
+    ///     Immediately synchronizes all registered physics bodies with the current component state.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Calling this method pushes the current state of each entity's physics components —
+    ///         <see cref="Geisha.Engine.Core.Components.Transform2DComponent" />, collider properties, and
+    ///         <see cref="Geisha.Engine.Physics.Components.KinematicRigidBody2DComponent" /> if present — into their
+    ///         underlying physics bodies, making those values visible to physics-related APIs such as
+    ///         <see cref="Geisha.Engine.Physics.Components.Collider2DComponent.BoundingRectangle" /> before the next
+    ///         physics simulation step runs.
+    ///     </para>
+    ///     <para>
+    ///         <b>Typical use case:</b> After setting up a scene — for example, loading a game level and positioning
+    ///         all entities — call this method once to ensure that physics-related APIs such as
+    ///         <see cref="Geisha.Engine.Physics.Components.Collider2DComponent.BoundingRectangle" /> return correctly
+    ///         initialized values from the very first frame the scene is processed, before the physics simulation step
+    ///         has had a chance to run.
+    ///     </para>
+    ///     <para>
+    ///         <b>Granularity:</b> This method synchronizes all registered physics bodies at once. To synchronize
+    ///         only a single collider, use
+    ///         <see cref="Geisha.Engine.Physics.Components.Collider2DComponent.SynchronizePhysicsState" /> on the
+    ///         individual component instead.
+    ///     </para>
+    ///     <para>
+    ///         <b>When not needed:</b> During normal gameplay the physics system synchronizes all bodies automatically
+    ///         at each simulation step. This method is only necessary when physics state must be up to date before
+    ///         the next simulation step.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Geisha.Engine.Physics.Components.Collider2DComponent.SynchronizePhysicsState" />
+    void SynchronizePhysicsState();
 }

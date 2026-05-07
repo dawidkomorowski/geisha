@@ -1,21 +1,89 @@
 ﻿using System;
 using System.Linq;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
+using Geisha.Engine.Physics.Systems;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class StateSynchronizationTests : PhysicsSystemTestsBase
+internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
 {
+    protected abstract void PerformSynchronization(PhysicsSystem physicsSystem);
+
+    [TestFixture]
+    public class StateSynchronizationViaProcessPhysicsTests : StateSynchronizationTests
+    {
+        protected override void PerformSynchronization(PhysicsSystem physicsSystem)
+        {
+            TimeSystem.FixedDeltaTime.Returns(TimeSpan.Zero);
+            physicsSystem.ProcessPhysics();
+        }
+    }
+
+    [TestFixture]
+    public class StateSynchronizationViaSynchronizePhysicsStateTests : StateSynchronizationTests
+    {
+        protected override void PerformSynchronization(PhysicsSystem physicsSystem) => physicsSystem.SynchronizePhysicsState();
+    }
+
+    [TestFixture]
+    public class StateSynchronizationViaCollider2DComponentSynchronizePhysicsStateTests : StateSynchronizationTests
+    {
+        protected override void PerformSynchronization(PhysicsSystem physicsSystem)
+        {
+            foreach (var entity in Scene.AllEntities)
+            {
+                foreach (var collider in entity.Components.OfType<Collider2DComponent>())
+                {
+                    collider.SynchronizePhysicsState();
+                }
+            }
+        }
+
+        [Test]
+        public void SynchronizePhysicsState_ShouldSynchronizeOnlySingleBody()
+        {
+            // Arrange
+            var physicsSystem = GetPhysicsSystem();
+            var entity1 = CreateRectangleStaticBody(0, 0, 10, 20);
+            var entity2 = CreateRectangleStaticBody(0, 0, 30, 40);
+
+            var transform2DComponent1 = entity1.GetComponent<Transform2DComponent>();
+            var collider1 = entity1.GetComponent<RectangleColliderComponent>();
+
+            var transform2DComponent2 = entity2.GetComponent<Transform2DComponent>();
+
+            // Assume
+            collider1.SynchronizePhysicsState();
+            entity2.GetComponent<RectangleColliderComponent>().SynchronizePhysicsState();
+
+            var body1 = GetBodyForEntity(physicsSystem, entity1);
+            var body2 = GetBodyForEntity(physicsSystem, entity2);
+
+            Assert.That(body1.Position, Is.EqualTo(new Vector2(0, 0)));
+            Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
+
+            // Act
+            transform2DComponent1.Translation = new Vector2(10, 5);
+            transform2DComponent2.Translation = new Vector2(20, 15);
+
+            collider1.SynchronizePhysicsState();
+            // entity2's collider is intentionally not synced
+
+            // Assert
+            Assert.That(body1.Position, Is.EqualTo(new Vector2(10, 5)));
+            Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
+        }
+    }
+
     [Test]
-    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenRectangleStaticBody()
+    public void ShouldSynchronizeBodyWithComponents_GivenRectangleStaticBody()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -27,7 +95,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         rectangleColliderComponent.Enabled = false;
 
         // Assume
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
@@ -40,6 +108,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(20, 10)));
         Assert.That(body.EnableCollisionDetection, Is.False);
 
+        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 10)));
+
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
         transform2DComponent.Rotation = Angle.DegreesToRadians(30);
@@ -48,7 +118,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         rectangleColliderComponent.Dimensions = new Vector2(30, 20);
         rectangleColliderComponent.Enabled = true;
 
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         // Assert
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
@@ -60,10 +130,13 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(30, 20)));
         Assert.That(body.EnableCollisionDetection, Is.True);
+
+        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 35.980762, 32.320508))
+            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
     }
 
     [Test]
-    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenCircleStaticBody()
+    public void ShouldSynchronizeBodyWithComponents_GivenCircleStaticBody()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -75,7 +148,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         circleColliderComponent.Enabled = false;
 
         // Assume
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
@@ -88,6 +161,9 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CircleColliderRadius, Is.EqualTo(10));
         Assert.That(body.EnableCollisionDetection, Is.False);
 
+        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 20)));
+
+
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
         transform2DComponent.Rotation = Angle.DegreesToRadians(30);
@@ -96,7 +172,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         circleColliderComponent.Radius = 20;
         circleColliderComponent.Enabled = true;
 
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         // Assert
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
@@ -108,6 +184,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(20));
         Assert.That(body.EnableCollisionDetection, Is.True);
+
+        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 40, 40)));
     }
 
     [TestCase(1, 1, 0, 0, 0, 0)]
@@ -135,7 +213,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
     [TestCase(2, 4, 8, 12, 8, 12)]
     [TestCase(2, 4, -8, -12, -8, -12)]
     [TestCase(2, 4, 13.75, 65.25, 14, 64)]
-    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenTileStaticBody(double tw, double th, double x, double y, double ex, double ey)
+    public void ShouldSynchronizeBodyWithComponents_GivenTileStaticBody(double tw, double th, double x, double y, double ex, double ey)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration
@@ -150,7 +228,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         tileColliderComponent.Enabled = false;
 
         // Assume
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
@@ -162,6 +240,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.EnableCollisionDetection, Is.False);
 
+        Assert.That(tileColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, tw, th)));
+
         // Act
         transform2DComponent.Translation = new Vector2(x, y);
         transform2DComponent.Rotation = Angle.DegreesToRadians(30);
@@ -169,7 +249,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
 
         tileColliderComponent.Enabled = true;
 
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         // Assert
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
@@ -184,10 +264,12 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(transform2DComponent.Translation, Is.EqualTo(new Vector2(ex, ey)));
         Assert.That(transform2DComponent.Rotation, Is.Zero);
         Assert.That(transform2DComponent.Scale, Is.EqualTo(Vector2.One));
+
+        Assert.That(tileColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(ex, ey, tw, th)));
     }
 
     [Test]
-    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenHierarchyOfStaticBodies()
+    public void ShouldSynchronizeBodyWithComponents_GivenHierarchyOfStaticBodies()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -197,12 +279,21 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         entity3.Parent = entity2;
         entity2.Parent = entity1;
 
-        // Assume
-        physicsSystem.ProcessPhysics();
+        var transform2DComponent1 = entity1.GetComponent<Transform2DComponent>();
+        var rectangleColliderComponent1 = entity1.GetComponent<RectangleColliderComponent>();
 
-        var body1 = physicsSystem.PhysicsScene2D.Bodies.Single(b => b.RectangleColliderSize == new SizeD(10, 20));
-        var body2 = physicsSystem.PhysicsScene2D.Bodies.Single(b => b.RectangleColliderSize == new SizeD(30, 40));
-        var body3 = physicsSystem.PhysicsScene2D.Bodies.Single(b => b.RectangleColliderSize == new SizeD(50, 60));
+        var transform2DComponent2 = entity2.GetComponent<Transform2DComponent>();
+        var rectangleColliderComponent2 = entity2.GetComponent<RectangleColliderComponent>();
+
+        var transform2DComponent3 = entity3.GetComponent<Transform2DComponent>();
+        var rectangleColliderComponent3 = entity3.GetComponent<RectangleColliderComponent>();
+
+        // Assume
+        PerformSynchronization(physicsSystem);
+
+        var body1 = GetBodyForEntity(physicsSystem, entity1);
+        var body2 = GetBodyForEntity(physicsSystem, entity2);
+        var body3 = GetBodyForEntity(physicsSystem, entity3);
 
         Assert.That(body1.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body1.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -213,6 +304,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body1.EnableCollisionResponse, Is.False);
         Assert.That(body1.RectangleColliderSize, Is.EqualTo(new SizeD(10, 20)));
 
+        Assert.That(rectangleColliderComponent1.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 10, 20)));
+
         Assert.That(body2.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body2.ColliderType, Is.EqualTo(ColliderType.Rectangle));
         Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
@@ -221,6 +314,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body2.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body2.EnableCollisionResponse, Is.False);
         Assert.That(body2.RectangleColliderSize, Is.EqualTo(new SizeD(30, 40)));
+
+        Assert.That(rectangleColliderComponent2.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 30, 40)));
 
         Assert.That(body3.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body3.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -231,38 +326,31 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.EnableCollisionResponse, Is.False);
         Assert.That(body3.RectangleColliderSize, Is.EqualTo(new SizeD(50, 60)));
 
+        Assert.That(rectangleColliderComponent3.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 50, 60)));
+
         // Act
         // Body 1
-        var transform2DComponent = entity1.GetComponent<Transform2DComponent>();
-        var rectangleColliderComponent = entity1.GetComponent<RectangleColliderComponent>();
+        transform2DComponent1.Translation = new Vector2(1, 2);
+        transform2DComponent1.Rotation = Angle.DegreesToRadians(10);
+        transform2DComponent1.Scale = Vector2.One;
 
-        transform2DComponent.Translation = new Vector2(1, 2);
-        transform2DComponent.Rotation = Angle.DegreesToRadians(10);
-        transform2DComponent.Scale = Vector2.One;
-
-        rectangleColliderComponent.Dimensions = new Vector2(11, 22);
+        rectangleColliderComponent1.Dimensions = new Vector2(11, 22);
 
         // Body 2
-        transform2DComponent = entity2.GetComponent<Transform2DComponent>();
-        rectangleColliderComponent = entity2.GetComponent<RectangleColliderComponent>();
+        transform2DComponent2.Translation = new Vector2(3, 4);
+        transform2DComponent2.Rotation = Angle.DegreesToRadians(20);
+        transform2DComponent2.Scale = Vector2.One;
 
-        transform2DComponent.Translation = new Vector2(3, 4);
-        transform2DComponent.Rotation = Angle.DegreesToRadians(20);
-        transform2DComponent.Scale = Vector2.One;
-
-        rectangleColliderComponent.Dimensions = new Vector2(33, 44);
+        rectangleColliderComponent2.Dimensions = new Vector2(33, 44);
 
         // Body 3
-        transform2DComponent = entity3.GetComponent<Transform2DComponent>();
-        rectangleColliderComponent = entity3.GetComponent<RectangleColliderComponent>();
+        transform2DComponent3.Translation = new Vector2(5, 6);
+        transform2DComponent3.Rotation = Angle.DegreesToRadians(30);
+        transform2DComponent3.Scale = Vector2.One;
 
-        transform2DComponent.Translation = new Vector2(5, 6);
-        transform2DComponent.Rotation = Angle.DegreesToRadians(30);
-        transform2DComponent.Scale = Vector2.One;
+        rectangleColliderComponent3.Dimensions = new Vector2(55, 66);
 
-        rectangleColliderComponent.Dimensions = new Vector2(55, 66);
-
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         // Assert
         Assert.That(body1.Type, Is.EqualTo(BodyType.Static));
@@ -274,6 +362,9 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body1.EnableCollisionResponse, Is.False);
         Assert.That(body1.RectangleColliderSize, Is.EqualTo(new SizeD(11, 22)));
 
+        Assert.That(rectangleColliderComponent1.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(1, 2, 14.653145, 23.575900))
+            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+
         Assert.That(body2.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body2.ColliderType, Is.EqualTo(ColliderType.Rectangle));
         var expectedPosition2 = new Vector2(1, 2) + (Matrix3x3.CreateRotation(Angle.DegreesToRadians(10)) * new Vector2(3, 4).Homogeneous).ToVector2();
@@ -284,6 +375,9 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body2.EnableCollisionResponse, Is.False);
         Assert.That(body2.RectangleColliderSize, Is.EqualTo(new SizeD(33, 44)));
 
+        Assert.That(rectangleColliderComponent2.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(expectedPosition2, new Vector2(50.578838, 54.605117)))
+            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+
         Assert.That(body3.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body3.ColliderType, Is.EqualTo(ColliderType.Rectangle));
         var expectedPosition3 = expectedPosition2 + (Matrix3x3.CreateRotation(Angle.DegreesToRadians(10 + 20)) * new Vector2(5, 6).Homogeneous).ToVector2();
@@ -293,10 +387,13 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body3.EnableCollisionResponse, Is.False);
         Assert.That(body3.RectangleColliderSize, Is.EqualTo(new SizeD(55, 66)));
+
+        Assert.That(rectangleColliderComponent3.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(expectedPosition3, new Vector2(84.657676, 80.631397)))
+            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
     }
 
     [Test]
-    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenRectangleKinematicBody()
+    public void ShouldSynchronizeBodyWithComponents_GivenRectangleKinematicBody()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -309,7 +406,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         rectangleColliderComponent.Enabled = false;
 
         // Assume
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
@@ -321,6 +418,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(20, 10)));
         Assert.That(body.EnableCollisionDetection, Is.False);
+
+        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 10)));
 
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
@@ -334,8 +433,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
         kinematicRigidBody2DComponent.EnableCollisionResponse = true;
 
-        TimeSystem.FixedDeltaTime.Returns(TimeSpan.Zero);
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         // Assert
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
@@ -347,10 +445,13 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.True);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(30, 20)));
         Assert.That(body.EnableCollisionDetection, Is.True);
+
+        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 35.980762, 32.320508))
+            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
     }
 
     [Test]
-    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenCircleKinematicBody()
+    public void ShouldSynchronizeBodyWithComponents_GivenCircleKinematicBody()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -363,7 +464,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         circleColliderComponent.Enabled = false;
 
         // Assume
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
@@ -375,6 +476,8 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(10));
         Assert.That(body.EnableCollisionDetection, Is.False);
+
+        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 20)));
 
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
@@ -388,8 +491,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
         kinematicRigidBody2DComponent.EnableCollisionResponse = true;
 
-        TimeSystem.FixedDeltaTime.Returns(TimeSpan.Zero);
-        physicsSystem.ProcessPhysics();
+        PerformSynchronization(physicsSystem);
 
         // Assert
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
@@ -401,5 +503,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.True);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(20));
         Assert.That(body.EnableCollisionDetection, Is.True);
+
+        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 40, 40)));
     }
 }

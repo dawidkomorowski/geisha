@@ -1,6 +1,6 @@
-﻿using Geisha.Engine.Core.Math;
-using System.Collections.Generic;
+﻿using System;
 using System.Runtime.CompilerServices;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
@@ -8,17 +8,15 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 // Trivial refactorings like combining methods or extracting methods can have a significant impact on performance.
 internal static class CollisionDetection
 {
-    public static void DetectCollisions(IReadOnlyList<RigidBody2D> staticBodies, IReadOnlyList<RigidBody2D> kinematicBodies)
+    public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies)
     {
-        for (var i = 0; i < staticBodies.Count; i++)
+        foreach (var staticBody in staticBodies)
         {
-            var staticBody = staticBodies[i];
             staticBody.Contacts.Clear();
         }
 
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        foreach (var kinematicBody in kinematicBodies)
         {
-            var kinematicBody = kinematicBodies[i];
             kinematicBody.Contacts.Clear();
         }
 
@@ -26,13 +24,13 @@ internal static class CollisionDetection
         DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies);
     }
 
-    private static void DetectCollisions_Kinematic_Vs_Kinematic(IReadOnlyList<RigidBody2D> kinematicBodies)
+    private static void DetectCollisions_Kinematic_Vs_Kinematic(ReadOnlySpan<RigidBody2D> kinematicBodies)
     {
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        for (var i = 0; i < kinematicBodies.Length; i++)
         {
             var kinematicBody1 = kinematicBodies[i];
 
-            for (var j = i + 1; j < kinematicBodies.Count; j++)
+            for (var j = i + 1; j < kinematicBodies.Length; j++)
             {
                 var kinematicBody2 = kinematicBodies[j];
 
@@ -60,16 +58,12 @@ internal static class CollisionDetection
         }
     }
 
-    private static void DetectCollisions_Kinematic_Vs_Static(IReadOnlyList<RigidBody2D> kinematicBodies, IReadOnlyList<RigidBody2D> staticBodies)
+    private static void DetectCollisions_Kinematic_Vs_Static(ReadOnlySpan<RigidBody2D> kinematicBodies, ReadOnlySpan<RigidBody2D> staticBodies)
     {
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        foreach (var kinematicBody in kinematicBodies)
         {
-            var kinematicBody = kinematicBodies[i];
-
-            for (var j = 0; j < staticBodies.Count; j++)
+            foreach (var staticBody in staticBodies)
             {
-                var staticBody = staticBodies[j];
-
                 if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
                 {
                     continue;

@@ -93,6 +93,7 @@ public abstract class Collider2DComponent : Component
     ///         entities are updated during that iteration.
     ///     </para>
     /// </remarks>
+    /// <seealso cref="SynchronizePhysicsState" />
     public AxisAlignedRectangle BoundingRectangle => PhysicsBodyProxy?.BoundingRectangle ?? default;
 
     /// <summary>
@@ -272,6 +273,41 @@ public abstract class Collider2DComponent : Component
         var written = GetContacts(contacts);
         return CollectionsMarshal.AsSpan(contacts).Slice(0, written);
     }
+
+    /// <summary>
+    ///     Immediately synchronizes this collider's physics body with the current component state.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Calling this method pushes the current state of the entity's physics components —
+    ///         <see cref="Core.Components.Transform2DComponent" />, this collider's properties, and
+    ///         <see cref="KinematicRigidBody2DComponent" /> if present — into the underlying physics body, making those
+    ///         values visible to physics-related APIs such as <see cref="BoundingRectangle" /> before the next physics
+    ///         simulation step runs.
+    ///     </para>
+    ///     <para>
+    ///         <b>Typical use case:</b> When an entity's transform or collider properties are modified and the updated
+    ///         physics state must be observed in the same game loop iteration — for example, reading
+    ///         <see cref="BoundingRectangle" /> immediately after repositioning an entity — call this method after the
+    ///         modification to ensure the physics body reflects the new state.
+    ///     </para>
+    ///     <para>
+    ///         <b>Granularity:</b> Unlike <see cref="IPhysicsSystem.SynchronizePhysicsState" />, which synchronizes all
+    ///         registered physics bodies at once, this method affects only the single collider it is called on. This
+    ///         allows targeted synchronization of individual entities without touching the rest of the physics state.
+    ///     </para>
+    ///     <para>
+    ///         <b>When not needed:</b> During normal gameplay the physics system synchronizes all bodies automatically at
+    ///         each simulation step. This method is only necessary when physics state must be up to date before the
+    ///         next simulation step.
+    ///     </para>
+    ///     <para>
+    ///         If this collider is not yet managed by the physics system (i.e. it has no associated physics body),
+    ///         calling this method has no effect.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="IPhysicsSystem.SynchronizePhysicsState" />
+    public void SynchronizePhysicsState() => PhysicsBodyProxy?.SynchronizeBody();
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)

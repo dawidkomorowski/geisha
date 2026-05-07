@@ -69,6 +69,16 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public bool EnableDebugRendering { get; set; }
 
+    public void SynchronizePhysicsState()
+    {
+        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
+
+        foreach (var proxy in physicsBodyProxies)
+        {
+            proxy.SynchronizeBody();
+        }
+    }
+
     #endregion
 
     #region Implementation of IPhysicsGameLoopStep
@@ -77,17 +87,15 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
-        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        foreach (var proxy in physicsBodyProxies)
         {
-            var proxy = physicsBodyProxies[i];
             proxy.SynchronizeBody();
         }
 
         PhysicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
 
-        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        foreach (var proxy in physicsBodyProxies)
         {
-            var proxy = physicsBodyProxies[i];
             proxy.SynchronizeComponents();
         }
     }
@@ -104,9 +112,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         Span<Vector2> points = stackalloc Vector2[2];
 
-        for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
+        foreach (var body in PhysicsScene2D.Bodies)
         {
-            var body = PhysicsScene2D.Bodies[i];
             var color = body.Type switch
             {
                 BodyType.Static => staticBodyColor,
@@ -153,9 +160,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             }
         }
 
-        for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
+        foreach (var body in PhysicsScene2D.Bodies)
         {
-            var body = PhysicsScene2D.Bodies[i];
             if (body.Type is not BodyType.Kinematic) continue;
 
             foreach (var contact in body.Contacts)
@@ -229,16 +235,4 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     }
 
     #endregion
-
-    // This method is a workaround for the issue: https://github.com/dawidkomorowski/geisha/issues/563
-    public void SynchronizeBodies()
-    {
-        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
-
-        for (var i = 0; i < physicsBodyProxies.Count; i++)
-        {
-            var proxy = physicsBodyProxies[i];
-            proxy.SynchronizeBody();
-        }
-    }
 }
