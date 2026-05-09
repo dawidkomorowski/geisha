@@ -133,20 +133,20 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
     {
-        var hardwareInputVariant = hardwareAction.InputElement;
-        return hardwareInputVariant.Type switch
+        var inputElement = hardwareAction.InputElement;
+        return inputElement.Type switch
         {
-            InputElement.InputType.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
-            InputElement.InputType.Mouse => hardwareInputVariant.AsMouse() switch
+            InputElement.InputType.KeyboardKey => hardwareInput.KeyboardInput[inputElement.AsKeyboardKey()],
+            InputElement.InputType.MouseButton => inputElement.AsMouseButton() switch
             {
-                InputElement.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
-                InputElement.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
-                InputElement.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
-                InputElement.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
-                InputElement.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
-                _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
+                MouseButton.Left => hardwareInput.MouseInput.LeftButton,
+                MouseButton.Middle => hardwareInput.MouseInput.MiddleButton,
+                MouseButton.Right => hardwareInput.MouseInput.RightButton,
+                MouseButton.XButton1 => hardwareInput.MouseInput.XButton1,
+                MouseButton.XButton2 => hardwareInput.MouseInput.XButton2,
+                _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputType)}: {hardwareInputVariant.Type}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputType)}: {inputElement.Type}")
         };
     }
 
@@ -182,17 +182,17 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
     {
-        var hardwareInputVariant = hardwareAxis.InputElement;
-        return hardwareInputVariant.Type switch
+        var inputElement = hardwareAxis.InputElement;
+        return inputElement.Type switch
         {
-            InputElement.InputType.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
-            InputElement.InputType.Mouse => hardwareInputVariant.AsMouse() switch
+            InputElement.InputType.KeyboardKey => BoolToDouble(hardwareInput.KeyboardInput[inputElement.AsKeyboardKey()]),
+            InputElement.InputType.MouseAxis => inputElement.AsMouseAxis() switch
             {
-                InputElement.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
-                InputElement.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
-                _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
+                MouseAxis.X => hardwareInput.MouseInput.PositionDelta.X,
+                MouseAxis.Y => -hardwareInput.MouseInput.PositionDelta.Y,
+                _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputType)}: {hardwareInputVariant.Type}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputType)}: {inputElement.Type}")
         };
     }
 

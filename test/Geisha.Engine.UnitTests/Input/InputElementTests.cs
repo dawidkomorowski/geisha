@@ -17,11 +17,11 @@ public class InputElementTests
         var inputElement = InputElement.Create(Key.Space);
 
         // Assert
-        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.Keyboard));
+        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.KeyboardKey));
     }
 
     [Test]
-    public void AsKeyboard_ShouldReturnKeyboardKey_WhenInputTypeIsKeyboard()
+    public void AsKeyboardKey_ShouldReturnKeyboardKey_WhenInputTypeIsKeyboard()
     {
         // Arrange
         const Key key = Key.Space;
@@ -29,18 +29,18 @@ public class InputElementTests
 
         // Act
         // Assert
-        Assert.That(inputElement.AsKeyboard(), Is.EqualTo(key));
+        Assert.That(inputElement.AsKeyboardKey(), Is.EqualTo(key));
     }
 
     [Test]
-    public void AsKeyboard_ShouldThrowException_WhenInputTypeIsNotKeyboard()
+    public void AsKeyboardKey_ShouldThrowException_WhenInputTypeIsNotKeyboard()
     {
         // Arrange
         var inputElement = InputElement.Create(MouseButton.Left);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsKeyboard, Throws.InvalidOperationException);
+        Assert.That(inputElement.AsKeyboardKey, Throws.InvalidOperationException);
     }
 
     #endregion
@@ -121,57 +121,16 @@ public class InputElementTests
 
     #endregion
 
-    #region Mouse
-
-    [Test]
-    public void Create_MouseVariant_ShouldSetCurrentVariantToMouse()
-    {
-        // Arrange
-
-        // Act
-        var inputElement = InputElement.Create(InputElement.MouseVariant.LeftButton);
-
-        // Assert
-        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.Mouse));
-    }
-
-    [Test]
-    public void AsMouse_ShouldReturnMouseVariant_WhenVariantIsMouse()
-    {
-        // Arrange
-        const InputElement.MouseVariant mouseVariant = InputElement.MouseVariant.LeftButton;
-        var inputElement = InputElement.Create(mouseVariant);
-
-        // Act
-        // Assert
-        Assert.That(inputElement.AsMouse(), Is.EqualTo(mouseVariant));
-    }
-
-    [Test]
-    public void AsMouse_ShouldThrowException_WhenVariantIsNotMouse()
-    {
-        // Arrange
-        var inputElement = InputElement.Create(Key.Space);
-
-        // Act
-        // Assert
-        Assert.That(inputElement.AsMouse, Throws.InvalidOperationException);
-    }
-
-    #endregion
-
     #region Formatting members
 
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
     {
-        new TestCaseData(InputElement.Create(Key.Space), "InputElement { Type = Keyboard, KeyboardKey = Space }")
+        new TestCaseData(InputElement.Create(Key.Space), "InputElement { Type = KeyboardKey, Key = Space }")
             .SetName("KeyboardKey"),
-        new TestCaseData(InputElement.Create(MouseButton.Left), "InputElement { Type = MouseButton, MouseButton = Left }")
+        new TestCaseData(InputElement.Create(MouseButton.Left), "InputElement { Type = MouseButton, Button = Left }")
             .SetName("MouseButton"),
-        new TestCaseData(InputElement.Create(MouseAxis.X), "InputElement { Type = MouseAxis, MouseAxis = X }")
-            .SetName("MouseAxis"),
-        new TestCaseData(InputElement.Create(InputElement.MouseVariant.LeftButton), "InputElement { Type = Mouse, MouseVariant = LeftButton }")
-            .SetName("MouseVariant")
+        new TestCaseData(InputElement.Create(MouseAxis.X), "InputElement { Type = MouseAxis, Axis = X }")
+            .SetName("MouseAxis")
     };
 
     [TestCaseSource(nameof(ToStringTestCases))]

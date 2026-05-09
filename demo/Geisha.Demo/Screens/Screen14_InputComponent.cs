@@ -308,7 +308,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
         Debug.Assert(_inputComponent.InputMapping != null, "_inputComponent.InputMapping != null");
         foreach (var hardwareAction in _inputComponent.InputMapping.ActionMappings.Single(m => m.ActionName == actionName).HardwareActions)
         {
-            stringBuilder.Append($"[{hardwareAction.InputElement.AsKeyboard()}]\t");
+            stringBuilder.Append($"[{hardwareAction.InputElement.AsKeyboardKey()}]\t");
         }
 
         return stringBuilder.ToString();
