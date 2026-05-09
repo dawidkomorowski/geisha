@@ -84,7 +84,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         Assert.That(inputMapping.ActionMappings[1].ActionName, Is.EqualTo("Fire"));
         Assert.That(inputMapping.ActionMappings[1].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(inputMapping.ActionMappings[1].HardwareActions[0].InputElement,
-            Is.EqualTo(InputElement.Create(InputElement.MouseVariant.LeftButton)));
+            Is.EqualTo(InputElement.Create(MouseButton.Left)));
 
         Assert.That(inputMapping.AxisMappings.Count, Is.EqualTo(4));
         // Axis mapping 1
@@ -105,13 +105,13 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         Assert.That(inputMapping.AxisMappings[2].AxisName, Is.EqualTo("LookUp"));
         Assert.That(inputMapping.AxisMappings[2].HardwareAxes, Has.Length.EqualTo(1));
         Assert.That(inputMapping.AxisMappings[2].HardwareAxes[0].InputElement,
-            Is.EqualTo(InputElement.Create(InputElement.MouseVariant.AxisX)));
+            Is.EqualTo(InputElement.Create(MouseAxis.X)));
         Assert.That(inputMapping.AxisMappings[2].HardwareAxes[0].Scale, Is.EqualTo(1));
         // Axis mapping 4
         Assert.That(inputMapping.AxisMappings[3].AxisName, Is.EqualTo("LookRight"));
         Assert.That(inputMapping.AxisMappings[3].HardwareAxes, Has.Length.EqualTo(1));
         Assert.That(inputMapping.AxisMappings[3].HardwareAxes[0].InputElement,
-            Is.EqualTo(InputElement.Create(InputElement.MouseVariant.AxisY)));
+            Is.EqualTo(InputElement.Create(MouseAxis.Y)));
         Assert.That(inputMapping.AxisMappings[3].HardwareAxes[0].Scale, Is.EqualTo(1));
     }
 

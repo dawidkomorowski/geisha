@@ -50,21 +50,9 @@ namespace Geisha.Engine.Input.Assets
                         }
                         case { Key: null, MouseButton: not null }:
                         {
-                            var mouseVariant = serializableHardwareAction.MouseButton switch
-                            {
-                                SerializableMouseButton.LeftButton => InputElement.MouseVariant.LeftButton,
-                                SerializableMouseButton.MiddleButton => InputElement.MouseVariant.MiddleButton,
-                                SerializableMouseButton.RightButton => InputElement.MouseVariant.RightButton,
-                                SerializableMouseButton.XButton1 => InputElement.MouseVariant.XButton1,
-                                SerializableMouseButton.XButton2 => InputElement.MouseVariant.XButton2,
-                                _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton),
-                                    serializableHardwareAction.MouseButton,
-                                    "Unsupported mouse button found in input mapping.")
-                            };
-
                             hardwareActions.Add(new HardwareAction
                             {
-                                InputElement = InputElement.Create(mouseVariant)
+                                InputElement = InputElement.Create(serializableHardwareAction.MouseButton.Value)
                             });
                             break;
                         }
@@ -101,17 +89,9 @@ namespace Geisha.Engine.Input.Assets
                         }
                         case { Key: null, MouseAxis: not null }:
                         {
-                            var mouseVariant = serializableHardwareAxis.MouseAxis switch
-                            {
-                                SerializableMouseAxis.AxisX => InputElement.MouseVariant.AxisX,
-                                SerializableMouseAxis.AxisY => InputElement.MouseVariant.AxisY,
-                                _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
-                                    "Unsupported mouse axis found in input mapping.")
-                            };
-
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                InputElement = InputElement.Create(mouseVariant),
+                                InputElement = InputElement.Create(serializableHardwareAxis.MouseAxis.Value),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;

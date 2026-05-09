@@ -35,7 +35,7 @@ public readonly record struct SerializableHardwareAction
     ///     Mouse button mapped to action.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SerializableMouseButton? MouseButton { get; init; }
+    public MouseButton? MouseButton { get; init; }
 }
 
 /// <summary>
@@ -53,57 +53,10 @@ public readonly record struct SerializableHardwareAxis
     ///     Mouse axis mapped to axis.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SerializableMouseAxis? MouseAxis { get; init; }
+    public MouseAxis? MouseAxis { get; init; }
 
     /// <summary>
     ///     Scaling factor of hardware axis state to logical axis state.
     /// </summary>
     public double Scale { get; init; }
-}
-
-/// <summary>
-///     Enumerates mouse buttons supported as hardware actions in input mapping asset content.
-/// </summary>
-public enum SerializableMouseButton
-{
-    /// <summary>
-    ///     Left mouse button.
-    /// </summary>
-    LeftButton,
-
-    /// <summary>
-    ///     Middle mouse button.
-    /// </summary>
-    MiddleButton,
-
-    /// <summary>
-    ///     Right mouse button.
-    /// </summary>
-    RightButton,
-
-    /// <summary>
-    ///     First extended mouse button.
-    /// </summary>
-    XButton1,
-
-    /// <summary>
-    ///     Second extended mouse button.
-    /// </summary>
-    XButton2
-}
-
-/// <summary>
-///     Enumerates mouse axes supported as hardware axes in input mapping asset content.
-/// </summary>
-public enum SerializableMouseAxis
-{
-    /// <summary>
-    ///     Horizontal axis of mouse movement.
-    /// </summary>
-    AxisX,
-
-    /// <summary>
-    ///     Vertical axis of mouse movement.
-    /// </summary>
-    AxisY
 }

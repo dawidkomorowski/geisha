@@ -11,7 +11,7 @@
       ],
       "Fire": [
         {
-          "MouseButton": "LeftButton"
+          "MouseButton": "Left"
         }
       ]
     },
@@ -38,13 +38,13 @@
       ],
       "LookUp": [
         {
-          "MouseAxis": "AxisX",
+          "MouseAxis": "X",
           "Scale": 1
         }
       ],
       "LookRight": [
         {
-          "MouseAxis": "AxisY",
+          "MouseAxis": "Y",
           "Scale": 1
         }
       ]
