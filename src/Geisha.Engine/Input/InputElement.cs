@@ -9,10 +9,11 @@ namespace Geisha.Engine.Input;
 // TODO: Consider extending/refatoring integration test: GetAsset_ShouldLoadAndReturn_InputMapping
 // TODO: Review implementation of InputMappingAssetLoader.
 // TODO: Find legacy name usages (HardwareInputVariant, variant) and update to use new name.
-// TODO: Review documentation of InputElement.
 
 /// <summary>
-///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
+///     Represents a hardware input control such as a keyboard key, mouse button, or mouse axis.
+///     Use <see cref="Kind" /> to determine the actual kind of input and the corresponding <c>As</c> method to retrieve
+///     the underlying value.
 /// </summary>
 public readonly record struct InputElement
 {
@@ -21,18 +22,24 @@ public readonly record struct InputElement
     private readonly MouseAxis _mouseAxis;
 
     /// <summary>
-    ///     Creates new instance of <see cref="InputElement" /> that represents keyboard input variant like a
-    ///     particular keyboard key.
+    ///     Creates a new instance of <see cref="InputElement" /> representing the specified keyboard key.
     /// </summary>
-    /// <param name="key">
-    ///     Variant of keyboard input to be represented by <see cref="InputElement" />
-    ///     instance.
-    /// </param>
-    /// <returns><see cref="InputElement" /> representing specified keyboard variant.</returns>
+    /// <param name="key">Keyboard key to be represented by the <see cref="InputElement" /> instance.</param>
+    /// <returns><see cref="InputElement" /> representing the specified keyboard key.</returns>
     public static InputElement Create(Key key) => new(key);
 
+    /// <summary>
+    ///     Creates a new instance of <see cref="InputElement" /> representing the specified mouse button.
+    /// </summary>
+    /// <param name="mouseButton">Mouse button to be represented by the <see cref="InputElement" /> instance.</param>
+    /// <returns><see cref="InputElement" /> representing the specified mouse button.</returns>
     public static InputElement Create(MouseButton mouseButton) => new(mouseButton);
 
+    /// <summary>
+    ///     Creates a new instance of <see cref="InputElement" /> representing the specified mouse axis.
+    /// </summary>
+    /// <param name="mouseAxis">Mouse axis to be represented by the <see cref="InputElement" /> instance.</param>
+    /// <returns><see cref="InputElement" /> representing the specified mouse axis.</returns>
     public static InputElement Create(MouseAxis mouseAxis) => new(mouseAxis);
 
     private InputElement(Key keyboardKey)
@@ -40,7 +47,7 @@ public readonly record struct InputElement
         _keyboardKey = keyboardKey;
         _mouseButton = default;
         _mouseAxis = default;
-        Type = InputType.KeyboardKey;
+        Kind = InputKind.KeyboardKey;
     }
 
     private InputElement(MouseButton mouseButton)
@@ -48,7 +55,7 @@ public readonly record struct InputElement
         _keyboardKey = default;
         _mouseButton = mouseButton;
         _mouseAxis = default;
-        Type = InputType.MouseButton;
+        Kind = InputKind.MouseButton;
     }
 
     private InputElement(MouseAxis mouseAxis)
@@ -56,56 +63,77 @@ public readonly record struct InputElement
         _keyboardKey = default;
         _mouseButton = default;
         _mouseAxis = mouseAxis;
-        Type = InputType.MouseAxis;
+        Kind = InputKind.MouseAxis;
     }
 
     /// <summary>
-    ///     Type of input source, namely a hardware input device.
+    ///     Specifies the kind of hardware input represented by an <see cref="InputElement" />.
     /// </summary>
-    public enum InputType
+    public enum InputKind
     {
         /// <summary>
-        ///     Keyboard input device.
+        ///     A keyboard key.
         /// </summary>
         KeyboardKey,
+
+        /// <summary>
+        ///     A mouse button.
+        /// </summary>
         MouseButton,
+
+        /// <summary>
+        ///     A mouse axis.
+        /// </summary>
         MouseAxis
     }
 
     /// <summary>
-    ///     Current variant of input source type.
+    ///     The kind of hardware input represented by this <see cref="InputElement" />.
     /// </summary>
-    public InputType Type { get; }
+    public InputKind Kind { get; }
 
     /// <summary>
-    ///     Converts this instance of <see cref="InputElement" /> to keyboard variant if possible.
+    ///     Returns the <see cref="Key" /> represented by this <see cref="InputElement" />.
     /// </summary>
-    /// <returns><see cref="Key" /> of keyboard if this instance is keyboard variant; otherwise throws exception.</returns>
+    /// <returns><see cref="Key" /> represented by this instance.</returns>
     /// <exception cref="InvalidOperationException">
-    ///     Thrown when <see cref="Type" /> is not
-    ///     <see cref="InputType.KeyboardKey" />.
+    ///     Thrown when <see cref="Kind" /> is not <see cref="InputKind.KeyboardKey" />.
     /// </exception>
-    public Key AsKeyboardKey() => Type is InputType.KeyboardKey ? _keyboardKey : throw CreateInvalidInputTypeException(Type);
+    public Key AsKeyboardKey() => Kind is InputKind.KeyboardKey ? _keyboardKey : throw CreateInvalidInputKindException(Kind);
 
-    public MouseButton AsMouseButton() => Type is InputType.MouseButton ? _mouseButton : throw CreateInvalidInputTypeException(Type);
+    /// <summary>
+    ///     Returns the <see cref="MouseButton" /> represented by this <see cref="InputElement" />.
+    /// </summary>
+    /// <returns><see cref="MouseButton" /> represented by this instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when <see cref="Kind" /> is not <see cref="InputKind.MouseButton" />.
+    /// </exception>
+    public MouseButton AsMouseButton() => Kind is InputKind.MouseButton ? _mouseButton : throw CreateInvalidInputKindException(Kind);
 
-    public MouseAxis AsMouseAxis() => Type is InputType.MouseAxis ? _mouseAxis : throw CreateInvalidInputTypeException(Type);
+    /// <summary>
+    ///     Returns the <see cref="MouseAxis" /> represented by this <see cref="InputElement" />.
+    /// </summary>
+    /// <returns><see cref="MouseAxis" /> represented by this instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when <see cref="Kind" /> is not <see cref="InputKind.MouseAxis" />.
+    /// </exception>
+    public MouseAxis AsMouseAxis() => Kind is InputKind.MouseAxis ? _mouseAxis : throw CreateInvalidInputKindException(Kind);
 
     /// <summary>
     ///     Custom <see cref="PrintMembers"/> for synthesized <see cref="ToString" />.
     /// </summary>
     private bool PrintMembers(StringBuilder builder)
     {
-        switch (Type)
+        switch (Kind)
         {
-            case InputType.KeyboardKey:
-                builder.Append($"{nameof(Type)} = {Type}, Key = {_keyboardKey}");
+            case InputKind.KeyboardKey:
+                builder.Append($"{nameof(Kind)} = {Kind}, Key = {_keyboardKey}");
                 break;
-            case InputType.MouseButton:
-                builder.Append($"{nameof(Type)} = {Type}, Button = {_mouseButton}");
+            case InputKind.MouseButton:
+                builder.Append($"{nameof(Kind)} = {Kind}, Button = {_mouseButton}");
                 break;
-            case InputType.MouseAxis:
-                builder.Append($"{nameof(Type)} = {Type}, Axis = {_mouseAxis}");
+            case InputKind.MouseAxis:
+                builder.Append($"{nameof(Kind)} = {Kind}, Axis = {_mouseAxis}");
                 break;
             default:
                 throw new InvalidOperationException(); // TODO Convert to unreachable exception?
@@ -114,8 +142,8 @@ public readonly record struct InputElement
         return true;
     }
 
-    private static InvalidOperationException CreateInvalidInputTypeException(InputType inputType)
+    private static InvalidOperationException CreateInvalidInputKindException(InputKind inputKind)
     {
-        return new InvalidOperationException($"Operation is not valid for input type: {inputType}.");
+        return new InvalidOperationException($"Operation is not valid for input kind: {inputKind}.");
     }
 }

@@ -17,7 +17,7 @@ public class InputElementTests
         var inputElement = InputElement.Create(Key.Space);
 
         // Assert
-        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.KeyboardKey));
+        Assert.That(inputElement.Kind, Is.EqualTo(InputElement.InputKind.KeyboardKey));
     }
 
     [Test]
@@ -55,7 +55,7 @@ public class InputElementTests
         var inputElement = InputElement.Create(MouseButton.Right);
 
         // Assert
-        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.MouseButton));
+        Assert.That(inputElement.Kind, Is.EqualTo(InputElement.InputKind.MouseButton));
     }
 
     [Test]
@@ -93,7 +93,7 @@ public class InputElementTests
         var inputElement = InputElement.Create(MouseAxis.Y);
 
         // Assert
-        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.MouseAxis));
+        Assert.That(inputElement.Kind, Is.EqualTo(InputElement.InputKind.MouseAxis));
     }
 
     [Test]
@@ -125,11 +125,11 @@ public class InputElementTests
 
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
     {
-        new TestCaseData(InputElement.Create(Key.Space), "InputElement { Type = KeyboardKey, Key = Space }")
+        new TestCaseData(InputElement.Create(Key.Space), "InputElement { Kind = KeyboardKey, Key = Space }")
             .SetName("KeyboardKey"),
-        new TestCaseData(InputElement.Create(MouseButton.Left), "InputElement { Type = MouseButton, Button = Left }")
+        new TestCaseData(InputElement.Create(MouseButton.Left), "InputElement { Kind = MouseButton, Button = Left }")
             .SetName("MouseButton"),
-        new TestCaseData(InputElement.Create(MouseAxis.X), "InputElement { Type = MouseAxis, Axis = X }")
+        new TestCaseData(InputElement.Create(MouseAxis.X), "InputElement { Kind = MouseAxis, Axis = X }")
             .SetName("MouseAxis")
     };
 
