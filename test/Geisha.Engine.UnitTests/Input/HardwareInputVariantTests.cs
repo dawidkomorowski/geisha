@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Input;
-using Geisha.Engine.Input.Mapping;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Input.Mapping;
+namespace Geisha.Engine.UnitTests.Input;
 
 [TestFixture]
 public class HardwareInputVariantTests

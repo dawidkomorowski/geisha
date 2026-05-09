@@ -1,10 +1,14 @@
 using System;
 using System.Text;
 
-namespace Geisha.Engine.Input.Mapping;
+namespace Geisha.Engine.Input;
 
 // TODO: Review documentation of MouseAxis.
 // TODO: Review documentation of MouseButton.
+// TODO: Review implementation of InputMappingAssetContent.
+// TODO: Consider extending/refatoring integration test: GetAsset_ShouldLoadAndReturn_InputMapping
+// TODO: Review implementation of InputMappingAssetLoader.
+// TODO: Rename to InputElement?
 
 /// <summary>
 ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
