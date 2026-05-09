@@ -1,11 +1,12 @@
 using System;
+using System.Text;
 
 namespace Geisha.Engine.Input.Mapping;
 
 /// <summary>
 ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
 /// </summary>
-public readonly struct HardwareInputVariant : IEquatable<HardwareInputVariant>
+public readonly record struct HardwareInputVariant
 {
     private readonly Key _keyboardVariant;
     private readonly MouseVariant _mouseVariant;
@@ -125,55 +126,28 @@ public readonly struct HardwareInputVariant : IEquatable<HardwareInputVariant>
     /// </exception>
     public MouseVariant AsMouse() => CurrentVariant == Variant.Mouse ? _mouseVariant : throw CreateInvalidVariantException(CurrentVariant);
 
+    /// <summary>
+    ///     Custom <see cref="PrintMembers"/> for synthesized <see cref="ToString" />.
+    /// </summary>
+    private bool PrintMembers(StringBuilder builder)
+    {
+        switch (CurrentVariant)
+        {
+            case Variant.Keyboard:
+                builder.Append($"{nameof(CurrentVariant)} = {CurrentVariant}, KeyboardVariant = {_keyboardVariant}");
+                break;
+            case Variant.Mouse:
+                builder.Append($"{nameof(CurrentVariant)} = {CurrentVariant}, MouseVariant = {_mouseVariant}");
+                break;
+            default:
+                throw new InvalidOperationException(); // TODO Convert to unreachable exception?
+        }
+
+        return true;
+    }
+
     private static InvalidOperationException CreateInvalidVariantException(Variant variant)
     {
         return new InvalidOperationException($"Operation is not valid for current variant: {variant}.");
     }
-
-    /// <summary>
-    ///     Converts the value of the current <see cref="HardwareInputVariant" /> object to its equivalent string
-    ///     representation.
-    /// </summary>
-    /// <returns>A string representation of the value of the current <see cref="HardwareInputVariant" /> object.</returns>
-    public override string ToString()
-    {
-        return CurrentVariant switch
-        {
-            Variant.Keyboard => $"{nameof(CurrentVariant)}: {CurrentVariant}, KeyboardVariant: {_keyboardVariant}",
-            Variant.Mouse => $"{nameof(CurrentVariant)}: {CurrentVariant}, MouseVariant: {_mouseVariant}",
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
-    /// <inheritdoc />
-    public bool Equals(HardwareInputVariant other) =>
-        _keyboardVariant == other._keyboardVariant && _mouseVariant == other._mouseVariant && CurrentVariant == other.CurrentVariant;
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is HardwareInputVariant other && Equals(other);
-
-    /// <inheritdoc />
-    public override int GetHashCode() => HashCode.Combine((int)_keyboardVariant, (int)_mouseVariant, (int)CurrentVariant);
-
-    /// <summary>
-    ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are equal.
-    /// </summary>
-    /// <param name="left">The first object to compare.</param>
-    /// <param name="right">The second object to compare.</param>
-    /// <returns>
-    ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
-    ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
-    /// </returns>
-    public static bool operator ==(HardwareInputVariant left, HardwareInputVariant right) => left.Equals(right);
-
-    /// <summary>
-    ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are not equal.
-    /// </summary>
-    /// <param name="left">The first object to compare.</param>
-    /// <param name="right">The second object to compare.</param>
-    /// <returns>
-    ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
-    ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
-    /// </returns>
-    public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right) => !left.Equals(right);
 }
