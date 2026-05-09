@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.FileSystem;
@@ -44,7 +44,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareActions.Add(new HardwareAction
                             {
-                                InputElement = InputElement.Create(serializableHardwareAction.Key.Value)
+                                InputSource = InputSource.Create(serializableHardwareAction.Key.Value)
                             });
                             break;
                         }
@@ -52,7 +52,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareActions.Add(new HardwareAction
                             {
-                                InputElement = InputElement.Create(serializableHardwareAction.MouseButton.Value)
+                                InputSource = InputSource.Create(serializableHardwareAction.MouseButton.Value)
                             });
                             break;
                         }
@@ -82,7 +82,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                InputElement = InputElement.Create(serializableHardwareAxis.Key.Value),
+                                InputSource = InputSource.Create(serializableHardwareAxis.Key.Value),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;
@@ -91,7 +91,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                InputElement = InputElement.Create(serializableHardwareAxis.MouseAxis.Value),
+                                InputSource = InputSource.Create(serializableHardwareAxis.MouseAxis.Value),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;

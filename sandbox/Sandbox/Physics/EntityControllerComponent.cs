@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -44,7 +44,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F5)
+                                InputSource = InputSource.Create(Key.F5)
                             }
                         )
                     },
@@ -55,7 +55,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F6)
+                                InputSource = InputSource.Create(Key.F6)
                             }
                         )
                     },
@@ -66,7 +66,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F7)
+                                InputSource = InputSource.Create(Key.F7)
                             }
                         )
                     },
@@ -77,7 +77,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.CloseBrackets)
+                                InputSource = InputSource.Create(Key.CloseBrackets)
                             }
                         )
                     },
@@ -88,7 +88,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.OpenBrackets)
+                                InputSource = InputSource.Create(Key.OpenBrackets)
                             }
                         )
                     },
@@ -99,7 +99,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Backslash)
+                                InputSource = InputSource.Create(Key.Backslash)
                             }
                         )
                     },
@@ -110,7 +110,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Backspace)
+                                InputSource = InputSource.Create(Key.Backspace)
                             }
                         )
                     },
@@ -121,7 +121,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.EqualsSign)
+                                InputSource = InputSource.Create(Key.EqualsSign)
                             }
                         )
                     }

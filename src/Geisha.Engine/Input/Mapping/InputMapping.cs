@@ -51,25 +51,26 @@ public readonly record struct AxisMapping()
 }
 
 /// <summary>
-///     Represents a single hardware action that is defined by hardware input variant i.e. a particular keyboard key press.
+///     Represents a single hardware action defined by a hardware input source i.e. a particular keyboard key press or
+///     mouse button press.
 /// </summary>
 public readonly record struct HardwareAction
 {
     /// <summary>
-    ///     Hardware input variant this hardware action is based on.
+    ///     Hardware input source this hardware action is based on.
     /// </summary>
-    public InputElement InputElement { get; init; }
+    public InputSource InputSource { get; init; }
 }
 
 /// <summary>
-///     Represents a single hardware axis that is defined by hardware input variant i.e. a particular keyboard key press.
+///     Represents a single hardware axis defined by a hardware input source i.e. a particular keyboard key or mouse axis.
 /// </summary>
 public readonly record struct HardwareAxis
 {
     /// <summary>
-    ///     Hardware input variant this hardware axis is based on.
+    ///     Hardware input source this hardware axis is based on.
     /// </summary>
-    public InputElement InputElement { get; init; }
+    public InputSource InputSource { get; init; }
 
     /// <summary>
     ///     Scaling factor of hardware axis state to logical axis state. For discrete input +1 and -1 is mostly used. For

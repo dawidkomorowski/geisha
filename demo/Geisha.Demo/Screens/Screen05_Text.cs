@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -126,7 +126,7 @@ internal sealed class TextSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Space)
+                                InputSource = InputSource.Create(Key.Space)
                             }
                         )
                     }

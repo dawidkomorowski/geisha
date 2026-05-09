@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -43,7 +43,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D1)
+                                InputSource = InputSource.Create(Key.D1)
                             }
                         )
                     },
@@ -54,7 +54,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D2)
+                                InputSource = InputSource.Create(Key.D2)
                             }
                         )
                     },
@@ -65,7 +65,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D3)
+                                InputSource = InputSource.Create(Key.D3)
                             }
                         )
                     },
@@ -76,7 +76,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D4)
+                                InputSource = InputSource.Create(Key.D4)
                             }
                         )
                     },
@@ -87,7 +87,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(MouseButton.Left)
+                                InputSource = InputSource.Create(MouseButton.Left)
                             }
                         )
                     },
@@ -98,7 +98,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(MouseButton.Right)
+                                InputSource = InputSource.Create(MouseButton.Right)
                             }
                         )
                     },
@@ -109,7 +109,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F1)
+                                InputSource = InputSource.Create(Key.F1)
                             }
                         )
                     },
@@ -120,7 +120,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F2)
+                                InputSource = InputSource.Create(Key.F2)
                             }
                         )
                     },
@@ -131,7 +131,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F3)
+                                InputSource = InputSource.Create(Key.F3)
                             }
                         )
                     },
@@ -142,7 +142,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F4)
+                                InputSource = InputSource.Create(Key.F4)
                             }
                         )
                     },
@@ -153,7 +153,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F9)
+                                InputSource = InputSource.Create(Key.F9)
                             }
                         )
                     },
@@ -164,7 +164,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F12)
+                                InputSource = InputSource.Create(Key.F12)
                             }
                         )
                     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
@@ -114,7 +114,7 @@ Press [UP] and [DOWN] to change the order of rendering.";
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Up)
+                                InputSource = InputSource.Create(Key.Up)
                             }
                         )
                     },
@@ -125,7 +125,7 @@ Press [UP] and [DOWN] to change the order of rendering.";
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Down)
+                                InputSource = InputSource.Create(Key.Down)
                             }
                         )
                     }

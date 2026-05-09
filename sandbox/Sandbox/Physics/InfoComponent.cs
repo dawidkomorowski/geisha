@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -43,7 +43,7 @@ public sealed class InfoComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Tab)
+                                InputSource = InputSource.Create(Key.Tab)
                             }
                         )
                     }

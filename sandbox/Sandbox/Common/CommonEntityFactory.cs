@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -47,7 +47,7 @@ public sealed class CommonEntityFactory
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(Key.Escape)
+                            InputSource = InputSource.Create(Key.Escape)
                         }
                     )
                 }

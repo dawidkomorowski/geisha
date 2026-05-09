@@ -140,8 +140,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action Key.Space"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(Key.Space)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(Key.Space)));
                 }),
             new LoadTestCase("Multiple keyboard keys mapped as single action",
                 new InputMappingAssetContent
@@ -163,10 +163,10 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action Key.C and Key.LeftCtrl"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(2));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.ElementAt(0).InputElement,
-                        Is.EqualTo(InputElement.Create(Key.C)));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.ElementAt(1).InputElement,
-                        Is.EqualTo(InputElement.Create(Key.LeftCtrl)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.ElementAt(0).InputSource,
+                        Is.EqualTo(InputSource.Create(Key.C)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.ElementAt(1).InputSource,
+                        Is.EqualTo(InputSource.Create(Key.LeftCtrl)));
                 }),
             new LoadTestCase("Left mouse button mapped as action",
                 new InputMappingAssetContent
@@ -187,8 +187,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.Left"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseButton.Left)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseButton.Left)));
                 }),
             new LoadTestCase("Middle mouse button mapped as action",
                 new InputMappingAssetContent
@@ -209,8 +209,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.Middle"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseButton.Middle)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseButton.Middle)));
                 }),
             new LoadTestCase("Right mouse button mapped as action",
                 new InputMappingAssetContent
@@ -231,8 +231,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.Right"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseButton.Right)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseButton.Right)));
                 }),
             new LoadTestCase("Extended mouse button 1 mapped as action",
                 new InputMappingAssetContent
@@ -253,8 +253,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.XButton1"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseButton.XButton1)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseButton.XButton1)));
                 }),
             new LoadTestCase("Extended mouse button 2 mapped as action",
                 new InputMappingAssetContent
@@ -275,8 +275,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.ActionMappings.Single().ActionName, Is.EqualTo("Action MouseButton.XButton2"));
                     Assert.That(mapping.ActionMappings.Single().HardwareActions, Has.Length.EqualTo(1));
-                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseButton.XButton2)));
+                    Assert.That(mapping.ActionMappings.Single().HardwareActions.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseButton.XButton2)));
                 }),
             new LoadTestCase("Multiple keyboard keys mapped as single axis",
                 new InputMappingAssetContent
@@ -298,11 +298,11 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis Key.Up and Key.Down"));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(2));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(0).InputElement,
-                        Is.EqualTo(InputElement.Create(Key.Up)));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(0).InputSource,
+                        Is.EqualTo(InputSource.Create(Key.Up)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(0).Scale, Is.EqualTo(1.02));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(1).InputElement,
-                        Is.EqualTo(InputElement.Create(Key.Down)));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(1).InputSource,
+                        Is.EqualTo(InputSource.Create(Key.Down)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(1).Scale, Is.EqualTo(-1.03));
                 }),
             new LoadTestCase("Mouse axis X mapped as axis",
@@ -324,8 +324,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis MouseAxis.X"));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(1));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseAxis.X)));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseAxis.X)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().Scale, Is.EqualTo(1.02));
                 }),
             new LoadTestCase("Mouse axis Y mapped as axis",
@@ -347,8 +347,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
                     Assert.That(mapping.AxisMappings.Single().AxisName, Is.EqualTo("Axis MouseAxis.Y"));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes, Has.Length.EqualTo(1));
-                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().InputElement,
-                        Is.EqualTo(InputElement.Create(MouseAxis.Y)));
+                    Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().InputSource,
+                        Is.EqualTo(InputSource.Create(MouseAxis.Y)));
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().Scale, Is.EqualTo(1.02));
                 })
         };

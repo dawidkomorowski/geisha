@@ -103,7 +103,7 @@ internal sealed class PrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Space)
+                                InputSource = InputSource.Create(Key.Space)
                             }
                         )
                     }

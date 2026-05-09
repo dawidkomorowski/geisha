@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
@@ -133,11 +133,11 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
     {
-        var inputElement = hardwareAction.InputElement;
-        return inputElement.Kind switch
+        var inputSource = hardwareAction.InputSource;
+        return inputSource.Kind switch
         {
-            InputElement.InputKind.KeyboardKey => hardwareInput.KeyboardInput[inputElement.AsKeyboardKey()],
-            InputElement.InputKind.MouseButton => inputElement.AsMouseButton() switch
+            InputSource.InputKind.KeyboardKey => hardwareInput.KeyboardInput[inputSource.AsKeyboardKey()],
+            InputSource.InputKind.MouseButton => inputSource.AsMouseButton() switch
             {
                 MouseButton.Left => hardwareInput.MouseInput.LeftButton,
                 MouseButton.Middle => hardwareInput.MouseInput.MiddleButton,
@@ -146,7 +146,7 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
                 MouseButton.XButton2 => hardwareInput.MouseInput.XButton2,
                 _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputKind)}: {inputElement.Kind}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}")
         };
     }
 
@@ -182,17 +182,17 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
     {
-        var inputElement = hardwareAxis.InputElement;
-        return inputElement.Kind switch
+        var inputSource = hardwareAxis.InputSource;
+        return inputSource.Kind switch
         {
-            InputElement.InputKind.KeyboardKey => BoolToDouble(hardwareInput.KeyboardInput[inputElement.AsKeyboardKey()]),
-            InputElement.InputKind.MouseAxis => inputElement.AsMouseAxis() switch
+            InputSource.InputKind.KeyboardKey => BoolToDouble(hardwareInput.KeyboardInput[inputSource.AsKeyboardKey()]),
+            InputSource.InputKind.MouseAxis => inputSource.AsMouseAxis() switch
             {
                 MouseAxis.X => hardwareInput.MouseInput.PositionDelta.X,
                 MouseAxis.Y => -hardwareInput.MouseInput.PositionDelta.Y,
                 _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputKind)}: {inputElement.Kind}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}")
         };
     }
 

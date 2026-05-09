@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core;
@@ -71,12 +71,12 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAxis
                             {
-                                InputElement = InputElement.Create(Key.Up),
+                                InputSource = InputSource.Create(Key.Up),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                InputElement = InputElement.Create(Key.Down),
+                                InputSource = InputSource.Create(Key.Down),
                                 Scale = -1
                             }
                         )
@@ -88,12 +88,12 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAxis
                             {
-                                InputElement = InputElement.Create(Key.Right),
+                                InputSource = InputSource.Create(Key.Right),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                InputElement = InputElement.Create(Key.Left),
+                                InputSource = InputSource.Create(Key.Left),
                                 Scale = -1
                             }
                         )

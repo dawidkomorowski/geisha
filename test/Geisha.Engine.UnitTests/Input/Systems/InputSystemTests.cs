@@ -660,7 +660,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(Key.Right)
+                            InputSource = InputSource.Create(Key.Right)
                         }
                     )
                 };
@@ -672,7 +672,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(Key.Left)
+                            InputSource = InputSource.Create(Key.Left)
                         }
                     )
                 };
@@ -684,11 +684,11 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(Key.Up)
+                            InputSource = InputSource.Create(Key.Up)
                         },
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(Key.Space)
+                            InputSource = InputSource.Create(Key.Space)
                         }
                     )
                 };
@@ -712,17 +712,17 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(Key.Up),
+                            InputSource = InputSource.Create(Key.Up),
                             Scale = 1.0
                         },
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(Key.Down),
+                            InputSource = InputSource.Create(Key.Down),
                             Scale = -1.0
                         },
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(Key.Space),
+                            InputSource = InputSource.Create(Key.Space),
                             Scale = 5.0
                         }
                     )
@@ -735,12 +735,12 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(Key.Right),
+                            InputSource = InputSource.Create(Key.Right),
                             Scale = 1.0
                         },
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(Key.Left),
+                            InputSource = InputSource.Create(Key.Left),
                             Scale = -1.0
                         }
                     )
@@ -766,7 +766,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(MouseButton.Left)
+                            InputSource = InputSource.Create(MouseButton.Left)
                         }
                     )
                 };
@@ -778,7 +778,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(MouseButton.Middle)
+                            InputSource = InputSource.Create(MouseButton.Middle)
                         }
                     )
                 };
@@ -790,7 +790,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(MouseButton.Right)
+                            InputSource = InputSource.Create(MouseButton.Right)
                         }
                     )
                 };
@@ -801,11 +801,11 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     HardwareActions = ImmutableArray.Create(
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(MouseButton.XButton1)
+                            InputSource = InputSource.Create(MouseButton.XButton1)
                         },
                         new HardwareAction
                         {
-                            InputElement = InputElement.Create(MouseButton.XButton2)
+                            InputSource = InputSource.Create(MouseButton.XButton2)
                         }
                     )
                 };
@@ -829,7 +829,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(MouseAxis.X),
+                            InputSource = InputSource.Create(MouseAxis.X),
                             Scale = 1.0
                         }
                     )
@@ -842,7 +842,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     (
                         new HardwareAxis
                         {
-                            InputElement = InputElement.Create(MouseAxis.Y),
+                            InputSource = InputSource.Create(MouseAxis.Y),
                             Scale = 1.0
                         }
                     )

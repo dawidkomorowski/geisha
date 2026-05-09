@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Geisha.Engine.Input;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input;
 
 [TestFixture]
-public class InputElementTests
+public class InputSourceTests
 {
     #region KeyboardKey
 
     [Test]
-    public void Create_Key_ShouldSetInputTypeToKeyboard()
+    public void Create_Key_ShouldSetInputTypeToKeyboardKey()
     {
         // Arrange
         // Act
-        var inputElement = InputElement.Create(Key.Space);
+        var inputSource = InputSource.Create(Key.Space);
 
         // Assert
-        Assert.That(inputElement.Kind, Is.EqualTo(InputElement.InputKind.KeyboardKey));
+        Assert.That(inputSource.Kind, Is.EqualTo(InputSource.InputKind.KeyboardKey));
     }
 
     [Test]
@@ -25,22 +25,22 @@ public class InputElementTests
     {
         // Arrange
         const Key key = Key.Space;
-        var inputElement = InputElement.Create(key);
+        var inputSource = InputSource.Create(key);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsKeyboardKey(), Is.EqualTo(key));
+        Assert.That(inputSource.AsKeyboardKey(), Is.EqualTo(key));
     }
 
     [Test]
     public void AsKeyboardKey_ShouldThrowException_WhenInputTypeIsNotKeyboard()
     {
         // Arrange
-        var inputElement = InputElement.Create(MouseButton.Left);
+        var inputSource = InputSource.Create(MouseButton.Left);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsKeyboardKey, Throws.InvalidOperationException);
+        Assert.That(inputSource.AsKeyboardKey, Throws.InvalidOperationException);
     }
 
     #endregion
@@ -52,10 +52,10 @@ public class InputElementTests
     {
         // Arrange
         // Act
-        var inputElement = InputElement.Create(MouseButton.Right);
+        var inputSource = InputSource.Create(MouseButton.Right);
 
         // Assert
-        Assert.That(inputElement.Kind, Is.EqualTo(InputElement.InputKind.MouseButton));
+        Assert.That(inputSource.Kind, Is.EqualTo(InputSource.InputKind.MouseButton));
     }
 
     [Test]
@@ -63,22 +63,22 @@ public class InputElementTests
     {
         // Arrange
         const MouseButton mouseButton = MouseButton.Right;
-        var inputElement = InputElement.Create(mouseButton);
+        var inputSource = InputSource.Create(mouseButton);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsMouseButton(), Is.EqualTo(mouseButton));
+        Assert.That(inputSource.AsMouseButton(), Is.EqualTo(mouseButton));
     }
 
     [Test]
     public void AsMouseButton_ShouldThrowException_WhenInputTypeIsNotMouseButton()
     {
         // Arrange
-        var inputElement = InputElement.Create(Key.Space);
+        var inputSource = InputSource.Create(Key.Space);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsMouseButton, Throws.InvalidOperationException);
+        Assert.That(inputSource.AsMouseButton, Throws.InvalidOperationException);
     }
 
     #endregion
@@ -90,10 +90,10 @@ public class InputElementTests
     {
         // Arrange
         // Act
-        var inputElement = InputElement.Create(MouseAxis.Y);
+        var inputSource = InputSource.Create(MouseAxis.Y);
 
         // Assert
-        Assert.That(inputElement.Kind, Is.EqualTo(InputElement.InputKind.MouseAxis));
+        Assert.That(inputSource.Kind, Is.EqualTo(InputSource.InputKind.MouseAxis));
     }
 
     [Test]
@@ -101,22 +101,22 @@ public class InputElementTests
     {
         // Arrange
         const MouseAxis mouseAxis = MouseAxis.Y;
-        var inputElement = InputElement.Create(mouseAxis);
+        var inputSource = InputSource.Create(mouseAxis);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsMouseAxis(), Is.EqualTo(mouseAxis));
+        Assert.That(inputSource.AsMouseAxis(), Is.EqualTo(mouseAxis));
     }
 
     [Test]
     public void AsMouseAxis_ShouldThrowException_WhenInputTypeIsNotMouseAxis()
     {
         // Arrange
-        var inputElement = InputElement.Create(Key.Space);
+        var inputSource = InputSource.Create(Key.Space);
 
         // Act
         // Assert
-        Assert.That(inputElement.AsMouseAxis, Throws.InvalidOperationException);
+        Assert.That(inputSource.AsMouseAxis, Throws.InvalidOperationException);
     }
 
     #endregion
@@ -125,20 +125,20 @@ public class InputElementTests
 
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
     {
-        new TestCaseData(InputElement.Create(Key.Space), "InputElement { Kind = KeyboardKey, Key = Space }")
+        new TestCaseData(InputSource.Create(Key.Space), "InputSource { Kind = KeyboardKey, Key = Space }")
             .SetName("KeyboardKey"),
-        new TestCaseData(InputElement.Create(MouseButton.Left), "InputElement { Kind = MouseButton, Button = Left }")
+        new TestCaseData(InputSource.Create(MouseButton.Left), "InputSource { Kind = MouseButton, Button = Left }")
             .SetName("MouseButton"),
-        new TestCaseData(InputElement.Create(MouseAxis.X), "InputElement { Kind = MouseAxis, Axis = X }")
+        new TestCaseData(InputSource.Create(MouseAxis.X), "InputSource { Kind = MouseAxis, Axis = X }")
             .SetName("MouseAxis")
     };
 
     [TestCaseSource(nameof(ToStringTestCases))]
-    public void ToString_Test(InputElement inputElement, string expected)
+    public void ToString_Test(InputSource inputSource, string expected)
     {
         // Arrange
         // Act
-        var actual = inputElement.ToString();
+        var actual = inputSource.ToString();
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));

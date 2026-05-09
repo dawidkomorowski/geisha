@@ -36,7 +36,7 @@ namespace Geisha.Demo.Common
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Escape)
+                                InputSource = InputSource.Create(Key.Escape)
                             }
                         )
                     },
@@ -47,7 +47,7 @@ namespace Geisha.Demo.Common
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Enter)
+                                InputSource = InputSource.Create(Key.Enter)
                             }
                         )
                     },
@@ -58,7 +58,7 @@ namespace Geisha.Demo.Common
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Backspace)
+                                InputSource = InputSource.Create(Key.Backspace)
                             }
                         )
                     },
@@ -69,7 +69,7 @@ namespace Geisha.Demo.Common
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.F1)
+                                InputSource = InputSource.Create(Key.F1)
                             }
                         )
                     }

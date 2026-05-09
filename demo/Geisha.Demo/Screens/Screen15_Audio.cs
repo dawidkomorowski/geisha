@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Audio;
@@ -90,7 +90,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D1)
+                                InputSource = InputSource.Create(Key.D1)
                             }
                         )
                     },
@@ -101,7 +101,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D2)
+                                InputSource = InputSource.Create(Key.D2)
                             }
                         )
                     },
@@ -112,7 +112,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.D3)
+                                InputSource = InputSource.Create(Key.D3)
                             }
                         )
                     },
@@ -123,7 +123,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Up)
+                                InputSource = InputSource.Create(Key.Up)
                             }
                         )
                     },
@@ -134,7 +134,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Down)
+                                InputSource = InputSource.Create(Key.Down)
                             }
                         )
                     }

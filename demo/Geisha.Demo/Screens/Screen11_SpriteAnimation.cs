@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Animation;
@@ -95,7 +95,7 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(Key.Space)
+                                InputSource = InputSource.Create(Key.Space)
                             }
                         )
                     }

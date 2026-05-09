@@ -74,13 +74,13 @@ public class InputSystemBenchmarks
             var moveRight = new ActionMapping
             {
                 ActionName = "MoveRight",
-                HardwareActions = ImmutableArray.Create(new HardwareAction { InputElement = InputElement.Create(Key.Right) })
+                HardwareActions = ImmutableArray.Create(new HardwareAction { InputSource = InputSource.Create(Key.Right) })
             };
 
             var moveLeft = new ActionMapping
             {
                 ActionName = "MoveLeft",
-                HardwareActions = ImmutableArray.Create(new HardwareAction { InputElement = InputElement.Create(Key.Left) })
+                HardwareActions = ImmutableArray.Create(new HardwareAction { InputSource = InputSource.Create(Key.Left) })
             };
 
             var jump = new ActionMapping
@@ -88,8 +88,8 @@ public class InputSystemBenchmarks
                 ActionName = "Jump",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.Up) },
-                    new HardwareAction { InputElement = InputElement.Create(Key.Space) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.Up) },
+                    new HardwareAction { InputSource = InputSource.Create(Key.Space) }
                 )
             };
 
@@ -98,8 +98,8 @@ public class InputSystemBenchmarks
                 AxisName = "MoveX",
                 HardwareAxes = ImmutableArray.Create
                 (
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Right), Scale = 1.0 },
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Left), Scale = -1.0 }
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Right), Scale = 1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Left), Scale = -1.0 }
                 )
             };
 
@@ -108,8 +108,8 @@ public class InputSystemBenchmarks
                 AxisName = "MoveY",
                 HardwareAxes = ImmutableArray.Create
                 (
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Up), Scale = 1.0 },
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Down), Scale = -1.0 }
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Up), Scale = 1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Down), Scale = -1.0 }
                 )
             };
 
@@ -140,7 +140,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(MouseButton.Left)
+                        InputSource = InputSource.Create(MouseButton.Left)
                     }
                 )
             };
@@ -152,7 +152,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(MouseButton.Right)
+                        InputSource = InputSource.Create(MouseButton.Right)
                     }
                 )
             };
@@ -164,7 +164,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(MouseButton.Middle)
+                        InputSource = InputSource.Create(MouseButton.Middle)
                     }
                 )
             };
@@ -176,11 +176,11 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(MouseButton.XButton1)
+                        InputSource = InputSource.Create(MouseButton.XButton1)
                     },
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(MouseButton.XButton2)
+                        InputSource = InputSource.Create(MouseButton.XButton2)
                     }
                 )
             };
@@ -192,7 +192,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAxis
                     {
-                        InputElement = InputElement.Create(MouseAxis.X), Scale = 1.0
+                        InputSource = InputSource.Create(MouseAxis.X), Scale = 1.0
                     }
                 )
             };
@@ -203,7 +203,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAxis
                     {
-                        InputElement = InputElement.Create(MouseAxis.Y), Scale = 1.0
+                        InputSource = InputSource.Create(MouseAxis.Y), Scale = 1.0
                     }
                 )
             };
@@ -233,7 +233,7 @@ public class InputSystemBenchmarks
                 ActionName = "Dash",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.LeftShift) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.LeftShift) }
                 )
             };
 
@@ -242,7 +242,7 @@ public class InputSystemBenchmarks
                 ActionName = "Crouch",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.LeftCtrl) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.LeftCtrl) }
                 )
             };
 
@@ -253,7 +253,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(MouseButton.Left)
+                        InputSource = InputSource.Create(MouseButton.Left)
                     }
                 )
             };
@@ -263,8 +263,8 @@ public class InputSystemBenchmarks
                 AxisName = "Throttle",
                 HardwareAxes = ImmutableArray.Create
                 (
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Up), Scale = 1.0 },
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Down), Scale = -1.0 }
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Up), Scale = 1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Down), Scale = -1.0 }
                 )
             };
 
@@ -290,7 +290,7 @@ public class InputSystemBenchmarks
                 ActionName = "Action",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.Space) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.Space) }
                 )
             };
 
@@ -299,11 +299,11 @@ public class InputSystemBenchmarks
                 AxisName = "CombinedAxis",
                 HardwareAxes = ImmutableArray.Create
                 (
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Right), Scale = 1.0 },
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Left), Scale = -1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Right), Scale = 1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Left), Scale = -1.0 },
                     new HardwareAxis
                     {
-                        InputElement = InputElement.Create(MouseAxis.X), Scale = 0.5
+                        InputSource = InputSource.Create(MouseAxis.X), Scale = 0.5
                     }
                 )
             };
@@ -327,7 +327,7 @@ public class InputSystemBenchmarks
                 ActionName = "MoveRight",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.Right) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.Right) }
                 )
             };
 
@@ -336,7 +336,7 @@ public class InputSystemBenchmarks
                 ActionName = "MoveLeft",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.Left) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.Left) }
                 )
             };
 
@@ -345,8 +345,8 @@ public class InputSystemBenchmarks
                 ActionName = "Jump",
                 HardwareActions = ImmutableArray.Create
                 (
-                    new HardwareAction { InputElement = InputElement.Create(Key.Up) },
-                    new HardwareAction { InputElement = InputElement.Create(Key.Space) }
+                    new HardwareAction { InputSource = InputSource.Create(Key.Up) },
+                    new HardwareAction { InputSource = InputSource.Create(Key.Space) }
                 )
             };
 
@@ -355,8 +355,8 @@ public class InputSystemBenchmarks
                 AxisName = "MoveX",
                 HardwareAxes = ImmutableArray.Create
                 (
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Right), Scale = 1.0 },
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Left), Scale = -1.0 }
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Right), Scale = 1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Left), Scale = -1.0 }
                 )
             };
 
@@ -365,8 +365,8 @@ public class InputSystemBenchmarks
                 AxisName = "MoveY",
                 HardwareAxes = ImmutableArray.Create
                 (
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Up), Scale = 1.0 },
-                    new HardwareAxis { InputElement = InputElement.Create(Key.Down), Scale = -1.0 }
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Up), Scale = 1.0 },
+                    new HardwareAxis { InputSource = InputSource.Create(Key.Down), Scale = -1.0 }
                 )
             };
 
