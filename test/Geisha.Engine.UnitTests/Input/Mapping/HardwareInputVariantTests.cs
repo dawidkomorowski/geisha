@@ -11,7 +11,7 @@ public class HardwareInputVariantTests
     #region Keyboard
 
     [Test]
-    public void CreateKeyboardVariant_ShouldSetCurrentVariantToKeyboard()
+    public void Create_Key_ShouldSetCurrentVariantToKeyboard()
     {
         // Arrange
 
@@ -50,7 +50,7 @@ public class HardwareInputVariantTests
     #region Mouse
 
     [Test]
-    public void CreateMouseVariant_ShouldSetCurrentVariantToMouse()
+    public void Create_MouseVariant_ShouldSetCurrentVariantToMouse()
     {
         // Arrange
 

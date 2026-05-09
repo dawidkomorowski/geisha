@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Geisha.Engine.Input.Mapping;
 
+// TODO: Review documentation of MouseAxis.
+// TODO: Review documentation of MouseButton.
+
 /// <summary>
 ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
 /// </summary>
