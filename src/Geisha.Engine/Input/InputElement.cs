@@ -37,6 +37,8 @@ public readonly record struct InputElement
 
     public static InputElement Create(MouseButton mouseButton) => new(mouseButton);
 
+    public static InputElement Create(MouseAxis mouseAxis) => new(mouseAxis);
+
     /// <summary>
     ///     Creates new instance of <see cref="InputElement" /> that represents mouse input variant like a particular
     ///     mouse button or mouse axis.
@@ -61,6 +63,15 @@ public readonly record struct InputElement
         _mouseAxis = default;
         _mouseVariant = default;
         Type = InputType.MouseButton;
+    }
+
+    private InputElement(MouseAxis mouseAxis)
+    {
+        _keyboardKey = default;
+        _mouseButton = default;
+        _mouseAxis = mouseAxis;
+        _mouseVariant = default;
+        Type = InputType.MouseAxis;
     }
 
     private InputElement(MouseVariant mouseVariant)
@@ -148,6 +159,8 @@ public readonly record struct InputElement
 
     public MouseButton AsMouseButton() => Type is InputType.MouseButton ? _mouseButton : throw CreateInvalidInputTypeException(Type);
 
+    public MouseAxis AsMouseAxis() => Type is InputType.MouseAxis ? _mouseAxis : throw CreateInvalidInputTypeException(Type);
+
     /// <summary>
     ///     Converts this instance of <see cref="InputElement" /> to mouse variant if possible.
     /// </summary>
@@ -170,6 +183,9 @@ public readonly record struct InputElement
                 break;
             case InputType.MouseButton:
                 builder.Append($"{nameof(Type)} = {Type}, MouseButton = {_mouseButton}");
+                break;
+            case InputType.MouseAxis:
+                builder.Append($"{nameof(Type)} = {Type}, MouseAxis = {_mouseAxis}");
                 break;
             case InputType.Mouse:
                 builder.Append($"{nameof(Type)} = {Type}, MouseVariant = {_mouseVariant}");

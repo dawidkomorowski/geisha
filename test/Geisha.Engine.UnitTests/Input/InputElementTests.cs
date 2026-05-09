@@ -7,7 +7,7 @@ namespace Geisha.Engine.UnitTests.Input;
 [TestFixture]
 public class InputElementTests
 {
-    #region Keyboard
+    #region KeyboardKey
 
     [Test]
     public void Create_Key_ShouldSetInputTypeToKeyboard()
@@ -83,6 +83,44 @@ public class InputElementTests
 
     #endregion
 
+    #region MouseAxis
+
+    [Test]
+    public void Create_MouseAxis_ShouldSetInputTypeToMouseAxis()
+    {
+        // Arrange
+        // Act
+        var inputElement = InputElement.Create(MouseAxis.Y);
+
+        // Assert
+        Assert.That(inputElement.Type, Is.EqualTo(InputElement.InputType.MouseAxis));
+    }
+
+    [Test]
+    public void AsMouseAxis_ShouldReturnMouseAxis_WhenInputTypeIsMouseAxis()
+    {
+        // Arrange
+        const MouseAxis mouseAxis = MouseAxis.Y;
+        var inputElement = InputElement.Create(mouseAxis);
+
+        // Act
+        // Assert
+        Assert.That(inputElement.AsMouseAxis(), Is.EqualTo(mouseAxis));
+    }
+
+    [Test]
+    public void AsMouseAxis_ShouldThrowException_WhenInputTypeIsNotMouseAxis()
+    {
+        // Arrange
+        var inputElement = InputElement.Create(Key.Space);
+
+        // Act
+        // Assert
+        Assert.That(inputElement.AsMouseAxis, Throws.InvalidOperationException);
+    }
+
+    #endregion
+
     #region Mouse
 
     [Test]
@@ -127,9 +165,11 @@ public class InputElementTests
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
     {
         new TestCaseData(InputElement.Create(Key.Space), "InputElement { Type = Keyboard, KeyboardKey = Space }")
-            .SetName("KeyboardVariant"),
+            .SetName("KeyboardKey"),
         new TestCaseData(InputElement.Create(MouseButton.Left), "InputElement { Type = MouseButton, MouseButton = Left }")
             .SetName("MouseButton"),
+        new TestCaseData(InputElement.Create(MouseAxis.X), "InputElement { Type = MouseAxis, MouseAxis = X }")
+            .SetName("MouseAxis"),
         new TestCaseData(InputElement.Create(InputElement.MouseVariant.LeftButton), "InputElement { Type = Mouse, MouseVariant = LeftButton }")
             .SetName("MouseVariant")
     };
