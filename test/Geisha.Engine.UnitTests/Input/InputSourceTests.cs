@@ -10,7 +10,7 @@ public class InputSourceTests
     #region KeyboardKey
 
     [Test]
-    public void Create_Key_ShouldSetInputTypeToKeyboardKey()
+    public void Create_Key_ShouldSetInputKindToKeyboardKey()
     {
         // Arrange
         // Act
@@ -21,7 +21,7 @@ public class InputSourceTests
     }
 
     [Test]
-    public void AsKeyboardKey_ShouldReturnKeyboardKey_WhenInputTypeIsKeyboard()
+    public void AsKeyboardKey_ShouldReturnKeyboardKey_WhenInputKindIsKeyboardKey()
     {
         // Arrange
         const Key key = Key.Space;
@@ -33,7 +33,7 @@ public class InputSourceTests
     }
 
     [Test]
-    public void AsKeyboardKey_ShouldThrowException_WhenInputTypeIsNotKeyboard()
+    public void AsKeyboardKey_ShouldThrowException_WhenInputKindIsNotKeyboardKey()
     {
         // Arrange
         var inputSource = InputSource.Create(MouseButton.Left);
@@ -48,7 +48,7 @@ public class InputSourceTests
     #region MouseButton
 
     [Test]
-    public void Create_MouseButton_ShouldSetInputTypeToMouseButton()
+    public void Create_MouseButton_ShouldSetInputKindToMouseButton()
     {
         // Arrange
         // Act
@@ -59,7 +59,7 @@ public class InputSourceTests
     }
 
     [Test]
-    public void AsMouseButton_ShouldReturnMouseButton_WhenInputTypeIsMouseButton()
+    public void AsMouseButton_ShouldReturnMouseButton_WhenInputKindIsMouseButton()
     {
         // Arrange
         const MouseButton mouseButton = MouseButton.Right;
@@ -71,7 +71,7 @@ public class InputSourceTests
     }
 
     [Test]
-    public void AsMouseButton_ShouldThrowException_WhenInputTypeIsNotMouseButton()
+    public void AsMouseButton_ShouldThrowException_WhenInputKindIsNotMouseButton()
     {
         // Arrange
         var inputSource = InputSource.Create(Key.Space);
@@ -86,7 +86,7 @@ public class InputSourceTests
     #region MouseAxis
 
     [Test]
-    public void Create_MouseAxis_ShouldSetInputTypeToMouseAxis()
+    public void Create_MouseAxis_ShouldSetInputKindToMouseAxis()
     {
         // Arrange
         // Act
@@ -97,7 +97,7 @@ public class InputSourceTests
     }
 
     [Test]
-    public void AsMouseAxis_ShouldReturnMouseAxis_WhenInputTypeIsMouseAxis()
+    public void AsMouseAxis_ShouldReturnMouseAxis_WhenInputKindIsMouseAxis()
     {
         // Arrange
         const MouseAxis mouseAxis = MouseAxis.Y;
@@ -109,7 +109,7 @@ public class InputSourceTests
     }
 
     [Test]
-    public void AsMouseAxis_ShouldThrowException_WhenInputTypeIsNotMouseAxis()
+    public void AsMouseAxis_ShouldThrowException_WhenInputKindIsNotMouseAxis()
     {
         // Arrange
         var inputSource = InputSource.Create(Key.Space);
