@@ -134,10 +134,10 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
     {
         var hardwareInputVariant = hardwareAction.InputElement;
-        return hardwareInputVariant.CurrentVariant switch
+        return hardwareInputVariant.Type switch
         {
-            InputElement.Variant.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
-            InputElement.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+            InputElement.InputType.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
+            InputElement.InputType.Mouse => hardwareInputVariant.AsMouse() switch
             {
                 InputElement.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
                 InputElement.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
@@ -146,7 +146,7 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
                 InputElement.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
                 _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.Variant)}: {hardwareInputVariant.CurrentVariant}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputType)}: {hardwareInputVariant.Type}")
         };
     }
 
@@ -183,16 +183,16 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
     {
         var hardwareInputVariant = hardwareAxis.InputElement;
-        return hardwareInputVariant.CurrentVariant switch
+        return hardwareInputVariant.Type switch
         {
-            InputElement.Variant.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
-            InputElement.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+            InputElement.InputType.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
+            InputElement.InputType.Mouse => hardwareInputVariant.AsMouse() switch
             {
                 InputElement.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
                 InputElement.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
                 _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.Variant)}: {hardwareInputVariant.CurrentVariant}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.InputType)}: {hardwareInputVariant.Type}")
         };
     }
 

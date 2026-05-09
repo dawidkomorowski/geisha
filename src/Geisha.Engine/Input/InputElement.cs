@@ -10,25 +10,32 @@ namespace Geisha.Engine.Input;
 // TODO: Review implementation of InputMappingAssetLoader.
 // TODO: Find legacy name usages (HardwareInputVariant, variant) and update to use new name.
 // TODO: Review documentation of InputElement.
+// TODO: Add support for dedicated MouseButton.
+// TODO: Add support for dedicated MouseAxis.
+// TODO: Rename Keyboard to KeyboardKey?
 
 /// <summary>
 ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
 /// </summary>
 public readonly record struct InputElement
 {
-    private readonly Key _keyboardVariant;
+    private readonly Key _keyboardKey;
+    private readonly MouseButton _mouseButton;
+    private readonly MouseAxis _mouseAxis;
     private readonly MouseVariant _mouseVariant;
 
     /// <summary>
     ///     Creates new instance of <see cref="InputElement" /> that represents keyboard input variant like a
     ///     particular keyboard key.
     /// </summary>
-    /// <param name="keyboardVariant">
+    /// <param name="key">
     ///     Variant of keyboard input to be represented by <see cref="InputElement" />
     ///     instance.
     /// </param>
     /// <returns><see cref="InputElement" /> representing specified keyboard variant.</returns>
-    public static InputElement Create(Key keyboardVariant) => new(keyboardVariant);
+    public static InputElement Create(Key key) => new(key);
+
+    public static InputElement Create(MouseButton mouseButton) => new(mouseButton);
 
     /// <summary>
     ///     Creates new instance of <see cref="InputElement" /> that represents mouse input variant like a particular
@@ -38,24 +45,37 @@ public readonly record struct InputElement
     /// <returns><see cref="InputElement" /> representing specified mouse variant.</returns>
     public static InputElement Create(MouseVariant mouseVariant) => new(mouseVariant);
 
-    private InputElement(Key keyboardVariant)
+    private InputElement(Key keyboardKey)
     {
-        _keyboardVariant = keyboardVariant;
+        _keyboardKey = keyboardKey;
+        _mouseButton = default;
+        _mouseAxis = default;
         _mouseVariant = default;
-        CurrentVariant = Variant.Keyboard;
+        Type = InputType.Keyboard;
+    }
+
+    private InputElement(MouseButton mouseButton)
+    {
+        _keyboardKey = default;
+        _mouseButton = mouseButton;
+        _mouseAxis = default;
+        _mouseVariant = default;
+        Type = InputType.MouseButton;
     }
 
     private InputElement(MouseVariant mouseVariant)
     {
-        _keyboardVariant = default;
+        _keyboardKey = default;
+        _mouseButton = default;
+        _mouseAxis = default;
         _mouseVariant = mouseVariant;
-        CurrentVariant = Variant.Mouse;
+        Type = InputType.Mouse;
     }
 
     /// <summary>
     ///     Type of input source, namely a hardware input device.
     /// </summary>
-    public enum Variant
+    public enum InputType
     {
         /// <summary>
         ///     Keyboard input device.
@@ -65,7 +85,9 @@ public readonly record struct InputElement
         /// <summary>
         ///     Mouse input device.
         /// </summary>
-        Mouse
+        Mouse,
+        MouseButton,
+        MouseAxis
     }
 
     /// <summary>
@@ -112,40 +134,45 @@ public readonly record struct InputElement
     /// <summary>
     ///     Current variant of input source type.
     /// </summary>
-    public Variant CurrentVariant { get; }
+    public InputType Type { get; }
 
     /// <summary>
     ///     Converts this instance of <see cref="InputElement" /> to keyboard variant if possible.
     /// </summary>
     /// <returns><see cref="Key" /> of keyboard if this instance is keyboard variant; otherwise throws exception.</returns>
     /// <exception cref="InvalidOperationException">
-    ///     Thrown when <see cref="CurrentVariant" /> is not
-    ///     <see cref="Variant.Keyboard" />.
+    ///     Thrown when <see cref="Type" /> is not
+    ///     <see cref="InputType.Keyboard" />.
     /// </exception>
-    public Key AsKeyboard() => CurrentVariant == Variant.Keyboard ? _keyboardVariant : throw CreateInvalidVariantException(CurrentVariant);
+    public Key AsKeyboard() => Type is InputType.Keyboard ? _keyboardKey : throw CreateInvalidInputTypeException(Type);
+
+    public MouseButton AsMouseButton() => Type is InputType.MouseButton ? _mouseButton : throw CreateInvalidInputTypeException(Type);
 
     /// <summary>
     ///     Converts this instance of <see cref="InputElement" /> to mouse variant if possible.
     /// </summary>
     /// <returns><see cref="MouseVariant" /> if this instance is mouse variant; otherwise throws exception.</returns>
     /// <exception cref="InvalidOperationException">
-    ///     Thrown when <see cref="CurrentVariant" /> is not
-    ///     <see cref="Variant.Mouse" />.
+    ///     Thrown when <see cref="Type" /> is not
+    ///     <see cref="InputType.Mouse" />.
     /// </exception>
-    public MouseVariant AsMouse() => CurrentVariant == Variant.Mouse ? _mouseVariant : throw CreateInvalidVariantException(CurrentVariant);
+    public MouseVariant AsMouse() => Type == InputType.Mouse ? _mouseVariant : throw CreateInvalidInputTypeException(Type);
 
     /// <summary>
     ///     Custom <see cref="PrintMembers"/> for synthesized <see cref="ToString" />.
     /// </summary>
     private bool PrintMembers(StringBuilder builder)
     {
-        switch (CurrentVariant)
+        switch (Type)
         {
-            case Variant.Keyboard:
-                builder.Append($"{nameof(CurrentVariant)} = {CurrentVariant}, KeyboardVariant = {_keyboardVariant}");
+            case InputType.Keyboard:
+                builder.Append($"{nameof(Type)} = {Type}, KeyboardKey = {_keyboardKey}");
                 break;
-            case Variant.Mouse:
-                builder.Append($"{nameof(CurrentVariant)} = {CurrentVariant}, MouseVariant = {_mouseVariant}");
+            case InputType.MouseButton:
+                builder.Append($"{nameof(Type)} = {Type}, MouseButton = {_mouseButton}");
+                break;
+            case InputType.Mouse:
+                builder.Append($"{nameof(Type)} = {Type}, MouseVariant = {_mouseVariant}");
                 break;
             default:
                 throw new InvalidOperationException(); // TODO Convert to unreachable exception?
@@ -154,8 +181,8 @@ public readonly record struct InputElement
         return true;
     }
 
-    private static InvalidOperationException CreateInvalidVariantException(Variant variant)
+    private static InvalidOperationException CreateInvalidInputTypeException(InputType inputType)
     {
-        return new InvalidOperationException($"Operation is not valid for current variant: {variant}.");
+        return new InvalidOperationException($"Operation is not valid for input type: {inputType}.");
     }
 }
