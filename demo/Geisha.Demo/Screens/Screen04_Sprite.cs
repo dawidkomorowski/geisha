@@ -97,7 +97,7 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up)
                             }
                         )
                     },
@@ -108,7 +108,7 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down)
                             }
                         )
                     }

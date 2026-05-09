@@ -44,7 +44,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareActions.Add(new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key.Value)
+                                HardwareInputVariant = HardwareInputVariant.Create(serializableHardwareAction.Key.Value)
                             });
                             break;
                         }
@@ -64,7 +64,7 @@ namespace Geisha.Engine.Input.Assets
 
                             hardwareActions.Add(new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant)
+                                HardwareInputVariant = HardwareInputVariant.Create(mouseVariant)
                             });
                             break;
                         }
@@ -94,7 +94,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAxis.Key.Value),
+                                HardwareInputVariant = HardwareInputVariant.Create(serializableHardwareAxis.Key.Value),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;
@@ -111,7 +111,7 @@ namespace Geisha.Engine.Input.Assets
 
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant),
+                                HardwareInputVariant = HardwareInputVariant.Create(mouseVariant),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;

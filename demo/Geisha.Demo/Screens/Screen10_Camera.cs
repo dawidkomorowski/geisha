@@ -71,12 +71,12 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down),
                                 Scale = -1
                             }
                         )
@@ -88,12 +88,12 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Right),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Left),
                                 Scale = -1
                             }
                         )

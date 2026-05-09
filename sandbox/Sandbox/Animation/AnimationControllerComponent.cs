@@ -64,7 +64,7 @@ internal sealed class AnimationControllerComponent : BehaviorComponent
                     HardwareActions = ImmutableArray.Create(
                         new HardwareAction
                         {
-                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                            HardwareInputVariant = HardwareInputVariant.Create(Key.Space)
                         }
                     )
                 }

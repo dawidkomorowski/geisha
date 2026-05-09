@@ -126,7 +126,7 @@ internal sealed class TextSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Space)
                             }
                         )
                     }

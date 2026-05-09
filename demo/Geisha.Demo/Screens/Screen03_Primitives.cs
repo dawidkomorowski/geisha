@@ -103,7 +103,7 @@ internal sealed class PrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Space)
                             }
                         )
                     }

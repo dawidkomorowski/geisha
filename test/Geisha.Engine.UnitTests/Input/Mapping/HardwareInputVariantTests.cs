@@ -17,7 +17,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
             // Arrange
 
             // Act
-            var hardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space);
+            var hardwareInputVariant = HardwareInputVariant.Create(Key.Space);
 
             // Assert
             Assert.That(hardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
@@ -28,7 +28,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
         {
             // Arrange
             const Key key = Key.Space;
-            var hardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(key);
+            var hardwareInputVariant = HardwareInputVariant.Create(key);
 
             // Act
             // Assert
@@ -39,7 +39,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
         public void AsKeyboard_ShouldThrowException_WhenVariantIsNotKeyboard()
         {
             // Arrange
-            var hardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton);
+            var hardwareInputVariant = HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton);
 
             // Act
             // Assert
@@ -56,7 +56,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
             // Arrange
 
             // Act
-            var hardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton);
+            var hardwareInputVariant = HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton);
 
             // Assert
             Assert.That(hardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Mouse));
@@ -67,7 +67,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
         {
             // Arrange
             const HardwareInputVariant.MouseVariant mouseVariant = HardwareInputVariant.MouseVariant.LeftButton;
-            var hardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant);
+            var hardwareInputVariant = HardwareInputVariant.Create(mouseVariant);
 
             // Act
             // Assert
@@ -78,7 +78,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
         public void AsMouse_ShouldThrowException_WhenVariantIsNotMouse()
         {
             // Arrange
-            var hardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space);
+            var hardwareInputVariant = HardwareInputVariant.Create(Key.Space);
 
             // Act
             // Assert
@@ -91,9 +91,9 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
 
         private static IEnumerable<ToStringTestCase> ToStringTestCases => new[]
         {
-            new ToStringTestCase(HardwareInputVariant.CreateKeyboardVariant(Key.Space),
+            new ToStringTestCase(HardwareInputVariant.Create(Key.Space),
                 "CurrentVariant: Keyboard, KeyboardVariant: Space"),
-            new ToStringTestCase(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton),
+            new ToStringTestCase(HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton),
                 "CurrentVariant: Mouse, MouseVariant: LeftButton")
         };
 
@@ -131,16 +131,16 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
 
         private static IEnumerable<EqualityMembersTestCase> EqualityMembersTestCases => new[]
         {
-            new EqualityMembersTestCase(HardwareInputVariant.CreateKeyboardVariant(Key.Space),
-                HardwareInputVariant.CreateKeyboardVariant(Key.Space), true),
-            new EqualityMembersTestCase(HardwareInputVariant.CreateKeyboardVariant(Key.Space),
-                HardwareInputVariant.CreateKeyboardVariant(Key.Enter), false),
-            new EqualityMembersTestCase(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton),
-                HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton), true),
-            new EqualityMembersTestCase(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton),
-                HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton), false),
-            new EqualityMembersTestCase(HardwareInputVariant.CreateKeyboardVariant(Key.Space),
-                HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton), false)
+            new EqualityMembersTestCase(HardwareInputVariant.Create(Key.Space),
+                HardwareInputVariant.Create(Key.Space), true),
+            new EqualityMembersTestCase(HardwareInputVariant.Create(Key.Space),
+                HardwareInputVariant.Create(Key.Enter), false),
+            new EqualityMembersTestCase(HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton),
+                HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton), true),
+            new EqualityMembersTestCase(HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton),
+                HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.RightButton), false),
+            new EqualityMembersTestCase(HardwareInputVariant.Create(Key.Space),
+                HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.RightButton), false)
         };
 
         [TestCaseSource(nameof(EqualityMembersTestCases))]

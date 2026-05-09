@@ -114,7 +114,7 @@ Press [UP] and [DOWN] to change the order of rendering.";
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up)
                             }
                         )
                     },
@@ -125,7 +125,7 @@ Press [UP] and [DOWN] to change the order of rendering.";
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down)
                             }
                         )
                     }

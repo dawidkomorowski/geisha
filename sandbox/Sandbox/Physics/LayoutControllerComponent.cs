@@ -43,7 +43,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D1)
                             }
                         )
                     },
@@ -54,7 +54,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D2)
                             }
                         )
                     },
@@ -65,7 +65,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D3)
                             }
                         )
                     },
@@ -76,7 +76,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D4)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D4)
                             }
                         )
                     },
@@ -87,7 +87,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
+                                HardwareInputVariant = HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton)
                             }
                         )
                     },
@@ -98,7 +98,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
+                                HardwareInputVariant = HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.RightButton)
                             }
                         )
                     },
@@ -109,7 +109,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F1)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.F1)
                             }
                         )
                     },
@@ -120,7 +120,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F2)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.F2)
                             }
                         )
                     },
@@ -131,7 +131,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F3)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.F3)
                             }
                         )
                     },
@@ -142,7 +142,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F4)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.F4)
                             }
                         )
                     },
@@ -153,7 +153,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F9)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.F9)
                             }
                         )
                     },
@@ -164,7 +164,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F12)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.F12)
                             }
                         )
                     }

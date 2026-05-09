@@ -90,7 +90,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D1)
                             }
                         )
                     },
@@ -101,7 +101,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D2)
                             }
                         )
                     },
@@ -112,7 +112,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D3)
                             }
                         )
                     },
@@ -123,7 +123,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up)
                             }
                         )
                     },
@@ -134,7 +134,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down)
                             }
                         )
                     }

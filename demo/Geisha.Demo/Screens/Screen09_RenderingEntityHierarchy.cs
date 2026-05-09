@@ -118,12 +118,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down),
                                 Scale = -1
                             }
                         )
@@ -135,12 +135,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Right),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.Left),
                                 Scale = -1
                             }
                         )
@@ -152,12 +152,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.D),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.A),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.A),
                                 Scale = -1
                             }
                         )
@@ -169,12 +169,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.W),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.S),
+                                HardwareInputVariant = HardwareInputVariant.Create(Key.S),
                                 Scale = -1
                             }
                         )
