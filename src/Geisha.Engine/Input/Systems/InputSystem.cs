@@ -133,20 +133,20 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
     {
-        var hardwareInputVariant = hardwareAction.HardwareInputVariant;
+        var hardwareInputVariant = hardwareAction.InputElement;
         return hardwareInputVariant.CurrentVariant switch
         {
-            HardwareInputVariant.Variant.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
-            HardwareInputVariant.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+            InputElement.Variant.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
+            InputElement.Variant.Mouse => hardwareInputVariant.AsMouse() switch
             {
-                HardwareInputVariant.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
-                HardwareInputVariant.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
-                HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
-                HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
-                HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
-                _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
+                InputElement.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
+                InputElement.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
+                InputElement.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
+                InputElement.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
+                InputElement.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
+                _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.Variant)}: {hardwareInputVariant.CurrentVariant}")
         };
     }
 
@@ -182,17 +182,17 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
     {
-        var hardwareInputVariant = hardwareAxis.HardwareInputVariant;
+        var hardwareInputVariant = hardwareAxis.InputElement;
         return hardwareInputVariant.CurrentVariant switch
         {
-            HardwareInputVariant.Variant.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
-            HardwareInputVariant.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+            InputElement.Variant.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
+            InputElement.Variant.Mouse => hardwareInputVariant.AsMouse() switch
             {
-                HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
-                HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
-                _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
+                InputElement.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
+                InputElement.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
+                _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputElement.Variant)}: {hardwareInputVariant.CurrentVariant}")
         };
     }
 

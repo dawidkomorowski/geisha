@@ -47,7 +47,7 @@ public sealed class CommonEntityFactory
                     (
                         new HardwareAction
                         {
-                            HardwareInputVariant = HardwareInputVariant.Create(Key.Escape)
+                            InputElement = InputElement.Create(Key.Escape)
                         }
                     )
                 }

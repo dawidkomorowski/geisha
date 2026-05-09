@@ -44,7 +44,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareActions.Add(new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(serializableHardwareAction.Key.Value)
+                                InputElement = InputElement.Create(serializableHardwareAction.Key.Value)
                             });
                             break;
                         }
@@ -52,11 +52,11 @@ namespace Geisha.Engine.Input.Assets
                         {
                             var mouseVariant = serializableHardwareAction.MouseButton switch
                             {
-                                SerializableMouseButton.LeftButton => HardwareInputVariant.MouseVariant.LeftButton,
-                                SerializableMouseButton.MiddleButton => HardwareInputVariant.MouseVariant.MiddleButton,
-                                SerializableMouseButton.RightButton => HardwareInputVariant.MouseVariant.RightButton,
-                                SerializableMouseButton.XButton1 => HardwareInputVariant.MouseVariant.XButton1,
-                                SerializableMouseButton.XButton2 => HardwareInputVariant.MouseVariant.XButton2,
+                                SerializableMouseButton.LeftButton => InputElement.MouseVariant.LeftButton,
+                                SerializableMouseButton.MiddleButton => InputElement.MouseVariant.MiddleButton,
+                                SerializableMouseButton.RightButton => InputElement.MouseVariant.RightButton,
+                                SerializableMouseButton.XButton1 => InputElement.MouseVariant.XButton1,
+                                SerializableMouseButton.XButton2 => InputElement.MouseVariant.XButton2,
                                 _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton),
                                     serializableHardwareAction.MouseButton,
                                     "Unsupported mouse button found in input mapping.")
@@ -64,7 +64,7 @@ namespace Geisha.Engine.Input.Assets
 
                             hardwareActions.Add(new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(mouseVariant)
+                                InputElement = InputElement.Create(mouseVariant)
                             });
                             break;
                         }
@@ -94,7 +94,7 @@ namespace Geisha.Engine.Input.Assets
                         {
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(serializableHardwareAxis.Key.Value),
+                                InputElement = InputElement.Create(serializableHardwareAxis.Key.Value),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;
@@ -103,15 +103,15 @@ namespace Geisha.Engine.Input.Assets
                         {
                             var mouseVariant = serializableHardwareAxis.MouseAxis switch
                             {
-                                SerializableMouseAxis.AxisX => HardwareInputVariant.MouseVariant.AxisX,
-                                SerializableMouseAxis.AxisY => HardwareInputVariant.MouseVariant.AxisY,
+                                SerializableMouseAxis.AxisX => InputElement.MouseVariant.AxisX,
+                                SerializableMouseAxis.AxisY => InputElement.MouseVariant.AxisY,
                                 _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
                                     "Unsupported mouse axis found in input mapping.")
                             };
 
                             hardwareAxes.Add(new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(mouseVariant),
+                                InputElement = InputElement.Create(mouseVariant),
                                 Scale = serializableHardwareAxis.Scale
                             });
                             break;

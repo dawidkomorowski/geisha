@@ -95,7 +95,7 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Space)
+                                InputElement = InputElement.Create(Key.Space)
                             }
                         )
                     }

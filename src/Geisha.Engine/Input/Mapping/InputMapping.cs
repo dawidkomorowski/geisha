@@ -58,7 +58,7 @@ public readonly record struct HardwareAction
     /// <summary>
     ///     Hardware input variant this hardware action is based on.
     /// </summary>
-    public HardwareInputVariant HardwareInputVariant { get; init; }
+    public InputElement InputElement { get; init; }
 }
 
 /// <summary>
@@ -69,7 +69,7 @@ public readonly record struct HardwareAxis
     /// <summary>
     ///     Hardware input variant this hardware axis is based on.
     /// </summary>
-    public HardwareInputVariant HardwareInputVariant { get; init; }
+    public InputElement InputElement { get; init; }
 
     /// <summary>
     ///     Scaling factor of hardware axis state to logical axis state. For discrete input +1 and -1 is mostly used. For

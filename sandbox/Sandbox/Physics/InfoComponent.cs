@@ -43,7 +43,7 @@ public sealed class InfoComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Tab)
+                                InputElement = InputElement.Create(Key.Tab)
                             }
                         )
                     }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Input;
 
 [TestFixture]
-public class HardwareInputVariantTests
+public class InputElementTests
 {
     #region Keyboard
 
@@ -15,10 +15,10 @@ public class HardwareInputVariantTests
         // Arrange
 
         // Act
-        var hardwareInputVariant = HardwareInputVariant.Create(Key.Space);
+        var hardwareInputVariant = InputElement.Create(Key.Space);
 
         // Assert
-        Assert.That(hardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
+        Assert.That(hardwareInputVariant.CurrentVariant, Is.EqualTo(InputElement.Variant.Keyboard));
     }
 
     [Test]
@@ -26,7 +26,7 @@ public class HardwareInputVariantTests
     {
         // Arrange
         const Key key = Key.Space;
-        var hardwareInputVariant = HardwareInputVariant.Create(key);
+        var hardwareInputVariant = InputElement.Create(key);
 
         // Act
         // Assert
@@ -37,7 +37,7 @@ public class HardwareInputVariantTests
     public void AsKeyboard_ShouldThrowException_WhenVariantIsNotKeyboard()
     {
         // Arrange
-        var hardwareInputVariant = HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton);
+        var hardwareInputVariant = InputElement.Create(InputElement.MouseVariant.LeftButton);
 
         // Act
         // Assert
@@ -54,18 +54,18 @@ public class HardwareInputVariantTests
         // Arrange
 
         // Act
-        var hardwareInputVariant = HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton);
+        var hardwareInputVariant = InputElement.Create(InputElement.MouseVariant.LeftButton);
 
         // Assert
-        Assert.That(hardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Mouse));
+        Assert.That(hardwareInputVariant.CurrentVariant, Is.EqualTo(InputElement.Variant.Mouse));
     }
 
     [Test]
     public void AsMouse_ShouldReturnMouseVariant_WhenVariantIsMouse()
     {
         // Arrange
-        const HardwareInputVariant.MouseVariant mouseVariant = HardwareInputVariant.MouseVariant.LeftButton;
-        var hardwareInputVariant = HardwareInputVariant.Create(mouseVariant);
+        const InputElement.MouseVariant mouseVariant = InputElement.MouseVariant.LeftButton;
+        var hardwareInputVariant = InputElement.Create(mouseVariant);
 
         // Act
         // Assert
@@ -76,7 +76,7 @@ public class HardwareInputVariantTests
     public void AsMouse_ShouldThrowException_WhenVariantIsNotMouse()
     {
         // Arrange
-        var hardwareInputVariant = HardwareInputVariant.Create(Key.Space);
+        var hardwareInputVariant = InputElement.Create(Key.Space);
 
         // Act
         // Assert
@@ -89,20 +89,20 @@ public class HardwareInputVariantTests
 
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
     {
-        new TestCaseData(HardwareInputVariant.Create(Key.Space),
-                "HardwareInputVariant { CurrentVariant = Keyboard, KeyboardVariant = Space }")
+        new TestCaseData(InputElement.Create(Key.Space),
+                "InputElement { CurrentVariant = Keyboard, KeyboardVariant = Space }")
             .SetName("KeyboardVariant"),
-        new TestCaseData(HardwareInputVariant.Create(HardwareInputVariant.MouseVariant.LeftButton),
-                "HardwareInputVariant { CurrentVariant = Mouse, MouseVariant = LeftButton }")
+        new TestCaseData(InputElement.Create(InputElement.MouseVariant.LeftButton),
+                "InputElement { CurrentVariant = Mouse, MouseVariant = LeftButton }")
             .SetName("MouseVariant")
     };
 
     [TestCaseSource(nameof(ToStringTestCases))]
-    public void ToString_Test(HardwareInputVariant variant, string expected)
+    public void ToString_Test(InputElement inputElement, string expected)
     {
         // Arrange
         // Act
-        var actual = variant.ToString();
+        var actual = inputElement.ToString();
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));

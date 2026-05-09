@@ -118,12 +118,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up),
+                                InputElement = InputElement.Create(Key.Up),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down),
+                                InputElement = InputElement.Create(Key.Down),
                                 Scale = -1
                             }
                         )
@@ -135,12 +135,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Right),
+                                InputElement = InputElement.Create(Key.Right),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Left),
+                                InputElement = InputElement.Create(Key.Left),
                                 Scale = -1
                             }
                         )
@@ -152,12 +152,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.D),
+                                InputElement = InputElement.Create(Key.D),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.A),
+                                InputElement = InputElement.Create(Key.A),
                                 Scale = -1
                             }
                         )
@@ -169,12 +169,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.W),
+                                InputElement = InputElement.Create(Key.W),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.S),
+                                InputElement = InputElement.Create(Key.S),
                                 Scale = -1
                             }
                         )

@@ -82,7 +82,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Tab)
+                                InputElement = InputElement.Create(Key.Tab)
                             }
                         )
                     },
@@ -93,7 +93,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.W)
+                                InputElement = InputElement.Create(Key.W)
                             }
                         )
                     },
@@ -104,7 +104,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Space)
+                                InputElement = InputElement.Create(Key.Space)
                             }
                         )
                     },
@@ -115,7 +115,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.LeftShift)
+                                InputElement = InputElement.Create(Key.LeftShift)
                             }
                         )
                     }
@@ -133,7 +133,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Tab)
+                                InputElement = InputElement.Create(Key.Tab)
                             }
                         )
                     },
@@ -144,11 +144,11 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Space)
+                                InputElement = InputElement.Create(Key.Space)
                             },
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up)
+                                InputElement = InputElement.Create(Key.Up)
                             }
                         )
                     },
@@ -159,11 +159,11 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.E)
+                                InputElement = InputElement.Create(Key.E)
                             },
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.RightCtrl)
+                                InputElement = InputElement.Create(Key.RightCtrl)
                             }
                         )
                     },
@@ -174,11 +174,11 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.W)
+                                InputElement = InputElement.Create(Key.W)
                             },
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.RightShift)
+                                InputElement = InputElement.Create(Key.RightShift)
                             }
                         )
                     }
@@ -308,7 +308,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
         Debug.Assert(_inputComponent.InputMapping != null, "_inputComponent.InputMapping != null");
         foreach (var hardwareAction in _inputComponent.InputMapping.ActionMappings.Single(m => m.ActionName == actionName).HardwareActions)
         {
-            stringBuilder.Append($"[{hardwareAction.HardwareInputVariant.AsKeyboard()}]\t");
+            stringBuilder.Append($"[{hardwareAction.InputElement.AsKeyboard()}]\t");
         }
 
         return stringBuilder.ToString();

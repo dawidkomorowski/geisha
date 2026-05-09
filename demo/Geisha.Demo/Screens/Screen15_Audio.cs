@@ -90,7 +90,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.D1)
+                                InputElement = InputElement.Create(Key.D1)
                             }
                         )
                     },
@@ -101,7 +101,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.D2)
+                                InputElement = InputElement.Create(Key.D2)
                             }
                         )
                     },
@@ -112,7 +112,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.D3)
+                                InputElement = InputElement.Create(Key.D3)
                             }
                         )
                     },
@@ -123,7 +123,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Up)
+                                InputElement = InputElement.Create(Key.Up)
                             }
                         )
                     },
@@ -134,7 +134,7 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                         (
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.Create(Key.Down)
+                                InputElement = InputElement.Create(Key.Down)
                             }
                         )
                     }
