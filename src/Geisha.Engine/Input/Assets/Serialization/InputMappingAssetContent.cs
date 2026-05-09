@@ -12,59 +12,59 @@ public sealed class InputMappingAssetContent
     /// <summary>
     ///     Action mappings dictionary. Dictionary key is an action name and value is a list of hardware actions.
     /// </summary>
-    public Dictionary<string, SerializableHardwareAction[]>? ActionMappings { get; set; }
+    public Dictionary<string, SerializableHardwareAction[]>? ActionMappings { get; init; }
 
     /// <summary>
     ///     Axis mappings dictionary. Dictionary key is an axis name and value is a list of hardware axes.
     /// </summary>
-    public Dictionary<string, SerializableHardwareAxis[]>? AxisMappings { get; set; }
+    public Dictionary<string, SerializableHardwareAxis[]>? AxisMappings { get; init; }
 }
 
 /// <summary>
 ///     Defines <see cref="HardwareAction" /> in input mapping asset content.
 /// </summary>
-public sealed class SerializableHardwareAction
+public readonly record struct SerializableHardwareAction
 {
     /// <summary>
     ///     Keyboard key mapped to action.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Key? Key { get; set; }
+    public Key? Key { get; init; }
 
     /// <summary>
     ///     Mouse button mapped to action.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MouseButton? MouseButton { get; set; }
+    public SerializableMouseButton? MouseButton { get; init; }
 }
 
 /// <summary>
 ///     Defines <see cref="HardwareAxis" /> in input mapping asset content.
 /// </summary>
-public sealed class SerializableHardwareAxis
+public readonly record struct SerializableHardwareAxis
 {
     /// <summary>
     ///     Keyboard key mapped to axis.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Key? Key { get; set; }
+    public Key? Key { get; init; }
 
     /// <summary>
     ///     Mouse axis mapped to axis.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MouseAxis? MouseAxis { get; set; }
+    public SerializableMouseAxis? MouseAxis { get; init; }
 
     /// <summary>
     ///     Scaling factor of hardware axis state to logical axis state.
     /// </summary>
-    public double Scale { get; set; }
+    public double Scale { get; init; }
 }
 
 /// <summary>
 ///     Enumerates mouse buttons supported as hardware actions in input mapping asset content.
 /// </summary>
-public enum MouseButton
+public enum SerializableMouseButton
 {
     /// <summary>
     ///     Left mouse button.
@@ -95,7 +95,7 @@ public enum MouseButton
 /// <summary>
 ///     Enumerates mouse axes supported as hardware axes in input mapping asset content.
 /// </summary>
-public enum MouseAxis
+public enum SerializableMouseAxis
 {
     /// <summary>
     ///     Horizontal axis of mouse movement.

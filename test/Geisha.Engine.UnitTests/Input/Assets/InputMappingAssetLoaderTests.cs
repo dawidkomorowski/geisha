@@ -50,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         new SerializableHardwareAction
                         {
                             Key = Key.Space,
-                            MouseButton = MouseButton.LeftButton
+                            MouseButton = SerializableMouseButton.LeftButton
                         }
                     }
                 },
@@ -77,7 +77,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         new SerializableHardwareAxis
                         {
                             Key = Key.Up,
-                            MouseAxis = MouseAxis.AxisX
+                            MouseAxis = SerializableMouseAxis.AxisX
                         }
                     }
                 }
@@ -182,7 +182,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.LeftButton"] = new[]
                         {
-                            new SerializableHardwareAction { MouseButton = MouseButton.LeftButton }
+                            new SerializableHardwareAction { MouseButton = SerializableMouseButton.LeftButton }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -204,7 +204,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.MiddleButton"] = new[]
                         {
-                            new SerializableHardwareAction { MouseButton = MouseButton.MiddleButton }
+                            new SerializableHardwareAction { MouseButton = SerializableMouseButton.MiddleButton }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -226,7 +226,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.RightButton"] = new[]
                         {
-                            new SerializableHardwareAction { MouseButton = MouseButton.RightButton }
+                            new SerializableHardwareAction { MouseButton = SerializableMouseButton.RightButton }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -248,7 +248,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.XButton1"] = new[]
                         {
-                            new SerializableHardwareAction { MouseButton = MouseButton.XButton1 }
+                            new SerializableHardwareAction { MouseButton = SerializableMouseButton.XButton1 }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -270,7 +270,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.XButton2"] = new[]
                         {
-                            new SerializableHardwareAction { MouseButton = MouseButton.XButton2 }
+                            new SerializableHardwareAction { MouseButton = SerializableMouseButton.XButton2 }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -320,7 +320,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Axis MouseAxis.AxisX"] = new[]
                         {
-                            new SerializableHardwareAxis { MouseAxis = MouseAxis.AxisX, Scale = 1.02 }
+                            new SerializableHardwareAxis { MouseAxis = SerializableMouseAxis.AxisX, Scale = 1.02 }
                         }
                     }
                 },
@@ -343,7 +343,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Axis MouseAxis.AxisY"] = new[]
                         {
-                            new SerializableHardwareAxis { MouseAxis = MouseAxis.AxisY, Scale = 1.02 }
+                            new SerializableHardwareAxis { MouseAxis = SerializableMouseAxis.AxisY, Scale = 1.02 }
                         }
                     }
                 },
