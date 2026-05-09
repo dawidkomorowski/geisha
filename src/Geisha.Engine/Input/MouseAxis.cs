@@ -7,12 +7,12 @@
 public enum MouseAxis
 {
     /// <summary>
-    ///     Horizontal axis of mouse movement.
+    ///     Horizontal axis of mouse movement. Positive values indicate movement to the right.
     /// </summary>
     X,
 
     /// <summary>
-    ///     Vertical axis of mouse movement.
+    ///     Vertical axis of mouse movement. Positive values indicate movement upward.
     /// </summary>
     Y
 }

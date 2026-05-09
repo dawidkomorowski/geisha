@@ -3,8 +3,6 @@ using System.Text;
 
 namespace Geisha.Engine.Input;
 
-// TODO: Review documentation of MouseAxis.
-// TODO: Review documentation of MouseButton.
 // TODO: Review implementation of InputMappingAssetContent.
 // TODO: Consider extending/refatoring integration test: GetAsset_ShouldLoadAndReturn_InputMapping
 // TODO: Review implementation of InputMappingAssetLoader.
