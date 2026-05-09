@@ -87,7 +87,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(InputElement.MouseVariant.LeftButton)
+                                InputElement = InputElement.Create(MouseButton.Left)
                             }
                         )
                     },
@@ -98,7 +98,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         (
                             new HardwareAction
                             {
-                                InputElement = InputElement.Create(InputElement.MouseVariant.RightButton)
+                                InputElement = InputElement.Create(MouseButton.Right)
                             }
                         )
                     },

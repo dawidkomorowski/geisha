@@ -140,7 +140,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.LeftButton)
+                        InputElement = InputElement.Create(MouseButton.Left)
                     }
                 )
             };
@@ -152,7 +152,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.RightButton)
+                        InputElement = InputElement.Create(MouseButton.Right)
                     }
                 )
             };
@@ -164,7 +164,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.MiddleButton)
+                        InputElement = InputElement.Create(MouseButton.Middle)
                     }
                 )
             };
@@ -176,11 +176,11 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.XButton1)
+                        InputElement = InputElement.Create(MouseButton.XButton1)
                     },
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.XButton2)
+                        InputElement = InputElement.Create(MouseButton.XButton2)
                     }
                 )
             };
@@ -192,7 +192,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAxis
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.AxisX), Scale = 1.0
+                        InputElement = InputElement.Create(MouseAxis.X), Scale = 1.0
                     }
                 )
             };
@@ -203,7 +203,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAxis
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.AxisY), Scale = 1.0
+                        InputElement = InputElement.Create(MouseAxis.Y), Scale = 1.0
                     }
                 )
             };
@@ -253,7 +253,7 @@ public class InputSystemBenchmarks
                 (
                     new HardwareAction
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.LeftButton)
+                        InputElement = InputElement.Create(MouseButton.Left)
                     }
                 )
             };
@@ -303,7 +303,7 @@ public class InputSystemBenchmarks
                     new HardwareAxis { InputElement = InputElement.Create(Key.Left), Scale = -1.0 },
                     new HardwareAxis
                     {
-                        InputElement = InputElement.Create(InputElement.MouseVariant.AxisX), Scale = 0.5
+                        InputElement = InputElement.Create(MouseAxis.X), Scale = 0.5
                     }
                 )
             };

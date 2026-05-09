@@ -10,7 +10,6 @@ namespace Geisha.Engine.Input;
 // TODO: Review implementation of InputMappingAssetLoader.
 // TODO: Find legacy name usages (HardwareInputVariant, variant) and update to use new name.
 // TODO: Review documentation of InputElement.
-// TODO: Remove Mouse variant.
 
 /// <summary>
 ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
@@ -35,14 +34,6 @@ public readonly record struct InputElement
     public static InputElement Create(MouseButton mouseButton) => new(mouseButton);
 
     public static InputElement Create(MouseAxis mouseAxis) => new(mouseAxis);
-
-    /// <summary>
-    ///     Creates new instance of <see cref="InputElement" /> that represents mouse input variant like a particular
-    ///     mouse button or mouse axis.
-    /// </summary>
-    /// <param name="mouseVariant">Variant of mouse input to be represented by <see cref="InputElement" /> instance.</param>
-    /// <returns><see cref="InputElement" /> representing specified mouse variant.</returns>
-    public static InputElement Create(MouseVariant mouseVariant) => default;
 
     private InputElement(Key keyboardKey)
     {
@@ -79,47 +70,6 @@ public readonly record struct InputElement
         KeyboardKey,
         MouseButton,
         MouseAxis
-    }
-
-    /// <summary>
-    ///     Enumerates supported variants of mouse input.
-    /// </summary>
-    public enum MouseVariant
-    {
-        /// <summary>
-        ///     Left mouse button.
-        /// </summary>
-        LeftButton,
-
-        /// <summary>
-        ///     Middle mouse button.
-        /// </summary>
-        MiddleButton,
-
-        /// <summary>
-        ///     Right mouse button.
-        /// </summary>
-        RightButton,
-
-        /// <summary>
-        ///     First extended mouse button.
-        /// </summary>
-        XButton1,
-
-        /// <summary>
-        ///     Second extended mouse button.
-        /// </summary>
-        XButton2,
-
-        /// <summary>
-        ///     Horizontal axis of mouse movement.
-        /// </summary>
-        AxisX,
-
-        /// <summary>
-        ///     Vertical axis of mouse movement.
-        /// </summary>
-        AxisY
     }
 
     /// <summary>
