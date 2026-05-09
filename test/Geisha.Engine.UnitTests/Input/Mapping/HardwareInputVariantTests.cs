@@ -43,7 +43,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
 
             // Act
             // Assert
-            Assert.That(() => hardwareInputVariant.AsKeyboard(), Throws.TypeOf<InvalidOperationForCurrentVariantException>());
+            Assert.That(hardwareInputVariant.AsKeyboard, Throws.InvalidOperationException);
         }
 
         #endregion
@@ -82,7 +82,7 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
 
             // Act
             // Assert
-            Assert.That(() => hardwareInputVariant.AsMouse(), Throws.TypeOf<InvalidOperationForCurrentVariantException>());
+            Assert.That(hardwareInputVariant.AsMouse, Throws.InvalidOperationException);
         }
 
         #endregion

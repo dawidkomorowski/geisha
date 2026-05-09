@@ -109,21 +109,26 @@ public readonly struct HardwareInputVariant : IEquatable<HardwareInputVariant>
     ///     Converts this instance of <see cref="HardwareInputVariant" /> to keyboard variant if possible.
     /// </summary>
     /// <returns><see cref="Key" /> of keyboard if this instance is keyboard variant; otherwise throws exception.</returns>
-    /// <exception cref="InvalidOperationForCurrentVariantException">
+    /// <exception cref="InvalidOperationException">
     ///     Thrown when <see cref="CurrentVariant" /> is not
     ///     <see cref="Variant.Keyboard" />.
     /// </exception>
-    public Key AsKeyboard() => CurrentVariant == Variant.Keyboard ? _keyboardVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
+    public Key AsKeyboard() => CurrentVariant == Variant.Keyboard ? _keyboardVariant : throw CreateInvalidVariantException(CurrentVariant);
 
     /// <summary>
     ///     Converts this instance of <see cref="HardwareInputVariant" /> to mouse variant if possible.
     /// </summary>
     /// <returns><see cref="MouseVariant" /> if this instance is mouse variant; otherwise throws exception.</returns>
-    /// <exception cref="InvalidOperationForCurrentVariantException">
+    /// <exception cref="InvalidOperationException">
     ///     Thrown when <see cref="CurrentVariant" /> is not
     ///     <see cref="Variant.Mouse" />.
     /// </exception>
-    public MouseVariant AsMouse() => CurrentVariant == Variant.Mouse ? _mouseVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
+    public MouseVariant AsMouse() => CurrentVariant == Variant.Mouse ? _mouseVariant : throw CreateInvalidVariantException(CurrentVariant);
+
+    private static InvalidOperationException CreateInvalidVariantException(Variant variant)
+    {
+        return new InvalidOperationException($"Operation is not valid for current variant: {variant}.");
+    }
 
     /// <summary>
     ///     Converts the value of the current <see cref="HardwareInputVariant" /> object to its equivalent string
@@ -171,22 +176,4 @@ public readonly struct HardwareInputVariant : IEquatable<HardwareInputVariant>
     ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
     /// </returns>
     public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right) => !left.Equals(right);
-}
-
-/// <summary>
-///     The exception that is thrown when converting <see cref="HardwareInputVariant" /> to specific input device variant
-///     that this instance of <see cref="HardwareInputVariant" /> does not represent.
-/// </summary>
-public sealed class InvalidOperationForCurrentVariantException : Exception
-{
-    public InvalidOperationForCurrentVariantException(HardwareInputVariant.Variant variant) : base(
-        $"Operation is not valid for current variant: {variant}.")
-    {
-        Variant = variant;
-    }
-
-    /// <summary>
-    ///     Current variant of <see cref="HardwareInputVariant" />.
-    /// </summary>
-    public HardwareInputVariant.Variant Variant { get; }
 }
