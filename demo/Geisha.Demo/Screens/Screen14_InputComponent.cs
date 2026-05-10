@@ -1,4 +1,3 @@
-﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -71,119 +70,22 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = inputEntity.CreateComponent<InputComponent>();
             // Create first input mapping scheme.
-            var keymap1 = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "SwitchKeyMap",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Jump",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Attack",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Use",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift)
-                            }
-                        )
-                    }
-                )
-            };
+            var keymap1 = InputMapping.CreateBuilder()
+                .MapAction("SwitchKeyMap", Key.Tab)
+                .MapAction("Jump", Key.W)
+                .MapAction("Attack", Key.Space)
+                .MapAction("Use", Key.LeftShift)
+                .Build();
             // Create second input mapping scheme.
-            var keymap2 = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "SwitchKeyMap",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Jump",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
-                            },
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Attack",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.E)
-                            },
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.RightCtrl)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Use",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
-                            },
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.RightShift)
-                            }
-                        )
-                    }
-                )
-            };
+            var keymap2 = InputMapping.CreateBuilder()
+                .MapAction("SwitchKeyMap", Key.Tab)
+                .MapAction("Jump", Key.Space)
+                .MapAction("Jump", Key.Up)
+                .MapAction("Attack", Key.E)
+                .MapAction("Attack", Key.RightCtrl)
+                .MapAction("Use", Key.W)
+                .MapAction("Use", Key.RightShift)
+                .Build();
             // Set first input mapping scheme to be used with InputComponent.
             inputComponent.InputMapping = keymap1;
 
@@ -308,7 +210,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
         Debug.Assert(_inputComponent.InputMapping != null, "_inputComponent.InputMapping != null");
         foreach (var hardwareAction in _inputComponent.InputMapping.ActionMappings.Single(m => m.ActionName == actionName).HardwareActions)
         {
-            stringBuilder.Append($"[{hardwareAction.HardwareInputVariant.AsKeyboard()}]\t");
+            stringBuilder.Append($"[{hardwareAction.InputSource.AsKeyboardKey()}]\t");
         }
 
         return stringBuilder.ToString();

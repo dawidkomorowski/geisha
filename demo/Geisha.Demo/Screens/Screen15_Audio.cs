@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+using System;
 using Geisha.Demo.Common;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
@@ -79,67 +78,13 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = soundEntity.CreateComponent<InputComponent>();
             // Set input mapping so selected keys will trigger corresponding actions.
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "PlaySound1",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "PlaySound2",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "PlaySound3",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "IncreaseVolume",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "DecreaseVolume",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("PlaySound1", Key.D1)
+                .MapAction("PlaySound2", Key.D2)
+                .MapAction("PlaySound3", Key.D3)
+                .MapAction("IncreaseVolume", Key.Up)
+                .MapAction("DecreaseVolume", Key.Down)
+                .Build();
             // Get sound assets from IAssetStore.
             var sound1 = _assetStore.GetAsset<ISound>(AssetId.Parse("0a72baa4-22dd-41f1-b2c3-2f254501697a"));
             var sound2 = _assetStore.GetAsset<ISound>(AssetId.Parse("18e7fcdf-c857-44db-8b02-0186ec5d01ed"));

@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -33,100 +32,16 @@ public sealed class EntityControllerComponent : BehaviorComponent
         if (!Entity.HasComponent<InputComponent>())
         {
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "ChangeToCircle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F5)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "ChangeToSquare",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F6)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "ChangeToRectangle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F7)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SizeIncrease",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.CloseBrackets)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SizeDecrease",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.OpenBrackets)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "ChangeMovementType",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Backslash)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "ResetPosition",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Backspace)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "ToggleCollisionResponse",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.EqualsSign)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("ChangeToCircle", Key.F5)
+                .MapAction("ChangeToSquare", Key.F6)
+                .MapAction("ChangeToRectangle", Key.F7)
+                .MapAction("SizeIncrease", Key.CloseBrackets)
+                .MapAction("SizeDecrease", Key.OpenBrackets)
+                .MapAction("ChangeMovementType", Key.Backslash)
+                .MapAction("ResetPosition", Key.Backspace)
+                .MapAction("ToggleCollisionResponse", Key.EqualsSign)
+                .Build();
 
             inputComponent.BindAction("ChangeToCircle", () => SetCollider("Circle"));
             inputComponent.BindAction("ChangeToSquare", () => SetCollider("Square"));

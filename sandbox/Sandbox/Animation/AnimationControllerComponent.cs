@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -55,21 +54,9 @@ internal sealed class AnimationControllerComponent : BehaviorComponent
     public override void OnStart()
     {
         var inputComponent = Entity.CreateComponent<InputComponent>();
-        inputComponent.InputMapping = new InputMapping
-        {
-            ActionMappings = ImmutableArray.Create(
-                new ActionMapping
-                {
-                    ActionName = "TogglePause",
-                    HardwareActions = ImmutableArray.Create(
-                        new HardwareAction
-                        {
-                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
-                        }
-                    )
-                }
-            )
-        };
+        inputComponent.InputMapping = InputMapping.CreateBuilder()
+            .MapAction("TogglePause", Key.Space)
+            .Build();
         inputComponent.BindAction("TogglePause", TogglePause);
     }
 

@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -71,53 +70,16 @@ public class InputSystemBenchmarks
         // Covers: keyboard actions (single hardware action), keyboard axes (multi hardware axis),
         //         multi hardware action mapping (Jump: Up OR Space), all bindings registered.
         {
-            var moveRight = new ActionMapping
-            {
-                ActionName = "MoveRight",
-                HardwareActions = ImmutableArray.Create(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right) })
-            };
-
-            var moveLeft = new ActionMapping
-            {
-                ActionName = "MoveLeft",
-                HardwareActions = ImmutableArray.Create(new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left) })
-            };
-
-            var jump = new ActionMapping
-            {
-                ActionName = "Jump",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up) },
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
-                )
-            };
-
-            var moveX = new AxisMapping
-            {
-                AxisName = "MoveX",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 },
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 }
-                )
-            };
-
-            var moveY = new AxisMapping
-            {
-                AxisName = "MoveY",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 },
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(moveRight, moveLeft, jump),
-                AxisMappings = ImmutableArray.Create(moveX, moveY)
-            };
+            var inputMapping = InputMapping.CreateBuilder()
+                .MapAction("MoveRight", Key.Right)
+                .MapAction("MoveLeft", Key.Left)
+                .MapAction("Jump", Key.Up)
+                .MapAction("Jump", Key.Space)
+                .MapAxis("MoveX", Key.Right, 1.0)
+                .MapAxis("MoveX", Key.Left, -1.0)
+                .MapAxis("MoveY", Key.Up, 1.0)
+                .MapAxis("MoveY", Key.Down, -1.0)
+                .Build();
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -133,86 +95,15 @@ public class InputSystemBenchmarks
         // Covers: mouse button actions, multi hardware action mapping (Melee: XButton1 OR XButton2),
         //         mouse axis (AxisX, AxisY with negation), all bindings registered.
         {
-            var fire = new ActionMapping
-            {
-                ActionName = "Fire",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
-                    }
-                )
-            };
-
-            var altFire = new ActionMapping
-            {
-                ActionName = "AltFire",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
-                    }
-                )
-            };
-
-            var zoom = new ActionMapping
-            {
-                ActionName = "Zoom",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)
-                    }
-                )
-            };
-
-            var melee = new ActionMapping
-            {
-                ActionName = "Melee",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)
-                    },
-                    new HardwareAction
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)
-                    }
-                )
-            };
-
-            var lookX = new AxisMapping
-            {
-                AxisName = "LookX",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX), Scale = 1.0
-                    }
-                )
-            };
-
-            var lookY = new AxisMapping
-            {
-                AxisName = "LookY", HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY), Scale = 1.0
-                    }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(fire, altFire, zoom, melee),
-                AxisMappings = ImmutableArray.Create(lookX, lookY)
-            };
+            var inputMapping = InputMapping.CreateBuilder()
+                .MapAction("Fire", MouseButton.Left)
+                .MapAction("AltFire", MouseButton.Right)
+                .MapAction("Zoom", MouseButton.Middle)
+                .MapAction("Melee", MouseButton.XButton1)
+                .MapAction("Melee", MouseButton.XButton2)
+                .MapAxis("LookX", MouseAxis.X, 1.0)
+                .MapAxis("LookY", MouseAxis.Y, 1.0)
+                .Build();
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -228,51 +119,13 @@ public class InputSystemBenchmarks
         // Entity 3: Mixed keyboard + mouse mappings, partial bindings
         // Covers: mixed input source actions, no-binding code path for some actions.
         {
-            var dash = new ActionMapping
-            {
-                ActionName = "Dash",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift) }
-                )
-            };
-
-            var crouch = new ActionMapping
-            {
-                ActionName = "Crouch",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftCtrl) }
-                )
-            };
-
-            var primaryFire = new ActionMapping
-            {
-                ActionName = "PrimaryFire",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
-                    }
-                )
-            };
-
-            var throttle = new AxisMapping
-            {
-                AxisName = "Throttle",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 },
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(dash, crouch, primaryFire),
-                AxisMappings = ImmutableArray.Create(throttle)
-            };
+            var inputMapping = InputMapping.CreateBuilder()
+                .MapAction("Dash", Key.LeftShift)
+                .MapAction("Crouch", Key.LeftCtrl)
+                .MapAction("PrimaryFire", MouseButton.Left)
+                .MapAxis("Throttle", Key.Up, 1.0)
+                .MapAxis("Throttle", Key.Down, -1.0)
+                .Build();
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -285,34 +138,12 @@ public class InputSystemBenchmarks
         // Entity 4: Mixed keyboard + mouse axes, multi-axis accumulation, no bindings
         // Covers: multi-source axis accumulation, pure state tracking (no bindings registered).
         {
-            var action = new ActionMapping
-            {
-                ActionName = "Action",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
-                )
-            };
-
-            var combinedAxis = new AxisMapping
-            {
-                AxisName = "CombinedAxis",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 },
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 },
-                    new HardwareAxis
-                    {
-                        HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX), Scale = 0.5
-                    }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(action),
-                AxisMappings = ImmutableArray.Create(combinedAxis)
-            };
+            var inputMapping = InputMapping.CreateBuilder()
+                .MapAction("Action", Key.Space)
+                .MapAxis("CombinedAxis", Key.Right, 1.0)
+                .MapAxis("CombinedAxis", Key.Left, -1.0)
+                .MapAxis("CombinedAxis", MouseAxis.X, 0.5)
+                .Build();
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();
@@ -322,59 +153,16 @@ public class InputSystemBenchmarks
 
         // Entity 5: Duplicate of Entity 1 - simulates a second active entity with full input processing
         {
-            var moveRight = new ActionMapping
-            {
-                ActionName = "MoveRight",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right) }
-                )
-            };
-
-            var moveLeft = new ActionMapping
-            {
-                ActionName = "MoveLeft",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left) }
-                )
-            };
-
-            var jump = new ActionMapping
-            {
-                ActionName = "Jump",
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up) },
-                    new HardwareAction { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space) }
-                )
-            };
-
-            var moveX = new AxisMapping
-            {
-                AxisName = "MoveX",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right), Scale = 1.0 },
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left), Scale = -1.0 }
-                )
-            };
-
-            var moveY = new AxisMapping
-            {
-                AxisName = "MoveY",
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up), Scale = 1.0 },
-                    new HardwareAxis { HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down), Scale = -1.0 }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(moveRight, moveLeft, jump),
-                AxisMappings = ImmutableArray.Create(moveX, moveY)
-            };
+            var inputMapping = InputMapping.CreateBuilder()
+                .MapAction("MoveRight", Key.Right)
+                .MapAction("MoveLeft", Key.Left)
+                .MapAction("Jump", Key.Up)
+                .MapAction("Jump", Key.Space)
+                .MapAxis("MoveX", Key.Right, 1.0)
+                .MapAxis("MoveX", Key.Left, -1.0)
+                .MapAxis("MoveY", Key.Up, 1.0)
+                .MapAxis("MoveY", Key.Down, -1.0)
+                .Build();
 
             var entity = _scene.CreateEntity();
             var inputComponent = entity.CreateComponent<InputComponent>();

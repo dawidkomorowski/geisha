@@ -6,6 +6,6 @@ internal static class Program
 {
     private static void Main()
     {
-        BenchmarkRunner.Run<PhysicsSystemBenchmarks>();
+        BenchmarkRunner.Run<InputSystemBenchmarks>();
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
@@ -133,20 +133,20 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
     {
-        var hardwareInputVariant = hardwareAction.HardwareInputVariant;
-        return hardwareInputVariant.CurrentVariant switch
+        var inputSource = hardwareAction.InputSource;
+        return inputSource.Kind switch
         {
-            HardwareInputVariant.Variant.Keyboard => hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()],
-            HardwareInputVariant.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+            InputSource.InputKind.KeyboardKey => hardwareInput.KeyboardInput[inputSource.AsKeyboardKey()],
+            InputSource.InputKind.MouseButton => inputSource.AsMouseButton() switch
             {
-                HardwareInputVariant.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
-                HardwareInputVariant.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
-                HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
-                HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
-                HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
-                _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
+                MouseButton.Left => hardwareInput.MouseInput.LeftButton,
+                MouseButton.Middle => hardwareInput.MouseInput.MiddleButton,
+                MouseButton.Right => hardwareInput.MouseInput.RightButton,
+                MouseButton.XButton1 => hardwareInput.MouseInput.XButton1,
+                MouseButton.XButton2 => hardwareInput.MouseInput.XButton2,
+                _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}")
         };
     }
 
@@ -182,17 +182,17 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
 
     private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
     {
-        var hardwareInputVariant = hardwareAxis.HardwareInputVariant;
-        return hardwareInputVariant.CurrentVariant switch
+        var inputSource = hardwareAxis.InputSource;
+        return inputSource.Kind switch
         {
-            HardwareInputVariant.Variant.Keyboard => BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]),
-            HardwareInputVariant.Variant.Mouse => hardwareInputVariant.AsMouse() switch
+            InputSource.InputKind.KeyboardKey => BoolToDouble(hardwareInput.KeyboardInput[inputSource.AsKeyboardKey()]),
+            InputSource.InputKind.MouseAxis => inputSource.AsMouseAxis() switch
             {
-                HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
-                HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
-                _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.MouseVariant)}: {hardwareInputVariant.AsMouse()}")
+                MouseAxis.X => hardwareInput.MouseInput.PositionDelta.X,
+                MouseAxis.Y => -hardwareInput.MouseInput.PositionDelta.Y,
+                _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
             },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(HardwareInputVariant.Variant)}: {hardwareInputVariant.CurrentVariant}")
+            _ => throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}")
         };
     }
 

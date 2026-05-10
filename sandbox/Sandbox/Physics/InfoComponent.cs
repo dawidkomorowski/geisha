@@ -1,4 +1,3 @@
-﻿using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -32,23 +31,9 @@ public sealed class InfoComponent : BehaviorComponent
         if (!Entity.HasComponent<InputComponent>())
         {
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "ToggleInfo",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("ToggleInfo", Key.Tab)
+                .Build();
 
             inputComponent.BindAction("ToggleInfo", ToggleInfo);
         }

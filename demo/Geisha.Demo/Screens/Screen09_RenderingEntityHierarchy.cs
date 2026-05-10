@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -118,12 +118,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
+                                InputSource = InputSource.Create(Key.Up),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
+                                InputSource = InputSource.Create(Key.Down),
                                 Scale = -1
                             }
                         )
@@ -135,12 +135,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
+                                InputSource = InputSource.Create(Key.Right),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
+                                InputSource = InputSource.Create(Key.Left),
                                 Scale = -1
                             }
                         )
@@ -152,12 +152,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D),
+                                InputSource = InputSource.Create(Key.D),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.A),
+                                InputSource = InputSource.Create(Key.A),
                                 Scale = -1
                             }
                         )
@@ -169,12 +169,12 @@ Scale:
                         (
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W),
+                                InputSource = InputSource.Create(Key.W),
                                 Scale = 1
                             },
                             new HardwareAxis
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.S),
+                                InputSource = InputSource.Create(Key.S),
                                 Scale = -1
                             }
                         )
