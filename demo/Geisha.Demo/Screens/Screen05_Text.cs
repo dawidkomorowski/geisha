@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -115,23 +114,9 @@ internal sealed class TextSceneBehaviorFactory : ISceneBehaviorFactory
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = textBlockEntity.CreateComponent<InputComponent>();
             // Set input mapping so SPACE key will trigger "Cycle" action.
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "Cycle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Space)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("Cycle", Key.Space)
+                .Build();
             // Bind "Cycle" action to call our cycle logic.
             inputComponent.BindAction("Cycle", () =>
             {

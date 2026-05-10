@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
@@ -84,23 +83,9 @@ internal sealed class SpriteAnimationSceneBehaviorFactory : ISceneBehaviorFactor
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = character.CreateComponent<InputComponent>();
             // Set input mapping so selected keys will trigger corresponding actions.
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "Cycle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Space)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("Cycle", Key.Space)
+                .Build();
             // Bind "Cycle" action to call our cycle logic.
             inputComponent.BindAction("Cycle", () => { CycleAnimations(character); });
 

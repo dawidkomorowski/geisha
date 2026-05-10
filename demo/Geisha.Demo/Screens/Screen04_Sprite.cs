@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -86,34 +85,10 @@ internal sealed class SpriteSceneBehaviorFactory : ISceneBehaviorFactory
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = entity.CreateComponent<InputComponent>();
             // Set input mapping so UP and DOWN keys will trigger "IncreaseOpacity" and "DecreaseOpacity" actions.
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "IncreaseOpacity",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Up)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "DecreaseOpacity",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Down)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("IncreaseOpacity", Key.Up)
+                .MapAction("DecreaseOpacity", Key.Down)
+                .Build();
             // Bind "IncreaseOpacity" action to call opacity handling logic.
             inputComponent.BindAction("IncreaseOpacity", () => { spriteRenderer.Opacity += 0.1; });
             // Bind "DecreaseOpacity" action to call opacity handling logic.

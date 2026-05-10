@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Demo.Common;
 using Geisha.Engine.Core;
@@ -60,46 +59,12 @@ internal sealed class CameraSceneBehaviorFactory : ISceneBehaviorFactory
             // Add InputComponent to entity so we can handle user input.
             var inputComponent = camera.CreateComponent<InputComponent>();
             // Set input mapping so selected keys will trigger corresponding actions.
-            inputComponent.InputMapping = new InputMapping
-            {
-                AxisMappings = ImmutableArray.Create
-                (
-                    new AxisMapping
-                    {
-                        AxisName = "MoveVertically",
-                        HardwareAxes = ImmutableArray.Create
-                        (
-                            new HardwareAxis
-                            {
-                                InputSource = InputSource.Create(Key.Up),
-                                Scale = 1
-                            },
-                            new HardwareAxis
-                            {
-                                InputSource = InputSource.Create(Key.Down),
-                                Scale = -1
-                            }
-                        )
-                    },
-                    new AxisMapping
-                    {
-                        AxisName = "MoveHorizontally",
-                        HardwareAxes = ImmutableArray.Create
-                        (
-                            new HardwareAxis
-                            {
-                                InputSource = InputSource.Create(Key.Right),
-                                Scale = 1
-                            },
-                            new HardwareAxis
-                            {
-                                InputSource = InputSource.Create(Key.Left),
-                                Scale = -1
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAxis("MoveVertically", Key.Up, 1)
+                .MapAxis("MoveVertically", Key.Down, -1)
+                .MapAxis("MoveHorizontally", Key.Right, 1)
+                .MapAxis("MoveHorizontally", Key.Left, -1)
+                .Build();
             // Add component that handles camera movement with frame-independent speed.
             camera.CreateComponent<CameraControlComponent>();
 
