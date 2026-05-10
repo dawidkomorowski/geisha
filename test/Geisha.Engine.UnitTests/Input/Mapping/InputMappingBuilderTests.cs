@@ -121,4 +121,163 @@ public class InputMappingBuilderTests
         Assert.That(actual.ActionMappings[0].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
         Assert.That(actual.ActionMappings[0].HardwareActions[3].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
     }
+
+    [Test]
+    public void Build_One_AxisMapping_Key()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAxis("Key axis 1", Key.A, 1);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Is.Empty);
+        Assert.That(actual.AxisMappings, Has.Length.EqualTo(1));
+
+        Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Key axis 1"));
+        Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(Key.A)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Build_One_AxisMapping_MouseAxis()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAxis("Mouse axis 1", MouseAxis.X, 0.5);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Is.Empty);
+        Assert.That(actual.AxisMappings, Has.Length.EqualTo(1));
+
+        Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Mouse axis 1"));
+        Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.X)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(0.5));
+    }
+
+    [Test]
+    public void Build_Multiple_AxisMappings()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAxis("Key axis 1", Key.A, 1);
+        builder.MapAxis("Key axis 2", Key.D, -1);
+        builder.MapAxis("Mouse axis 1", MouseAxis.X, 0.5);
+        builder.MapAxis("Mouse axis 2", MouseAxis.Y, -0.25);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Is.Empty);
+        Assert.That(actual.AxisMappings, Has.Length.EqualTo(4));
+
+        Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Key axis 1"));
+        Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(Key.A)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
+
+        Assert.That(actual.AxisMappings[1].AxisName, Is.EqualTo("Key axis 2"));
+        Assert.That(actual.AxisMappings[1].HardwareAxes, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings[1].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(Key.D)));
+        Assert.That(actual.AxisMappings[1].HardwareAxes[0].Scale, Is.EqualTo(-1));
+
+        Assert.That(actual.AxisMappings[2].AxisName, Is.EqualTo("Mouse axis 1"));
+        Assert.That(actual.AxisMappings[2].HardwareAxes, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings[2].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.X)));
+        Assert.That(actual.AxisMappings[2].HardwareAxes[0].Scale, Is.EqualTo(0.5));
+
+        Assert.That(actual.AxisMappings[3].AxisName, Is.EqualTo("Mouse axis 2"));
+        Assert.That(actual.AxisMappings[3].HardwareAxes, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings[3].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.Y)));
+        Assert.That(actual.AxisMappings[3].HardwareAxes[0].Scale, Is.EqualTo(-0.25));
+    }
+
+    [Test]
+    public void Build_One_AxisMapping_Multiple_InputSources()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAxis("Axis 1", Key.A, 1);
+        builder.MapAxis("Axis 1", Key.D, -1);
+        builder.MapAxis("Axis 1", MouseAxis.X, 0.5);
+        builder.MapAxis("Axis 1", MouseAxis.Y, -0.25);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Is.Empty);
+        Assert.That(actual.AxisMappings, Has.Length.EqualTo(1));
+
+        Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Axis 1"));
+        Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(4));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(Key.A)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[1].InputSource, Is.EqualTo(InputSource.Create(Key.D)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[1].Scale, Is.EqualTo(-1));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[2].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.X)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[2].Scale, Is.EqualTo(0.5));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[3].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.Y)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[3].Scale, Is.EqualTo(-0.25));
+    }
+
+    [Test]
+    public void Build_Multiple_ActionMappings_And_AxisMappings()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAction("Action 1", Key.D1);
+        builder.MapAction("Action 1", MouseButton.Left);
+        builder.MapAction("Action 2", Key.D2);
+        builder.MapAction("Action 2", MouseButton.Right);
+
+        builder.MapAxis("Axis 1", Key.A, 1);
+        builder.MapAxis("Axis 1", Key.D, -1);
+        builder.MapAxis("Axis 2", MouseAxis.X, 0.5);
+        builder.MapAxis("Axis 2", MouseAxis.Y, -0.25);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Has.Length.EqualTo(2));
+        Assert.That(actual.AxisMappings, Has.Length.EqualTo(2));
+
+        Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Action 1"));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(2));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
+
+        Assert.That(actual.ActionMappings[1].ActionName, Is.EqualTo("Action 2"));
+        Assert.That(actual.ActionMappings[1].HardwareActions, Has.Length.EqualTo(2));
+        Assert.That(actual.ActionMappings[1].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D2)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+
+        Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Axis 1"));
+        Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(2));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(Key.A)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[1].InputSource, Is.EqualTo(InputSource.Create(Key.D)));
+        Assert.That(actual.AxisMappings[0].HardwareAxes[1].Scale, Is.EqualTo(-1));
+
+        Assert.That(actual.AxisMappings[1].AxisName, Is.EqualTo("Axis 2"));
+        Assert.That(actual.AxisMappings[1].HardwareAxes, Has.Length.EqualTo(2));
+        Assert.That(actual.AxisMappings[1].HardwareAxes[0].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.X)));
+        Assert.That(actual.AxisMappings[1].HardwareAxes[0].Scale, Is.EqualTo(0.5));
+        Assert.That(actual.AxisMappings[1].HardwareAxes[1].InputSource, Is.EqualTo(InputSource.Create(MouseAxis.Y)));
+        Assert.That(actual.AxisMappings[1].HardwareAxes[1].Scale, Is.EqualTo(-0.25));
+    }
 }

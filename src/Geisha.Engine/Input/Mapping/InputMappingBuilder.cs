@@ -11,8 +11,8 @@ public sealed class InputMappingBuilder
     public InputMappingBuilder MapAction(string actionName, Key key) => MapAction(actionName, InputSource.Create(key));
     public InputMappingBuilder MapAction(string actionName, MouseButton mouseButton) => MapAction(actionName, InputSource.Create(mouseButton));
 
-    public InputMappingBuilder MapAxis(string axisName, Key key, double scale) => this;
-    public InputMappingBuilder MapAxis(string axisName, MouseAxis mouseAxis, double scale) => this;
+    public InputMappingBuilder MapAxis(string axisName, Key key, double scale) => MapAxis(axisName, InputSource.Create(key), scale);
+    public InputMappingBuilder MapAxis(string axisName, MouseAxis mouseAxis, double scale) => MapAxis(axisName, InputSource.Create(mouseAxis), scale);
 
     public InputMapping Build()
     {
@@ -27,9 +27,21 @@ public sealed class InputMappingBuilder
             });
         }
 
+        var axisMappingsBuilder = ImmutableArray.CreateBuilder<AxisMapping>();
+
+        foreach (var (axisName, builder) in _axisMappings)
+        {
+            axisMappingsBuilder.Add(new AxisMapping
+            {
+                AxisName = axisName,
+                HardwareAxes = builder.ToImmutable()
+            });
+        }
+
         return new InputMapping
         {
-            ActionMappings = actionMappingsBuilder.ToImmutable()
+            ActionMappings = actionMappingsBuilder.ToImmutable(),
+            AxisMappings = axisMappingsBuilder.ToImmutable()
         };
     }
 
