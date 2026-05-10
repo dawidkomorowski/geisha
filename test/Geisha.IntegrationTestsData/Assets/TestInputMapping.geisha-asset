@@ -38,13 +38,13 @@
       ],
       "LookUp": [
         {
-          "MouseAxis": "X",
+          "MouseAxis": "Y",
           "Scale": 1
         }
       ],
       "LookRight": [
         {
-          "MouseAxis": "Y",
+          "MouseAxis": "X",
           "Scale": 1
         }
       ]

@@ -105,13 +105,13 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         Assert.That(inputMapping.AxisMappings[2].AxisName, Is.EqualTo("LookUp"));
         Assert.That(inputMapping.AxisMappings[2].HardwareAxes, Has.Length.EqualTo(1));
         Assert.That(inputMapping.AxisMappings[2].HardwareAxes[0].InputSource,
-            Is.EqualTo(InputSource.Create(MouseAxis.X)));
+            Is.EqualTo(InputSource.Create(MouseAxis.Y)));
         Assert.That(inputMapping.AxisMappings[2].HardwareAxes[0].Scale, Is.EqualTo(1));
         // Axis mapping 4
         Assert.That(inputMapping.AxisMappings[3].AxisName, Is.EqualTo("LookRight"));
         Assert.That(inputMapping.AxisMappings[3].HardwareAxes, Has.Length.EqualTo(1));
         Assert.That(inputMapping.AxisMappings[3].HardwareAxes[0].InputSource,
-            Is.EqualTo(InputSource.Create(MouseAxis.Y)));
+            Is.EqualTo(InputSource.Create(MouseAxis.X)));
         Assert.That(inputMapping.AxisMappings[3].HardwareAxes[0].Scale, Is.EqualTo(1));
     }
 

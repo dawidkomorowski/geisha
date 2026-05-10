@@ -3,10 +3,6 @@ using System.Text;
 
 namespace Geisha.Engine.Input;
 
-// TODO: Review implementation of InputMappingAssetContent.
-// TODO: Consider extending/refatoring integration test: GetAsset_ShouldLoadAndReturn_InputMapping
-// TODO: Review implementation of InputMappingAssetLoader.
-
 /// <summary>
 ///     Represents a hardware input source such as a keyboard key, mouse button, or mouse axis.
 ///     Use <see cref="Kind" /> to determine the actual kind of input and the corresponding <c>As</c> method to retrieve

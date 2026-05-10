@@ -112,7 +112,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
             // Act
             // Assert
-            Assert.That(() => inputMappingAssetLoader.LoadAsset(assetInfo, _assetStore), Throws.TypeOf<InvalidInputMappingAssetContentException>());
+            Assert.That(() => inputMappingAssetLoader.LoadAsset(assetInfo, _assetStore), Throws.InvalidOperationException);
         }
 
         #endregion
