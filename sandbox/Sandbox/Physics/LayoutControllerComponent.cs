@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -32,144 +31,20 @@ public sealed class LayoutControllerComponent : BehaviorComponent
         if (!Entity.HasComponent<InputComponent>())
         {
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "SetLayout1",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.D1)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SetLayout2",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.D2)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SetLayout3",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.D3)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SetLayout4",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.D4)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "ToggleCollisionDetection",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(MouseButton.Left)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "DeleteEntity",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(MouseButton.Right)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SpawnSquare",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F1)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SpawnCircle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F2)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SpawnWideRectangle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F3)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "SpawnTallRectangle",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F4)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Save",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F9)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Load",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F12)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("SetLayout1", Key.D1)
+                .MapAction("SetLayout2", Key.D2)
+                .MapAction("SetLayout3", Key.D3)
+                .MapAction("SetLayout4", Key.D4)
+                .MapAction("ToggleCollisionDetection", MouseButton.Left)
+                .MapAction("DeleteEntity", MouseButton.Right)
+                .MapAction("SpawnSquare", Key.F1)
+                .MapAction("SpawnCircle", Key.F2)
+                .MapAction("SpawnWideRectangle", Key.F3)
+                .MapAction("SpawnTallRectangle", Key.F4)
+                .MapAction("Save", Key.F9)
+                .MapAction("Load", Key.F12)
+                .Build();
             inputComponent.BindAction("SetLayout1", () => SetLayout(1));
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
             inputComponent.BindAction("SetLayout3", () => SetLayout(3));

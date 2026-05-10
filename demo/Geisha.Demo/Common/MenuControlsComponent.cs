@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core;
@@ -25,56 +24,12 @@ namespace Geisha.Demo.Common
         public override void OnStart()
         {
             var inputComponent = Entity.GetComponent<InputComponent>();
-            inputComponent.InputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create
-                (
-                    new ActionMapping
-                    {
-                        ActionName = "Exit",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Escape)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Next",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Enter)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "Previous",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.Backspace)
-                            }
-                        )
-                    },
-                    new ActionMapping
-                    {
-                        ActionName = "GoToUrl",
-                        HardwareActions = ImmutableArray.Create
-                        (
-                            new HardwareAction
-                            {
-                                InputSource = InputSource.Create(Key.F1)
-                            }
-                        )
-                    }
-                )
-            };
+            inputComponent.InputMapping = InputMapping.CreateBuilder()
+                .MapAction("Exit", Key.Escape)
+                .MapAction("Next", Key.Enter)
+                .MapAction("Previous", Key.Backspace)
+                .MapAction("GoToUrl", Key.F1)
+                .Build();
 
             inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);
             inputComponent.BindAction("Next", _screenManager.Next);
