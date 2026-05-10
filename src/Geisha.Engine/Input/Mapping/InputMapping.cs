@@ -7,6 +7,9 @@ namespace Geisha.Engine.Input.Mapping;
 /// </summary>
 public sealed class InputMapping
 {
+    // TODO: Add documentation.
+    public static InputMappingBuilder CreateBuilder() => new();
+
     /// <summary>
     ///     List of action mappings.
     /// </summary>
