@@ -3,11 +3,15 @@ using System.Collections.Immutable;
 namespace Geisha.Engine.Input.Mapping;
 
 /// <summary>
-///     Defines mapping of hardware input to actions and axes.
+///     Defines mapping of hardware input sources to logical actions and axes.
 /// </summary>
 public sealed class InputMapping
 {
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Creates a new <see cref="InputMappingBuilder" /> used to define mapping of hardware input sources to logical actions
+    ///     and axes.
+    /// </summary>
+    /// <returns>New <see cref="InputMappingBuilder" /> instance.</returns>
     public static InputMappingBuilder CreateBuilder() => new();
 
     /// <summary>
