@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Physics;
+﻿using System;
+using Geisha.Engine.Physics;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics;
@@ -7,7 +8,20 @@ namespace Geisha.Engine.UnitTests.Physics;
 public class CollisionBitmaskTests
 {
     [Test]
-    public void FromValue_Test()
+    public void Constructor_Test()
+    {
+        // Arrange
+        const uint value = 123;
+
+        // Act
+        var actual = new CollisionBitmask(value);
+
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(value));
+    }
+
+    [Test]
+    public void FromUInt_Test()
     {
         // Arrange
         const uint value = 123;
@@ -29,9 +43,24 @@ public class CollisionBitmaskTests
     {
         // Arrange
         // Act
-        var actual = CollisionBitmask.FromBits(bits);
+        var fromParams = CollisionBitmask.FromBits(bits);
+        var fromSpan = CollisionBitmask.FromBits(bits.AsSpan());
 
         // Assert
-        Assert.That(actual.Value, Is.EqualTo(value));
+        Assert.That(fromParams.Value, Is.EqualTo(value));
+        Assert.That(fromSpan.Value, Is.EqualTo(value));
+    }
+
+    [Test]
+    public void ToString_Test()
+    {
+        // Arrange
+        var collisionBitmask = CollisionBitmask.FromBits(0, 2, 4, 5, 8, 29, 31);
+
+        // Act
+        var actual = collisionBitmask.ToString();
+
+        // Assert
+        Assert.That(actual, Is.EqualTo("CollisionBitmask { Value = 10100000000000000000000100110101 }"));
     }
 }
