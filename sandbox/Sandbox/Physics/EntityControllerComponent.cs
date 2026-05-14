@@ -15,9 +15,18 @@ namespace Sandbox.Physics;
 public sealed class EntityControllerComponent : BehaviorComponent
 {
     private const double AngularVelocity = Math.PI / 4;
+    private static readonly (CollisionBitmask Layer, CollisionBitmask Mask)[] CollisionProfiles =
+    {
+        (CollisionBitmask.FromValue(0b0001), CollisionBitmask.FromValue(0b0001)),
+        (CollisionBitmask.FromValue(0b0010), CollisionBitmask.FromValue(0b0010)),
+        (CollisionBitmask.FromValue(0b0100), CollisionBitmask.FromValue(0b0100)),
+        (CollisionBitmask.FromValue(0b0011), CollisionBitmask.FromValue(0b0011))
+    };
+
     private readonly List<Contact2D> _contacts = new();
     private double _linearVelocity = 400;
     private double _sizeFactor = 1d;
+    private int _collisionProfile;
     private string _type = "Square";
     private string _movementType = "Free";
     private InputComponent _inputComponent = null!;
@@ -41,6 +50,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
                 .MapAction("ChangeMovementType", Key.Backslash)
                 .MapAction("ResetPosition", Key.Backspace)
                 .MapAction("ToggleCollisionResponse", Key.EqualsSign)
+                .MapAction("CycleCollisionProfile", Key.Subtract)
                 .Build();
 
             inputComponent.BindAction("ChangeToCircle", () => SetCollider("Circle"));
@@ -51,11 +61,13 @@ public sealed class EntityControllerComponent : BehaviorComponent
             inputComponent.BindAction("ChangeMovementType", ChangeMovement);
             inputComponent.BindAction("ResetPosition", ResetPosition);
             inputComponent.BindAction("ToggleCollisionResponse", ToggleCollisionResponse);
+            inputComponent.BindAction("CycleCollisionProfile", CycleCollisionProfile);
         }
 
         _inputComponent = Entity.GetComponent<InputComponent>();
         _kinematicBody = Entity.GetComponent<KinematicRigidBody2DComponent>();
 
+        ApplyCollisionProfile();
         UpdateInfoComponent();
     }
 
@@ -228,6 +240,9 @@ public sealed class EntityControllerComponent : BehaviorComponent
             default:
                 throw new InvalidOperationException($"Unsupported type: {type}");
         }
+
+        ApplyCollisionProfile();
+        UpdateInfoComponent();
     }
 
     private void UpdateSize(double delta)
@@ -241,11 +256,32 @@ public sealed class EntityControllerComponent : BehaviorComponent
         _kinematicBody.EnableCollisionResponse = !_kinematicBody.EnableCollisionResponse;
     }
 
+    private void CycleCollisionProfile()
+    {
+        _collisionProfile = (_collisionProfile + 1) % CollisionProfiles.Length;
+        ApplyCollisionProfile();
+        UpdateInfoComponent();
+    }
+
+    private void ApplyCollisionProfile()
+    {
+        if (Entity.Components.FirstOrDefault(c => c is Collider2DComponent) is not Collider2DComponent collider2DComponent)
+        {
+            return;
+        }
+
+        var profile = CollisionProfiles[_collisionProfile];
+        collider2DComponent.CollisionLayer = profile.Layer;
+        collider2DComponent.CollisionMask = profile.Mask;
+    }
+
     private void UpdateInfoComponent()
     {
         var infoComponent = Scene.RootEntities.Single(e => e.HasComponent<InfoComponent>()).GetComponent<InfoComponent>();
+        var profile = CollisionProfiles[_collisionProfile];
         infoComponent.OnLinearVelocity(_linearVelocity);
         infoComponent.OnMovementType(_movementType);
+        infoComponent.OnCollisionLayerMask(profile.Layer, profile.Mask);
     }
 }
 

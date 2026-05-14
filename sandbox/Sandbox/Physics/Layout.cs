@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 
 namespace Sandbox.Physics;
@@ -49,6 +50,36 @@ public static class Layout
             .GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
         PhysicsEntityFactory.CreateCircleKinematicBody(scene, -300, -200, 50)
             .GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+    }
+
+    public static void CollisionLayerMaskScenario(Scene scene)
+    {
+        // Left cluster: controller profile 0b0001/0b0001 collides.
+        var leftFloor = PhysicsEntityFactory.CreateRectangleStaticBody(scene, -500, -200, 300, 50);
+        leftFloor.GetComponent<RectangleColliderComponent>().CollisionLayer = CollisionBitmask.FromValue(0b0001);
+        leftFloor.GetComponent<RectangleColliderComponent>().CollisionMask = CollisionBitmask.FromValue(0b0001);
+
+        var leftWall = PhysicsEntityFactory.CreateRectangleStaticBody(scene, -650, 0, 50, 300);
+        leftWall.GetComponent<RectangleColliderComponent>().CollisionLayer = CollisionBitmask.FromValue(0b0001);
+        leftWall.GetComponent<RectangleColliderComponent>().CollisionMask = CollisionBitmask.FromValue(0b0001);
+
+        // Middle cluster: requires controller mask to include 0b0010 and layer to be 0b0010.
+        var middleFloor = PhysicsEntityFactory.CreateRectangleStaticBody(scene, 0, -200, 300, 50);
+        middleFloor.GetComponent<RectangleColliderComponent>().CollisionLayer = CollisionBitmask.FromValue(0b0010);
+        middleFloor.GetComponent<RectangleColliderComponent>().CollisionMask = CollisionBitmask.FromValue(0b0010);
+
+        var middleWall = PhysicsEntityFactory.CreateRectangleStaticBody(scene, -150, 0, 50, 300);
+        middleWall.GetComponent<RectangleColliderComponent>().CollisionLayer = CollisionBitmask.FromValue(0b0010);
+        middleWall.GetComponent<RectangleColliderComponent>().CollisionMask = CollisionBitmask.FromValue(0b0010);
+
+        // Right cluster: requires controller to expose bit 0b0100 and accept 0b0100.
+        var rightFloor = PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -200, 300, 50);
+        rightFloor.GetComponent<RectangleColliderComponent>().CollisionLayer = CollisionBitmask.FromValue(0b0100);
+        rightFloor.GetComponent<RectangleColliderComponent>().CollisionMask = CollisionBitmask.FromValue(0b0100);
+
+        var rightWall = PhysicsEntityFactory.CreateRectangleStaticBody(scene, 650, 0, 50, 300);
+        rightWall.GetComponent<RectangleColliderComponent>().CollisionLayer = CollisionBitmask.FromValue(0b0100);
+        rightWall.GetComponent<RectangleColliderComponent>().CollisionMask = CollisionBitmask.FromValue(0b0100);
     }
 
     public static void PlatformLevel(Scene scene)

@@ -36,6 +36,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 .MapAction("SetLayout2", Key.D2)
                 .MapAction("SetLayout3", Key.D3)
                 .MapAction("SetLayout4", Key.D4)
+                .MapAction("SetLayout5", Key.D5)
                 .MapAction("ToggleCollisionDetection", MouseButton.Left)
                 .MapAction("DeleteEntity", MouseButton.Right)
                 .MapAction("SpawnSquare", Key.F1)
@@ -49,6 +50,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
             inputComponent.BindAction("SetLayout3", () => SetLayout(3));
             inputComponent.BindAction("SetLayout4", () => SetLayout(4));
+            inputComponent.BindAction("SetLayout5", () => SetLayout(5));
             inputComponent.BindAction("ToggleCollisionDetection", ToggleCollisionDetection);
             inputComponent.BindAction("DeleteEntity", DeleteEntity);
             inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 100 * _spawnSizeFactor));
@@ -78,10 +80,13 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 Layout.CircleColliders(Scene);
                 break;
             case 3:
-                Layout.KinematicBodies(Scene);
+                Layout.CollisionLayerMaskScenario(Scene);
                 break;
             case 4:
                 Layout.PlatformLevel(Scene);
+                break;
+            case 5:
+                Layout.KinematicBodies(Scene);
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported layout: {_layout}");
