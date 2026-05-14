@@ -39,6 +39,11 @@ internal static class CollisionDetection
                     continue;
                 }
 
+                if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 && (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
+                {
+                    continue;
+                }
+
                 if (!TestAABB(kinematicBody1, kinematicBody2))
                 {
                     continue;
@@ -65,6 +70,11 @@ internal static class CollisionDetection
             foreach (var staticBody in staticBodies)
             {
                 if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
+                {
+                    continue;
+                }
+
+                if ((kinematicBody.CollisionLayer & staticBody.CollisionMask) == 0 && (kinematicBody.CollisionMask & staticBody.CollisionLayer) == 0)
                 {
                     continue;
                 }

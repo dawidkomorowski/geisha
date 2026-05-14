@@ -273,4 +273,35 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
         Assert.That(rectangle2Collider.GetContacts(rectangle2Contacts), Is.Zero);
         Assert.That(rectangle2Contacts, Has.Count.Zero);
     }
+
+    [TestCase(0u, 0u, 0u, 0u, false)]
+    [TestCase(uint.MaxValue, uint.MaxValue, uint.MaxValue, uint.MaxValue, true)]
+    public void ProcessPhysics_KinematicBodiesShouldCollide_WhenCollisionLayerAndMaskAllows(uint layer1, uint mask1, uint layer2, uint mask2,
+        bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var rectangle2 = CreateRectangleKinematicBody(5, 0, 10, 5);
+
+        var rectangle1Collider = rectangle1.GetComponent<RectangleColliderComponent>();
+        var rectangle2Collider = rectangle2.GetComponent<RectangleColliderComponent>();
+
+        rectangle1Collider.CollisionLayer = CollisionBitmask.FromValue(layer1);
+        rectangle1Collider.CollisionMask = CollisionBitmask.FromValue(mask1);
+
+        rectangle2Collider.CollisionLayer = CollisionBitmask.FromValue(layer1);
+        rectangle2Collider.CollisionMask = CollisionBitmask.FromValue(mask1);
+
+        // Assume
+        Assert.That(rectangle1Collider.IsColliding, Is.False);
+        Assert.That(rectangle2Collider.IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(rectangle1Collider.IsColliding, Is.EqualTo(expected));
+        Assert.That(rectangle2Collider.IsColliding, Is.EqualTo(expected));
+    }
 }

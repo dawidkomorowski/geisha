@@ -549,4 +549,39 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
     }
 
     #endregion
+
+    #region Collision layer/mask
+
+    [TestCase(0u, 0u, 0u, 0u, false)]
+    [TestCase(uint.MaxValue, uint.MaxValue, uint.MaxValue, uint.MaxValue, true)]
+    public void ProcessPhysics_KinematicBodyShouldCollideStaticBody_WhenCollisionLayerAndMaskAllows(uint layer1, uint mask1, uint layer2, uint mask2,
+        bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
+
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
+        kinematicBodyCollider.CollisionLayer = CollisionBitmask.FromValue(layer1);
+        kinematicBodyCollider.CollisionMask = CollisionBitmask.FromValue(mask1);
+
+        staticBodyCollider.CollisionLayer = CollisionBitmask.FromValue(layer1);
+        staticBodyCollider.CollisionMask = CollisionBitmask.FromValue(mask1);
+
+        // Assume
+        Assert.That(kinematicBodyCollider.IsColliding, Is.False);
+        Assert.That(staticBodyCollider.IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(kinematicBodyCollider.IsColliding, Is.EqualTo(expected));
+        Assert.That(staticBodyCollider.IsColliding, Is.EqualTo(expected));
+    }
+
+    #endregion
 }
