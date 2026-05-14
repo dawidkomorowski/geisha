@@ -34,9 +34,9 @@ public class CollisionBitmaskTests
         Assert.That(actual.Value, Is.EqualTo(value));
     }
 
-    // TODO: Add more test cases.
     [TestCase(0, 0b_00000000_00000000_00000000_00000001u)]
     [TestCase(1, 0b_00000000_00000000_00000000_00000010u)]
+    [TestCase(15, 0b_00000000_00000000_10000000_00000000u)]
     [TestCase(30, 0b_01000000_00000000_00000000_00000000u)]
     [TestCase(31, 0b_10000000_00000000_00000000_00000000u)]
     public void FromBit_Test(int bit, uint expected)
@@ -49,12 +49,13 @@ public class CollisionBitmaskTests
         Assert.That(actual.Value, Is.EqualTo(expected));
     }
 
-    // TODO: Add more test cases.
     [TestCase(new int[0], 0b_00000000_00000000_00000000_00000000u)]
     [TestCase(new[] { 0 }, 0b_00000000_00000000_00000000_00000001u)]
     [TestCase(new[] { 1 }, 0b_00000000_00000000_00000000_00000010u)]
     [TestCase(new[] { 30 }, 0b_01000000_00000000_00000000_00000000u)]
     [TestCase(new[] { 31 }, 0b_10000000_00000000_00000000_00000000u)]
+    [TestCase(new[] { 0, 1 }, 0b_00000000_00000000_00000000_00000011u)]
+    [TestCase(new[] { 0, 15, 31 }, 0b_10000000_00000000_10000000_00000001u)]
     public void FromBits_Test(int[] bits, uint expected)
     {
         // Arrange
@@ -67,9 +68,10 @@ public class CollisionBitmaskTests
         Assert.That(fromSpan.Value, Is.EqualTo(expected));
     }
 
-    // TODO: Add more test cases.
     [TestCase(new int[0])]
     [TestCase(new[] { 0 })]
+    [TestCase(new[] { 31 })]
+    [TestCase(new[] { 0, 15, 31 })]
     public void HasBit_Test(int[] bits)
     {
         // Arrange
@@ -85,9 +87,10 @@ public class CollisionBitmaskTests
         }
     }
 
-    // TODO: Add more test cases.
     [TestCase(new int[0])]
     [TestCase(new[] { 0 })]
+    [TestCase(new[] { 31 })]
+    [TestCase(new[] { 0, 15, 31 })]
     public void WithBit_Test(int[] bits)
     {
         // Arrange
@@ -107,9 +110,10 @@ public class CollisionBitmaskTests
         }
     }
 
-    // TODO: Add more test cases.
     [TestCase(new int[0])]
     [TestCase(new[] { 0 })]
+    [TestCase(new[] { 31 })]
+    [TestCase(new[] { 0, 15, 31 })]
     public void WithoutBit_Test(int[] bits)
     {
         // Arrange
@@ -129,9 +133,10 @@ public class CollisionBitmaskTests
         }
     }
 
-    // TODO: Add more test cases.
     [TestCase(0b_00000000_00000000_00000000_00000000u, 0b_00000000_00000000_00000000_00000000u)]
     [TestCase(0b_00000000_00000000_00000000_00000001u, 0b_00000000_00000000_00000000_00000001u)]
+    [TestCase(0b_00000000_00000000_00000000_00000001u, 0b_00000000_00000000_00000000_00000010u)]
+    [TestCase(0b_00000000_00000000_00000000_00000011u, 0b_00000000_00000000_00000000_00000010u)]
     public void Operator_BitwiseAnd_Test(uint value1, uint value2)
     {
         // Arrange
@@ -147,9 +152,10 @@ public class CollisionBitmaskTests
         Assert.That(actual.Value, Is.EqualTo(expected));
     }
 
-    // TODO: Add more test cases.
     [TestCase(0b_00000000_00000000_00000000_00000000u, 0b_00000000_00000000_00000000_00000000u)]
     [TestCase(0b_00000000_00000000_00000000_00000001u, 0b_00000000_00000000_00000000_00000001u)]
+    [TestCase(0b_00000000_00000000_00000000_00000001u, 0b_00000000_00000000_00000000_00000010u)]
+    [TestCase(0b_00000000_00000000_00000000_00000011u, 0b_00000000_00000000_00000000_00000010u)]
     public void Operator_BitwiseOr_Test(uint value1, uint value2)
     {
         // Arrange
