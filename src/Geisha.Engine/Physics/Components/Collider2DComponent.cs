@@ -60,6 +60,9 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
+    public CollisionBitmask CollisionLayer { get; set; } = CollisionBitmask.All;
+    public CollisionBitmask CollisionMask { get; set; } = CollisionBitmask.All;
+
     /// <summary>
     ///     Gets the axis-aligned bounding rectangle of this collider as computed at the last physics simulation step.
     /// </summary>
