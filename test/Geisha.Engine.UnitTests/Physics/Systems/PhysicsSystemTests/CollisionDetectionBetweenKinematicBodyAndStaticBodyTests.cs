@@ -552,8 +552,32 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
 
     #region Collision layer/mask
 
+    // Scenario: no layers or masks enabled on either collider.
     [TestCase(0u, 0u, 0u, 0u, false)]
+    // Scenario: all layers and masks enabled on both colliders.
     [TestCase(uint.MaxValue, uint.MaxValue, uint.MaxValue, uint.MaxValue, true)]
+    // Scenario: single-bit cross-match (both sides allow each other).
+    [TestCase(0b0001u, 0b0010u, 0b0010u, 0b0001u, true)]
+    // Scenario: allowed with non-identical masks/layers, matching at least one bit in each required direction.
+    [TestCase(0b0101u, 0b1000u, 0b1100u, 0b0001u, true)]
+    // Scenario: only first collider allows the second one (mutual agreement required).
+    [TestCase(0b0001u, 0b0010u, 0b0010u, 0u, false)]
+    // Scenario: only second collider allows the first one (mutual agreement required).
+    [TestCase(0b0001u, 0u, 0b0010u, 0b0001u, false)]
+    // Scenario: disjoint single-bit layers and masks.
+    [TestCase(0b0001u, 0b0001u, 0b0010u, 0b0010u, false)]
+    // Scenario: multi-bit selective overlap that allows collision both ways.
+    [TestCase(0b0101u, 0b0001_0010u, 0b0001_0010u, 0b0101u, true)]
+    // Scenario: one-direction overlap only (not mutually allowed).
+    [TestCase(0b0101u, 0b0100u, 0b0001_0010u, 0b0001u, false)]
+    // Scenario: empty layer cannot collide even with permissive masks.
+    [TestCase(0u, uint.MaxValue, 0b0001u, uint.MaxValue, false)]
+    // Scenario: empty mask blocks collision despite matching layers.
+    [TestCase(uint.MaxValue, 0u, uint.MaxValue, uint.MaxValue, false)]
+    // Scenario: highest bit only.
+    [TestCase(0b1000_0000_0000_0000_0000_0000_0000_0000u, 0b1000_0000_0000_0000_0000_0000_0000_0000u, 0b1000_0000_0000_0000_0000_0000_0000_0000u, 0b1000_0000_0000_0000_0000_0000_0000_0000u, true)]
+    // Scenario: crossed highest/lowest bit permissions.
+    [TestCase(0b1000_0000_0000_0000_0000_0000_0000_0000u, 0b0001u, 0b0001u, 0b1000_0000_0000_0000_0000_0000_0000_0000u, true)]
     public void ProcessPhysics_KinematicBodyShouldCollideStaticBody_WhenCollisionLayerAndMaskAllows(uint layer1, uint mask1, uint layer2, uint mask2,
         bool expected)
     {
@@ -568,8 +592,8 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         kinematicBodyCollider.CollisionLayer = CollisionBitmask.FromValue(layer1);
         kinematicBodyCollider.CollisionMask = CollisionBitmask.FromValue(mask1);
 
-        staticBodyCollider.CollisionLayer = CollisionBitmask.FromValue(layer1);
-        staticBodyCollider.CollisionMask = CollisionBitmask.FromValue(mask1);
+        staticBodyCollider.CollisionLayer = CollisionBitmask.FromValue(layer2);
+        staticBodyCollider.CollisionMask = CollisionBitmask.FromValue(mask2);
 
         // Assume
         Assert.That(kinematicBodyCollider.IsColliding, Is.False);

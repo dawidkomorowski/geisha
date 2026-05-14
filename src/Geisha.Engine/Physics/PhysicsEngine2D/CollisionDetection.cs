@@ -39,7 +39,7 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 && (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
+                if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 || (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
                 {
                     continue;
                 }
@@ -74,7 +74,7 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if ((kinematicBody.CollisionLayer & staticBody.CollisionMask) == 0 && (kinematicBody.CollisionMask & staticBody.CollisionLayer) == 0)
+                if ((kinematicBody.CollisionLayer & staticBody.CollisionMask) == 0 || (kinematicBody.CollisionMask & staticBody.CollisionLayer) == 0)
                 {
                     continue;
                 }
