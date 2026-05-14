@@ -13,13 +13,14 @@ public readonly record struct CollisionBitmask
     public uint Value { get; init; }
 
     public bool HasBit(int bit) => (Value & 1u << bit) != 0;
-    public CollisionBitmask WithBit(int bit) => default;
-    public CollisionBitmask WithoutBit(int bit) => default;
+    public CollisionBitmask WithBit(int bit) => new(Value | 1u << bit);
+    public CollisionBitmask WithoutBit(int bit) => new(Value & ~(1u << bit));
 
     public static CollisionBitmask None { get; } = new(0);
     public static CollisionBitmask All { get; } = new(uint.MaxValue);
 
-    public static CollisionBitmask FromUInt(uint value) => new(value);
+    public static CollisionBitmask FromValue(uint value) => new(value);
+    public static CollisionBitmask FromBit(int bit) => new(1u << bit);
 
     // TODO: This implementation may force the caller to allocate.
     //       When migrated to .NET 9 (C# 13) params collection feature could be used to accept ReadOnlySpan.
@@ -37,8 +38,8 @@ public readonly record struct CollisionBitmask
         return new CollisionBitmask(value);
     }
 
-    public static CollisionBitmask operator &(CollisionBitmask left, CollisionBitmask right) => default;
-    public static CollisionBitmask operator |(CollisionBitmask left, CollisionBitmask right) => default;
+    public static CollisionBitmask operator &(CollisionBitmask left, CollisionBitmask right) => new(left.Value & right.Value);
+    public static CollisionBitmask operator |(CollisionBitmask left, CollisionBitmask right) => new(left.Value | right.Value);
 
     private bool PrintMembers(StringBuilder builder)
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Engine.Physics;
 using NUnit.Framework;
 
@@ -21,16 +22,31 @@ public class CollisionBitmaskTests
     }
 
     [Test]
-    public void FromUInt_Test()
+    public void FromValue_Test()
     {
         // Arrange
         const uint value = 123;
 
         // Act
-        var actual = CollisionBitmask.FromUInt(value);
+        var actual = CollisionBitmask.FromValue(value);
 
         // Assert
         Assert.That(actual.Value, Is.EqualTo(value));
+    }
+
+    // TODO: Add more test cases.
+    [TestCase(0, 0b_00000000_00000000_00000000_00000001u)]
+    [TestCase(1, 0b_00000000_00000000_00000000_00000010u)]
+    [TestCase(30, 0b_01000000_00000000_00000000_00000000u)]
+    [TestCase(31, 0b_10000000_00000000_00000000_00000000u)]
+    public void FromBit_Test(int bit, uint expected)
+    {
+        // Arrange
+        // Act
+        var actual = CollisionBitmask.FromBit(bit);
+
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(expected));
     }
 
     // TODO: Add more test cases.
@@ -39,7 +55,7 @@ public class CollisionBitmaskTests
     [TestCase(new[] { 1 }, 0b_00000000_00000000_00000000_00000010u)]
     [TestCase(new[] { 30 }, 0b_01000000_00000000_00000000_00000000u)]
     [TestCase(new[] { 31 }, 0b_10000000_00000000_00000000_00000000u)]
-    public void FromBits_Test(int[] bits, uint value)
+    public void FromBits_Test(int[] bits, uint expected)
     {
         // Arrange
         // Act
@@ -47,8 +63,106 @@ public class CollisionBitmaskTests
         var fromSpan = CollisionBitmask.FromBits(bits.AsSpan());
 
         // Assert
-        Assert.That(fromParams.Value, Is.EqualTo(value));
-        Assert.That(fromSpan.Value, Is.EqualTo(value));
+        Assert.That(fromParams.Value, Is.EqualTo(expected));
+        Assert.That(fromSpan.Value, Is.EqualTo(expected));
+    }
+
+    // TODO: Add more test cases.
+    [TestCase(new int[0])]
+    [TestCase(new[] { 0 })]
+    public void HasBit_Test(int[] bits)
+    {
+        // Arrange
+        var collisionBitmask = CollisionBitmask.FromBits(bits);
+
+        for (var i = 0; i < 32; i++)
+        {
+            // Act
+            var actual = collisionBitmask.HasBit(i);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(bits.Contains(i)));
+        }
+    }
+
+    // TODO: Add more test cases.
+    [TestCase(new int[0])]
+    [TestCase(new[] { 0 })]
+    public void WithBit_Test(int[] bits)
+    {
+        // Arrange
+        var collisionBitmask = CollisionBitmask.FromBits(bits);
+
+        for (var i = 0; i < 32; i++)
+        {
+            // Act
+            var actual = collisionBitmask.WithBit(i);
+
+            // Assert
+            for (var j = 0; j < 32; j++)
+            {
+                var expected = i == j || collisionBitmask.HasBit(j);
+                Assert.That(actual.HasBit(j), Is.EqualTo(expected));
+            }
+        }
+    }
+
+    // TODO: Add more test cases.
+    [TestCase(new int[0])]
+    [TestCase(new[] { 0 })]
+    public void WithoutBit_Test(int[] bits)
+    {
+        // Arrange
+        var collisionBitmask = CollisionBitmask.FromBits(bits);
+
+        for (var i = 0; i < 32; i++)
+        {
+            // Act
+            var actual = collisionBitmask.WithoutBit(i);
+
+            // Assert
+            for (var j = 0; j < 32; j++)
+            {
+                var expected = i != j && collisionBitmask.HasBit(j);
+                Assert.That(actual.HasBit(j), Is.EqualTo(expected));
+            }
+        }
+    }
+
+    // TODO: Add more test cases.
+    [TestCase(0b_00000000_00000000_00000000_00000000u, 0b_00000000_00000000_00000000_00000000u)]
+    [TestCase(0b_00000000_00000000_00000000_00000001u, 0b_00000000_00000000_00000000_00000001u)]
+    public void Operator_BitwiseAnd_Test(uint value1, uint value2)
+    {
+        // Arrange
+        var collisionBitmask1 = new CollisionBitmask(value1);
+        var collisionBitmask2 = new CollisionBitmask(value2);
+
+        var expected = value1 & value2;
+
+        // Act
+        var actual = collisionBitmask1 & collisionBitmask2;
+
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(expected));
+    }
+
+    // TODO: Add more test cases.
+    [TestCase(0b_00000000_00000000_00000000_00000000u, 0b_00000000_00000000_00000000_00000000u)]
+    [TestCase(0b_00000000_00000000_00000000_00000001u, 0b_00000000_00000000_00000000_00000001u)]
+    public void Operator_BitwiseOr_Test(uint value1, uint value2)
+    {
+        // Arrange
+        var collisionBitmask1 = new CollisionBitmask(value1);
+        var collisionBitmask2 = new CollisionBitmask(value2);
+
+        var expected = value1 | value2;
+
+        // Act
+        var actual = collisionBitmask1 | collisionBitmask2;
+
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(expected));
     }
 
     [Test]
