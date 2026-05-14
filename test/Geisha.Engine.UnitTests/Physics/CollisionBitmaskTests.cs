@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Geisha.Engine.Physics;
 using NUnit.Framework;
 
@@ -68,69 +67,59 @@ public class CollisionBitmaskTests
         Assert.That(fromSpan.Value, Is.EqualTo(expected));
     }
 
-    [TestCase(new int[0])]
-    [TestCase(new[] { 0 })]
-    [TestCase(new[] { 31 })]
-    [TestCase(new[] { 0, 15, 31 })]
-    public void HasBit_Test(int[] bits)
+    [TestCase(new int[0],          0,  false)]
+    [TestCase(new[] { 0 },         0,  true)]
+    [TestCase(new[] { 0 },         1,  false)]
+    [TestCase(new[] { 31 },        31, true)]
+    [TestCase(new[] { 31 },        30, false)]
+    [TestCase(new[] { 0, 15, 31 }, 15, true)]
+    [TestCase(new[] { 0, 15, 31 }, 7,  false)]
+    public void HasBit_Test(int[] bits, int bit, bool expected)
     {
         // Arrange
         var collisionBitmask = CollisionBitmask.FromBits(bits);
 
-        for (var i = 0; i < 32; i++)
-        {
-            // Act
-            var actual = collisionBitmask.HasBit(i);
+        // Act
+        var actual = collisionBitmask.HasBit(bit);
 
-            // Assert
-            Assert.That(actual, Is.EqualTo(bits.Contains(i)));
-        }
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
-    [TestCase(new int[0])]
-    [TestCase(new[] { 0 })]
-    [TestCase(new[] { 31 })]
-    [TestCase(new[] { 0, 15, 31 })]
-    public void WithBit_Test(int[] bits)
+    [TestCase(new int[0],          0,  0b_00000000_00000000_00000000_00000001u)]
+    [TestCase(new[] { 0 },         0,  0b_00000000_00000000_00000000_00000001u)] // idempotent
+    [TestCase(new[] { 0 },         1,  0b_00000000_00000000_00000000_00000011u)]
+    [TestCase(new[] { 31 },        31, 0b_10000000_00000000_00000000_00000000u)] // idempotent
+    [TestCase(new[] { 0, 15, 31 }, 15, 0b_10000000_00000000_10000000_00000001u)] // idempotent
+    [TestCase(new[] { 0, 15, 31 }, 7,  0b_10000000_00000000_10000000_10000001u)]
+    public void WithBit_Test(int[] bits, int bit, uint expected)
     {
         // Arrange
         var collisionBitmask = CollisionBitmask.FromBits(bits);
 
-        for (var i = 0; i < 32; i++)
-        {
-            // Act
-            var actual = collisionBitmask.WithBit(i);
+        // Act
+        var actual = collisionBitmask.WithBit(bit);
 
-            // Assert
-            for (var j = 0; j < 32; j++)
-            {
-                var expected = i == j || collisionBitmask.HasBit(j);
-                Assert.That(actual.HasBit(j), Is.EqualTo(expected));
-            }
-        }
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(expected));
     }
 
-    [TestCase(new int[0])]
-    [TestCase(new[] { 0 })]
-    [TestCase(new[] { 31 })]
-    [TestCase(new[] { 0, 15, 31 })]
-    public void WithoutBit_Test(int[] bits)
+    [TestCase(new int[0],          0,  0b_00000000_00000000_00000000_00000000u)] // no-op
+    [TestCase(new[] { 0 },         0,  0b_00000000_00000000_00000000_00000000u)]
+    [TestCase(new[] { 0 },         1,  0b_00000000_00000000_00000000_00000001u)] // no-op
+    [TestCase(new[] { 31 },        31, 0b_00000000_00000000_00000000_00000000u)]
+    [TestCase(new[] { 0, 15, 31 }, 15, 0b_10000000_00000000_00000000_00000001u)]
+    [TestCase(new[] { 0, 15, 31 }, 7,  0b_10000000_00000000_10000000_00000001u)] // no-op
+    public void WithoutBit_Test(int[] bits, int bit, uint expected)
     {
         // Arrange
         var collisionBitmask = CollisionBitmask.FromBits(bits);
 
-        for (var i = 0; i < 32; i++)
-        {
-            // Act
-            var actual = collisionBitmask.WithoutBit(i);
+        // Act
+        var actual = collisionBitmask.WithoutBit(bit);
 
-            // Assert
-            for (var j = 0; j < 32; j++)
-            {
-                var expected = i != j && collisionBitmask.HasBit(j);
-                Assert.That(actual.HasBit(j), Is.EqualTo(expected));
-            }
-        }
+        // Assert
+        Assert.That(actual.Value, Is.EqualTo(expected));
     }
 
     [TestCase(0b_00000000_00000000_00000000_00000000u, 0b_00000000_00000000_00000000_00000000u)]
