@@ -20,6 +20,7 @@ namespace Geisha.Engine.Core.Math
         private const int GreenOffset = 8;
         private const int BlueOffset = 0;
 
+        // TODO: Should it be stored as uint?
         private readonly int _argb;
 
         // TODO These predefined colors may need revision when adding more of them.
