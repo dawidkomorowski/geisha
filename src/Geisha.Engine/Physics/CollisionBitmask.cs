@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Geisha.Engine.Physics;
 
+// TODO: Consider parameters validation to make sure the specified bits are in range [0, 31].
 /// <summary>
 ///     Represents a 32-bit bitmask used for collision filtering in the physics system.
 /// </summary>
