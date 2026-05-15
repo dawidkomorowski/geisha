@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Geisha.Engine.Core
 {
+    // TODO: Should it be moved to test utilities?
     /// <summary>
     ///     Provides common utility functions for <see cref="string" /> data type.
     /// </summary>

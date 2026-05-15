@@ -107,6 +107,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(20, 10)));
         Assert.That(body.EnableCollisionDetection, Is.False);
+        Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 10)));
 
@@ -117,6 +119,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
 
         rectangleColliderComponent.Dimensions = new Vector2(30, 20);
         rectangleColliderComponent.Enabled = true;
+        rectangleColliderComponent.CollisionLayer = CollisionBitmask.FromBits(0, 2);
+        rectangleColliderComponent.CollisionMask = CollisionBitmask.FromBits(1, 3);
 
         PerformSynchronization(physicsSystem);
 
@@ -130,6 +134,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(30, 20)));
         Assert.That(body.EnableCollisionDetection, Is.True);
+        Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
+        Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
         Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 35.980762, 32.320508))
             .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
@@ -160,6 +166,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(10));
         Assert.That(body.EnableCollisionDetection, Is.False);
+        Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 20)));
 
@@ -171,6 +179,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
 
         circleColliderComponent.Radius = 20;
         circleColliderComponent.Enabled = true;
+        circleColliderComponent.CollisionLayer = CollisionBitmask.FromBits(0, 2);
+        circleColliderComponent.CollisionMask = CollisionBitmask.FromBits(1, 3);
 
         PerformSynchronization(physicsSystem);
 
@@ -184,6 +194,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(20));
         Assert.That(body.EnableCollisionDetection, Is.True);
+        Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
+        Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
         Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 40, 40)));
     }
@@ -239,6 +251,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.EnableCollisionDetection, Is.False);
+        Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(tileColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, tw, th)));
 
@@ -248,6 +262,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent.Scale = new Vector2(2, 3);
 
         tileColliderComponent.Enabled = true;
+        tileColliderComponent.CollisionLayer = CollisionBitmask.FromBits(0, 2);
+        tileColliderComponent.CollisionMask = CollisionBitmask.FromBits(1, 3);
 
         PerformSynchronization(physicsSystem);
 
@@ -260,6 +276,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.EnableCollisionDetection, Is.True);
+        Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
+        Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
         Assert.That(transform2DComponent.Translation, Is.EqualTo(new Vector2(ex, ey)));
         Assert.That(transform2DComponent.Rotation, Is.Zero);
@@ -303,6 +321,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body1.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body1.EnableCollisionResponse, Is.False);
         Assert.That(body1.RectangleColliderSize, Is.EqualTo(new SizeD(10, 20)));
+        Assert.That(body1.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body1.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(rectangleColliderComponent1.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 10, 20)));
 
@@ -314,6 +334,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body2.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body2.EnableCollisionResponse, Is.False);
         Assert.That(body2.RectangleColliderSize, Is.EqualTo(new SizeD(30, 40)));
+        Assert.That(body2.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body2.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(rectangleColliderComponent2.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 30, 40)));
 
@@ -325,6 +347,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body3.EnableCollisionResponse, Is.False);
         Assert.That(body3.RectangleColliderSize, Is.EqualTo(new SizeD(50, 60)));
+        Assert.That(body3.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body3.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(rectangleColliderComponent3.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 50, 60)));
 
@@ -335,6 +359,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent1.Scale = Vector2.One;
 
         rectangleColliderComponent1.Dimensions = new Vector2(11, 22);
+        rectangleColliderComponent1.CollisionLayer = CollisionBitmask.FromBits(0, 2);
+        rectangleColliderComponent1.CollisionMask = CollisionBitmask.FromBits(1, 3);
 
         // Body 2
         transform2DComponent2.Translation = new Vector2(3, 4);
@@ -342,6 +368,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent2.Scale = Vector2.One;
 
         rectangleColliderComponent2.Dimensions = new Vector2(33, 44);
+        rectangleColliderComponent2.CollisionLayer = CollisionBitmask.FromBits(1, 4);
+        rectangleColliderComponent2.CollisionMask = CollisionBitmask.FromBits(0, 3);
 
         // Body 3
         transform2DComponent3.Translation = new Vector2(5, 6);
@@ -349,6 +377,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         transform2DComponent3.Scale = Vector2.One;
 
         rectangleColliderComponent3.Dimensions = new Vector2(55, 66);
+        rectangleColliderComponent3.CollisionLayer = CollisionBitmask.FromBits(2, 5);
+        rectangleColliderComponent3.CollisionMask = CollisionBitmask.FromBits(1, 4);
 
         PerformSynchronization(physicsSystem);
 
@@ -361,6 +391,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body1.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body1.EnableCollisionResponse, Is.False);
         Assert.That(body1.RectangleColliderSize, Is.EqualTo(new SizeD(11, 22)));
+        Assert.That(body1.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
+        Assert.That(body1.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
         Assert.That(rectangleColliderComponent1.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(1, 2, 14.653145, 23.575900))
             .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
@@ -374,6 +406,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body2.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body2.EnableCollisionResponse, Is.False);
         Assert.That(body2.RectangleColliderSize, Is.EqualTo(new SizeD(33, 44)));
+        Assert.That(body2.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(1, 4).Value));
+        Assert.That(body2.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(0, 3).Value));
 
         Assert.That(rectangleColliderComponent2.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(expectedPosition2, new Vector2(50.578838, 54.605117)))
             .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
@@ -387,6 +421,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body3.EnableCollisionResponse, Is.False);
         Assert.That(body3.RectangleColliderSize, Is.EqualTo(new SizeD(55, 66)));
+        Assert.That(body3.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(2, 5).Value));
+        Assert.That(body3.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 4).Value));
 
         Assert.That(rectangleColliderComponent3.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(expectedPosition3, new Vector2(84.657676, 80.631397)))
             .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
@@ -418,6 +454,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(20, 10)));
         Assert.That(body.EnableCollisionDetection, Is.False);
+        Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 10)));
 
@@ -428,6 +466,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
 
         rectangleColliderComponent.Dimensions = new Vector2(30, 20);
         rectangleColliderComponent.Enabled = true;
+        rectangleColliderComponent.CollisionLayer = CollisionBitmask.FromBits(0, 2);
+        rectangleColliderComponent.CollisionMask = CollisionBitmask.FromBits(1, 3);
 
         kinematicRigidBody2DComponent.LinearVelocity = new Vector2(1, 2);
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
@@ -445,6 +485,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.True);
         Assert.That(body.RectangleColliderSize, Is.EqualTo(new SizeD(30, 20)));
         Assert.That(body.EnableCollisionDetection, Is.True);
+        Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
+        Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
         Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 35.980762, 32.320508))
             .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
@@ -476,6 +518,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(10));
         Assert.That(body.EnableCollisionDetection, Is.False);
+        Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
+        Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
         Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 20)));
 
@@ -486,6 +530,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
 
         circleColliderComponent.Radius = 20;
         circleColliderComponent.Enabled = true;
+        circleColliderComponent.CollisionLayer = CollisionBitmask.FromBits(0, 2);
+        circleColliderComponent.CollisionMask = CollisionBitmask.FromBits(1, 3);
 
         kinematicRigidBody2DComponent.LinearVelocity = new Vector2(1, 2);
         kinematicRigidBody2DComponent.AngularVelocity = 0.5d;
@@ -503,6 +549,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.EnableCollisionResponse, Is.True);
         Assert.That(body.CircleColliderRadius, Is.EqualTo(20));
         Assert.That(body.EnableCollisionDetection, Is.True);
+        Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
+        Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
         Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 40, 40)));
     }

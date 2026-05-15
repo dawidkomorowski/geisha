@@ -3,112 +3,121 @@ using System.Collections.Generic;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 
-namespace Geisha.Engine.Core.SceneModel.Serialization
+namespace Geisha.Engine.Core.SceneModel.Serialization;
+
+/// <summary>
+///     Provides methods to read object data during deserialization.
+/// </summary>
+public interface IObjectReader
 {
     /// <summary>
-    ///     Provides API to read object data during deserialization process.
+    ///     Checks whether the property with the specified name is defined in the object.
     /// </summary>
-    public interface IObjectReader
-    {
-        /// <summary>
-        ///     Checks if property of specified name is defined in object.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><c>true</c> if property is defined in object; otherwise <c>false</c>.</returns>
-        bool IsDefined(string propertyName);
-
-        /// <summary>
-        ///     Checks if property of specified name has <c>null</c> value.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><c>true</c> if property has null value; otherwise <c>false</c>.</returns>
-        bool IsNull(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="bool" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="bool" /> value of property being read.</returns>
-        bool ReadBool(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="int" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="int" /> value of property being read.</returns>
-        int ReadInt(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="double" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="double" /> value of property being read.</returns>
-        double ReadDouble(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="string" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="string" /> value of property being read.</returns>
-        string? ReadString(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="Enum" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <typeparam name="TEnum">Type of <see cref="Enum" /> to read.</typeparam>
-        /// <returns><typeparamref name="TEnum" /> value of property being read.</returns>
-        TEnum ReadEnum<TEnum>(string propertyName) where TEnum : Enum;
-
-        /// <summary>
-        ///     Reads <see cref="Vector2" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="Vector2" /> value of property being read.</returns>
-        Vector2 ReadVector2(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="Vector3" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="Vector3" /> value of property being read.</returns>
-        Vector3 ReadVector3(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="AssetId" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="AssetId" /> value of property being read.</returns>
-        AssetId ReadAssetId(string propertyName);
-
-        /// <summary>
-        ///     Reads <see cref="Color" /> property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="Color" /> value of property being read.</returns>
-        Color ReadColor(string propertyName);
-
-        /// <summary>
-        ///     Reads object property of specified name with value described by <paramref name="readFunc" />.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <param name="readFunc">Function describing how to read an object of type <typeparamref name="T" />.</param>
-        /// <typeparam name="T">Type of object to read.</typeparam>
-        /// <returns><typeparamref name="T" /> value of property being read.</returns>
-        T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc);
-
-        /// <summary>
-        ///     Gets <see cref="IEnumerable{T}" /> enumerating all property names of object property of specified name.
-        /// </summary>
-        /// <param name="propertyName">Name of property to read.</param>
-        /// <returns><see cref="IEnumerable{T}" /> enumerating names of all properties of object.</returns>
-        IEnumerable<string> EnumerateObject(string propertyName);
-    }
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns><c>true</c> if the property is defined in the object; otherwise <c>false</c>.</returns>
+    bool IsDefined(string propertyName);
 
     /// <summary>
-    ///     Provides API to read component data during deserialization process.
+    ///     Checks whether the property with the specified name has a <c>null</c> value.
     /// </summary>
-    public interface IComponentDataReader : IObjectReader
-    {
-    }
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns><c>true</c> if the property has a null value; otherwise <c>false</c>.</returns>
+    bool IsNull(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="bool" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="bool" /> value of the property.</returns>
+    bool ReadBool(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="int" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="int" /> value of the property.</returns>
+    int ReadInt(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="uint" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="uint" /> value of the property.</returns>
+    uint ReadUInt(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="double" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="double" /> value of the property.</returns>
+    double ReadDouble(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="string" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>
+    ///     The <see cref="string" /> value of the property, or <see langword="null" /> when the property value is
+    ///     <c>null</c>.
+    /// </returns>
+    string? ReadString(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="Enum" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <typeparam name="TEnum">Type of <see cref="Enum" /> to read.</typeparam>
+    /// <returns>The <typeparamref name="TEnum" /> value of the property.</returns>
+    TEnum ReadEnum<TEnum>(string propertyName) where TEnum : Enum;
+
+    /// <summary>
+    ///     Reads the <see cref="Vector2" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="Vector2" /> value of the property.</returns>
+    Vector2 ReadVector2(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="Vector3" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="Vector3" /> value of the property.</returns>
+    Vector3 ReadVector3(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="AssetId" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="AssetId" /> value of the property.</returns>
+    AssetId ReadAssetId(string propertyName);
+
+    /// <summary>
+    ///     Reads the <see cref="Color" /> property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>The <see cref="Color" /> value of the property.</returns>
+    Color ReadColor(string propertyName);
+
+    /// <summary>
+    ///     Reads the object property with the specified name using <paramref name="readFunc" />.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <param name="readFunc">Function that defines how to read an object of type <typeparamref name="T" />.</param>
+    /// <typeparam name="T">Type of object to read.</typeparam>
+    /// <returns>The <typeparamref name="T" /> value of the property.</returns>
+    T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc);
+
+    /// <summary>
+    ///     Enumerates names of all properties of the object property with the specified name.
+    /// </summary>
+    /// <param name="propertyName">Name of the property to read.</param>
+    /// <returns>An enumerable sequence of property names.</returns>
+    IEnumerable<string> EnumerateObject(string propertyName);
+}
+
+/// <summary>
+///     Provides methods to read component data during deserialization.
+/// </summary>
+public interface IComponentDataReader : IObjectReader
+{
 }

@@ -8,6 +8,7 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 // Trivial refactorings like combining methods or extracting methods can have a significant impact on performance.
 internal static class CollisionDetection
 {
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies)
     {
         foreach (var staticBody in staticBodies)
@@ -24,6 +25,7 @@ internal static class CollisionDetection
         DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void DetectCollisions_Kinematic_Vs_Kinematic(ReadOnlySpan<RigidBody2D> kinematicBodies)
     {
         for (var i = 0; i < kinematicBodies.Length; i++)
@@ -35,6 +37,11 @@ internal static class CollisionDetection
                 var kinematicBody2 = kinematicBodies[j];
 
                 if (kinematicBody1.EnableCollisionDetection is false || kinematicBody2.EnableCollisionDetection is false)
+                {
+                    continue;
+                }
+
+                if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 || (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
                 {
                     continue;
                 }
@@ -58,6 +65,7 @@ internal static class CollisionDetection
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void DetectCollisions_Kinematic_Vs_Static(ReadOnlySpan<RigidBody2D> kinematicBodies, ReadOnlySpan<RigidBody2D> staticBodies)
     {
         foreach (var kinematicBody in kinematicBodies)
@@ -65,6 +73,11 @@ internal static class CollisionDetection
             foreach (var staticBody in staticBodies)
             {
                 if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
+                {
+                    continue;
+                }
+
+                if ((kinematicBody.CollisionLayer & staticBody.CollisionMask) == 0 || (kinematicBody.CollisionMask & staticBody.CollisionLayer) == 0)
                 {
                     continue;
                 }
