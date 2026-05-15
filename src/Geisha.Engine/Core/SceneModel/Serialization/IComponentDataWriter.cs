@@ -30,6 +30,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         void WriteInt(string propertyName, int value);
 
         /// <summary>
+        ///     Writes <see cref="uint" /> property with specified name and value.
+        /// </summary>
+        /// <param name="propertyName">Name of property to write.</param>
+        /// <param name="value">Value of property to write.</param>
+        void WriteUInt(string propertyName, uint value);
+
+        /// <summary>
         ///     Writes <see cref="double" /> property with specified name and value.
         /// </summary>
         /// <param name="propertyName">Name of property to write.</param>

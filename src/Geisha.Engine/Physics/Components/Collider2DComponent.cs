@@ -317,6 +317,8 @@ public abstract class Collider2DComponent : Component
     {
         base.Serialize(writer, assetStore);
         writer.WriteBool("Enabled", Enabled);
+        writer.WriteUInt("CollisionLayer", CollisionLayer.Value);
+        writer.WriteUInt("CollisionMask", CollisionMask.Value);
     }
 
     /// <inheritdoc />
@@ -324,5 +326,7 @@ public abstract class Collider2DComponent : Component
     {
         base.Deserialize(reader, assetStore);
         Enabled = reader.ReadBool("Enabled");
+        CollisionLayer = new CollisionBitmask(reader.ReadUInt("CollisionLayer"));
+        CollisionMask = new CollisionBitmask(reader.ReadUInt("CollisionMask"));
     }
 }

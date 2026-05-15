@@ -283,6 +283,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteNumber(propertyName, value);
             }
 
+            public void WriteUInt(string propertyName, uint value)
+            {
+                _jsonWriter.WriteNumber(propertyName, value);
+            }
+
             public void WriteDouble(string propertyName, double value)
             {
                 _jsonWriter.WriteNumber(propertyName, value);
@@ -353,6 +358,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public bool IsNull(string propertyName) => _jsonElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
             public bool ReadBool(string propertyName) => _jsonElement.GetProperty(propertyName).GetBoolean();
             public int ReadInt(string propertyName) => _jsonElement.GetProperty(propertyName).GetInt32();
+            public uint ReadUInt(string propertyName) => _jsonElement.GetProperty(propertyName).GetUInt32();
             public double ReadDouble(string propertyName) => _jsonElement.GetProperty(propertyName).GetDouble();
             public string? ReadString(string propertyName) => _jsonElement.GetProperty(propertyName).GetString();
 

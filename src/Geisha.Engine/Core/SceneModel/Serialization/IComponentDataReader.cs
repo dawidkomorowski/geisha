@@ -39,6 +39,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         int ReadInt(string propertyName);
 
         /// <summary>
+        ///     Reads <see cref="uint" /> property of specified name.
+        /// </summary>
+        /// <param name="propertyName">Name of property to read.</param>
+        /// <returns><see cref="uint" /> value of property being read.</returns>
+        uint ReadUInt(string propertyName);
+
+        /// <summary>
         ///     Reads <see cref="double" /> property of specified name.
         /// </summary>
         /// <param name="propertyName">Name of property to read.</param>
