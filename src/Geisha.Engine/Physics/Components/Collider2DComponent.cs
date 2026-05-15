@@ -60,7 +60,47 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
+    /// <summary>
+    ///     Gets or sets the collision layer bitmask that identifies which logical groups this collider belongs to.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         <see cref="CollisionLayer" /> describes what this collider <i>is</i>. Each set bit marks membership in a
+    ///         corresponding collision layer.
+    ///     </para>
+    ///     <para>
+    ///         During collision filtering between colliders A and B, this value is matched against B's
+    ///         <see cref="CollisionMask" />. A collision pair is accepted only when both directional checks pass:
+    ///         (A.Layer &amp; B.Mask) != 0 and (A.Mask &amp; B.Layer) != 0.
+    ///     </para>
+    ///     <para>
+    ///         Default value is <see cref="CollisionBitmask.All" />, meaning this collider belongs to all layers.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="CollisionMask" />
+    /// <seealso cref="CollisionBitmask" />
     public CollisionBitmask CollisionLayer { get; set; } = CollisionBitmask.All;
+
+    /// <summary>
+    ///     Gets or sets the collision mask bitmask that defines which layers this collider can collide with.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         <see cref="CollisionMask" /> describes what this collider collides <i>with</i>. Each set bit allows
+    ///         collisions with colliders that have the same bit set in their <see cref="CollisionLayer" />.
+    ///     </para>
+    ///     <para>
+    ///         During collision filtering between colliders A and B, this value is matched against B's
+    ///         <see cref="CollisionLayer" />. A collision pair is accepted only when both directional checks pass:
+    ///         (A.Layer &amp; B.Mask) != 0 and (A.Mask &amp; B.Layer) != 0.
+    ///     </para>
+    ///     <para>
+    ///         Default value is <see cref="CollisionBitmask.All" />, meaning this collider accepts collisions with all
+    ///         layers.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="CollisionLayer" />
+    /// <seealso cref="CollisionBitmask" />
     public CollisionBitmask CollisionMask { get; set; } = CollisionBitmask.All;
 
     /// <summary>
