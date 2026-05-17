@@ -233,6 +233,8 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
 
         var pointToTest = new Vector2(px, py);
 
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawCircle(new Circle(pointToTest, 0.3), Color.Red));
+
         // Act
         var actual = circleCollider.ContainsPoint(pointToTest);
 
@@ -240,10 +242,30 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         Assert.That(actual, Is.EqualTo(expected));
     }
 
-    [Test]
-    public void ContainsPoint_RectangleCollider_Test()
+    [TestCase(0, 0, 20, 10, 0, 0, 0, true)] // Point at center
+    [TestCase(0, 0, 20, 10, 0, 10, 0, true)] // Point on edge
+    [TestCase(0, 0, 20, 10, 0, 10.0001, 0, false)] // Point outside
+    [TestCase(0, 0, 20, 10, Math.PI / 2, 0, 10, true)] // Rotated 90°: point on edge
+    [TestCase(0, 0, 20, 10, Math.PI / 2, 0, 10.0001, false)] // Rotated 90°: point outside
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, false)] // Rotated 30°: inside AABB but outside rotated rectangle
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 9, 0, true)] // Rotated 30°: point inside rotated rectangle
+    public void ContainsPoint_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double px, double py, bool expected)
     {
-        Assert.Fail("TODO");
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
+        var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToTest = new Vector2(px, py);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawCircle(new Circle(pointToTest, 0.3), Color.Red));
+
+        // Act
+        var actual = rectangleCollider.ContainsPoint(pointToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]

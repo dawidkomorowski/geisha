@@ -190,7 +190,7 @@ internal sealed class RigidBody2D
         return ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Contains(point),
-            ColliderType.Rectangle => false,
+            ColliderType.Rectangle => BoundingRectangle.Contains(point) && TransformedRectangleCollider.Contains(point),
             ColliderType.Tile => false,
             _ => throw new ArgumentOutOfRangeException()
         };
