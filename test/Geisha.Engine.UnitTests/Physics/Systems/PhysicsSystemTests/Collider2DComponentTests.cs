@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
@@ -268,10 +269,36 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         Assert.That(actual, Is.EqualTo(expected));
     }
 
-    [Test]
-    public void ContainsPoint_TileCollider_Test()
+    [TestCase(0, 0, 1, 1, 0, 0, true)] // Point at center of tile at grid origin
+    [TestCase(0, 0, 1, 1, 0.5, 0.5, true)] // Point on upper-right corner of tile at grid origin
+    [TestCase(0, 0, 1, 1, 0.5001, 0.5, false)] // Point outside tile at grid origin
+    [TestCase(4, 6, 2, 3, 5, 7, true)] // Point inside custom-size tile
+    [TestCase(4, 6, 2, 3, 5.0001, 7, false)] // Point outside custom-size tile
+    public void ContainsPoint_TileCollider_Test(double tx, double ty, double tw, double th, double px, double py, bool expected)
     {
-        Assert.Fail("TODO");
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th),
+            EnableDebugRendering = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var tile = CreateTileStaticBody(tx, ty);
+        var tileCollider = tile.GetComponent<TileColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToTest = new Vector2(px, py);
+
+        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawCircle(new Circle(pointToTest, 0.05), Color.Red));
+
+        // Assume
+        Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+
+        // Act
+        var actual = tileCollider.ContainsPoint(pointToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     #endregion

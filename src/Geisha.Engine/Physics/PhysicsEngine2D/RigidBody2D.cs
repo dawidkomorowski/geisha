@@ -191,7 +191,7 @@ internal sealed class RigidBody2D
         {
             ColliderType.Circle => TransformedCircleCollider.Contains(point),
             ColliderType.Rectangle => BoundingRectangle.Contains(point) && TransformedRectangleCollider.Contains(point),
-            ColliderType.Tile => false,
+            ColliderType.Tile => BoundingRectangle.Contains(point),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

@@ -317,8 +317,6 @@ public abstract class Collider2DComponent : Component
         return CollectionsMarshal.AsSpan(contacts).Slice(0, written);
     }
 
-    // TODO: Add tests: public bool ContainsPoint(in Vector2 point)
-    // TODO: Implement: public bool ContainsPoint(in Vector2 point)
     // TODO: Add docs:  public bool ContainsPoint(in Vector2 point)
     // TODO: Add tests: public bool Overlaps(in AxisAlignedRectangle rectangle)
     // TODO: Implement: public bool Overlaps(in AxisAlignedRectangle rectangle)
