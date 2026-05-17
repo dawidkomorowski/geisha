@@ -220,10 +220,21 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
 
     #region ContainsPoint
 
-    [Test]
-    public void ContainsPoint_CircleCollider_Test()
+    [TestCase(0, 0, 10, 0, 0, true)]
+    public void ContainsPoint_CircleCollider_Test(double cx, double cy, double cr, double px, double py, bool expected)
     {
-        Assert.Fail("TODO");
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+
+        var pointToTest = new Vector2(px, py);
+
+        // Act
+        var actual = circleCollider.ContainsPoint(pointToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
