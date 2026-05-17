@@ -307,4 +307,76 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     }
 
     #endregion
+
+    #region Overlaps AxisAlignedRectangle
+
+    public void Overlaps_AxisAlignedRectangle_CircleCollider_Test(double cx, double cy, double cr, double aabbX, double aabbY, double aabbW, double aabbH,
+        bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+
+        // Act
+        var actual = circleCollider.Overlaps(aabbToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    public void Overlaps_AxisAlignedRectangle_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double aabbX, double aabbY,
+        double aabbW, double aabbH, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
+        var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+
+        // Act
+        var actual = rectangleCollider.Overlaps(aabbToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    public void Overlaps_AxisAlignedRectangle_TileCollider_Test(double tx, double ty, double tw, double th, double aabbX, double aabbY, double aabbW,
+        double aabbH, bool expected)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th),
+            EnableDebugRendering = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var tile = CreateTileStaticBody(tx, ty);
+        var tileCollider = tile.GetComponent<TileColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+
+        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+
+        // Assume
+        Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+
+        // Act
+        var actual = tileCollider.Overlaps(aabbToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    #endregion
 }
