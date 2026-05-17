@@ -224,6 +224,8 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     [TestCase(0, 0, 10, 0, 0, true)] // Point at center
     [TestCase(0, 0, 10, 10, 0, true)] // Point on edge
     [TestCase(0, 0, 10, 10.0001, 0, false)] // Point outside
+    [TestCase(5, -3, 10, 15, -3, true)] // Shifted circle: point on edge
+    [TestCase(5, -3, 10, 15.0001, -3, false)] // Shifted circle: point outside
     public void ContainsPoint_CircleCollider_Test(double cx, double cy, double cr, double px, double py, bool expected)
     {
         // Arrange
@@ -250,6 +252,9 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     [TestCase(0, 0, 20, 10, Math.PI / 2, 0, 10.0001, false)] // Rotated 90°: point outside
     [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, false)] // Rotated 30°: inside AABB but outside rotated rectangle
     [TestCase(0, 0, 20, 10, Math.PI / 6, 9, 0, true)] // Rotated 30°: point inside rotated rectangle
+    [TestCase(5, -3, 20, 10, 0, 15, -3, true)] // Shifted rectangle: point on edge
+    [TestCase(5, -3, 20, 10, 0, 15.0001, -3, false)] // Shifted rectangle: point outside
+    [TestCase(5, -3, 20, 10, Math.PI / 6, 16, -3, false)] // Shifted rotated rectangle: inside AABB but outside rotated rectangle
     public void ContainsPoint_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double px, double py, bool expected)
     {
         // Arrange
