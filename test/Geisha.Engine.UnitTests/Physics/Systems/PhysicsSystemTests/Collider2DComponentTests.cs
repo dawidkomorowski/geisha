@@ -217,4 +217,26 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     }
 
     #endregion
+
+    #region ContainsPoint
+
+    [Test]
+    public void ContainsPoint_CircleCollider_Test()
+    {
+        Assert.Fail("TODO");
+    }
+
+    [Test]
+    public void ContainsPoint_RectangleCollider_Test()
+    {
+        Assert.Fail("TODO");
+    }
+
+    [Test]
+    public void ContainsPoint_TileCollider_Test()
+    {
+        Assert.Fail("TODO");
+    }
+
+    #endregion
 }
