@@ -185,6 +185,17 @@ internal sealed class RigidBody2D
         RecomputeCollider();
     }
 
+    public bool ContainsPoint(in Vector2 point)
+    {
+        return ColliderType switch
+        {
+            ColliderType.Circle => TransformedCircleCollider.Contains(point),
+            ColliderType.Rectangle => false,
+            ColliderType.Tile => false,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
     internal void RecomputeCollider()
     {
         var transform = new Transform2D(Position, Rotation, Vector2.One);

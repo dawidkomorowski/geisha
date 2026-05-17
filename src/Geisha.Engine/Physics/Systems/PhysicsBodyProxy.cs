@@ -89,6 +89,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
         return writeCount;
     }
 
+    public bool ContainsPoint(in Vector2 point) => _body.ContainsPoint(point);
+
     public void Dispose()
     {
         Collider.PhysicsBodyProxy = null;

@@ -220,13 +220,16 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
 
     #region ContainsPoint
 
-    [TestCase(0, 0, 10, 0, 0, true)]
+    [TestCase(0, 0, 10, 0, 0, true)] // Point at center
+    [TestCase(0, 0, 10, 10, 0, true)] // Point on edge
+    [TestCase(0, 0, 10, 10.0001, 0, false)] // Point outside
     public void ContainsPoint_CircleCollider_Test(double cx, double cy, double cr, double px, double py, bool expected)
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
         var circle = CreateCircleStaticBody(cx, cy, cr);
         var circleCollider = circle.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
 
         var pointToTest = new Vector2(px, py);
 
