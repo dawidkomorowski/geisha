@@ -310,6 +310,12 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
 
     #region Overlaps AxisAlignedRectangle
 
+    [TestCase(0, 0, 10, 0, 0, 2, 2, true)] // AABB fully inside circle
+    [TestCase(0, 0, 10, 11, 0, 2, 2, true)] // AABB touching circle edge
+    [TestCase(0, 0, 10, 11.0001, 0, 2, 2, false)] // AABB outside circle
+    [TestCase(0, 0, 10, 9, 9, 1, 1, false)] // AABB inside circle bounding box but outside actual circle
+    [TestCase(5, -3, 10, 15, -3, 2, 2, true)] // Shifted circle overlap
+    [TestCase(5, -3, 10, 16.0001, -3, 2, 2, false)] // Shifted circle no overlap
     public void Overlaps_AxisAlignedRectangle_CircleCollider_Test(double cx, double cy, double cr, double aabbX, double aabbY, double aabbW, double aabbH,
         bool expected)
     {
@@ -330,6 +336,12 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [TestCase(0, 0, 20, 10, 0, 0, 0, 2, 2, true)] // AABB fully inside rectangle
+    [TestCase(0, 0, 20, 10, 0, 11, 0, 2, 2, true)] // AABB touching rectangle edge
+    [TestCase(0, 0, 20, 10, 0, 11.0001, 0, 2, 2, false)] // AABB outside rectangle
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, 1, 1, true)] // Rotated rectangle: AABB touches shape
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, -2, 1, 1, false)] // Rotated rectangle: AABB inside bounding AABB but outside shape
+    [TestCase(5, -3, 20, 10, 0, 15, -3, 2, 2, true)] // Shifted rectangle overlap
     public void Overlaps_AxisAlignedRectangle_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double aabbX, double aabbY,
         double aabbW, double aabbH, bool expected)
     {
@@ -350,6 +362,11 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [TestCase(0, 0, 1, 1, 0, 0, 0.2, 0.2, true)] // AABB fully inside tile at grid origin
+    [TestCase(0, 0, 1, 1, 1, 0, 1, 1, true)] // AABB touching tile edge at grid origin
+    [TestCase(0, 0, 1, 1, 1.0001, 0, 1, 1, false)] // AABB outside tile at grid origin
+    [TestCase(4, 6, 2, 3, 5, 7, 0.2, 0.2, true)] // AABB inside custom-size tile aligned to grid
+    [TestCase(4, 6, 2, 3, 5.1001, 7, 0.2, 0.2, false)] // AABB outside custom-size tile aligned to grid
     public void Overlaps_AxisAlignedRectangle_TileCollider_Test(double tx, double ty, double tw, double th, double aabbX, double aabbY, double aabbW,
         double aabbH, bool expected)
     {

@@ -90,6 +90,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     }
 
     public bool ContainsPoint(in Vector2 point) => _body.ContainsPoint(point);
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _body.Overlaps(axisAlignedRectangle);
 
     public void Dispose()
     {

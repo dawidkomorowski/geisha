@@ -185,16 +185,24 @@ internal sealed class RigidBody2D
         RecomputeCollider();
     }
 
-    public bool ContainsPoint(in Vector2 point)
-    {
-        return ColliderType switch
+    public bool ContainsPoint(in Vector2 point) =>
+        ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Contains(point),
             ColliderType.Rectangle => BoundingRectangle.Contains(point) && TransformedRectangleCollider.Contains(point),
             ColliderType.Tile => BoundingRectangle.Contains(point),
             _ => throw new ArgumentOutOfRangeException()
         };
-    }
+
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) =>
+        ColliderType switch
+        {
+            ColliderType.Circle => BoundingRectangle.Overlaps(axisAlignedRectangle) && TransformedCircleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
+            ColliderType.Rectangle => BoundingRectangle.Overlaps(axisAlignedRectangle) &&
+                                      TransformedRectangleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
+            ColliderType.Tile => BoundingRectangle.Overlaps(axisAlignedRectangle),
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     internal void RecomputeCollider()
     {
