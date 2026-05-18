@@ -204,6 +204,15 @@ internal sealed class RigidBody2D
             _ => throw new ArgumentOutOfRangeException()
         };
 
+    public bool Overlaps(in Circle circle) =>
+        ColliderType switch
+        {
+            ColliderType.Circle => TransformedCircleCollider.Overlaps(circle),
+            ColliderType.Rectangle => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
+            ColliderType.Tile => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
     internal void RecomputeCollider()
     {
         var transform = new Transform2D(Position, Rotation, Vector2.One);

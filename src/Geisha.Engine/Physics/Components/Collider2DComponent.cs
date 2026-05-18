@@ -319,15 +319,13 @@ public abstract class Collider2DComponent : Component
 
     // TODO: Add docs:  public bool ContainsPoint(in Vector2 point)
     // TODO: Add docs:  public bool Overlaps(in AxisAlignedRectangle rectangle)
-    // TODO: Add tests: public bool Overlaps(in Circle circle)
-    // TODO: Implement: public bool Overlaps(in Circle circle)
     // TODO: Add docs:  public bool Overlaps(in Circle circle)
     // TODO: Add tests: public bool Overlaps(in Rectangle rectangle)
     // TODO: Implement: public bool Overlaps(in Rectangle rectangle)
     // TODO: Add docs:  public bool Overlaps(in Rectangle rectangle)
     public bool ContainsPoint(in Vector2 point) => PhysicsBodyProxy?.ContainsPoint(point) ?? false;
     public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => PhysicsBodyProxy?.Overlaps(axisAlignedRectangle) ?? false;
-    public bool Overlaps(in Circle circle) => false;
+    public bool Overlaps(in Circle circle) => PhysicsBodyProxy?.Overlaps(circle) ?? false;
     public bool Overlaps(in Rectangle rectangle) => false;
 
     /// <summary>
