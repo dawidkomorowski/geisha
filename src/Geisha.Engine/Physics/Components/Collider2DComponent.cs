@@ -317,13 +317,90 @@ public abstract class Collider2DComponent : Component
         return CollectionsMarshal.AsSpan(contacts).Slice(0, written);
     }
 
-    // TODO: Add docs:  public bool ContainsPoint(in Vector2 point)
-    // TODO: Add docs:  public bool Overlaps(in AxisAlignedRectangle rectangle)
-    // TODO: Add docs:  public bool Overlaps(in Circle circle)
-    // TODO: Add docs:  public bool Overlaps(in Rectangle rectangle)
+    /// <summary>
+    ///     Determines whether the specified point in world space is contained within this collider's geometry.
+    /// </summary>
+    /// <param name="point">The point in world space to test.</param>
+    /// <returns>
+    ///     <see langword="true" /> if the point is contained within this collider; otherwise, <see langword="false" />.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         This method performs a geometric containment test against the actual collider shape, not just
+    ///         <see cref="BoundingRectangle" /> containment.
+    ///     </para>
+    ///     <para>
+    ///         This query observes collider state from the most recently synchronized physics data. If transform or
+    ///         collider properties were modified after the last synchronization, the result may reflect stale state until
+    ///         the next physics simulation step or until <see cref="SynchronizePhysicsState" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
+    ///     </para>
+    /// </remarks>
     public bool ContainsPoint(in Vector2 point) => PhysicsBodyProxy?.ContainsPoint(point) ?? false;
+
+    /// <summary>
+    ///     Determines whether this collider overlaps with the specified axis-aligned rectangle.
+    /// </summary>
+    /// <param name="axisAlignedRectangle">The axis-aligned rectangle to test for overlap.</param>
+    /// <returns>
+    ///     <see langword="true" /> if this collider overlaps with the rectangle; otherwise, <see langword="false" />.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         This query observes collider state from the most recently synchronized physics data. If transform or
+    ///         collider properties were modified after the last synchronization, the result may reflect stale state until
+    ///         the next physics simulation step or until <see cref="SynchronizePhysicsState" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Overlaps(in Circle)" />
+    /// <seealso cref="Overlaps(in Rectangle)" />
     public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => PhysicsBodyProxy?.Overlaps(axisAlignedRectangle) ?? false;
+
+    /// <summary>
+    ///     Determines whether this collider overlaps with the specified circle.
+    /// </summary>
+    /// <param name="circle">The circle to test for overlap.</param>
+    /// <returns>
+    ///     <see langword="true" /> if this collider overlaps with the circle; otherwise, <see langword="false" />.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         This query observes collider state from the most recently synchronized physics data. If transform or
+    ///         collider properties were modified after the last synchronization, the result may reflect stale state until
+    ///         the next physics simulation step or until <see cref="SynchronizePhysicsState" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Overlaps(in AxisAlignedRectangle)" />
+    /// <seealso cref="Overlaps(in Rectangle)" />
     public bool Overlaps(in Circle circle) => PhysicsBodyProxy?.Overlaps(circle) ?? false;
+
+    /// <summary>
+    ///     Determines whether this collider overlaps with the specified rotated rectangle.
+    /// </summary>
+    /// <param name="rectangle">The rotated rectangle to test for overlap.</param>
+    /// <returns>
+    ///     <see langword="true" /> if this collider overlaps with the rectangle; otherwise, <see langword="false" />.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         This query observes collider state from the most recently synchronized physics data. If transform or
+    ///         collider properties were modified after the last synchronization, the result may reflect stale state until
+    ///         the next physics simulation step or until <see cref="SynchronizePhysicsState" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Overlaps(in AxisAlignedRectangle)" />
+    /// <seealso cref="Overlaps(in Circle)" />
     public bool Overlaps(in Rectangle rectangle) => PhysicsBodyProxy?.Overlaps(rectangle) ?? false;
 
     /// <summary>
