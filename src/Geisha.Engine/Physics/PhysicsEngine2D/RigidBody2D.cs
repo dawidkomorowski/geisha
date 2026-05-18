@@ -185,6 +185,43 @@ internal sealed class RigidBody2D
         RecomputeCollider();
     }
 
+    public bool ContainsPoint(in Vector2 point) =>
+        ColliderType switch
+        {
+            ColliderType.Circle => TransformedCircleCollider.Contains(point),
+            ColliderType.Rectangle => BoundingRectangle.Contains(point) && TransformedRectangleCollider.Contains(point),
+            ColliderType.Tile => BoundingRectangle.Contains(point),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) =>
+        ColliderType switch
+        {
+            ColliderType.Circle => BoundingRectangle.Overlaps(axisAlignedRectangle) && TransformedCircleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
+            ColliderType.Rectangle => BoundingRectangle.Overlaps(axisAlignedRectangle) &&
+                                      TransformedRectangleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
+            ColliderType.Tile => BoundingRectangle.Overlaps(axisAlignedRectangle),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public bool Overlaps(in Circle circle) =>
+        ColliderType switch
+        {
+            ColliderType.Circle => TransformedCircleCollider.Overlaps(circle),
+            ColliderType.Rectangle => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
+            ColliderType.Tile => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public bool Overlaps(in Rectangle rectangle) =>
+        ColliderType switch
+        {
+            ColliderType.Circle => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedCircleCollider.Overlaps(rectangle),
+            ColliderType.Rectangle => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(rectangle),
+            ColliderType.Tile => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(rectangle),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
     internal void RecomputeCollider()
     {
         var transform = new Transform2D(Position, Rotation, Vector2.One);

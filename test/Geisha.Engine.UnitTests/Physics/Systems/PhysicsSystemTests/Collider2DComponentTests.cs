@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
@@ -214,6 +215,370 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         Assert.That(contactsView.Length, Is.EqualTo(contactsWritten));
         Assert.That(contactsView.ToArray(), Is.EqualTo(contacts.ToArray().AsSpan(0, contactsWritten).ToArray()));
         Assert.That(contacts.Count, Is.EqualTo(finalListSize));
+    }
+
+    #endregion
+
+    #region ContainsPoint
+
+    [TestCase(0, 0, 10, 0, 0, true)] // Point at center
+    [TestCase(0, 0, 10, 10, 0, true)] // Point on edge
+    [TestCase(0, 0, 10, 10.0001, 0, false)] // Point outside
+    [TestCase(5, -3, 10, 15, -3, true)] // Shifted circle: point on edge
+    [TestCase(5, -3, 10, 15.0001, -3, false)] // Shifted circle: point outside
+    public void ContainsPoint_CircleCollider_Test(double cx, double cy, double cr, double px, double py, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToTest = new Vector2(px, py);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawCircle(new Circle(pointToTest, 0.3), Color.Red));
+
+        // Act
+        var actual = circleCollider.ContainsPoint(pointToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 20, 10, 0, 0, 0, true)] // Point at center
+    [TestCase(0, 0, 20, 10, 0, 10, 0, true)] // Point on edge
+    [TestCase(0, 0, 20, 10, 0, 10.0001, 0, false)] // Point outside
+    [TestCase(0, 0, 20, 10, Math.PI / 2, 0, 10, true)] // Rotated 90°: point on edge
+    [TestCase(0, 0, 20, 10, Math.PI / 2, 0, 10.0001, false)] // Rotated 90°: point outside
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, false)] // Rotated 30°: inside AABB but outside rotated rectangle
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 9, 0, true)] // Rotated 30°: point inside rotated rectangle
+    [TestCase(5, -3, 20, 10, 0, 15, -3, true)] // Shifted rectangle: point on edge
+    [TestCase(5, -3, 20, 10, 0, 15.0001, -3, false)] // Shifted rectangle: point outside
+    [TestCase(5, -3, 20, 10, Math.PI / 6, 16, -3, false)] // Shifted rotated rectangle: inside AABB but outside rotated rectangle
+    public void ContainsPoint_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double px, double py, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
+        var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToTest = new Vector2(px, py);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawCircle(new Circle(pointToTest, 0.3), Color.Red));
+
+        // Act
+        var actual = rectangleCollider.ContainsPoint(pointToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 1, 1, 0, 0, true)] // Point at center of tile at grid origin
+    [TestCase(0, 0, 1, 1, 0.5, 0.5, true)] // Point on upper-right corner of tile at grid origin
+    [TestCase(0, 0, 1, 1, 0.5001, 0.5, false)] // Point outside tile at grid origin
+    [TestCase(4, 6, 2, 3, 5, 7, true)] // Point inside custom-size tile
+    [TestCase(4, 6, 2, 3, 5.0001, 7, false)] // Point outside custom-size tile
+    public void ContainsPoint_TileCollider_Test(double tx, double ty, double tw, double th, double px, double py, bool expected)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th),
+            EnableDebugRendering = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var tile = CreateTileStaticBody(tx, ty);
+        var tileCollider = tile.GetComponent<TileColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToTest = new Vector2(px, py);
+
+        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawCircle(new Circle(pointToTest, 0.05), Color.Red));
+
+        // Assume
+        Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+
+        // Act
+        var actual = tileCollider.ContainsPoint(pointToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    #endregion
+
+    #region Overlaps AxisAlignedRectangle
+
+    [TestCase(0, 0, 10, 0, 0, 2, 2, true)] // AABB fully inside circle
+    [TestCase(0, 0, 10, 11, 0, 2, 2, true)] // AABB touching circle edge
+    [TestCase(0, 0, 10, 11.0001, 0, 2, 2, false)] // AABB outside circle
+    [TestCase(0, 0, 10, 9, 9, 1, 1, false)] // AABB inside circle bounding box but outside actual circle
+    [TestCase(5, -3, 10, 15, -3, 2, 2, true)] // Shifted circle overlap
+    [TestCase(5, -3, 10, 16.0001, -3, 2, 2, false)] // Shifted circle no overlap
+    public void Overlaps_AxisAlignedRectangle_CircleCollider_Test(double cx, double cy, double cr, double aabbX, double aabbY, double aabbW, double aabbH,
+        bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+
+        // Act
+        var actual = circleCollider.Overlaps(aabbToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 20, 10, 0, 0, 0, 2, 2, true)] // AABB fully inside rectangle
+    [TestCase(0, 0, 20, 10, 0, 11, 0, 2, 2, true)] // AABB touching rectangle edge
+    [TestCase(0, 0, 20, 10, 0, 11.0001, 0, 2, 2, false)] // AABB outside rectangle
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, 1, 1, true)] // Rotated rectangle: AABB touches shape
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, -2, 1, 1, false)] // Rotated rectangle: AABB inside bounding AABB but outside shape
+    [TestCase(5, -3, 20, 10, 0, 15, -3, 2, 2, true)] // Shifted rectangle overlap
+    public void Overlaps_AxisAlignedRectangle_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double aabbX, double aabbY,
+        double aabbW, double aabbH, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
+        var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+
+        // Act
+        var actual = rectangleCollider.Overlaps(aabbToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 1, 1, 0, 0, 0.2, 0.2, true)] // AABB fully inside tile at grid origin
+    [TestCase(0, 0, 1, 1, 1, 0, 1, 1, true)] // AABB touching tile edge at grid origin
+    [TestCase(0, 0, 1, 1, 1.0001, 0, 1, 1, false)] // AABB outside tile at grid origin
+    [TestCase(4, 6, 2, 3, 5, 7, 0.2, 0.2, true)] // AABB inside custom-size tile aligned to grid
+    [TestCase(4, 6, 2, 3, 5.1001, 7, 0.2, 0.2, false)] // AABB outside custom-size tile aligned to grid
+    public void Overlaps_AxisAlignedRectangle_TileCollider_Test(double tx, double ty, double tw, double th, double aabbX, double aabbY, double aabbW,
+        double aabbH, bool expected)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th),
+            EnableDebugRendering = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var tile = CreateTileStaticBody(tx, ty);
+        var tileCollider = tile.GetComponent<TileColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+
+        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+
+        // Assume
+        Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+
+        // Act
+        var actual = tileCollider.Overlaps(aabbToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    #endregion
+
+    #region Overlaps Circle
+
+    [TestCase(0, 0, 10, 0, 0, 2, true)] // Circle fully inside collider circle
+    [TestCase(0, 0, 10, 12, 0, 2, true)] // Circle touching collider circle edge
+    [TestCase(0, 0, 10, 12.0001, 0, 2, false)] // Circle outside collider circle
+    [TestCase(5, -3, 10, 15, -3, 2, true)] // Shifted circle overlap
+    [TestCase(5, -3, 10, 17.0001, -3, 2, false)] // Shifted circle no overlap
+    public void Overlaps_Circle_CircleCollider_Test(double cx, double cy, double cr, double testCx, double testCy, double testCr, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToTest = new Circle(new Vector2(testCx, testCy), testCr);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawCircle(circleToTest, Color.Red));
+
+        // Act
+        var actual = circleCollider.Overlaps(circleToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 20, 10, 0, 0, 0, 2, true)] // Circle center inside rectangle
+    [TestCase(0, 0, 20, 10, 0, 11, 0, 1, true)] // Circle touching rectangle edge
+    [TestCase(0, 0, 20, 10, 0, 11.0001, 0, 1, false)] // Circle outside rectangle
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, 0.5, true)] // Rotated rectangle: circle touching shape
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, -2, 0.5, false)] // Rotated rectangle: circle inside bounding AABB but outside shape
+    [TestCase(5, -3, 20, 10, 0, 15, -3, 1, true)] // Shifted rectangle overlap
+    public void Overlaps_Circle_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double testCx, double testCy, double testCr,
+        bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
+        var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToTest = new Circle(new Vector2(testCx, testCy), testCr);
+
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawCircle(circleToTest, Color.Red));
+
+        // Act
+        var actual = rectangleCollider.Overlaps(circleToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 1, 1, 0, 0, 0.1, true)] // Circle inside tile at grid origin
+    [TestCase(0, 0, 1, 1, 1, 0, 0.5, true)] // Circle touching tile edge at grid origin
+    [TestCase(0, 0, 1, 1, 1.0001, 0, 0.5, false)] // Circle outside tile at grid origin
+    [TestCase(0, 0, 1, 1, 0.9, 0.9, 0.4, false)] // Circle AABB touches tile AABB, but circle is outside tile shape
+    [TestCase(4, 6, 2, 3, 5, 7, 0.1, true)] // Circle inside custom-size tile aligned to grid
+    [TestCase(4, 6, 2, 3, 5.1001, 7, 0.1, false)] // Circle outside custom-size tile aligned to grid
+    public void Overlaps_Circle_TileCollider_Test(double tx, double ty, double tw, double th, double testCx, double testCy, double testCr, bool expected)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th),
+            EnableDebugRendering = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var tile = CreateTileStaticBody(tx, ty);
+        var tileCollider = tile.GetComponent<TileColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToTest = new Circle(new Vector2(testCx, testCy), testCr);
+
+        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawCircle(circleToTest, Color.Red));
+
+        // Assume
+        Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+
+        // Act
+        var actual = tileCollider.Overlaps(circleToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    #endregion
+
+    #region Overlaps Rectangle
+
+    [TestCase(0, 0, 10, 0, 0, 2, 2, 0, true)] // Rectangle fully inside circle
+    [TestCase(0, 0, 10, 11, 0, 2, 2, 0, true)] // Rectangle touching circle edge
+    [TestCase(0, 0, 10, 11.0001, 0, 2, 2, 0, false)] // Rectangle outside circle
+    [TestCase(0, 0, 10, 8, 8, 0.5, 0.5, 0, false)] // Rectangle inside circle AABB but outside circle
+    [TestCase(5, -3, 10, 15, -3, 2, 2, 0, true)] // Shifted circle overlap
+    [TestCase(5, -3, 10, 16.0001, -3, 2, 2, 0, false)] // Shifted circle no overlap
+    public void Overlaps_Rectangle_CircleCollider_Test(double cx, double cy, double cr, double testRx, double testRy, double testRw, double testRh,
+        double testRr, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var circle = CreateCircleStaticBody(cx, cy, cr);
+        var circleCollider = circle.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleTransform = new Transform2D(new Vector2(testRx, testRy), testRr, Vector2.One).ToMatrix();
+        var rectangleToTest = new Rectangle(new Vector2(testRw, testRh)).Transform(rectangleTransform);
+        var rectangleToDraw = new AxisAlignedRectangle(testRw, testRh);
+
+        SaveVisualOutput(physicsSystem, scale: 10,
+            postDrawAction: renderer => renderer.DrawRectangle(rectangleToDraw, Color.Red, rectangleTransform));
+
+        // Act
+        var actual = circleCollider.Overlaps(rectangleToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 20, 10, 0, 0, 0, 2, 2, 0, true)] // Rectangle fully inside rectangle collider
+    [TestCase(0, 0, 20, 10, 0, 11, 0, 2, 2, 0, true)] // Rectangle touching rectangle collider edge
+    [TestCase(0, 0, 20, 10, 0, 11.0001, 0, 2, 2, 0, false)] // Rectangle outside rectangle collider
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, 1, 1, 0, true)] // Rotated rectangle collider: rectangle touching shape
+    [TestCase(0, 0, 20, 10, Math.PI / 6, 11, -2, 1, 1, 0, false)] // Rotated rectangle collider: rectangle inside AABB but outside shape
+    [TestCase(5, -3, 20, 10, 0, 15, -3, 2, 2, 0, true)] // Shifted rectangle overlap
+    public void Overlaps_Rectangle_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double testRx, double testRy, double testRw,
+        double testRh, double testRr, bool expected)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
+        var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleTransform = new Transform2D(new Vector2(testRx, testRy), testRr, Vector2.One).ToMatrix();
+        var rectangleToTest = new Rectangle(new Vector2(testRw, testRh)).Transform(rectangleTransform);
+        var rectangleToDraw = new AxisAlignedRectangle(testRw, testRh);
+
+        SaveVisualOutput(physicsSystem, scale: 10,
+            postDrawAction: renderer => renderer.DrawRectangle(rectangleToDraw, Color.Red, rectangleTransform));
+
+        // Act
+        var actual = rectangleCollider.Overlaps(rectangleToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase(0, 0, 1, 1, 0, 0, 0.2, 0.2, 0, true)] // Rectangle inside tile at grid origin
+    [TestCase(0, 0, 1, 1, 1, 0, 1, 1, 0, true)] // Rectangle touching tile edge at grid origin
+    [TestCase(0, 0, 1, 1, 1.0001, 0, 1, 1, 0, false)] // Rectangle outside tile at grid origin
+    [TestCase(0, 0, 1, 1, 0.8, 0.8, 0.5, 0.5, Math.PI / 4, false)] // Rectangle AABB overlaps tile, but rotated rectangle is outside tile
+    [TestCase(4, 6, 2, 3, 5, 7, 0.2, 0.2, 0, true)] // Rectangle inside custom-size tile aligned to grid
+    [TestCase(4, 6, 2, 3, 5.1001, 7, 0.2, 0.2, 0, false)] // Rectangle outside custom-size tile aligned to grid
+    public void Overlaps_Rectangle_TileCollider_Test(double tx, double ty, double tw, double th, double testRx, double testRy, double testRw, double testRh,
+        double testRr, bool expected)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th),
+            EnableDebugRendering = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var tile = CreateTileStaticBody(tx, ty);
+        var tileCollider = tile.GetComponent<TileColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleTransform = new Transform2D(new Vector2(testRx, testRy), testRr, Vector2.One).ToMatrix();
+        var rectangleToTest = new Rectangle(new Vector2(testRw, testRh)).Transform(rectangleTransform);
+        var rectangleToDraw = new AxisAlignedRectangle(testRw, testRh);
+
+        SaveVisualOutput(physicsSystem, scale: 40,
+            postDrawAction: renderer => renderer.DrawRectangle(rectangleToDraw, Color.Red, rectangleTransform));
+
+        // Assume
+        Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+
+        // Act
+        var actual = tileCollider.Overlaps(rectangleToTest);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     #endregion

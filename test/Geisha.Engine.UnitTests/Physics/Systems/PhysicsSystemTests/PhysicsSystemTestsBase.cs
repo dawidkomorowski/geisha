@@ -65,11 +65,12 @@ public abstract class PhysicsSystemTestsBase
         return physicsSystem;
     }
 
-    private protected void SaveVisualOutput(PhysicsSystem physicsSystem, int stage = 0, double scale = 1d)
+    private protected void SaveVisualOutput(PhysicsSystem physicsSystem, int stage = 0, double scale = 1d, Action<IDebugRenderer>? postDrawAction = null)
     {
         _debugRendererForTests.BeginDraw(scale);
         physicsSystem.SynchronizePhysicsState();
         physicsSystem.PreparePhysicsDebugInformation();
+        postDrawAction?.Invoke(_debugRendererForTests);
         _debugRendererForTests.EndDrawUsingTestContext(stage);
         DebugRenderer.ClearReceivedCalls();
     }

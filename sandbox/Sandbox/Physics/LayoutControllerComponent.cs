@@ -114,40 +114,10 @@ public sealed class LayoutControllerComponent : BehaviorComponent
 
         foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
-            if (entity.HasComponent<RectangleColliderComponent>())
+            var colliderComponent = entity.Components.OfType<Collider2DComponent>().Single();
+            if (colliderComponent.ContainsPoint(mousePosition))
             {
-                var rectangleColliderComponent = entity.GetComponent<RectangleColliderComponent>();
-                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-                var rectangle = new Rectangle(rectangleColliderComponent.Dimensions).Transform(transform2DComponent.ToMatrix());
-
-                if (rectangle.Contains(mousePosition))
-                {
-                    rectangleColliderComponent.Enabled = !rectangleColliderComponent.Enabled;
-                }
-            }
-
-            if (entity.HasComponent<CircleColliderComponent>())
-            {
-                var circleColliderComponent = entity.GetComponent<CircleColliderComponent>();
-                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-                var circle = new Circle(circleColliderComponent.Radius).Transform(transform2DComponent.ToMatrix());
-
-                if (circle.Contains(mousePosition))
-                {
-                    circleColliderComponent.Enabled = !circleColliderComponent.Enabled;
-                }
-            }
-
-            if (entity.HasComponent<TileColliderComponent>())
-            {
-                var tileColliderComponent = entity.GetComponent<TileColliderComponent>();
-                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-                var rectangle = new Rectangle(new SizeD(50, 50)).Transform(transform2DComponent.ToMatrix());
-
-                if (rectangle.Contains(mousePosition))
-                {
-                    tileColliderComponent.Enabled = !tileColliderComponent.Enabled;
-                }
+                colliderComponent.Enabled = !colliderComponent.Enabled;
             }
         }
     }
@@ -158,39 +128,10 @@ public sealed class LayoutControllerComponent : BehaviorComponent
 
         foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
-            if (entity.HasComponent<RectangleColliderComponent>())
+            var colliderComponent = entity.Components.OfType<Collider2DComponent>().Single();
+            if (colliderComponent.ContainsPoint(mousePosition))
             {
-                var rectangleColliderComponent = entity.GetComponent<RectangleColliderComponent>();
-                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-                var rectangle = new Rectangle(rectangleColliderComponent.Dimensions).Transform(transform2DComponent.ToMatrix());
-
-                if (rectangle.Contains(mousePosition))
-                {
-                    entity.RemoveAfterFixedTimeStep();
-                }
-            }
-
-            if (entity.HasComponent<CircleColliderComponent>())
-            {
-                var circleColliderComponent = entity.GetComponent<CircleColliderComponent>();
-                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-                var circle = new Circle(circleColliderComponent.Radius).Transform(transform2DComponent.ToMatrix());
-
-                if (circle.Contains(mousePosition))
-                {
-                    entity.RemoveAfterFixedTimeStep();
-                }
-            }
-
-            if (entity.HasComponent<TileColliderComponent>())
-            {
-                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-                var rectangle = new Rectangle(new SizeD(50, 50)).Transform(transform2DComponent.ToMatrix());
-
-                if (rectangle.Contains(mousePosition))
-                {
-                    entity.RemoveAfterFixedTimeStep();
-                }
+                entity.RemoveAfterFixedTimeStep();
             }
         }
     }

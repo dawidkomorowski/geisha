@@ -89,6 +89,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
         return writeCount;
     }
 
+    public bool ContainsPoint(in Vector2 point) => _body.ContainsPoint(point);
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _body.Overlaps(axisAlignedRectangle);
+    public bool Overlaps(in Circle circle) => _body.Overlaps(circle);
+    public bool Overlaps(in Rectangle rectangle) => _body.Overlaps(rectangle);
+
     public void Dispose()
     {
         Collider.PhysicsBodyProxy = null;
