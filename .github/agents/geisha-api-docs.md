@@ -52,6 +52,11 @@ C# / XML documentation guidance:
 - Keep <summary> focused on the API contract.
 - Use <remarks> for lifecycle notes, threading expectations, ownership, performance caveats, or usage constraints when these are supported by the code or tests.
 - Add examples only when requested or when examples are necessary for clarity.
+- Cross references: use <see> for inline references and <seealso> for related overloads or sibling APIs. Avoid prose "See also" lines in remarks.
+
+Module-Specific Addenda:
+- Physics API Addendum:
+  - Physics query freshness: if results depend on physics synchronization, include a concise stale-state note and reference the synchronization API.
 
 Hard constraints:
 - Do not modify code unless explicitly asked.
