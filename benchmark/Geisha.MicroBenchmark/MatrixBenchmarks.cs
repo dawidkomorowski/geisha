@@ -17,6 +17,7 @@ public class MatrixBenchmarks
         }
     }
 
+    // To use this baseline, introduce a copy of the benchmarked method as Matrix3x3.CreateRotation_Legacy for side-by-side comparison.
     //[Benchmark(Baseline = true)]
     //public Matrix3x3 Matrix3x3_CreateRotation_Legacy()
     //{
