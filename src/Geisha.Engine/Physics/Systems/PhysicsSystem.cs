@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -77,6 +79,86 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         {
             proxy.SynchronizeBody();
         }
+    }
+
+    public int QueryPoint(in Vector2 point, Span<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public int QueryPoint(in Vector2 point, List<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, Span<Collider2DComponent> colliders)
+    {
+        return colliders.Slice(0, 0);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, List<Collider2DComponent> colliders)
+    {
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, 0);
+    }
+
+    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        return colliders.Slice(0, 0);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, 0);
+    }
+
+    public int QueryOverlap(in Circle circle, Span<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public int QueryOverlap(in Circle circle, List<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Circle circle, Span<Collider2DComponent> colliders)
+    {
+        return colliders.Slice(0, 0);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Circle circle, List<Collider2DComponent> colliders)
+    {
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, 0);
+    }
+
+    public int QueryOverlap(in Rectangle rectangle, Span<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public int QueryOverlap(in Rectangle rectangle, List<Collider2DComponent> colliders)
+    {
+        return 0;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, Span<Collider2DComponent> colliders)
+    {
+        return colliders.Slice(0, 0);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, List<Collider2DComponent> colliders)
+    {
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, 0);
     }
 
     #endregion

@@ -1,4 +1,8 @@
-﻿namespace Geisha.Engine.Physics.Systems;
+﻿using System;
+using System.Collections.Generic;
+using Geisha.Engine.Core.Math;
+
+namespace Geisha.Engine.Physics.Systems;
 
 /// <summary>
 ///     Provides access to runtime settings and controls of the physics system.
@@ -48,4 +52,28 @@ public interface IPhysicsSystem
     /// </remarks>
     /// <seealso cref="Geisha.Engine.Physics.Components.Collider2DComponent.SynchronizePhysicsState" />
     void SynchronizePhysicsState();
+
+    int QueryPoint(in Vector2 point, Span<Components.Collider2DComponent> colliders);
+    int QueryPoint(in Vector2 point, List<Components.Collider2DComponent> colliders);
+    ReadOnlySpan<Components.Collider2DComponent> QueryPointAsSpan(in Vector2 point, Span<Components.Collider2DComponent> colliders);
+    ReadOnlySpan<Components.Collider2DComponent> QueryPointAsSpan(in Vector2 point, List<Components.Collider2DComponent> colliders);
+
+    int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Components.Collider2DComponent> colliders);
+    int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, List<Components.Collider2DComponent> colliders);
+
+    ReadOnlySpan<Components.Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle,
+        Span<Components.Collider2DComponent> colliders);
+
+    ReadOnlySpan<Components.Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle,
+        List<Components.Collider2DComponent> colliders);
+
+    int QueryOverlap(in Circle circle, Span<Components.Collider2DComponent> colliders);
+    int QueryOverlap(in Circle circle, List<Components.Collider2DComponent> colliders);
+    ReadOnlySpan<Components.Collider2DComponent> QueryOverlapAsSpan(in Circle circle, Span<Components.Collider2DComponent> colliders);
+    ReadOnlySpan<Components.Collider2DComponent> QueryOverlapAsSpan(in Circle circle, List<Components.Collider2DComponent> colliders);
+
+    int QueryOverlap(in Rectangle rectangle, Span<Components.Collider2DComponent> colliders);
+    int QueryOverlap(in Rectangle rectangle, List<Components.Collider2DComponent> colliders);
+    ReadOnlySpan<Components.Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, Span<Components.Collider2DComponent> colliders);
+    ReadOnlySpan<Components.Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, List<Components.Collider2DComponent> colliders);
 }
