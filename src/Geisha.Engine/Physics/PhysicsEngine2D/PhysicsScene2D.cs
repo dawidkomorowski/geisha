@@ -103,6 +103,21 @@ internal sealed class PhysicsScene2D
         }
     }
 
+    public int QueryPoint(in Vector2 point, Span<RigidBody2D> bodies)
+    {
+        var written = 0;
+
+        foreach (var body in Bodies)
+        {
+            if (body.ContainsPoint(point))
+            {
+                bodies[written++] = body;
+            }
+        }
+
+        return written;
+    }
+
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
     private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
 

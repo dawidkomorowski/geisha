@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -83,22 +84,35 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public int QueryPoint(in Vector2 point, Span<Collider2DComponent> colliders)
     {
-        return 0;
+        // TODO: How to do it efficiently without allocation?
+        var bodies = new RigidBody2D[64];
+        var written = PhysicsScene2D.QueryPoint(point, bodies);
+
+        for (var i = 0; i < written; i++)
+        {
+            var proxy = bodies[i].Proxy;
+            Debug.Assert(proxy is not null);
+            colliders[i] = proxy.Collider;
+        }
+
+        return written;
     }
 
     public int QueryPoint(in Vector2 point, List<Collider2DComponent> colliders)
     {
-        return 0;
+        return QueryPoint(point, CollectionsMarshal.AsSpan(colliders));
     }
 
     public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, Span<Collider2DComponent> colliders)
     {
-        return colliders.Slice(0, 0);
+        var written = QueryPoint(in point, colliders);
+        return colliders.Slice(0, written);
     }
 
     public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, List<Collider2DComponent> colliders)
     {
-        return CollectionsMarshal.AsSpan(colliders).Slice(0, 0);
+        var written = QueryPoint(in point, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
     public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
