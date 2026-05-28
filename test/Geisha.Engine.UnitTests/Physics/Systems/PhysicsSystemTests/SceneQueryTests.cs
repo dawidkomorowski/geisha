@@ -25,7 +25,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             TileSize = new SizeD(2, 2)
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
-        CreateCollidersContainingPoint(collidersCount);
+        CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
         var pointToQuery = Vector2.Zero;
@@ -56,10 +56,13 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             TileSize = new SizeD(2, 2)
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
-        var fillerCollider = CreateCollidersContainingPoint(Math.Max(collidersCount, 1));
+        CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
         var pointToQuery = Vector2.Zero;
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.ContainsPoint(pointToQuery), Is.False);
 
         var colliders = new List<Collider2DComponent>();
         for (var i = 0; i < initialListSize; i++)
@@ -93,7 +96,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             TileSize = new SizeD(2, 2)
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
-        CreateCollidersContainingPoint(collidersCount);
+        CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
         var pointToQuery = Vector2.Zero;
@@ -124,10 +127,13 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             TileSize = new SizeD(2, 2)
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
-        var fillerCollider = CreateCollidersContainingPoint(Math.Max(collidersCount, 1));
+        CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
         var pointToQuery = Vector2.Zero;
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.ContainsPoint(pointToQuery), Is.False);
 
         var colliders = new List<Collider2DComponent>();
         for (var i = 0; i < initialListSize; i++)
@@ -146,6 +152,38 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         {
             Assert.That(view[i].ContainsPoint(pointToQuery), Is.True);
         }
+    }
+
+    private static IEnumerable<TestCaseData> QueryPointGeometryTestCases()
+    {
+        // Circle: x, y, radius(a), ignored(b), rotation, pointX, pointY, expected
+        yield return new TestCaseData("Circle", 0d, 0d, 10d, 0d, 0d, 0d, 0d, true).SetName("QueryPoint_Geometry_Circle_PointAtCenter");
+        yield return new TestCaseData("Circle", 0d, 0d, 10d, 0d, 0d, 10d, 0d, true).SetName("QueryPoint_Geometry_Circle_PointOnEdge");
+        yield return new TestCaseData("Circle", 0d, 0d, 10d, 0d, 0d, 10.0001d, 0d, false).SetName("QueryPoint_Geometry_Circle_PointOutside");
+        yield return new TestCaseData("Circle", 5d, -3d, 10d, 0d, 0d, 15d, -3d, true).SetName("QueryPoint_Geometry_Circle_ShiftedPointOnEdge");
+        yield return new TestCaseData("Circle", 5d, -3d, 10d, 0d, 0d, 15.0001d, -3d, false).SetName("QueryPoint_Geometry_Circle_ShiftedPointOutside");
+
+        // Rectangle: x, y, width(a), height(b), rotation, pointX, pointY, expected
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, 0d, 0d, 0d, true).SetName("QueryPoint_Geometry_Rectangle_PointAtCenter");
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, 0d, 10d, 0d, true).SetName("QueryPoint_Geometry_Rectangle_PointOnEdge");
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, 0d, 10.0001d, 0d, false).SetName("QueryPoint_Geometry_Rectangle_PointOutside");
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 2, 0d, 10d, true).SetName("QueryPoint_Geometry_Rectangle_Rotated90_PointOnEdge");
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 2, 0d, 10.0001d, false).SetName(
+            "QueryPoint_Geometry_Rectangle_Rotated90_PointOutside");
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 6, 11d, 0d, false).SetName(
+            "QueryPoint_Geometry_Rectangle_Rotated30_InsideAabbOutsideShape");
+        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 6, 9d, 0d, true).SetName("QueryPoint_Geometry_Rectangle_Rotated30_InsideShape");
+        yield return new TestCaseData("Rectangle", 5d, -3d, 20d, 10d, 0d, 15d, -3d, true).SetName("QueryPoint_Geometry_Rectangle_ShiftedPointOnEdge");
+        yield return new TestCaseData("Rectangle", 5d, -3d, 20d, 10d, 0d, 15.0001d, -3d, false).SetName("QueryPoint_Geometry_Rectangle_ShiftedPointOutside");
+        yield return new TestCaseData("Rectangle", 5d, -3d, 20d, 10d, Math.PI / 6, 16d, -3d, false)
+            .SetName("QueryPoint_Geometry_Rectangle_ShiftedRotated_InsideAabbOutsideShape");
+
+        // Tile: x, y, tileWidth(a), tileHeight(b), ignored(rotation), pointX, pointY, expected
+        yield return new TestCaseData("Tile", 0d, 0d, 1d, 1d, 0d, 0d, 0d, true).SetName("QueryPoint_Geometry_Tile_PointAtCenter");
+        yield return new TestCaseData("Tile", 0d, 0d, 1d, 1d, 0d, 0.5d, 0.5d, true).SetName("QueryPoint_Geometry_Tile_PointOnCorner");
+        yield return new TestCaseData("Tile", 0d, 0d, 1d, 1d, 0d, 0.5001d, 0.5d, false).SetName("QueryPoint_Geometry_Tile_PointOutside");
+        yield return new TestCaseData("Tile", 4d, 6d, 2d, 3d, 0d, 5d, 7d, true).SetName("QueryPoint_Geometry_Tile_CustomSize_PointInside");
+        yield return new TestCaseData("Tile", 4d, 6d, 2d, 3d, 0d, 5.0001d, 7d, false).SetName("QueryPoint_Geometry_Tile_CustomSize_PointOutside");
     }
 
     [TestCaseSource(nameof(QueryPointGeometryTestCases))]
@@ -199,52 +237,22 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
     #endregion
 
-    private Collider2DComponent CreateCollidersContainingPoint(int collidersCount)
+    private void CreateCollidersAtOrigin(int collidersCount)
     {
-        Collider2DComponent? firstCollider = null;
-
         for (var i = 0; i < collidersCount; i++)
         {
-            Collider2DComponent collider = (i % 3) switch
+            switch (i % 3)
             {
-                0 => CreateCircleStaticBody(0, 0, 10 + i).GetComponent<CircleColliderComponent>(),
-                1 => CreateRectangleStaticBody(0, 0, 20 + i, 10 + i, i % 2 == 0 ? 0 : Math.PI / 6).GetComponent<RectangleColliderComponent>(),
-                _ => CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>()
-            };
-
-            firstCollider ??= collider;
+                case 0:
+                    CreateCircleStaticBody(0, 0, 10 + i);
+                    break;
+                case 1:
+                    CreateRectangleStaticBody(0, 0, 20 + i, 10 + i, i % 2 == 0 ? 0 : Math.PI / 6);
+                    break;
+                default:
+                    CreateTileStaticBody(0, 0);
+                    break;
+            }
         }
-
-        return firstCollider ?? CreateCircleStaticBody(0, 0, 1).GetComponent<CircleColliderComponent>();
-    }
-
-    private static IEnumerable<TestCaseData> QueryPointGeometryTestCases()
-    {
-        // Circle: x, y, radius(a), ignored(b), rotation, pointX, pointY, expected
-        yield return new TestCaseData("Circle", 0d, 0d, 10d, 0d, 0d, 0d, 0d, true).SetName("QueryPoint_Geometry_Circle_PointAtCenter");
-        yield return new TestCaseData("Circle", 0d, 0d, 10d, 0d, 0d, 10d, 0d, true).SetName("QueryPoint_Geometry_Circle_PointOnEdge");
-        yield return new TestCaseData("Circle", 0d, 0d, 10d, 0d, 0d, 10.0001d, 0d, false).SetName("QueryPoint_Geometry_Circle_PointOutside");
-        yield return new TestCaseData("Circle", 5d, -3d, 10d, 0d, 0d, 15d, -3d, true).SetName("QueryPoint_Geometry_Circle_ShiftedPointOnEdge");
-        yield return new TestCaseData("Circle", 5d, -3d, 10d, 0d, 0d, 15.0001d, -3d, false).SetName("QueryPoint_Geometry_Circle_ShiftedPointOutside");
-
-        // Rectangle: x, y, width(a), height(b), rotation, pointX, pointY, expected
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, 0d, 0d, 0d, true).SetName("QueryPoint_Geometry_Rectangle_PointAtCenter");
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, 0d, 10d, 0d, true).SetName("QueryPoint_Geometry_Rectangle_PointOnEdge");
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, 0d, 10.0001d, 0d, false).SetName("QueryPoint_Geometry_Rectangle_PointOutside");
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 2, 0d, 10d, true).SetName("QueryPoint_Geometry_Rectangle_Rotated90_PointOnEdge");
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 2, 0d, 10.0001d, false).SetName("QueryPoint_Geometry_Rectangle_Rotated90_PointOutside");
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 6, 11d, 0d, false).SetName("QueryPoint_Geometry_Rectangle_Rotated30_InsideAabbOutsideShape");
-        yield return new TestCaseData("Rectangle", 0d, 0d, 20d, 10d, Math.PI / 6, 9d, 0d, true).SetName("QueryPoint_Geometry_Rectangle_Rotated30_InsideShape");
-        yield return new TestCaseData("Rectangle", 5d, -3d, 20d, 10d, 0d, 15d, -3d, true).SetName("QueryPoint_Geometry_Rectangle_ShiftedPointOnEdge");
-        yield return new TestCaseData("Rectangle", 5d, -3d, 20d, 10d, 0d, 15.0001d, -3d, false).SetName("QueryPoint_Geometry_Rectangle_ShiftedPointOutside");
-        yield return new TestCaseData("Rectangle", 5d, -3d, 20d, 10d, Math.PI / 6, 16d, -3d, false)
-            .SetName("QueryPoint_Geometry_Rectangle_ShiftedRotated_InsideAabbOutsideShape");
-
-        // Tile: x, y, tileWidth(a), tileHeight(b), ignored(rotation), pointX, pointY, expected
-        yield return new TestCaseData("Tile", 0d, 0d, 1d, 1d, 0d, 0d, 0d, true).SetName("QueryPoint_Geometry_Tile_PointAtCenter");
-        yield return new TestCaseData("Tile", 0d, 0d, 1d, 1d, 0d, 0.5d, 0.5d, true).SetName("QueryPoint_Geometry_Tile_PointOnCorner");
-        yield return new TestCaseData("Tile", 0d, 0d, 1d, 1d, 0d, 0.5001d, 0.5d, false).SetName("QueryPoint_Geometry_Tile_PointOutside");
-        yield return new TestCaseData("Tile", 4d, 6d, 2d, 3d, 0d, 5d, 7d, true).SetName("QueryPoint_Geometry_Tile_CustomSize_PointInside");
-        yield return new TestCaseData("Tile", 4d, 6d, 2d, 3d, 0d, 5.0001d, 7d, false).SetName("QueryPoint_Geometry_Tile_CustomSize_PointOutside");
     }
 }
