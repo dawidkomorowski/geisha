@@ -43,12 +43,12 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         }
     }
 
-    [TestCase(0, 0, 0, 0)] // No colliders: 0 hits, empty list -> 0 written, list stays empty
-    [TestCase(5, 0, 5, 5)] // 5 hits, empty list -> 5 written, list grows to 5
-    [TestCase(5, 2, 5, 5)] // 5 hits, list size 2 -> 5 written, list grows to 5
-    [TestCase(5, 5, 5, 5)] // 5 hits, list size 5 -> 5 written, list stays at 5
-    [TestCase(5, 8, 5, 8)] // 5 hits, list size 8 -> 5 written, list stays at 8
-    public void QueryPoint_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten, int expectedFinalListSize)
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> 0 written, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> 5 written, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> 5 written, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> 5 written, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> 5 written, capacity unchanged
+    public void QueryPoint_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
@@ -64,18 +64,21 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
         Assert.That(fillerCollider.ContainsPoint(pointToQuery), Is.False);
 
-        var colliders = new List<Collider2DComponent>();
+        var colliders = new List<Collider2DComponent>(initialListSize);
         for (var i = 0; i < initialListSize; i++)
         {
             colliders.Add(fillerCollider);
         }
+
+        var initialCapacity = colliders.Capacity;
 
         // Act
         var written = physicsSystem.QueryPoint(pointToQuery, colliders);
 
         // Assert
         Assert.That(written, Is.EqualTo(expectedWritten));
-        Assert.That(colliders.Count, Is.EqualTo(expectedFinalListSize));
+        Assert.That(colliders.Count, Is.EqualTo(written));
+        AssertListCapacityBehavior(initialCapacity, written, colliders.Capacity);
 
         for (var i = 0; i < written; i++)
         {
@@ -114,12 +117,12 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         }
     }
 
-    [TestCase(0, 0, 0, 0)] // No colliders: 0 hits, empty list -> empty span, list stays empty
-    [TestCase(5, 0, 5, 5)] // 5 hits, empty list -> span length 5, list grows to 5
-    [TestCase(5, 2, 5, 5)] // 5 hits, list size 2 -> span length 5, list grows to 5
-    [TestCase(5, 5, 5, 5)] // 5 hits, list size 5 -> span length 5, list stays at 5
-    [TestCase(5, 8, 5, 8)] // 5 hits, list size 8 -> span length 5, list stays at 8
-    public void QueryPointAsSpan_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten, int expectedFinalListSize)
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> empty span, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> span length 5, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> span length 5, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> span length 5, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> span length 5, capacity unchanged
+    public void QueryPointAsSpan_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
@@ -135,18 +138,21 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
         Assert.That(fillerCollider.ContainsPoint(pointToQuery), Is.False);
 
-        var colliders = new List<Collider2DComponent>();
+        var colliders = new List<Collider2DComponent>(initialListSize);
         for (var i = 0; i < initialListSize; i++)
         {
             colliders.Add(fillerCollider);
         }
+
+        var initialCapacity = colliders.Capacity;
 
         // Act
         var view = physicsSystem.QueryPointAsSpan(pointToQuery, colliders);
 
         // Assert
         Assert.That(view.Length, Is.EqualTo(expectedWritten));
-        Assert.That(colliders.Count, Is.EqualTo(expectedFinalListSize));
+        Assert.That(colliders.Count, Is.EqualTo(view.Length));
+        AssertListCapacityBehavior(initialCapacity, view.Length, colliders.Capacity);
 
         for (var i = 0; i < view.Length; i++)
         {
@@ -291,6 +297,19 @@ public class SceneQueryTests : PhysicsSystemTestsBase
                     CreateTileStaticBody(0, 0);
                     break;
             }
+        }
+    }
+
+    private static void AssertListCapacityBehavior(int initialCapacity, int requiredCount, int finalCapacity)
+    {
+        if (initialCapacity < requiredCount)
+        {
+            Assert.That(finalCapacity, Is.GreaterThanOrEqualTo(requiredCount));
+            Assert.That(finalCapacity, Is.GreaterThan(initialCapacity));
+        }
+        else
+        {
+            Assert.That(finalCapacity, Is.EqualTo(initialCapacity));
         }
     }
 }
