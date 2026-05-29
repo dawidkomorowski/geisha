@@ -103,19 +103,18 @@ internal sealed class PhysicsScene2D
         }
     }
 
-    public int QueryPoint(in Vector2 point, Span<RigidBody2D> bodies)
+    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IRigidBodyQueryHandler
     {
-        var written = 0;
-
         foreach (var body in Bodies)
         {
             if (body.ContainsPoint(point))
             {
-                bodies[written++] = body;
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
             }
         }
-
-        return written;
     }
 
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);

@@ -84,23 +84,27 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public int QueryPoint(in Vector2 point, Span<Collider2DComponent> colliders)
     {
-        // TODO: How to do it efficiently without allocation?
-        var bodies = new RigidBody2D[64];
-        var written = PhysicsScene2D.QueryPoint(point, bodies);
+        //// TODO: How to do it efficiently without allocation?
+        //var bodies = new RigidBody2D[64];
+        //var written = PhysicsScene2D.QueryPoint(point, bodies);
 
-        for (var i = 0; i < written; i++)
-        {
-            var proxy = bodies[i].Proxy;
-            Debug.Assert(proxy is not null);
-            colliders[i] = proxy.Collider;
-        }
+        //for (var i = 0; i < written; i++)
+        //{
+        //    var proxy = bodies[i].Proxy;
+        //    Debug.Assert(proxy is not null);
+        //    colliders[i] = proxy.Collider;
+        //}
 
-        return written;
+        //return written;
+        return 0;
     }
 
     public int QueryPoint(in Vector2 point, List<Collider2DComponent> colliders)
     {
-        return QueryPoint(point, CollectionsMarshal.AsSpan(colliders));
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryPoint(point, ref queryHandler);
+        return queryHandler.Count;
     }
 
     public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, Span<Collider2DComponent> colliders)
@@ -331,4 +335,28 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     }
 
     #endregion
+
+    private struct ColliderListQueryHandler : IRigidBodyQueryHandler
+    {
+        private readonly List<Collider2DComponent> _colliders;
+
+        public ColliderListQueryHandler(List<Collider2DComponent> colliders)
+        {
+            _colliders = colliders;
+            Count = 0;
+        }
+
+        public int Count { get; private set; }
+
+        public bool Handle(RigidBody2D body)
+        {
+            Count++;
+
+            var proxy = body.Proxy;
+            Debug.Assert(proxy is not null);
+            _colliders.Add(proxy.Collider);
+
+            return true;
+        }
+    }
 }
