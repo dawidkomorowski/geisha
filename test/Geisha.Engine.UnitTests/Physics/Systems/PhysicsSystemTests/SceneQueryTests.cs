@@ -722,6 +722,245 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
     #endregion
 
+    #region QueryOverlap Rectangle
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> 0 written
+    [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> 0 written
+    [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> 2 written
+    [TestCase(5, 5, 5)] // 5 hits, buffer size 5 -> 5 written
+    [TestCase(5, 8, 5)] // 5 hits, buffer size 8 -> 5 written
+    public void QueryOverlap_Rectangle_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = CreateQueryRectangleData(0, 0, 1, 1, 0).QueryRectangle;
+        var colliders = new Collider2DComponent[bufferSize];
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(expectedWritten));
+
+        for (var i = 0; i < written; i++)
+        {
+            Assert.That(colliders[i].Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> 0 written, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> 5 written, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> 5 written, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> 5 written, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> 5 written, capacity unchanged
+    public void QueryOverlap_Rectangle_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = CreateQueryRectangleData(0, 0, 1, 1, 0).QueryRectangle;
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.Overlaps(rectangleToQuery), Is.False);
+
+        var colliders = new List<Collider2DComponent>(initialListSize);
+        for (var i = 0; i < initialListSize; i++)
+        {
+            colliders.Add(fillerCollider);
+        }
+
+        var initialCapacity = colliders.Capacity;
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(expectedWritten));
+        Assert.That(colliders.Count, Is.EqualTo(written));
+        AssertListCapacityBehavior(initialCapacity, written, colliders.Capacity);
+
+        for (var i = 0; i < written; i++)
+        {
+            Assert.That(colliders[i].Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> empty span
+    [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> empty span
+    [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> span length 2
+    [TestCase(5, 5, 5)] // 5 hits, buffer size 5 -> span length 5
+    [TestCase(5, 8, 5)] // 5 hits, buffer size 8 -> span length 5
+    public void QueryOverlapAsSpan_Rectangle_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = CreateQueryRectangleData(0, 0, 1, 1, 0).QueryRectangle;
+        var colliders = new Collider2DComponent[bufferSize];
+
+        // Act
+        var view = physicsSystem.QueryOverlapAsSpan(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(view.Length, Is.EqualTo(expectedWritten));
+
+        foreach (var collider in view)
+        {
+            Assert.That(collider.Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> empty span, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> span length 5, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> span length 5, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> span length 5, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> span length 5, capacity unchanged
+    public void QueryOverlapAsSpan_Rectangle_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = CreateQueryRectangleData(0, 0, 1, 1, 0).QueryRectangle;
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.Overlaps(rectangleToQuery), Is.False);
+
+        var colliders = new List<Collider2DComponent>(initialListSize);
+        for (var i = 0; i < initialListSize; i++)
+        {
+            colliders.Add(fillerCollider);
+        }
+
+        var initialCapacity = colliders.Capacity;
+
+        // Act
+        var view = physicsSystem.QueryOverlapAsSpan(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(view.Length, Is.EqualTo(expectedWritten));
+        Assert.That(colliders.Count, Is.EqualTo(view.Length));
+        AssertListCapacityBehavior(initialCapacity, view.Length, colliders.Capacity);
+
+        foreach (var collider in view)
+        {
+            Assert.That(collider.Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    public sealed record QueryOverlapRectangleGeometryTestCase(
+        string Name,
+        Func<SceneQueryTests, Collider2DComponent> CreateCollider,
+        PhysicsConfiguration PhysicsConfiguration,
+        Rectangle RectangleToQuery,
+        AxisAlignedRectangle RectangleToDraw,
+        Matrix3x3 RectangleDrawTransform,
+        bool ExpectedHit,
+        double VisualScale
+    );
+
+    private static IEnumerable<QueryOverlapRectangleGeometryTestCase> QueryOverlapRectangleGeometryCases()
+    {
+        // Circle
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_01_Geometry_Circle_FullyInside",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            0, 0, 2, 2, 0, true, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_02_Geometry_Circle_TouchingEdge",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            11, 0, 2, 2, 0, true, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_03_Geometry_Circle_Outside",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            11.0001, 0, 2, 2, 0, false, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_04_Geometry_Circle_InsideAabbOutsideShape",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            8, 8, 0.5, 0.5, 0, false, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_05_Geometry_Circle_ShiftedOverlap",
+            t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            15, -3, 2, 2, 0, true, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_06_Geometry_Circle_ShiftedNoOverlap",
+            t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            16.0001, -3, 2, 2, 0, false, 10d);
+
+        // Rectangle
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_07_Geometry_Rectangle_FullyInside",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            0, 0, 2, 2, 0, true, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_08_Geometry_Rectangle_TouchingEdge",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            11, 0, 2, 2, 0, true, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_09_Geometry_Rectangle_Outside",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            11.0001, 0, 2, 2, 0, false, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_10_Geometry_Rectangle_RotatedTouchingShape",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            11, 0, 1, 1, 0, true, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_11_Geometry_Rectangle_RotatedInsideAabbOutsideShape",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            11, -2, 1, 1, 0, false, 10d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_12_Geometry_Rectangle_ShiftedOverlap",
+            t => t.CreateRectangleStaticBody(5, -3, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            15, -3, 2, 2, 0, true, 10d);
+
+        // Tile
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_13_Geometry_Tile_Inside",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            0, 0, 0.2, 0.2, 0, true, 40d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_14_Geometry_Tile_TouchingEdge",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            1, 0, 1, 1, 0, true, 40d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_15_Geometry_Tile_Outside",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            1.0001, 0, 1, 1, 0, false, 40d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_16_Geometry_Tile_RotatedInsideAabbOutsideShape",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            0.8, 0.8, 0.5, 0.5, Math.PI / 4, false, 40d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_17_Geometry_Tile_CustomSizeInside",
+            t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
+            5, 7, 0.2, 0.2, 0, true, 40d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_18_Geometry_Tile_CustomSizeOutside",
+            t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
+            5.1001, 7, 0.2, 0.2, 0, false, 40d);
+    }
+
+    private static IEnumerable<TestCaseData> QueryOverlapRectangleGeometryTestCases() =>
+        QueryOverlapRectangleGeometryCases().Select(testCase => new TestCaseData(testCase).SetName(testCase.Name));
+
+    [TestCaseSource(nameof(QueryOverlapRectangleGeometryTestCases))]
+    public void QueryOverlap_Rectangle_ShouldReturnCollidersMatchingGeometry(QueryOverlapRectangleGeometryTestCase testCase)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(testCase.PhysicsConfiguration);
+        var collider = testCase.CreateCollider(this);
+        var queryShapeColor = testCase.ExpectedHit ? Color.Red : Color.Black;
+
+        physicsSystem.SynchronizePhysicsState();
+        var colliders = new Collider2DComponent[1];
+
+        SaveVisualOutput(physicsSystem, scale: testCase.VisualScale,
+            postDrawAction: renderer => renderer.DrawRectangle(testCase.RectangleToDraw, queryShapeColor, testCase.RectangleDrawTransform));
+
+        // Act
+        var written = physicsSystem.QueryOverlap(testCase.RectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(testCase.ExpectedHit ? 1 : 0));
+
+        if (testCase.ExpectedHit)
+        {
+            Assert.That(colliders[0], Is.EqualTo(collider));
+        }
+    }
+
+    #endregion
+
     private static PhysicsConfiguration CreatePhysicsConfiguration(double tileWidth = 1, double tileHeight = 1)
     {
         return new PhysicsConfiguration
@@ -729,6 +968,27 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             EnableDebugRendering = true,
             TileSize = new SizeD(tileWidth, tileHeight)
         };
+    }
+
+    private sealed record QueryRectangleData(Rectangle QueryRectangle, AxisAlignedRectangle RectangleToDraw, Matrix3x3 RectangleDrawTransform);
+
+    private static QueryRectangleData CreateQueryRectangleData(double x, double y, double width, double height, double rotation)
+    {
+        var transform = new Transform2D(new Vector2(x, y), rotation, Vector2.One).ToMatrix();
+        var rectangleToQuery = new Rectangle(new Vector2(width, height)).Transform(transform);
+        var rectangleToDraw = new AxisAlignedRectangle(width, height);
+
+        return new QueryRectangleData(rectangleToQuery, rectangleToDraw, transform);
+    }
+
+    private static QueryOverlapRectangleGeometryTestCase CreateQueryOverlapRectangleGeometryTestCase(string name,
+        Func<SceneQueryTests, Collider2DComponent> createCollider, PhysicsConfiguration physicsConfiguration, double queryX, double queryY, double queryWidth,
+        double queryHeight, double queryRotation, bool expectedHit, double visualScale)
+    {
+        var queryRectangleData = CreateQueryRectangleData(queryX, queryY, queryWidth, queryHeight, queryRotation);
+
+        return new QueryOverlapRectangleGeometryTestCase(name, createCollider, physicsConfiguration, queryRectangleData.QueryRectangle,
+            queryRectangleData.RectangleToDraw, queryRectangleData.RectangleDrawTransform, expectedHit, visualScale);
     }
 
     private void CreateCollidersAtOrigin(int collidersCount)
