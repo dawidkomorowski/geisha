@@ -488,6 +488,240 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
     #endregion
 
+    #region QueryOverlap Circle
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> 0 written
+    [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> 0 written
+    [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> 2 written
+    [TestCase(5, 5, 5)] // 5 hits, buffer size 5 -> 5 written
+    [TestCase(5, 8, 5)] // 5 hits, buffer size 8 -> 5 written
+    public void QueryOverlap_Circle_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToQuery = new Circle(Vector2.Zero, 1);
+        var colliders = new Collider2DComponent[bufferSize];
+
+        // Act
+        var written = physicsSystem.QueryOverlap(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(expectedWritten));
+
+        for (var i = 0; i < written; i++)
+        {
+            Assert.That(colliders[i].Overlaps(circleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> 0 written, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> 5 written, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> 5 written, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> 5 written, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> 5 written, capacity unchanged
+    public void QueryOverlap_Circle_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToQuery = new Circle(Vector2.Zero, 1);
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.Overlaps(circleToQuery), Is.False);
+
+        var colliders = new List<Collider2DComponent>(initialListSize);
+        for (var i = 0; i < initialListSize; i++)
+        {
+            colliders.Add(fillerCollider);
+        }
+
+        var initialCapacity = colliders.Capacity;
+
+        // Act
+        var written = physicsSystem.QueryOverlap(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(expectedWritten));
+        Assert.That(colliders.Count, Is.EqualTo(written));
+        AssertListCapacityBehavior(initialCapacity, written, colliders.Capacity);
+
+        for (var i = 0; i < written; i++)
+        {
+            Assert.That(colliders[i].Overlaps(circleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> empty span
+    [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> empty span
+    [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> span length 2
+    [TestCase(5, 5, 5)] // 5 hits, buffer size 5 -> span length 5
+    [TestCase(5, 8, 5)] // 5 hits, buffer size 8 -> span length 5
+    public void QueryOverlapAsSpan_Circle_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToQuery = new Circle(Vector2.Zero, 1);
+        var colliders = new Collider2DComponent[bufferSize];
+
+        // Act
+        var view = physicsSystem.QueryOverlapAsSpan(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(view.Length, Is.EqualTo(expectedWritten));
+
+        foreach (var collider in view)
+        {
+            Assert.That(collider.Overlaps(circleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> empty span, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> span length 5, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> span length 5, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> span length 5, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> span length 5, capacity unchanged
+    public void QueryOverlapAsSpan_Circle_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToQuery = new Circle(Vector2.Zero, 1);
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.Overlaps(circleToQuery), Is.False);
+
+        var colliders = new List<Collider2DComponent>(initialListSize);
+        for (var i = 0; i < initialListSize; i++)
+        {
+            colliders.Add(fillerCollider);
+        }
+
+        var initialCapacity = colliders.Capacity;
+
+        // Act
+        var view = physicsSystem.QueryOverlapAsSpan(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(view.Length, Is.EqualTo(expectedWritten));
+        Assert.That(colliders.Count, Is.EqualTo(view.Length));
+        AssertListCapacityBehavior(initialCapacity, view.Length, colliders.Capacity);
+
+        foreach (var collider in view)
+        {
+            Assert.That(collider.Overlaps(circleToQuery), Is.True);
+        }
+    }
+
+    public sealed record QueryOverlapCircleGeometryTestCase(
+        string Name,
+        Func<SceneQueryTests, Collider2DComponent> CreateCollider,
+        PhysicsConfiguration PhysicsConfiguration,
+        Circle CircleToQuery,
+        bool ExpectedHit,
+        double VisualScale
+    );
+
+    private static IEnumerable<QueryOverlapCircleGeometryTestCase> QueryOverlapCircleGeometryCases()
+    {
+        // Circle
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_01_Geometry_Circle_FullyInside",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(0, 0), 2), true, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_02_Geometry_Circle_TouchingEdge",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(12, 0), 2), true, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_03_Geometry_Circle_Outside",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(12.0001, 0), 2), false, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_04_Geometry_Circle_ShiftedOverlap",
+            t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(15, -3), 2), true, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_05_Geometry_Circle_ShiftedNoOverlap",
+            t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(17.0001, -3), 2), false, 10d);
+
+        // Rectangle
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_06_Geometry_Rectangle_CenterInside",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(0, 0), 2), true, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_07_Geometry_Rectangle_TouchingEdge",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(11, 0), 1), true, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_08_Geometry_Rectangle_Outside",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(11.0001, 0), 1), false, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_09_Geometry_Rectangle_RotatedTouchingShape",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(11, 0), 0.5), true, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_10_Geometry_Rectangle_RotatedInsideAabbOutsideShape",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(11, -2), 0.5), false, 10d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_11_Geometry_Rectangle_ShiftedOverlap",
+            t => t.CreateRectangleStaticBody(5, -3, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new Circle(new Vector2(15, -3), 1), true, 10d);
+
+        // Tile
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_12_Geometry_Tile_Inside",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new Circle(new Vector2(0, 0), 0.1), true, 40d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_13_Geometry_Tile_TouchingEdge",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new Circle(new Vector2(1, 0), 0.5), true, 40d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_14_Geometry_Tile_Outside",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new Circle(new Vector2(1.0001, 0), 0.5), false, 40d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_15_Geometry_Tile_AabbTouchOnlyOutsideShape",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new Circle(new Vector2(0.83, 0.83), 0.4), false, 40d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_16_Geometry_Tile_CustomSizeInside",
+            t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
+            new Circle(new Vector2(5, 7), 0.1), true, 40d);
+        yield return new QueryOverlapCircleGeometryTestCase("QueryOverlap_Circle_17_Geometry_Tile_CustomSizeOutside",
+            t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
+            new Circle(new Vector2(5.1001, 7), 0.1), false, 40d);
+    }
+
+    private static IEnumerable<TestCaseData> QueryOverlapCircleGeometryTestCases() =>
+        QueryOverlapCircleGeometryCases().Select(testCase => new TestCaseData(testCase).SetName(testCase.Name));
+
+    [TestCaseSource(nameof(QueryOverlapCircleGeometryTestCases))]
+    public void QueryOverlap_Circle_ShouldReturnCollidersMatchingGeometry(QueryOverlapCircleGeometryTestCase testCase)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(testCase.PhysicsConfiguration);
+        var collider = testCase.CreateCollider(this);
+        var queryShapeColor = testCase.ExpectedHit ? Color.Red : Color.Black;
+
+        physicsSystem.SynchronizePhysicsState();
+        var colliders = new Collider2DComponent[1];
+
+        SaveVisualOutput(physicsSystem, scale: testCase.VisualScale,
+            postDrawAction: renderer => renderer.DrawCircle(testCase.CircleToQuery, queryShapeColor));
+
+        // Act
+        var written = physicsSystem.QueryOverlap(testCase.CircleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(testCase.ExpectedHit ? 1 : 0));
+
+        if (testCase.ExpectedHit)
+        {
+            Assert.That(colliders[0], Is.EqualTo(collider));
+        }
+    }
+
+    #endregion
+
     private static PhysicsConfiguration CreatePhysicsConfiguration(double tileWidth = 1, double tileHeight = 1)
     {
         return new PhysicsConfiguration

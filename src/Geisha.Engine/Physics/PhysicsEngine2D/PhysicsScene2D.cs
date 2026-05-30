@@ -1,8 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Runtime.InteropServices;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
@@ -125,6 +124,21 @@ internal sealed class PhysicsScene2D
         foreach (var body in Bodies)
         {
             if (body.Overlaps(axisAlignedRectangle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    public void QueryOverlap<TQueryHandler>(in Circle circle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.Overlaps(circle))
             {
                 if (!handler.Handle(body))
                 {
