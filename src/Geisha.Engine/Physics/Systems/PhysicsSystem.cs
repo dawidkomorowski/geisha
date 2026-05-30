@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -84,19 +85,18 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public int QueryPoint(in Vector2 point, Span<Collider2DComponent> colliders)
     {
-        //// TODO: How to do it efficiently without allocation?
-        //var bodies = new RigidBody2D[64];
-        //var written = PhysicsScene2D.QueryPoint(point, bodies);
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryPoint(point, ref queryHandler);
 
-        //for (var i = 0; i < written; i++)
-        //{
-        //    var proxy = bodies[i].Proxy;
-        //    Debug.Assert(proxy is not null);
-        //    colliders[i] = proxy.Collider;
-        //}
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
 
-        //return written;
-        return 0;
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
     }
 
     public int QueryPoint(in Vector2 point, List<Collider2DComponent> colliders)
@@ -336,15 +336,26 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     #endregion
 
-    private ref struct ColliderSpanQueryHandler : IRigidBodyQueryHandler
+    // TODO: Use ColliderSpanQueryHandler instead when migrated to .NET 9 (C# 13) -> it allows ref structs to implement interfaces.
+    //       Then the span based query handler can implement IRigidBodyQueryHandler.
+    //       It will allow more memory friendly implementation of span based queries without accidental allocations and data copying.
+    private struct ColliderArrayQueryHandler : IRigidBodyQueryHandler
     {
-        private Span<Collider2DComponent> _colliders;
+        private readonly Collider2DComponent[] _colliders;
+        private readonly int _maxCount;
+
+        public ColliderArrayQueryHandler(Collider2DComponent[] colliders, int maxCount)
+        {
+            _colliders = colliders;
+            _maxCount = maxCount;
+            Count = 0;
+        }
 
         public int Count { get; private set; }
 
         public bool Handle(RigidBody2D body)
         {
-            if (Count >= _colliders.Length)
+            if (Count >= _maxCount)
             {
                 return false;
             }
@@ -356,6 +367,33 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             return true;
         }
     }
+
+    //private ref struct ColliderSpanQueryHandler : IRigidBodyQueryHandler
+    //{
+    //    private readonly Span<Collider2DComponent> _colliders;
+
+    //    public ColliderSpanQueryHandler(Span<Collider2DComponent> colliders)
+    //    {
+    //        _colliders = colliders;
+    //        Count = 0;
+    //    }
+
+    //    public int Count { get; private set; }
+
+    //    public bool Handle(RigidBody2D body)
+    //    {
+    //        if (Count >= _colliders.Length)
+    //        {
+    //            return false;
+    //        }
+
+    //        var proxy = body.Proxy;
+    //        Debug.Assert(proxy is not null);
+    //        _colliders[Count++] = proxy.Collider;
+
+    //        return true;
+    //    }
+    //}
 
     private struct ColliderListQueryHandler : IRigidBodyQueryHandler
     {
