@@ -336,6 +336,27 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     #endregion
 
+    private ref struct ColliderSpanQueryHandler : IRigidBodyQueryHandler
+    {
+        private Span<Collider2DComponent> _colliders;
+
+        public int Count { get; private set; }
+
+        public bool Handle(RigidBody2D body)
+        {
+            if (Count >= _colliders.Length)
+            {
+                return false;
+            }
+
+            var proxy = body.Proxy;
+            Debug.Assert(proxy is not null);
+            _colliders[Count++] = proxy.Collider;
+
+            return true;
+        }
+    }
+
     private struct ColliderListQueryHandler : IRigidBodyQueryHandler
     {
         private readonly List<Collider2DComponent> _colliders;
@@ -350,11 +371,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         public bool Handle(RigidBody2D body)
         {
-            Count++;
-
             var proxy = body.Proxy;
             Debug.Assert(proxy is not null);
             _colliders.Add(proxy.Collider);
+
+            Count++;
 
             return true;
         }
