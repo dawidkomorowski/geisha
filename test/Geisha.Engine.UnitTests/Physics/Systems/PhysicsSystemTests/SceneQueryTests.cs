@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
@@ -20,11 +21,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
     public void QueryPoint_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
     {
         // Arrange
-        var physicsConfiguration = new PhysicsConfiguration
-        {
-            TileSize = new SizeD(2, 2)
-        };
-        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
@@ -51,11 +48,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
     public void QueryPoint_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
     {
         // Arrange
-        var physicsConfiguration = new PhysicsConfiguration
-        {
-            TileSize = new SizeD(2, 2)
-        };
-        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
@@ -94,11 +87,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
     public void QueryPointAsSpan_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
     {
         // Arrange
-        var physicsConfiguration = new PhysicsConfiguration
-        {
-            TileSize = new SizeD(2, 2)
-        };
-        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
@@ -111,9 +100,9 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(view.Length, Is.EqualTo(expectedWritten));
 
-        for (var i = 0; i < view.Length; i++)
+        foreach (var collider in view)
         {
-            Assert.That(view[i].ContainsPoint(pointToQuery), Is.True);
+            Assert.That(collider.ContainsPoint(pointToQuery), Is.True);
         }
     }
 
@@ -125,11 +114,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
     public void QueryPointAsSpan_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
     {
         // Arrange
-        var physicsConfiguration = new PhysicsConfiguration
-        {
-            TileSize = new SizeD(2, 2)
-        };
-        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
@@ -154,9 +139,9 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         Assert.That(colliders.Count, Is.EqualTo(view.Length));
         AssertListCapacityBehavior(initialCapacity, view.Length, colliders.Capacity);
 
-        for (var i = 0; i < view.Length; i++)
+        foreach (var collider in view)
         {
-            Assert.That(view[i].ContainsPoint(pointToQuery), Is.True);
+            Assert.That(collider.ContainsPoint(pointToQuery), Is.True);
         }
     }
 
@@ -173,77 +158,72 @@ public class SceneQueryTests : PhysicsSystemTestsBase
     private static IEnumerable<QueryPointGeometryTestCase> QueryPointGeometryCases()
     {
         // Circle
-        yield return new QueryPointGeometryTestCase("01_QueryPoint_Geometry_Circle_PointAtCenter",
+        yield return new QueryPointGeometryTestCase("QueryPoint_01_Geometry_Circle_PointAtCenter",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(0, 0), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("02_QueryPoint_Geometry_Circle_PointOnEdge",
+        yield return new QueryPointGeometryTestCase("QueryPoint_02_Geometry_Circle_PointOnEdge",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(10, 0), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("03_QueryPoint_Geometry_Circle_PointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_03_Geometry_Circle_PointOutside",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(10.0001, 0), false, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("04_QueryPoint_Geometry_Circle_ShiftedPointOnEdge",
+        yield return new QueryPointGeometryTestCase("QueryPoint_04_Geometry_Circle_ShiftedPointOnEdge",
             t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(15, -3), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("05_QueryPoint_Geometry_Circle_ShiftedPointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_05_Geometry_Circle_ShiftedPointOutside",
             t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(15.0001, -3), false, 10d, 0.3d);
         // Rectangle
-        yield return new QueryPointGeometryTestCase("06_QueryPoint_Geometry_Rectangle_PointAtCenter",
+        yield return new QueryPointGeometryTestCase("QueryPoint_06_Geometry_Rectangle_PointAtCenter",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(0, 0), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("07_QueryPoint_Geometry_Rectangle_PointOnEdge",
+        yield return new QueryPointGeometryTestCase("QueryPoint_07_Geometry_Rectangle_PointOnEdge",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(10, 0), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("08_QueryPoint_Geometry_Rectangle_PointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_08_Geometry_Rectangle_PointOutside",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(10.0001, 0), false, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("09_QueryPoint_Geometry_Rectangle_Rotated90_PointOnEdge",
+        yield return new QueryPointGeometryTestCase("QueryPoint_09_Geometry_Rectangle_Rotated90_PointOnEdge",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 2).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(0, 10), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("10_QueryPoint_Geometry_Rectangle_Rotated90_PointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_10_Geometry_Rectangle_Rotated90_PointOutside",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 2).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(0, 10.0001), false, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("11_QueryPoint_Geometry_Rectangle_Rotated30_InsideAabbOutsideShape",
+        yield return new QueryPointGeometryTestCase("QueryPoint_11_Geometry_Rectangle_Rotated30_InsideAabbOutsideShape",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(11, 0), false, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("12_QueryPoint_Geometry_Rectangle_Rotated30_InsideShape",
+        yield return new QueryPointGeometryTestCase("QueryPoint_12_Geometry_Rectangle_Rotated30_InsideShape",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(9, 0), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("13_QueryPoint_Geometry_Rectangle_ShiftedPointOnEdge",
+        yield return new QueryPointGeometryTestCase("QueryPoint_13_Geometry_Rectangle_ShiftedPointOnEdge",
             t => t.CreateRectangleStaticBody(5, -3, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(15, -3), true, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("14_QueryPoint_Geometry_Rectangle_ShiftedPointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_14_Geometry_Rectangle_ShiftedPointOutside",
             t => t.CreateRectangleStaticBody(5, -3, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(15.0001, -3), false, 10d, 0.3d);
-        yield return new QueryPointGeometryTestCase("15_QueryPoint_Geometry_Rectangle_ShiftedRotated_InsideAabbOutsideShape",
+        yield return new QueryPointGeometryTestCase("QueryPoint_15_Geometry_Rectangle_ShiftedRotated_InsideAabbOutsideShape",
             t => t.CreateRectangleStaticBody(5, -3, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
             new Vector2(16, -3), false, 10d, 0.3d);
         // Tile
-        yield return new QueryPointGeometryTestCase("16_QueryPoint_Geometry_Tile_PointAtCenter",
+        yield return new QueryPointGeometryTestCase("QueryPoint_16_Geometry_Tile_PointAtCenter",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
             new Vector2(0, 0), true, 40d, 0.05d);
-        yield return new QueryPointGeometryTestCase("17_QueryPoint_Geometry_Tile_PointOnCorner",
+        yield return new QueryPointGeometryTestCase("QueryPoint_17_Geometry_Tile_PointOnCorner",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
             new Vector2(0.5, 0.5), true, 40d, 0.05d);
-        yield return new QueryPointGeometryTestCase("18_QueryPoint_Geometry_Tile_PointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_18_Geometry_Tile_PointOutside",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
             new Vector2(0.5001, 0.5), false, 40d, 0.05d);
-        yield return new QueryPointGeometryTestCase("19_QueryPoint_Geometry_Tile_CustomSize_PointInside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_19_Geometry_Tile_CustomSize_PointInside",
             t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
             new Vector2(5, 7), true, 40d, 0.05d);
-        yield return new QueryPointGeometryTestCase("20_QueryPoint_Geometry_Tile_CustomSize_PointOutside",
+        yield return new QueryPointGeometryTestCase("QueryPoint_20_Geometry_Tile_CustomSize_PointOutside",
             t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
             new Vector2(5.0001, 7), false, 40d, 0.05d);
     }
 
-    private static IEnumerable<TestCaseData> QueryPointGeometryTestCases()
-    {
-        foreach (var testCase in QueryPointGeometryCases())
-        {
-            yield return new TestCaseData(testCase).SetName(testCase.Name);
-        }
-    }
+    private static IEnumerable<TestCaseData> QueryPointGeometryTestCases() =>
+        QueryPointGeometryCases().Select(testCase => new TestCaseData(testCase).SetName(testCase.Name));
 
     [TestCaseSource(nameof(QueryPointGeometryTestCases))]
     public void QueryPoint_ShouldReturnCollidersMatchingGeometry(QueryPointGeometryTestCase testCase)
@@ -251,15 +231,251 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         // Arrange
         var physicsSystem = GetPhysicsSystem(testCase.PhysicsConfiguration);
         var collider = testCase.CreateCollider(this);
+        var queryShapeColor = testCase.ExpectedHit ? Color.Red : Color.Black;
 
         physicsSystem.SynchronizePhysicsState();
         var colliders = new Collider2DComponent[1];
 
         SaveVisualOutput(physicsSystem, scale: testCase.VisualScale,
-            postDrawAction: renderer => renderer.DrawCircle(new Circle(testCase.PointToQuery, testCase.PointMarkerRadius), Color.Red));
+            postDrawAction: renderer => renderer.DrawCircle(new Circle(testCase.PointToQuery, testCase.PointMarkerRadius), queryShapeColor));
 
         // Act
         var written = physicsSystem.QueryPoint(testCase.PointToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(testCase.ExpectedHit ? 1 : 0));
+
+        if (testCase.ExpectedHit)
+        {
+            Assert.That(colliders[0], Is.EqualTo(collider));
+        }
+    }
+
+    #endregion
+
+    #region QueryOverlap AxisAlignedRectangle
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> 0 written
+    [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> 0 written
+    [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> 2 written
+    [TestCase(5, 5, 5)] // 5 hits, buffer size 5 -> 5 written
+    [TestCase(5, 8, 5)] // 5 hits, buffer size 8 -> 5 written
+    public void QueryOverlap_AxisAlignedRectangle_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+        var colliders = new Collider2DComponent[bufferSize];
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(expectedWritten));
+
+        for (var i = 0; i < written; i++)
+        {
+            Assert.That(colliders[i].Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> 0 written, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> 5 written, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> 5 written, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> 5 written, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> 5 written, capacity unchanged
+    public void QueryOverlap_AxisAlignedRectangle_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.Overlaps(rectangleToQuery), Is.False);
+
+        var colliders = new List<Collider2DComponent>(initialListSize);
+        for (var i = 0; i < initialListSize; i++)
+        {
+            colliders.Add(fillerCollider);
+        }
+
+        var initialCapacity = colliders.Capacity;
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(expectedWritten));
+        Assert.That(colliders.Count, Is.EqualTo(written));
+        AssertListCapacityBehavior(initialCapacity, written, colliders.Capacity);
+
+        for (var i = 0; i < written; i++)
+        {
+            Assert.That(colliders[i].Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> empty span
+    [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> empty span
+    [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> span length 2
+    [TestCase(5, 5, 5)] // 5 hits, buffer size 5 -> span length 5
+    [TestCase(5, 8, 5)] // 5 hits, buffer size 8 -> span length 5
+    public void QueryOverlapAsSpan_AxisAlignedRectangle_ShouldWriteCollidersIntoSpan(int collidersCount, int bufferSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+        var colliders = new Collider2DComponent[bufferSize];
+
+        // Act
+        var view = physicsSystem.QueryOverlapAsSpan(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(view.Length, Is.EqualTo(expectedWritten));
+
+        foreach (var collider in view)
+        {
+            Assert.That(collider.Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    [TestCase(0, 0, 0)] // No colliders: 0 hits, empty list -> empty span, capacity unchanged
+    [TestCase(5, 0, 5)] // 5 hits, empty list -> span length 5, capacity grows
+    [TestCase(5, 2, 5)] // 5 hits, list size 2 -> span length 5, capacity grows
+    [TestCase(5, 5, 5)] // 5 hits, list size 5 -> span length 5, capacity unchanged
+    [TestCase(5, 8, 5)] // 5 hits, list size 8 -> span length 5, capacity unchanged
+    public void QueryOverlapAsSpan_AxisAlignedRectangle_ShouldWriteCollidersIntoList(int collidersCount, int initialListSize, int expectedWritten)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration(2, 2));
+        CreateCollidersAtOrigin(collidersCount);
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+
+        var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
+        Assert.That(fillerCollider.Overlaps(rectangleToQuery), Is.False);
+
+        var colliders = new List<Collider2DComponent>(initialListSize);
+        for (var i = 0; i < initialListSize; i++)
+        {
+            colliders.Add(fillerCollider);
+        }
+
+        var initialCapacity = colliders.Capacity;
+
+        // Act
+        var view = physicsSystem.QueryOverlapAsSpan(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(view.Length, Is.EqualTo(expectedWritten));
+        Assert.That(colliders.Count, Is.EqualTo(view.Length));
+        AssertListCapacityBehavior(initialCapacity, view.Length, colliders.Capacity);
+
+        foreach (var collider in view)
+        {
+            Assert.That(collider.Overlaps(rectangleToQuery), Is.True);
+        }
+    }
+
+    public sealed record QueryOverlapAxisAlignedRectangleGeometryTestCase(
+        string Name,
+        Func<SceneQueryTests, Collider2DComponent> CreateCollider,
+        PhysicsConfiguration PhysicsConfiguration,
+        AxisAlignedRectangle RectangleToQuery,
+        bool ExpectedHit,
+        double VisualScale
+    );
+
+    private static IEnumerable<QueryOverlapAxisAlignedRectangleGeometryTestCase> QueryOverlapAxisAlignedRectangleGeometryCases()
+    {
+        // Circle
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_01_Geometry_Circle_AabbFullyInside",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(0, 0, 2, 2), true, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_02_Geometry_Circle_AabbTouchingEdge",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(11, 0, 2, 2), true, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_03_Geometry_Circle_AabbOutside",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(11.0001, 0, 2, 2), false, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_04_Geometry_Circle_InsideBoundingBoxOutsideShape",
+            t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(9, 9, 1, 1), false, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_05_Geometry_Circle_ShiftedOverlap",
+            t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(15, -3, 2, 2), true, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_06_Geometry_Circle_ShiftedNoOverlap",
+            t => t.CreateCircleStaticBody(5, -3, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(16.0001, -3, 2, 2), false, 10d);
+
+        // Rectangle
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_07_Geometry_Rectangle_AabbFullyInside",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(0, 0, 2, 2), true, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_08_Geometry_Rectangle_AabbTouchingEdge",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(11, 0, 2, 2), true, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_09_Geometry_Rectangle_AabbOutside",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(11.0001, 0, 2, 2), false, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_10_Geometry_Rectangle_RotatedTouchingShape",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(11, 0, 1, 1), true, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase(
+            "QueryOverlap_AxisAlignedRectangle_11_Geometry_Rectangle_RotatedInsideAabbOutsideShape",
+            t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(11, -2, 1, 1), false, 10d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_12_Geometry_Rectangle_ShiftedOverlap",
+            t => t.CreateRectangleStaticBody(5, -3, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
+            new AxisAlignedRectangle(15, -3, 2, 2), true, 10d);
+
+        // Tile
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_13_Geometry_Tile_AabbFullyInside",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new AxisAlignedRectangle(0, 0, 0.2, 0.2), true, 40d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_14_Geometry_Tile_AabbTouchingEdge",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new AxisAlignedRectangle(1, 0, 1, 1), true, 40d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_15_Geometry_Tile_AabbOutside",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            new AxisAlignedRectangle(1.0001, 0, 1, 1), false, 40d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_16_Geometry_Tile_CustomSizeInside",
+            t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
+            new AxisAlignedRectangle(5, 7, 0.2, 0.2), true, 40d);
+        yield return new QueryOverlapAxisAlignedRectangleGeometryTestCase("QueryOverlap_AxisAlignedRectangle_17_Geometry_Tile_CustomSizeOutside",
+            t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
+            new AxisAlignedRectangle(5.1001, 7, 0.2, 0.2), false, 40d);
+    }
+
+    private static IEnumerable<TestCaseData> QueryOverlapAxisAlignedRectangleGeometryTestCases() =>
+        QueryOverlapAxisAlignedRectangleGeometryCases().Select(testCase => new TestCaseData(testCase).SetName(testCase.Name));
+
+    [TestCaseSource(nameof(QueryOverlapAxisAlignedRectangleGeometryTestCases))]
+    public void QueryOverlap_AxisAlignedRectangle_ShouldReturnCollidersMatchingGeometry(QueryOverlapAxisAlignedRectangleGeometryTestCase testCase)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(testCase.PhysicsConfiguration);
+        var collider = testCase.CreateCollider(this);
+        var queryShapeColor = testCase.ExpectedHit ? Color.Red : Color.Black;
+
+        physicsSystem.SynchronizePhysicsState();
+        var colliders = new Collider2DComponent[1];
+
+        SaveVisualOutput(physicsSystem, scale: testCase.VisualScale,
+            postDrawAction: renderer => renderer.DrawRectangle(testCase.RectangleToQuery, queryShapeColor, Matrix3x3.Identity));
+
+        // Act
+        var written = physicsSystem.QueryOverlap(testCase.RectangleToQuery, colliders);
 
         // Assert
         Assert.That(written, Is.EqualTo(testCase.ExpectedHit ? 1 : 0));
