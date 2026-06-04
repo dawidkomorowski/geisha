@@ -4,8 +4,8 @@ namespace Geisha.MicroBenchmark;
 
 internal static class Program
 {
-    private static void Main()
+    private static void Main(string[] args)
     {
-        BenchmarkRunner.Run<PhysicsSceneQueryBenchmarks>();
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
     }
 }
