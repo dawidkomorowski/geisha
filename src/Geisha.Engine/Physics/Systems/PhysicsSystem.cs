@@ -193,22 +193,38 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public int QueryOverlap(in Rectangle rectangle, Span<Collider2DComponent> colliders)
     {
-        return 0;
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryOverlap(rectangle, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
     }
 
     public int QueryOverlap(in Rectangle rectangle, List<Collider2DComponent> colliders)
     {
-        return 0;
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryOverlap(rectangle, ref queryHandler);
+        return queryHandler.Count;
     }
 
     public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, Span<Collider2DComponent> colliders)
     {
-        return colliders.Slice(0, 0);
+        var written = QueryOverlap(rectangle, colliders);
+        return colliders.Slice(0, written);
     }
 
     public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, List<Collider2DComponent> colliders)
     {
-        return CollectionsMarshal.AsSpan(colliders).Slice(0, 0);
+        var written = QueryOverlap(rectangle, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
     #endregion

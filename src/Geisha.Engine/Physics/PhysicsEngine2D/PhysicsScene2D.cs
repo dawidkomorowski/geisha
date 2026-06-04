@@ -148,6 +148,21 @@ internal sealed class PhysicsScene2D
         }
     }
 
+    public void QueryOverlap<TQueryHandler>(in Rectangle rectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.Overlaps(rectangle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
     private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
 
