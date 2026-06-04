@@ -64,12 +64,11 @@ public class PhysicsSceneQueryBenchmarks
         return _physicsSystem.QueryBounds(_queryRectangle, _collidersArray);
     }
 
-    [Benchmark]
-    public int QueryBounds_List()
-    {
-        _collidersList.Clear();
-        return _physicsSystem.QueryBounds(_queryRectangle, _collidersList);
-    }
+[Benchmark]
+public int QueryBounds_List()
+{
+    return _physicsSystem.QueryBounds(_queryRectangle, _collidersList);
+}
 
     [Benchmark]
     public int QueryOverlap_AxisAlignedRectangle_Span()
