@@ -118,6 +118,21 @@ internal sealed class PhysicsScene2D
         }
     }
 
+    public void QueryBounds<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.BoundingRectangle.Overlaps(axisAlignedRectangle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
     public void QueryOverlap<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyQueryHandler
     {
