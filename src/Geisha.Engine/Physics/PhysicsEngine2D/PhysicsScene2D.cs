@@ -103,6 +103,81 @@ internal sealed class PhysicsScene2D
         }
     }
 
+    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.ContainsPoint(point))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    public void QueryBounds<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.BoundingRectangle.Overlaps(axisAlignedRectangle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    public void QueryOverlap<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.Overlaps(axisAlignedRectangle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    public void QueryOverlap<TQueryHandler>(in Circle circle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.Overlaps(circle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    public void QueryOverlap<TQueryHandler>(in Rectangle rectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyQueryHandler
+    {
+        foreach (var body in Bodies)
+        {
+            if (body.Overlaps(rectangle))
+            {
+                if (!handler.Handle(body))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
     private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
 

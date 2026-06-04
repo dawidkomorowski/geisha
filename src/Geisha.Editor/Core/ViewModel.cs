@@ -31,7 +31,7 @@ namespace Geisha.Editor.Core
 
         protected IComputedProperty<U> CreateComputedProperty<T, U>(string name, IReadOnlyProperty<T> sourceProperty, Func<T, U> computeFunc)
         {
-            return new ComputedProperty<T, U>(this, name, (PropertyBase<T>) sourceProperty, computeFunc);
+            return new ComputedProperty<T, U>(this, name, (PropertyBase<T>)sourceProperty, computeFunc);
         }
 
         private void NotifyPropertyChanged(string propertyName)

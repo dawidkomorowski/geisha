@@ -70,9 +70,9 @@ namespace Geisha.Editor.Core
                 _canExecute = canExecute;
             }
 
-            public override void Execute(object? parameter) => _execute((T?) parameter);
+            public override void Execute(object? parameter) => _execute((T?)parameter);
 
-            public override bool CanExecute(object? parameter) => _canExecute((T?) parameter);
+            public override bool CanExecute(object? parameter) => _canExecute((T?)parameter);
         }
 
         private sealed class RelayCommandWithValueTypeParameter<T> : RelayCommandBase where T : struct
@@ -90,9 +90,9 @@ namespace Geisha.Editor.Core
                 _canExecute = canExecute;
             }
 
-            public override void Execute(object? parameter) => _execute((T?) parameter);
+            public override void Execute(object? parameter) => _execute((T?)parameter);
 
-            public override bool CanExecute(object? parameter) => _canExecute((T?) parameter);
+            public override bool CanExecute(object? parameter) => _canExecute((T?)parameter);
         }
     }
 }

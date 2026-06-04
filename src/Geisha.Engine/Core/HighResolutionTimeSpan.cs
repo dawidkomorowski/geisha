@@ -14,7 +14,7 @@ namespace Geisha.Engine.Core
         /// <returns>An object that represents <paramref name="seconds" />.</returns>
         public static TimeSpan FromSeconds(double seconds)
         {
-            return TimeSpan.FromTicks((long) (TimeSpan.TicksPerSecond * seconds));
+            return TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond * seconds));
         }
     }
 }

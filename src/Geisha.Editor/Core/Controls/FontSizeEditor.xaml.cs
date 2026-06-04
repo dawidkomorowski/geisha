@@ -19,14 +19,14 @@ namespace Geisha.Editor.Core.Controls
 
         public FontSize Value
         {
-            get => (FontSize) GetValue(ValueProperty);
+            get => (FontSize)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var editor = (FontSizeEditor) d;
-            var newValue = (FontSize) e.NewValue;
+            var editor = (FontSizeEditor)d;
+            var newValue = (FontSize)e.NewValue;
 
             editor.Dips.Value = newValue.Dips;
         }

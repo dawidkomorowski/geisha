@@ -17,7 +17,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            ((SceneOutlineViewModel) DataContext).SelectedItem = (SceneOutlineItemViewModel) e.NewValue;
+            ((SceneOutlineViewModel)DataContext).SelectedItem = (SceneOutlineItemViewModel)e.NewValue;
         }
     }
 }

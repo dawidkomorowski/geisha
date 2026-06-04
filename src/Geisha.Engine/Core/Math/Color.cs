@@ -50,6 +50,11 @@ namespace Geisha.Engine.Core.Math
         public static Color White { get; } = FromArgb(255, 255, 255, 255);
 
         /// <summary>
+        ///     Gray color.
+        /// </summary>
+        public static Color Gray { get; } = FromArgb(255, 128, 128, 128);
+
+        /// <summary>
         ///     Alpha component of color.
         /// </summary>
         public byte A => (byte)((_argb & AlphaMask) >> AlphaOffset);

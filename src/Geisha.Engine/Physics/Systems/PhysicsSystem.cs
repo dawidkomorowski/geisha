@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -79,6 +83,186 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         }
     }
 
+    public int QueryPoint(in Vector2 point, Span<Collider2DComponent> colliders)
+    {
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryPoint(point, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
+    }
+
+    public int QueryPoint(in Vector2 point, List<Collider2DComponent> colliders)
+    {
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryPoint(point, ref queryHandler);
+        return queryHandler.Count;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, Span<Collider2DComponent> colliders)
+    {
+        var written = QueryPoint(point, colliders);
+        return colliders.Slice(0, written);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, List<Collider2DComponent> colliders)
+    {
+        var written = QueryPoint(point, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
+    }
+
+    public int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryBounds(axisAlignedRectangle, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
+    }
+
+    public int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryBounds(axisAlignedRectangle, ref queryHandler);
+        return queryHandler.Count;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        var written = QueryBounds(axisAlignedRectangle, colliders);
+        return colliders.Slice(0, written);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        var written = QueryBounds(axisAlignedRectangle, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
+    }
+
+    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
+    }
+
+    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+        return queryHandler.Count;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        var written = QueryOverlap(axisAlignedRectangle, colliders);
+        return colliders.Slice(0, written);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        var written = QueryOverlap(axisAlignedRectangle, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
+    }
+
+    public int QueryOverlap(in Circle circle, Span<Collider2DComponent> colliders)
+    {
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryOverlap(circle, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
+    }
+
+    public int QueryOverlap(in Circle circle, List<Collider2DComponent> colliders)
+    {
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryOverlap(circle, ref queryHandler);
+        return queryHandler.Count;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Circle circle, Span<Collider2DComponent> colliders)
+    {
+        var written = QueryOverlap(circle, colliders);
+        return colliders.Slice(0, written);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Circle circle, List<Collider2DComponent> colliders)
+    {
+        var written = QueryOverlap(circle, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
+    }
+
+    public int QueryOverlap(in Rectangle rectangle, Span<Collider2DComponent> colliders)
+    {
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        PhysicsScene2D.QueryOverlap(rectangle, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
+    }
+
+    public int QueryOverlap(in Rectangle rectangle, List<Collider2DComponent> colliders)
+    {
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        PhysicsScene2D.QueryOverlap(rectangle, ref queryHandler);
+        return queryHandler.Count;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, Span<Collider2DComponent> colliders)
+    {
+        var written = QueryOverlap(rectangle, colliders);
+        return colliders.Slice(0, written);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in Rectangle rectangle, List<Collider2DComponent> colliders)
+    {
+        var written = QueryOverlap(rectangle, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
+    }
+
     #endregion
 
     #region Implementation of IPhysicsGameLoopStep
@@ -108,7 +292,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         var kinematicBodyColor = Color.Blue;
         var contactPointColor = Color.FromArgb(255, 255, 165, 0);
         var contactNormalColor = Color.Black;
-        var disabledCollisionDetectionBodyColor = Color.FromArgb(255, 128, 128, 128);
+        var disabledCollisionDetectionBodyColor = Color.Gray;
 
         Span<Vector2> points = stackalloc Vector2[2];
 
@@ -235,4 +419,87 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     }
 
     #endregion
+
+    // TODO: Use ColliderSpanQueryHandler instead when migrated to .NET 9 (C# 13) -> it allows ref structs to implement interfaces.
+    //       Then the span based query handler can implement IRigidBodyQueryHandler.
+    //       It will allow more memory friendly implementation of span based queries without accidental allocations and data copying.
+    private struct ColliderArrayQueryHandler : IRigidBodyQueryHandler
+    {
+        private readonly Collider2DComponent[] _colliders;
+        private readonly int _maxCount;
+
+        public ColliderArrayQueryHandler(Collider2DComponent[] colliders, int maxCount)
+        {
+            _colliders = colliders;
+            _maxCount = maxCount;
+            Count = 0;
+        }
+
+        public int Count { get; private set; }
+
+        public bool Handle(RigidBody2D body)
+        {
+            if (Count >= _maxCount)
+            {
+                return false;
+            }
+
+            var proxy = body.Proxy;
+            Debug.Assert(proxy is not null);
+            _colliders[Count++] = proxy.Collider;
+
+            return true;
+        }
+    }
+
+    //private ref struct ColliderSpanQueryHandler : IRigidBodyQueryHandler
+    //{
+    //    private readonly Span<Collider2DComponent> _colliders;
+
+    //    public ColliderSpanQueryHandler(Span<Collider2DComponent> colliders)
+    //    {
+    //        _colliders = colliders;
+    //        Count = 0;
+    //    }
+
+    //    public int Count { get; private set; }
+
+    //    public bool Handle(RigidBody2D body)
+    //    {
+    //        if (Count >= _colliders.Length)
+    //        {
+    //            return false;
+    //        }
+
+    //        var proxy = body.Proxy;
+    //        Debug.Assert(proxy is not null);
+    //        _colliders[Count++] = proxy.Collider;
+
+    //        return true;
+    //    }
+    //}
+
+    private struct ColliderListQueryHandler : IRigidBodyQueryHandler
+    {
+        private readonly List<Collider2DComponent> _colliders;
+
+        public ColliderListQueryHandler(List<Collider2DComponent> colliders)
+        {
+            _colliders = colliders;
+            Count = 0;
+        }
+
+        public int Count { get; private set; }
+
+        public bool Handle(RigidBody2D body)
+        {
+            var proxy = body.Proxy;
+            Debug.Assert(proxy is not null);
+            _colliders.Add(proxy.Collider);
+
+            Count++;
+
+            return true;
+        }
+    }
 }

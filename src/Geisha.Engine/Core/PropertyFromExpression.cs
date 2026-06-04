@@ -20,7 +20,7 @@ namespace Geisha.Engine.Core
         {
             return propertyExpression.Body switch
             {
-                MemberExpression {Member: PropertyInfo propertyInfo} => propertyInfo.Name,
+                MemberExpression { Member: PropertyInfo propertyInfo } => propertyInfo.Name,
                 _ => throw new ArgumentException("Expression must be selecting property.", nameof(propertyExpression))
             };
         }
