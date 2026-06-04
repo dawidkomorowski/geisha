@@ -51,12 +51,16 @@ C# / XML documentation guidance:
 - Do not add XML tags mechanically when they do not add value.
 - Keep <summary> focused on the API contract.
 - Use <remarks> for lifecycle notes, threading expectations, ownership, performance caveats, or usage constraints when these are supported by the code or tests.
+- When <remarks> contains multiple caveats or guidance points, format each logical section as its own paragraph for readability and consistency.
 - Add examples only when requested or when examples are necessary for clarity.
 - Cross references: use <see> for inline references and <seealso> for related overloads or sibling APIs. Avoid prose "See also" lines in remarks.
 
 Module-Specific Addenda:
 - Physics API Addendum:
   - Physics query freshness: if results depend on physics synchronization, include a concise stale-state note and reference the synchronization API.
+  - Overload consistency: for the same query family, keep synchronization wording consistent across all overloads (point, bounds, overlap; span, list, and AsSpan variants).
+  - Buffer retention caveat: for APIs writing collider references into caller-provided buffers, document GC retention implications for both span-backed buffers and list-backed buffers.
+  - GC reference retention wording quality: explain that retention is about GC-managed object references kept in caller-provided buffers, why this can keep removed colliders alive, when it matters (for example, level reloads/entity destruction), and when clearing is appropriate; explicitly note that clearing every frame is usually unnecessary.
 
 Hard constraints:
 - Do not modify code unless explicitly asked.
