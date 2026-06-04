@@ -119,6 +119,42 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
+    public int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
+        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
+        //PhysicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+
+        for (var i = 0; i < queryHandler.Count; i++)
+        {
+            colliders[i] = collidersArray[i];
+        }
+
+        ArrayPool<Collider2DComponent>.Shared.Return(collidersArray, true);
+
+        return queryHandler.Count;
+    }
+
+    public int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        colliders.Clear();
+        var queryHandler = new ColliderListQueryHandler(colliders);
+        //PhysicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+        return queryHandler.Count;
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    {
+        var written = QueryBounds(axisAlignedRectangle, colliders);
+        return colliders.Slice(0, written);
+    }
+
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    {
+        var written = QueryBounds(axisAlignedRectangle, colliders);
+        return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
+    }
+
     public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
