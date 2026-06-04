@@ -76,12 +76,11 @@ public int QueryBounds_List()
         return _physicsSystem.QueryOverlap(_queryRectangle, _collidersArray);
     }
 
-    [Benchmark]
-    public int QueryOverlap_AxisAlignedRectangle_List()
-    {
-        _collidersList.Clear();
-        return _physicsSystem.QueryOverlap(_queryRectangle, _collidersList);
-    }
+[Benchmark]
+public int QueryOverlap_AxisAlignedRectangle_List()
+{
+    return _physicsSystem.QueryOverlap(_queryRectangle, _collidersList);
+}
 
     private void ConfigureStaticScene(SizeD bounds, int staticBodies)
     {
