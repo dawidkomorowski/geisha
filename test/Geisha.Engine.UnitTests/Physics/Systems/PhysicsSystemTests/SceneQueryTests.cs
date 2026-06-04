@@ -940,13 +940,16 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_15_Geometry_Tile_Outside",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
             1.0001, 0, 1, 1, 0, false, 40d);
-        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_16_Geometry_Tile_RotatedInsideAabbOutsideShape",
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_16_Geometry_Tile_RotatedHit",
+            t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
+            0.6, 0.6, 0.8, 0.4, Math.PI / 4, true, 40d);
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_17_Geometry_Tile_RotatedInsideAabbOutsideShape",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
             0.8, 0.8, 0.5, 0.5, Math.PI / 4, false, 40d);
-        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_17_Geometry_Tile_CustomSizeInside",
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_18_Geometry_Tile_CustomSizeInside",
             t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
             5, 7, 0.2, 0.2, 0, true, 40d);
-        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_18_Geometry_Tile_CustomSizeOutside",
+        yield return CreateQueryOverlapRectangleGeometryTestCase("QueryOverlap_Rectangle_19_Geometry_Tile_CustomSizeOutside",
             t => t.CreateTileStaticBody(4, 6).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(2, 3),
             5.1001, 7, 0.2, 0.2, 0, false, 40d);
     }
