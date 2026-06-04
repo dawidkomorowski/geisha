@@ -292,7 +292,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         var kinematicBodyColor = Color.Blue;
         var contactPointColor = Color.FromArgb(255, 255, 165, 0);
         var contactNormalColor = Color.Black;
-        var disabledCollisionDetectionBodyColor = Color.FromArgb(255, 128, 128, 128);
+        var disabledCollisionDetectionBodyColor = Color.Gray;
 
         Span<Vector2> points = stackalloc Vector2[2];
 
