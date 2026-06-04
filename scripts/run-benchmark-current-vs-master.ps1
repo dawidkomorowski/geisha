@@ -4,9 +4,13 @@ $ErrorActionPreference = "Stop"
 Import-Module -Name .\modules\Benchmarks.psm1 -Force
 Import-Module -Name .\modules\Windows.psm1 -Force
 
-$binPath = "bin"
+$binPath = Resolve-Path -Path "bin"
 $benchmarkAppPackageName = "benchmark-app.zip"
-$currentBenchmarkDir = "..\benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\"
+$currentBenchmarkProjectPath = Resolve-Path -Path "..\benchmark\Geisha.Benchmark\Geisha.Benchmark.csproj"
+$currentBenchmarkProjectDir = Split-Path -Path $currentBenchmarkProjectPath -Parent
+$currentBenchmarkOutputDir = dotnet msbuild $currentBenchmarkProjectPath -nologo -p:Configuration=Release -getProperty:TargetDir
+$currentBenchmarkOutputDir = $currentBenchmarkOutputDir.Trim()
+$currentBenchmarkDir = "$binPath\current"
 
 ### Prepare Geisha.Benchmark binaries ###
 
@@ -36,24 +40,23 @@ if (-not (Test-Path -PathType Container -Path $masterBenchmarkDir)) {
     Expand-Archive -Path $zip -DestinationPath $masterBenchmarkDir
 }
 
-if (-not (Test-Path -PathType Leaf -Path "$currentBenchmarkDir\Geisha.Benchmark.exe")) {
-    Write-Host "Current version of Geisha.Benchmark.exe not found. Starting build..."
-    .\build-benchmark.ps1
-}
+New-Item -ItemType Directory -Path $currentBenchmarkDir -Force | Out-Null
 
 ### Run Benchmarks ###
 
 Write-Host "Removing stale benchmark results."
-Remove-Item -Path "$currentBenchmarkDir\BenchmarkResults*.json"
-Remove-Item -Path "$masterBenchmarkDir\BenchmarkResults*.json"
+Remove-Item -Path "$currentBenchmarkDir\BenchmarkResults*.json" -ErrorAction SilentlyContinue
+Remove-Item -Path "$currentBenchmarkOutputDir\BenchmarkResults*.json" -ErrorAction SilentlyContinue
+Remove-Item -Path "$masterBenchmarkDir\BenchmarkResults*.json" -ErrorAction SilentlyContinue
 
 $startTime = Get-Date
 
 Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
 
 Write-Host "Execute performance benchmarks (current 1/3)" -ForegroundColor Cyan
-Set-Location -Path $currentBenchmarkDir
-.\Geisha.Benchmark.exe 2>&1 | Out-Default
+Set-Location -Path $currentBenchmarkProjectDir
+dotnet run --project $currentBenchmarkProjectPath --configuration Release 2>&1 | Out-Default
+Move-Item -Path "$currentBenchmarkOutputDir\BenchmarkResults*.json" -Destination $currentBenchmarkDir -Force
 Set-Location -Path $PSScriptRoot
 
 Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
@@ -66,8 +69,9 @@ Set-Location -Path $PSScriptRoot
 Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
 
 Write-Host "Execute performance benchmarks (current 2/3)" -ForegroundColor Cyan
-Set-Location -Path $currentBenchmarkDir
-.\Geisha.Benchmark.exe 2>&1 | Out-Default
+Set-Location -Path $currentBenchmarkProjectDir
+dotnet run --project $currentBenchmarkProjectPath --configuration Release 2>&1 | Out-Default
+Move-Item -Path "$currentBenchmarkOutputDir\BenchmarkResults*.json" -Destination $currentBenchmarkDir -Force
 Set-Location -Path $PSScriptRoot
 
 Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
@@ -80,8 +84,9 @@ Set-Location -Path $PSScriptRoot
 Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
 
 Write-Host "Execute performance benchmarks (current 3/3)" -ForegroundColor Cyan
-Set-Location -Path $currentBenchmarkDir
-.\Geisha.Benchmark.exe 2>&1 | Out-Default
+Set-Location -Path $currentBenchmarkProjectDir
+dotnet run --project $currentBenchmarkProjectPath --configuration Release 2>&1 | Out-Default
+Move-Item -Path "$currentBenchmarkOutputDir\BenchmarkResults*.json" -Destination $currentBenchmarkDir -Force
 Set-Location -Path $PSScriptRoot
 
 Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)

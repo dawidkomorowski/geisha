@@ -21,7 +21,9 @@ namespace Geisha.Benchmark
 
         public BenchmarkResults()
         {
-            _resultsFilePath = $"BenchmarkResults--{DateTime.Now:yyyy-MM-dd--HH-mm-ss}.json";
+            // TODO: Should it produce results next to executable or to working directory?
+            var fileName = $"BenchmarkResults--{DateTime.Now:yyyy-MM-dd--HH-mm-ss}.json";
+            _resultsFilePath = Path.Combine(AppContext.BaseDirectory, fileName);
 
             SaveResults();
         }
