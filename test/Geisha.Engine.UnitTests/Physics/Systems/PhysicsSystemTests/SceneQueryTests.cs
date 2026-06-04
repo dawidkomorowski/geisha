@@ -724,6 +724,17 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
     #region QueryOverlap Rectangle
 
+    private sealed record QueryRectangleData(Rectangle QueryRectangle, AxisAlignedRectangle RectangleToDraw, Matrix3x3 RectangleDrawTransform);
+
+    private static QueryRectangleData CreateQueryRectangleData(double x, double y, double width, double height, double rotation)
+    {
+        var transform = new Transform2D(new Vector2(x, y), rotation, Vector2.One).ToMatrix();
+        var rectangleToQuery = new Rectangle(new Vector2(width, height)).Transform(transform);
+        var rectangleToDraw = new AxisAlignedRectangle(width, height);
+
+        return new QueryRectangleData(rectangleToQuery, rectangleToDraw, transform);
+    }
+
     [TestCase(0, 0, 0)] // No colliders: 0 hits, empty buffer -> 0 written
     [TestCase(5, 0, 0)] // 5 hits, buffer size 0 -> 0 written
     [TestCase(5, 2, 2)] // 5 hits, buffer size 2 -> 2 written
@@ -867,6 +878,16 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         double VisualScale
     );
 
+    private static QueryOverlapRectangleGeometryTestCase CreateQueryOverlapRectangleGeometryTestCase(string name,
+        Func<SceneQueryTests, Collider2DComponent> createCollider, PhysicsConfiguration physicsConfiguration, double queryX, double queryY, double queryWidth,
+        double queryHeight, double queryRotation, bool expectedHit, double visualScale)
+    {
+        var queryRectangleData = CreateQueryRectangleData(queryX, queryY, queryWidth, queryHeight, queryRotation);
+
+        return new QueryOverlapRectangleGeometryTestCase(name, createCollider, physicsConfiguration, queryRectangleData.QueryRectangle,
+            queryRectangleData.RectangleToDraw, queryRectangleData.RectangleDrawTransform, expectedHit, visualScale);
+    }
+
     private static IEnumerable<QueryOverlapRectangleGeometryTestCase> QueryOverlapRectangleGeometryCases()
     {
         // Circle
@@ -968,27 +989,6 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             EnableDebugRendering = true,
             TileSize = new SizeD(tileWidth, tileHeight)
         };
-    }
-
-    private sealed record QueryRectangleData(Rectangle QueryRectangle, AxisAlignedRectangle RectangleToDraw, Matrix3x3 RectangleDrawTransform);
-
-    private static QueryRectangleData CreateQueryRectangleData(double x, double y, double width, double height, double rotation)
-    {
-        var transform = new Transform2D(new Vector2(x, y), rotation, Vector2.One).ToMatrix();
-        var rectangleToQuery = new Rectangle(new Vector2(width, height)).Transform(transform);
-        var rectangleToDraw = new AxisAlignedRectangle(width, height);
-
-        return new QueryRectangleData(rectangleToQuery, rectangleToDraw, transform);
-    }
-
-    private static QueryOverlapRectangleGeometryTestCase CreateQueryOverlapRectangleGeometryTestCase(string name,
-        Func<SceneQueryTests, Collider2DComponent> createCollider, PhysicsConfiguration physicsConfiguration, double queryX, double queryY, double queryWidth,
-        double queryHeight, double queryRotation, bool expectedHit, double visualScale)
-    {
-        var queryRectangleData = CreateQueryRectangleData(queryX, queryY, queryWidth, queryHeight, queryRotation);
-
-        return new QueryOverlapRectangleGeometryTestCase(name, createCollider, physicsConfiguration, queryRectangleData.QueryRectangle,
-            queryRectangleData.RectangleToDraw, queryRectangleData.RectangleDrawTransform, expectedHit, visualScale);
     }
 
     private void CreateCollidersAtOrigin(int collidersCount)
