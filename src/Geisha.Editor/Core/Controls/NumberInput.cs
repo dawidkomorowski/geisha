@@ -13,7 +13,7 @@ namespace Geisha.Editor.Core.Controls
 
         public TNumber Value
         {
-            get => (TNumber) GetValue(ValueProperty);
+            get => (TNumber)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
@@ -58,8 +58,8 @@ namespace Geisha.Editor.Core.Controls
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var numericTextBox = (NumberInput<TNumber>) d;
-            var newValue = (TNumber) e.NewValue;
+            var numericTextBox = (NumberInput<TNumber>)d;
+            var newValue = (TNumber)e.NewValue;
 
             numericTextBox.Text = numericTextBox.Convert(newValue);
         }

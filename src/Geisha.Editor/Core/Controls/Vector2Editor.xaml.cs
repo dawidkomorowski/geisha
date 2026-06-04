@@ -19,14 +19,14 @@ namespace Geisha.Editor.Core.Controls
 
         public Vector2 Value
         {
-            get => (Vector2) GetValue(ValueProperty);
+            get => (Vector2)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var editor = (Vector2Editor) d;
-            var newValue = (Vector2) e.NewValue;
+            var editor = (Vector2Editor)d;
+            var newValue = (Vector2)e.NewValue;
 
             editor.X.Value = newValue.X;
             editor.Y.Value = newValue.Y;

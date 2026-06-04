@@ -54,7 +54,7 @@ internal static class XmlElementExtensions
             return defaultValue;
         }
 
-        if (!double.TryParse(attribute.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value ))
+        if (!double.TryParse(attribute.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
         {
             throw new InvalidTiledMapException($"invalid '{attributeName}' attribute value '{attribute.Value}' in '{element.Name}' element");
         }
