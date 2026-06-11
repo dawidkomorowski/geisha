@@ -60,6 +60,14 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
+    // TODO: Include in serialization.
+    // TODO: Add documentation.
+    // TODO: Add documentation to overlap callbacks.
+    public bool IsSensor { get; set; } = false;
+
+    public Action<Collider2DComponent>? OnOverlapBegin { get; set; }
+    public Action<Collider2DComponent>? OnOverlapEnd { get; set; }
+
     /// <summary>
     ///     Gets or sets the collision layer bitmask that identifies which logical groups this collider belongs to.
     /// </summary>
