@@ -77,6 +77,11 @@ internal static class CollisionDetection
                     continue;
                 }
 
+                if (staticBody.IsSensor)
+                {
+                    continue;
+                }
+
                 if ((kinematicBody.CollisionLayer & staticBody.CollisionMask) == 0 || (kinematicBody.CollisionMask & staticBody.CollisionLayer) == 0)
                 {
                     continue;

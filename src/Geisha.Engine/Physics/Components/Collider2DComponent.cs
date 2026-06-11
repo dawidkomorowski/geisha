@@ -63,6 +63,7 @@ public abstract class Collider2DComponent : Component
     // TODO: Include in serialization.
     // TODO: Add documentation.
     // TODO: Add documentation to overlap callbacks.
+    // TODO: Add state synchronization tests.
     public bool IsSensor { get; set; } = false;
 
     public Action<Collider2DComponent>? OnOverlapBegin { get; set; }

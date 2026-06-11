@@ -121,6 +121,8 @@ internal sealed class RigidBody2D
 
     public bool EnableCollisionResponse { get; set; }
 
+    public bool IsSensor { get; set; }
+
     public uint CollisionLayer { get; set; } = uint.MaxValue;
     public uint CollisionMask { get; set; } = uint.MaxValue;
 
