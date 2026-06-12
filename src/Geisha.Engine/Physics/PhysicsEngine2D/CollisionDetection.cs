@@ -41,6 +41,11 @@ internal static class CollisionDetection
                     continue;
                 }
 
+                if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
+                {
+                    continue;
+                }
+
                 if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 || (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
                 {
                     continue;
@@ -77,7 +82,7 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if (staticBody.IsSensor)
+                if (kinematicBody.IsSensor || staticBody.IsSensor)
                 {
                     continue;
                 }
