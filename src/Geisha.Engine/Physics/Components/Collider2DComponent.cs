@@ -64,6 +64,8 @@ public abstract class Collider2DComponent : Component
     // TODO: Add documentation.
     // TODO: Add documentation to overlap callbacks.
     // TODO: Add state synchronization tests.
+    // TODO: Test interaction between IsSensor and Enabled.
+    // TODO: Test that non sensor colliders do not trigger overlap callbacks.
     public bool IsSensor { get; set; } = false;
 
     public Action<Collider2DComponent>? OnOverlapBegin { get; set; }
