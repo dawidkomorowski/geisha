@@ -62,6 +62,7 @@ public class SensorTests : PhysicsSystemTestsBase
             : CreateCircleStaticBody(x, y, radius);
     }
 
+    // TODO: Code for collision detection is duplicated so kinematic vs static is different code than kinematic vs kinematic.
     [Test]
     public void Sensor_ShouldInvoke_OnOverlapBegin_And_OnOverlapEnd()
     {

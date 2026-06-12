@@ -10,6 +10,7 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _bodies = new();
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
+    private readonly List<SensorOverlap> _sensorOverlaps = new();
 
     public PhysicsScene2D(SizeD tileSize)
     {
@@ -93,7 +94,7 @@ internal sealed class PhysicsScene2D
                 kinematicBody.RecomputeCollider();
             }
 
-            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies);
+            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies, _sensorOverlaps);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)

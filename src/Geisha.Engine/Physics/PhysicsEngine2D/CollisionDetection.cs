@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Geisha.Engine.Core.Math;
+using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
@@ -9,8 +10,10 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 internal static class CollisionDetection
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies)
+    public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies, List<SensorOverlap> sensorOverlaps)
     {
+        sensorOverlaps.Clear();
+
         foreach (var staticBody in staticBodies)
         {
             staticBody.Contacts.Clear();
@@ -22,7 +25,7 @@ internal static class CollisionDetection
         }
 
         DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies);
-        DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies);
+        DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies, sensorOverlaps);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -71,18 +74,14 @@ internal static class CollisionDetection
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void DetectCollisions_Kinematic_Vs_Static(ReadOnlySpan<RigidBody2D> kinematicBodies, ReadOnlySpan<RigidBody2D> staticBodies)
+    private static void DetectCollisions_Kinematic_Vs_Static(ReadOnlySpan<RigidBody2D> kinematicBodies, ReadOnlySpan<RigidBody2D> staticBodies,
+        List<SensorOverlap> sensorOverlaps)
     {
         foreach (var kinematicBody in kinematicBodies)
         {
             foreach (var staticBody in staticBodies)
             {
                 if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
-                {
-                    continue;
-                }
-
-                if (kinematicBody.IsSensor || staticBody.IsSensor)
                 {
                     continue;
                 }
@@ -94,6 +93,12 @@ internal static class CollisionDetection
 
                 if (!TestAABB(kinematicBody, staticBody))
                 {
+                    continue;
+                }
+
+                if (kinematicBody.IsSensor || staticBody.IsSensor)
+                {
+                    sensorOverlaps.Add(new SensorOverlap(kinematicBody, staticBody));
                     continue;
                 }
 
