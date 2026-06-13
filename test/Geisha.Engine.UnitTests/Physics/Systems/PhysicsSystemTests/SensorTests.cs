@@ -13,8 +13,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 // TODO: Test runtime Enabled toggling for sensor and visitor bodies; verify no ghost overlaps and correct begin/end transitions.
 // TODO: Test runtime CollisionLayer/CollisionMask changes during active overlap; verify pair begin/end follows filter changes.
 // TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
-// TODO: Test duplicate callback protection: no repeated begin for continuous overlap and no repeated end for continuous separation.
-// TODO: Test callback symmetry/order: both participants receive matching OnOverlapBegin and OnOverlapEnd exactly once per transition.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
 
 [TestFixture]

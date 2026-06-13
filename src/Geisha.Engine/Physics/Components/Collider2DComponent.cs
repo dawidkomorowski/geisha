@@ -62,7 +62,7 @@ public abstract class Collider2DComponent : Component
 
     // TODO: Include in serialization.
     // TODO: Add documentation.
-    // TODO: Add documentation to overlap callbacks.
+    // TODO: Add documentation to overlap callbacks. Include information about undefined order of callbacks between colliders.
     // TODO: Add state synchronization tests.
     // TODO: Test interaction between IsSensor and Enabled.
     // TODO: Test interaction between IsSensor and CollisionLayer and CollisionMask.
