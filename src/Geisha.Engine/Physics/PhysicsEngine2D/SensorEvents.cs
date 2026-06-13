@@ -2,10 +2,16 @@
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-// TODO: How to approach span in struct in older .NET version?
-internal readonly struct SensorEvents
+internal readonly ref struct SensorEvents
 {
-    public Span<SensorOverlapBeginEvent> BeginEvents { get; }
+    public SensorEvents(ReadOnlySpan<SensorOverlapBeginEvent> beginEvents, ReadOnlySpan<SensorOverlapEndEvent> endEvents)
+    {
+        BeginEvents = beginEvents;
+        EndEvents = endEvents;
+    }
+
+    public ReadOnlySpan<SensorOverlapBeginEvent> BeginEvents { get; }
+    public ReadOnlySpan<SensorOverlapEndEvent> EndEvents { get; }
 }
 
 internal readonly struct SensorOverlapBeginEvent

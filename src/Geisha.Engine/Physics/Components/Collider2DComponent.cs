@@ -67,6 +67,7 @@ public abstract class Collider2DComponent : Component
     // TODO: Test interaction between IsSensor and Enabled.
     // TODO: Test interaction between IsSensor and CollisionLayer and CollisionMask.
     // TODO: Test that non sensor colliders do not trigger overlap callbacks.
+    // TODO: Test sensor events with substepping.
     public bool IsSensor { get; set; } = false;
 
     public Action<Collider2DComponent>? OnOverlapBegin { get; set; }

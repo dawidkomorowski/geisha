@@ -11,6 +11,8 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
     private readonly List<SensorOverlap> _sensorOverlaps = new();
+    private readonly List<SensorOverlapBeginEvent> _sensorOverlapBeginEvents = new();
+    private readonly List<SensorOverlapEndEvent> _sensorOverlapEndEvents = new();
 
     public PhysicsScene2D(SizeD tileSize)
     {
@@ -101,6 +103,8 @@ internal sealed class PhysicsScene2D
             {
                 ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
             }
+
+            GenerateEvents();
         }
     }
 
@@ -179,6 +183,11 @@ internal sealed class PhysicsScene2D
         }
     }
 
+    public SensorEvents GetSensorEvents()
+    {
+        return new SensorEvents(CollectionsMarshal.AsSpan(_sensorOverlapBeginEvents), CollectionsMarshal.AsSpan(_sensorOverlapEndEvents));
+    }
+
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
     private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
 
@@ -196,6 +205,33 @@ internal sealed class PhysicsScene2D
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(body), "Unsupported body type.");
+        }
+    }
+
+    private void ClearEvents()
+    {
+        // TODO:
+    }
+
+    private void GenerateEvents()
+    {
+        foreach (var sensorOverlap in _sensorOverlaps)
+        {
+            RigidBody2D sensor;
+            RigidBody2D visitor;
+
+            if (sensorOverlap.Body1.IsSensor)
+            {
+                sensor = sensorOverlap.Body1;
+                visitor = sensorOverlap.Body2;
+            }
+            else
+            {
+                sensor = sensorOverlap.Body2;
+                visitor = sensorOverlap.Body1;
+            }
+
+            _sensorOverlapBeginEvents.Add(new SensorOverlapBeginEvent(sensor, visitor));
         }
     }
 }
