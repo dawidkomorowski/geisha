@@ -64,8 +64,6 @@ public abstract class Collider2DComponent : Component
     // TODO: Add documentation.
     // TODO: Add documentation to overlap callbacks. Include information about undefined order of callbacks between colliders.
     // TODO: Add state synchronization tests.
-    // TODO: Test interaction between IsSensor and Enabled.
-    // TODO: Test interaction between IsSensor and CollisionLayer and CollisionMask.
     // TODO: Test that non sensor colliders do not trigger overlap callbacks.
     // TODO: Test sensor events with substepping.
     // TODO: Test sensor for exact overlap not just AABB.
