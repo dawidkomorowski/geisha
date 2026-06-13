@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.Systems;
 using NUnit.Framework;
@@ -11,7 +12,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 // TODO: Test sensor exact-overlap correctness: AABB overlap without shape overlap must not trigger OnOverlapBegin/OnOverlapEnd.
 // TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
 // TODO: Test runtime IsSensor toggling while overlapping and while separated; verify begin/end transitions are correct.
-// TODO: Test runtime CollisionLayer/CollisionMask changes during active overlap; verify pair begin/end follows filter changes.
 // TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
 
@@ -208,6 +208,91 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
         Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
         Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Sensor_ShouldHandle_RuntimeCollisionFilteringToggle_ForLayerAndMask(bool visitorIsKinematic)
+    {
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics(); // Pair is enabled and overlapping with matching filters.
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        // Act 1
+        context.SensorCollider.CollisionMask = CollisionBitmask.None;
+
+        context.PhysicsSystem.ProcessPhysics(); // Filters reject overlapping pair -> OnOverlapEnd expected.
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+
+        // Act 2
+        context.PhysicsSystem.ProcessPhysics(); // Filters still reject pair.
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 2
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+
+        // Act 3
+        context.SensorCollider.CollisionMask = CollisionBitmask.All;
+
+        context.PhysicsSystem.ProcessPhysics(); // Filters accept pair again -> OnOverlapBegin expected.
+        SaveVisualOutput(context.PhysicsSystem, 3);
+
+        // Assert 3
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorBeginEvents[1], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents[1], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+
+        // Act 4
+        context.VisitorCollider.CollisionLayer = CollisionBitmask.None;
+
+        context.PhysicsSystem.ProcessPhysics(); // Filters reject pair via layer -> OnOverlapEnd expected.
+        SaveVisualOutput(context.PhysicsSystem, 4);
+
+        // Assert 4
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents[1], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorEndEvents[1], Is.EqualTo(context.SensorCollider));
+
+        // Act 5
+        context.VisitorCollider.CollisionLayer = CollisionBitmask.All;
+
+        context.PhysicsSystem.ProcessPhysics(); // Filters accept pair again -> OnOverlapBegin expected.
+        SaveVisualOutput(context.PhysicsSystem, 5);
+
+        // Assert 5
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(3));
+        Assert.That(context.SensorBeginEvents[2], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(3));
+        Assert.That(context.VisitorBeginEvents[2], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(2));
     }
 
     private SensorOverlapContext CreateOverlappingSensorContext(bool visitorIsKinematic)
