@@ -80,89 +80,67 @@ public class SensorTests : PhysicsSystemTestsBase
 
     [TestCase(false)]
     [TestCase(true)]
-    public void Sensor_ShouldInvoke_OnOverlapBegin_And_OnOverlapEnd(bool sensorIsKinematic)
+    public void Sensor_ShouldInvoke_OnOverlapBegin_And_OnOverlapEnd_WhenGeometryOverlapChangesDueToPosition(bool visitorIsKinematic)
     {
-        var physicsSystem = GetPhysicsSystem();
-        var kinematicBody = CreateCircleKinematicBody(-100, 0, 100);
-        var sensorBody = CreateBody(sensorIsKinematic, 150, 0, 100);
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
 
-        var overlapBeginFromKinematic = new List<Collider2DComponent>();
-        var overlapBeginFromSensor = new List<Collider2DComponent>();
-        var overlapEndFromKinematic = new List<Collider2DComponent>();
-        var overlapEndFromSensor = new List<Collider2DComponent>();
-
-        var kinematicCollider = kinematicBody.GetComponent<CircleColliderComponent>();
-        kinematicCollider.OnOverlapBegin = overlapBeginFromKinematic.Add;
-        kinematicCollider.OnOverlapEnd = overlapEndFromKinematic.Add;
-
-        var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
-        sensorCollider.OnOverlapBegin = overlapBeginFromSensor.Add;
-        sensorCollider.OnOverlapEnd = overlapEndFromSensor.Add;
-        sensorCollider.IsSensor = true;
-
-        var kinematicTransform = kinematicBody.GetComponent<Transform2DComponent>();
+        visitorTransform.Translation = new Vector2(300, 0);
 
         // Act 0
-        physicsSystem.ProcessPhysics(); // No overlap -> should invoke no overlap callbacks.
-        SaveVisualOutput(physicsSystem, 0);
+        context.PhysicsSystem.ProcessPhysics(); // No overlap -> should invoke no overlap callbacks.
+        SaveVisualOutput(context.PhysicsSystem, 0);
 
         // Assert 0
-        Assert.That(overlapBeginFromKinematic, Is.Empty);
-        Assert.That(overlapBeginFromSensor, Is.Empty);
-        Assert.That(overlapEndFromKinematic, Is.Empty);
-        Assert.That(overlapEndFromSensor, Is.Empty);
+        AssertNoCallbacks(context);
 
         // Act 1
-        kinematicTransform.Translation = new Vector2(0, 0);
+        visitorTransform.Translation = new Vector2(150, 0);
 
-        physicsSystem.ProcessPhysics(); // Overlap detected -> should invoke OnOverlapBegin.
-        SaveVisualOutput(physicsSystem, 1);
+        context.PhysicsSystem.ProcessPhysics(); // Overlap detected -> should invoke OnOverlapBegin.
+        SaveVisualOutput(context.PhysicsSystem, 1);
 
         // Assert 1
-        Assert.That(overlapBeginFromKinematic, Has.Count.EqualTo(1));
-        Assert.That(overlapBeginFromKinematic[0], Is.EqualTo(sensorCollider));
-
-        Assert.That(overlapBeginFromSensor, Has.Count.EqualTo(1));
-        Assert.That(overlapBeginFromSensor[0], Is.EqualTo(kinematicCollider));
-
-        Assert.That(overlapEndFromKinematic, Is.Empty);
-        Assert.That(overlapEndFromSensor, Is.Empty);
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
 
         // Act 2
-        physicsSystem.ProcessPhysics(); // Overlap stays -> should invoke no overlap callbacks.
-        SaveVisualOutput(physicsSystem, 2);
+        context.PhysicsSystem.ProcessPhysics(); // Overlap stays -> should invoke no overlap callbacks.
+        SaveVisualOutput(context.PhysicsSystem, 2);
 
         // Assert 2
-        Assert.That(overlapBeginFromKinematic, Has.Count.EqualTo(1));
-        Assert.That(overlapBeginFromSensor, Has.Count.EqualTo(1));
-        Assert.That(overlapEndFromKinematic, Is.Empty);
-        Assert.That(overlapEndFromSensor, Is.Empty);
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
 
         // Act 3
-        kinematicTransform.Translation = new Vector2(-100, 0);
+        visitorTransform.Translation = new Vector2(300, 0);
 
-        physicsSystem.ProcessPhysics(); // Overlap removed -> should invoke OnOverlapEnd.
-        SaveVisualOutput(physicsSystem, 3);
+        context.PhysicsSystem.ProcessPhysics(); // Overlap removed -> should invoke OnOverlapEnd.
+        SaveVisualOutput(context.PhysicsSystem, 3);
 
         // Assert 3
-        Assert.That(overlapBeginFromKinematic, Has.Count.EqualTo(1));
-        Assert.That(overlapBeginFromSensor, Has.Count.EqualTo(1));
-
-        Assert.That(overlapEndFromKinematic, Has.Count.EqualTo(1));
-        Assert.That(overlapEndFromKinematic[0], Is.EqualTo(sensorCollider));
-
-        Assert.That(overlapEndFromSensor, Has.Count.EqualTo(1));
-        Assert.That(overlapEndFromSensor[0], Is.EqualTo(kinematicCollider));
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
 
         // Act 4
-        physicsSystem.ProcessPhysics(); // No overlap -> should invoke no overlap callbacks.
-        SaveVisualOutput(physicsSystem, 4);
+        context.PhysicsSystem.ProcessPhysics(); // No overlap -> should invoke no overlap callbacks.
+        SaveVisualOutput(context.PhysicsSystem, 4);
 
         // Assert 4
-        Assert.That(overlapBeginFromKinematic, Has.Count.EqualTo(1));
-        Assert.That(overlapBeginFromSensor, Has.Count.EqualTo(1));
-        Assert.That(overlapEndFromKinematic, Has.Count.EqualTo(1));
-        Assert.That(overlapEndFromSensor, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
     }
 
     [TestCase(false, true)]
