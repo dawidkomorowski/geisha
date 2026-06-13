@@ -1,6 +1,5 @@
 ﻿using Geisha.Engine.Core.Math;
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
@@ -10,9 +9,11 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 internal static class CollisionDetection
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies, List<SensorOverlap> sensorOverlaps)
+    public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies,
+        SensorOverlapCache sensorOverlapCache)
     {
-        sensorOverlaps.Clear();
+        sensorOverlapCache.RemoveStale();
+        sensorOverlapCache.MarkStale();
 
         foreach (var staticBody in staticBodies)
         {
@@ -25,7 +26,7 @@ internal static class CollisionDetection
         }
 
         DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies);
-        DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies, sensorOverlaps);
+        DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies, sensorOverlapCache);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -75,7 +76,7 @@ internal static class CollisionDetection
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void DetectCollisions_Kinematic_Vs_Static(ReadOnlySpan<RigidBody2D> kinematicBodies, ReadOnlySpan<RigidBody2D> staticBodies,
-        List<SensorOverlap> sensorOverlaps)
+        SensorOverlapCache sensorOverlapCache)
     {
         foreach (var kinematicBody in kinematicBodies)
         {
@@ -98,7 +99,7 @@ internal static class CollisionDetection
 
                 if (kinematicBody.IsSensor || staticBody.IsSensor)
                 {
-                    sensorOverlaps.Add(new SensorOverlap(kinematicBody, staticBody));
+                    sensorOverlapCache.AddPair(kinematicBody, staticBody);
                     continue;
                 }
 

@@ -10,7 +10,7 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _bodies = new();
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
-    private readonly List<SensorOverlap> _sensorOverlaps = new();
+    private readonly SensorOverlapCache _sensorOverlapCache = new();
     private readonly List<SensorOverlapBeginEvent> _sensorOverlapBeginEvents = new();
     private readonly List<SensorOverlapEndEvent> _sensorOverlapEndEvents = new();
 
@@ -80,6 +80,8 @@ internal sealed class PhysicsScene2D
         var staticBodies = GetStaticBodiesAsSpan();
         var kinematicBodies = GetKinematicBodiesAsSpan();
 
+        ClearEvents();
+
         for (var substep = 0; substep < Substeps; substep++)
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
@@ -96,7 +98,7 @@ internal sealed class PhysicsScene2D
                 kinematicBody.RecomputeCollider();
             }
 
-            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies, _sensorOverlaps);
+            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies, _sensorOverlapCache);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
@@ -210,12 +212,13 @@ internal sealed class PhysicsScene2D
 
     private void ClearEvents()
     {
-        // TODO:
+        _sensorOverlapBeginEvents.Clear();
+        _sensorOverlapEndEvents.Clear();
     }
 
     private void GenerateEvents()
     {
-        foreach (var sensorOverlap in _sensorOverlaps)
+        foreach (var sensorOverlap in _sensorOverlapCache.GetOverlaps())
         {
             RigidBody2D sensor;
             RigidBody2D visitor;
@@ -231,7 +234,19 @@ internal sealed class PhysicsScene2D
                 visitor = sensorOverlap.Body1;
             }
 
-            _sensorOverlapBeginEvents.Add(new SensorOverlapBeginEvent(sensor, visitor));
+            switch (sensorOverlap.CacheStatus)
+            {
+                case CacheStatus.New:
+                    _sensorOverlapBeginEvents.Add(new SensorOverlapBeginEvent(sensor, visitor));
+                    break;
+                case CacheStatus.Updated:
+                    break;
+                case CacheStatus.Stale:
+                    _sensorOverlapEndEvents.Add(new SensorOverlapEndEvent(sensor, visitor));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

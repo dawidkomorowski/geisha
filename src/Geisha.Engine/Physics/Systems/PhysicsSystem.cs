@@ -440,6 +440,21 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             collider1.OnOverlapBegin?.Invoke(collider2);
             collider2.OnOverlapBegin?.Invoke(collider1);
         }
+
+        foreach (var endEvent in sensorEvents.EndEvents)
+        {
+            var proxy1 = endEvent.Sensor.Proxy;
+            var proxy2 = endEvent.Visitor.Proxy;
+
+            Debug.Assert(proxy1 is not null);
+            Debug.Assert(proxy2 is not null);
+
+            var collider1 = proxy1.Collider;
+            var collider2 = proxy2.Collider;
+
+            collider1.OnOverlapEnd?.Invoke(collider2);
+            collider2.OnOverlapEnd?.Invoke(collider1);
+        }
     }
 
     // TODO: Use ColliderSpanQueryHandler instead when migrated to .NET 9 (C# 13) -> it allows ref structs to implement interfaces.
