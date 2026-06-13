@@ -7,6 +7,17 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
+// TODO: Test kinematic-vs-kinematic sensor behavior (one sensor and both sensors) and verify expected callback semantics.
+// TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
+// TODO: Test sensor exact-overlap correctness: AABB overlap without shape overlap must not trigger OnOverlapBegin/OnOverlapEnd.
+// TODO: Test runtime IsSensor toggling while overlapping and while separated; verify begin/end transitions are correct.
+// TODO: Test runtime Enabled toggling for sensor and visitor bodies; verify no ghost overlaps and correct begin/end transitions.
+// TODO: Test runtime CollisionLayer/CollisionMask changes during active overlap; verify pair begin/end follows filter changes.
+// TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
+// TODO: Test duplicate callback protection: no repeated begin for continuous overlap and no repeated end for continuous separation.
+// TODO: Test callback symmetry/order: both participants receive matching OnOverlapBegin and OnOverlapEnd exactly once per transition.
+// TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
+
 [TestFixture]
 public class SensorTests : PhysicsSystemTestsBase
 {
@@ -55,20 +66,13 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(secondTransform.Scale, Is.EqualTo(Vector2.One));
     }
 
-    private Entity CreateBody(bool isKinematic, double x, double y, double radius)
-    {
-        return isKinematic
-            ? CreateCircleKinematicBody(x, y, radius)
-            : CreateCircleStaticBody(x, y, radius);
-    }
-
-    // TODO: Code for collision detection is duplicated so kinematic vs static is different code than kinematic vs kinematic.
-    [Test]
-    public void Sensor_ShouldInvoke_OnOverlapBegin_And_OnOverlapEnd()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Sensor_ShouldInvoke_OnOverlapBegin_And_OnOverlapEnd(bool sensorIsKinematic)
     {
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateCircleKinematicBody(-100, 0, 100);
-        var sensorBody = CreateCircleStaticBody(150, 0, 100);
+        var sensorBody = CreateBody(sensorIsKinematic, 150, 0, 100);
 
         var overlapBeginFromKinematic = new List<Collider2DComponent>();
         var overlapBeginFromSensor = new List<Collider2DComponent>();
@@ -147,5 +151,12 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(overlapBeginFromSensor, Has.Count.EqualTo(1));
         Assert.That(overlapEndFromKinematic, Has.Count.EqualTo(1));
         Assert.That(overlapEndFromSensor, Has.Count.EqualTo(1));
+    }
+
+    private Entity CreateBody(bool isKinematic, double x, double y, double radius)
+    {
+        return isKinematic
+            ? CreateCircleKinematicBody(x, y, radius)
+            : CreateCircleStaticBody(x, y, radius);
     }
 }

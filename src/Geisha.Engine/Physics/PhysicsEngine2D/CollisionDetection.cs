@@ -25,12 +25,12 @@ internal static class CollisionDetection
             kinematicBody.Contacts.Clear();
         }
 
-        DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies);
+        DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies, sensorOverlapCache);
         DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies, sensorOverlapCache);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void DetectCollisions_Kinematic_Vs_Kinematic(ReadOnlySpan<RigidBody2D> kinematicBodies)
+    private static void DetectCollisions_Kinematic_Vs_Kinematic(ReadOnlySpan<RigidBody2D> kinematicBodies, SensorOverlapCache sensorOverlapCache)
     {
         for (var i = 0; i < kinematicBodies.Length; i++)
         {
@@ -45,11 +45,6 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
-                {
-                    continue;
-                }
-
                 if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 || (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
                 {
                     continue;
@@ -57,6 +52,12 @@ internal static class CollisionDetection
 
                 if (!TestAABB(kinematicBody1, kinematicBody2))
                 {
+                    continue;
+                }
+
+                if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
+                {
+                    sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
                     continue;
                 }
 
