@@ -3,6 +3,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.Systems;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -10,7 +11,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 // TODO: Test sensor exact-overlap correctness: AABB overlap without shape overlap must not trigger OnOverlapBegin/OnOverlapEnd.
 // TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
 // TODO: Test runtime IsSensor toggling while overlapping and while separated; verify begin/end transitions are correct.
-// TODO: Test runtime Enabled toggling for sensor and visitor bodies; verify no ghost overlaps and correct begin/end transitions.
 // TODO: Test runtime CollisionLayer/CollisionMask changes during active overlap; verify pair begin/end follows filter changes.
 // TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
@@ -165,10 +165,136 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(overlapEndFromSensor, Has.Count.EqualTo(1));
     }
 
+    [TestCase(false, true)]
+    [TestCase(false, false)]
+    [TestCase(true, true)]
+    [TestCase(true, false)]
+    public void Sensor_ShouldHandle_RuntimeEnabledToggle_ForSensorAndVisitorBodies(bool visitorIsKinematic, bool disableSensor)
+    {
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+        var toggledCollider = disableSensor ? context.SensorCollider : context.VisitorCollider;
+
+        toggledCollider.Enabled = false;
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics(); // Pair overlaps geometrically, but one body is disabled.
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        AssertNoCallbacks(context);
+
+        // Act 1
+        toggledCollider.Enabled = true;
+
+        context.PhysicsSystem.ProcessPhysics(); // Pair is enabled and overlapping -> OnOverlapBegin expected.
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        // Act 2
+        context.PhysicsSystem.ProcessPhysics(); // Pair remains enabled and overlapping.
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 2
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        // Act 3
+        toggledCollider.Enabled = false;
+
+        context.PhysicsSystem.ProcessPhysics(); // Overlap removed by disabling while still geometrically overlapping.
+        SaveVisualOutput(context.PhysicsSystem, 3);
+
+        // Assert 3
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+
+        // Act 4
+        context.PhysicsSystem.ProcessPhysics(); // Still disabled.
+        SaveVisualOutput(context.PhysicsSystem, 4);
+
+        // Assert 4
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+    }
+
+    private SensorOverlapContext CreateOverlappingSensorContext(bool visitorIsKinematic)
+    {
+        var physicsSystem = GetPhysicsSystem();
+
+        var sensorBody = CreateCircleKinematicBody(0, 0, 100);
+        var visitorBody = CreateBody(visitorIsKinematic, 150, 0, 100);
+
+        var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
+        var visitorCollider = visitorBody.GetComponent<CircleColliderComponent>();
+
+        sensorCollider.IsSensor = true;
+
+        var sensorBeginEvents = new List<Collider2DComponent>();
+        var sensorEndEvents = new List<Collider2DComponent>();
+        var visitorBeginEvents = new List<Collider2DComponent>();
+        var visitorEndEvents = new List<Collider2DComponent>();
+
+        sensorCollider.OnOverlapBegin = sensorBeginEvents.Add;
+        sensorCollider.OnOverlapEnd = sensorEndEvents.Add;
+        visitorCollider.OnOverlapBegin = visitorBeginEvents.Add;
+        visitorCollider.OnOverlapEnd = visitorEndEvents.Add;
+
+        return new SensorOverlapContext(physicsSystem, sensorCollider, visitorCollider, sensorBeginEvents, sensorEndEvents, visitorBeginEvents,
+            visitorEndEvents);
+    }
+
+    private static void AssertNoCallbacks(SensorOverlapContext context)
+    {
+        Assert.That(context.SensorBeginEvents, Is.Empty);
+        Assert.That(context.VisitorBeginEvents, Is.Empty);
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+    }
+
     private Entity CreateBody(bool isKinematic, double x, double y, double radius)
     {
         return isKinematic
             ? CreateCircleKinematicBody(x, y, radius)
             : CreateCircleStaticBody(x, y, radius);
+    }
+
+    private sealed class SensorOverlapContext
+    {
+        public SensorOverlapContext(PhysicsSystem physicsSystem, CircleColliderComponent sensorCollider, CircleColliderComponent visitorCollider,
+            List<Collider2DComponent> sensorBeginEvents, List<Collider2DComponent> sensorEndEvents,
+            List<Collider2DComponent> visitorBeginEvents, List<Collider2DComponent> visitorEndEvents)
+        {
+            PhysicsSystem = physicsSystem;
+            SensorCollider = sensorCollider;
+            VisitorCollider = visitorCollider;
+            SensorBeginEvents = sensorBeginEvents;
+            SensorEndEvents = sensorEndEvents;
+            VisitorBeginEvents = visitorBeginEvents;
+            VisitorEndEvents = visitorEndEvents;
+        }
+
+        public PhysicsSystem PhysicsSystem { get; }
+        public CircleColliderComponent SensorCollider { get; }
+        public CircleColliderComponent VisitorCollider { get; }
+
+        public List<Collider2DComponent> SensorBeginEvents { get; }
+        public List<Collider2DComponent> SensorEndEvents { get; }
+        public List<Collider2DComponent> VisitorBeginEvents { get; }
+        public List<Collider2DComponent> VisitorEndEvents { get; }
     }
 }
