@@ -11,7 +11,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 // TODO: Test sensor exact-overlap correctness: AABB overlap without shape overlap must not trigger OnOverlapBegin/OnOverlapEnd.
 // TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
-// TODO: Test runtime IsSensor toggling while overlapping and while separated; verify begin/end transitions are correct.
 // TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
 
@@ -210,6 +209,112 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
     }
 
+    [TestCase(false, true)]
+    [TestCase(false, false)]
+    [TestCase(true, true)]
+    [TestCase(true, false)]
+    public void Sensor_ShouldHandle_RuntimeIsSensorToggle_WhileOverlappingAndSeparated(bool visitorIsKinematic, bool toggleSensor)
+    {
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+        DisableCollisionResponseIfKinematic(context.SensorCollider);
+        DisableCollisionResponseIfKinematic(context.VisitorCollider);
+
+        var toggledCollider = toggleSensor ? context.SensorCollider : context.VisitorCollider;
+        var otherCollider = toggleSensor ? context.VisitorCollider : context.SensorCollider;
+
+        toggledCollider.IsSensor = true;
+        otherCollider.IsSensor = false;
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics(); // Pair is overlapping and one collider is sensor.
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        // Act 1
+        toggledCollider.IsSensor = false;
+
+        context.PhysicsSystem.ProcessPhysics(); // Pair remains overlapping but with no sensors -> OnOverlapEnd expected.
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+
+        // Act 2
+        context.PhysicsSystem.ProcessPhysics(); // No sensor and still overlapping.
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 2
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+
+        // Act 3
+        toggledCollider.IsSensor = true;
+
+        context.PhysicsSystem.ProcessPhysics(); // Pair remains overlapping and one collider becomes sensor -> OnOverlapBegin expected.
+        SaveVisualOutput(context.PhysicsSystem, 3);
+
+        // Assert 3
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorBeginEvents[1], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents[1], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+
+        // Act 4
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
+        visitorTransform.Translation = new Vector2(300, 0);
+
+        context.PhysicsSystem.ProcessPhysics(); // Pair becomes separated with one collider still sensor -> OnOverlapEnd expected.
+        SaveVisualOutput(context.PhysicsSystem, 4);
+
+        // Assert 4
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents[1], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorEndEvents[1], Is.EqualTo(context.SensorCollider));
+
+        // Act 5
+        toggledCollider.IsSensor = false;
+
+        context.PhysicsSystem.ProcessPhysics(); // Toggle while separated should not create callbacks.
+        SaveVisualOutput(context.PhysicsSystem, 5);
+
+        // Assert 5
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(2));
+
+        // Act 6
+        toggledCollider.IsSensor = true;
+
+        context.PhysicsSystem.ProcessPhysics(); // Toggle while separated should not create callbacks.
+        SaveVisualOutput(context.PhysicsSystem, 6);
+
+        // Assert 6
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(2));
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     public void Sensor_ShouldHandle_RuntimeCollisionFilteringToggle_ForLayerAndMask(bool visitorIsKinematic)
@@ -327,6 +432,14 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.VisitorBeginEvents, Is.Empty);
         Assert.That(context.SensorEndEvents, Is.Empty);
         Assert.That(context.VisitorEndEvents, Is.Empty);
+    }
+
+    private static void DisableCollisionResponseIfKinematic(Collider2DComponent collider)
+    {
+        if (collider.Entity.HasComponent<KinematicRigidBody2DComponent>())
+        {
+            collider.Entity.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = false;
+        }
     }
 
     private Entity CreateBody(bool isKinematic, double x, double y, double radius)
