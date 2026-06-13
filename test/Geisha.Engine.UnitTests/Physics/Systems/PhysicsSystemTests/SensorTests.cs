@@ -7,9 +7,8 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-// TODO: Test kinematic-vs-kinematic sensor behavior (one sensor and both sensors) and verify expected callback semantics.
-// TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
 // TODO: Test sensor exact-overlap correctness: AABB overlap without shape overlap must not trigger OnOverlapBegin/OnOverlapEnd.
+// TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
 // TODO: Test runtime IsSensor toggling while overlapping and while separated; verify begin/end transitions are correct.
 // TODO: Test runtime Enabled toggling for sensor and visitor bodies; verify no ghost overlaps and correct begin/end transitions.
 // TODO: Test runtime CollisionLayer/CollisionMask changes during active overlap; verify pair begin/end follows filter changes.
@@ -21,13 +20,15 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class SensorTests : PhysicsSystemTestsBase
 {
-    [TestCase(true, true, false, false)]
-    [TestCase(true, false, false, true)]
-    [TestCase(true, true, true, false)]
-    [TestCase(true, false, true, true)]
-    [TestCase(true, true, false, true)]
-    [TestCase(true, true, true, true)]
-    public void Sensor_ShouldProduceNoCollision(bool firstBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsKinematic, bool secondBodyIsSensor)
+    [TestCase(true, true, false, false, true)]
+    [TestCase(true, false, false, true, true)]
+    [TestCase(true, true, true, false, true)]
+    [TestCase(true, false, true, true, true)]
+    [TestCase(true, true, false, true, true)]
+    [TestCase(true, true, true, true, true)]
+    [TestCase(false, true, false, true, false)]
+    public void Sensor_ShouldProduceNoCollision(bool firstBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsKinematic, bool secondBodyIsSensor,
+        bool expectSensorEvent)
     {
         var physicsSystem = GetPhysicsSystem();
         var firstBody = CreateBody(firstBodyIsKinematic, 0, 0, 100);
@@ -37,6 +38,9 @@ public class SensorTests : PhysicsSystemTestsBase
         var secondBodyCollider = secondBody.GetComponent<CircleColliderComponent>();
         firstBodyCollider.IsSensor = firstBodyIsSensor;
         secondBodyCollider.IsSensor = secondBodyIsSensor;
+
+        var overlapBeginFromFirstBody = new List<Collider2DComponent>();
+        firstBodyCollider.OnOverlapBegin = overlapBeginFromFirstBody.Add;
 
         // Assume
         Assert.That(firstBodyCollider.IsColliding, Is.False);
@@ -64,6 +68,16 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(secondTransform.Translation, Is.EqualTo(new Vector2(150, 0)));
         Assert.That(secondTransform.Rotation, Is.Zero);
         Assert.That(secondTransform.Scale, Is.EqualTo(Vector2.One));
+
+        if (expectSensorEvent)
+        {
+            Assert.That(overlapBeginFromFirstBody, Has.Count.EqualTo(1));
+            Assert.That(overlapBeginFromFirstBody[0], Is.EqualTo(secondBodyCollider));
+        }
+        else
+        {
+            Assert.That(overlapBeginFromFirstBody, Has.Count.Zero);
+        }
     }
 
     [TestCase(false)]
