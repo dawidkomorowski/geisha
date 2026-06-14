@@ -10,9 +10,9 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _bodies = new();
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
-    private readonly SensorOverlapCache _sensorOverlapCache = new();
-    private readonly List<SensorOverlapBeginEvent> _sensorOverlapBeginEvents = new();
-    private readonly List<SensorOverlapEndEvent> _sensorOverlapEndEvents = new();
+    private readonly SensorOverlapCache _sensorOverlapCache = new(256);
+    private readonly List<SensorOverlapBeginEvent> _sensorOverlapBeginEvents = new(256);
+    private readonly List<SensorOverlapEndEvent> _sensorOverlapEndEvents = new(256);
 
     public PhysicsScene2D(SizeD tileSize)
     {

@@ -30,8 +30,14 @@ internal struct SensorOverlap
 
 internal sealed class SensorOverlapCache
 {
-    private readonly List<SensorOverlap> _overlaps = new();
-    private readonly Dictionary<CacheKey, int> _index = new();
+    private readonly List<SensorOverlap> _overlaps;
+    private readonly Dictionary<CacheKey, int> _index;
+
+    public SensorOverlapCache(int capacity)
+    {
+        _overlaps = new List<SensorOverlap>(capacity);
+        _index = new Dictionary<CacheKey, int>(capacity);
+    }
 
     public void AddPair(RigidBody2D body1, RigidBody2D body2)
     {
