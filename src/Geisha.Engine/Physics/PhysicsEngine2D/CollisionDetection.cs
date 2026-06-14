@@ -55,16 +55,17 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
-                {
-                    sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
-                    continue;
-                }
-
                 var (overlap, mtv) = TestOverlap(kinematicBody1, kinematicBody2);
 
                 if (overlap is false)
                 {
+                    continue;
+                }
+
+                // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
+                if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
+                {
+                    sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
                     continue;
                 }
 
@@ -98,16 +99,17 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if (kinematicBody.IsSensor || staticBody.IsSensor)
-                {
-                    sensorOverlapCache.AddPair(kinematicBody, staticBody);
-                    continue;
-                }
-
                 var (overlap, mtv) = TestOverlap(kinematicBody, staticBody);
 
                 if (overlap is false)
                 {
+                    continue;
+                }
+
+                // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
+                if (kinematicBody.IsSensor || staticBody.IsSensor)
+                {
+                    sensorOverlapCache.AddPair(kinematicBody, staticBody);
                     continue;
                 }
 
