@@ -15,17 +15,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class SensorTests : PhysicsSystemTestsBase
 {
-    [TestCase(true, true, false, false, true)]
-    [TestCase(true, false, false, true, true)]
-    [TestCase(true, true, true, false, true)]
-    [TestCase(true, false, true, true, true)]
-    [TestCase(true, true, false, true, true)]
-    [TestCase(true, true, true, true, true)]
-    public void Sensor_ShouldProduceNoCollision(bool firstBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsKinematic, bool secondBodyIsSensor,
-        bool expectSensorEvent)
+    [TestCase(false, true, false)]
+    [TestCase(false, false, true)]
+    [TestCase(false, true, true)]
+    [TestCase(true, true, false)]
+    [TestCase(true, false, true)]
+    [TestCase(true, true, true)]
+    public void Sensor_ShouldProduceNoCollision(bool secondBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsSensor)
     {
         var physicsSystem = GetPhysicsSystem();
-        var firstBody = CreateBody(firstBodyIsKinematic, 0, 0, 100);
+        var firstBody = CreateCircleKinematicBody(0, 0, 100);
         var secondBody = CreateBody(secondBodyIsKinematic, 150, 0, 100);
 
         var firstBodyCollider = firstBody.GetComponent<CircleColliderComponent>();
@@ -63,15 +62,8 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(secondTransform.Rotation, Is.Zero);
         Assert.That(secondTransform.Scale, Is.EqualTo(Vector2.One));
 
-        if (expectSensorEvent)
-        {
-            Assert.That(overlapBeginFromFirstBody, Has.Count.EqualTo(1));
-            Assert.That(overlapBeginFromFirstBody[0], Is.EqualTo(secondBodyCollider));
-        }
-        else
-        {
-            Assert.That(overlapBeginFromFirstBody, Has.Count.Zero);
-        }
+        Assert.That(overlapBeginFromFirstBody, Has.Count.EqualTo(1));
+        Assert.That(overlapBeginFromFirstBody[0], Is.EqualTo(secondBodyCollider));
     }
 
     [TestCase(true, false)]
