@@ -9,7 +9,6 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-// TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
 // TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
 
@@ -172,6 +171,60 @@ public class SensorTests : PhysicsSystemTestsBase
         SaveVisualOutput(context.PhysicsSystem, 4);
 
         // Assert 4
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+    }
+
+    [TestCase(false, true)]
+    [TestCase(false, false)]
+    [TestCase(true, true)]
+    [TestCase(true, false)]
+    public void Sensor_ShouldInvoke_OnOverlapEnd_WhenOverlappingBodyIsRemoved(bool visitorIsKinematic, bool removeSensorCollider)
+    {
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics(); // Pair is overlapping.
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        var removedCollider = removeSensorCollider ? context.SensorCollider : context.VisitorCollider;
+        var remainingCollider = removeSensorCollider ? context.VisitorCollider : context.SensorCollider;
+
+        // Act 1
+        removedCollider.Entity.RemoveComponent(removedCollider); // Removing collider component disposes underlying physics body.
+
+        context.PhysicsSystem.ProcessPhysics(); // Cached overlap is stale -> OnOverlapEnd expected.
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+
+        var removedColliderEndEvents = removeSensorCollider ? context.SensorEndEvents : context.VisitorEndEvents;
+        var remainingColliderEndEvents = removeSensorCollider ? context.VisitorEndEvents : context.SensorEndEvents;
+
+        Assert.That(removedColliderEndEvents[0], Is.EqualTo(remainingCollider));
+        Assert.That(remainingColliderEndEvents[0], Is.EqualTo(removedCollider));
+
+        // Act 2
+        context.PhysicsSystem.ProcessPhysics(); // Overlap already ended.
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 2
         Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
         Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
         Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
