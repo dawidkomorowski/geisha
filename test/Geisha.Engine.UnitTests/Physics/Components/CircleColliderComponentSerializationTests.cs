@@ -14,6 +14,7 @@ public class CircleColliderComponentSerializationTests : ComponentSerializationT
         // Arrange
         const double radius = 123.456;
         const bool enabled = false;
+        const bool isSensor = true;
         var collisionLayer = CollisionBitmask.FromBits(0, 2);
         var collisionMask = CollisionBitmask.FromBits(1, 3);
 
@@ -22,6 +23,7 @@ public class CircleColliderComponentSerializationTests : ComponentSerializationT
         {
             component.Radius = radius;
             component.Enabled = enabled;
+            component.IsSensor = isSensor;
             component.CollisionLayer = collisionLayer;
             component.CollisionMask = collisionMask;
         });
@@ -30,6 +32,7 @@ public class CircleColliderComponentSerializationTests : ComponentSerializationT
         Assert.That(actual.Radius, Is.EqualTo(radius));
         Assert.That(actual.IsColliding, Is.False);
         Assert.That(actual.Enabled, Is.EqualTo(enabled));
+        Assert.That(actual.IsSensor, Is.EqualTo(isSensor));
         Assert.That(actual.CollisionLayer, Is.EqualTo(collisionLayer));
         Assert.That(actual.CollisionMask, Is.EqualTo(collisionMask));
     }

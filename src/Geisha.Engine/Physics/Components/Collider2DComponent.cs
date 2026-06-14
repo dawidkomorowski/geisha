@@ -60,7 +60,6 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
-    // TODO: Include in serialization.
     // TODO: Add documentation.
     // TODO: Add documentation to overlap callbacks. Include information about undefined order of callbacks between colliders.
     // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
@@ -452,6 +451,7 @@ public abstract class Collider2DComponent : Component
     {
         base.Serialize(writer, assetStore);
         writer.WriteBool("Enabled", Enabled);
+        writer.WriteBool("IsSensor", IsSensor);
         writer.WriteUInt("CollisionLayer", CollisionLayer.Value);
         writer.WriteUInt("CollisionMask", CollisionMask.Value);
     }
@@ -461,6 +461,7 @@ public abstract class Collider2DComponent : Component
     {
         base.Deserialize(reader, assetStore);
         Enabled = reader.ReadBool("Enabled");
+        IsSensor = reader.ReadBool("IsSensor");
         CollisionLayer = new CollisionBitmask(reader.ReadUInt("CollisionLayer"));
         CollisionMask = new CollisionBitmask(reader.ReadUInt("CollisionMask"));
     }
