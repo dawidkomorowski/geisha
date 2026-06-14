@@ -135,37 +135,21 @@ public class SensorTests : PhysicsSystemTestsBase
     [TestCase(true)]
     public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenOnlyAabbOverlaps_ButShapesDoNot(bool visitorIsKinematic)
     {
-        var physicsSystem = GetPhysicsSystem();
-        var sensorBody = CreateCircleKinematicBody(0, 0, 100);
-        var visitorBody = CreateBody(visitorIsKinematic, 170, 170, 100);
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
 
-        var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
-        var visitorCollider = visitorBody.GetComponent<CircleColliderComponent>();
-
-        var sensorBeginEvents = new List<Collider2DComponent>();
-        var sensorEndEvents = new List<Collider2DComponent>();
-        var visitorBeginEvents = new List<Collider2DComponent>();
-        var visitorEndEvents = new List<Collider2DComponent>();
-
-        sensorCollider.IsSensor = true;
-        sensorCollider.OnOverlapBegin = sensorBeginEvents.Add;
-        sensorCollider.OnOverlapEnd = sensorEndEvents.Add;
-        visitorCollider.OnOverlapBegin = visitorBeginEvents.Add;
-        visitorCollider.OnOverlapEnd = visitorEndEvents.Add;
+        visitorTransform.Translation = new Vector2(170, 170);
 
         // Act
-        physicsSystem.ProcessPhysics();
-        SaveVisualOutput(physicsSystem, 0, postDrawAction: debugRenderer =>
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 0, postDrawAction: debugRenderer =>
         {
-            debugRenderer.DrawRectangle(sensorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
-            debugRenderer.DrawRectangle(visitorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(context.SensorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(context.VisitorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
         });
 
         // Assert
-        Assert.That(sensorBeginEvents, Is.Empty);
-        Assert.That(sensorEndEvents, Is.Empty);
-        Assert.That(visitorBeginEvents, Is.Empty);
-        Assert.That(visitorEndEvents, Is.Empty);
+        AssertNoCallbacks(context);
     }
 
     [TestCase(false)]
