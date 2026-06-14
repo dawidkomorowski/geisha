@@ -91,6 +91,69 @@ public class SensorTests : PhysicsSystemTestsBase
         AssertNoCallbacks(context);
     }
 
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Sensor_ShouldHandle_NullOverlapCallbacks(bool configureCallbacks)
+    {
+        var context = CreateOverlappingSensorContext(false);
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
+
+        visitorTransform.Translation = new Vector2(300, 0);
+
+        if (!configureCallbacks)
+        {
+            context.SensorCollider.OnOverlapBegin = null;
+            context.SensorCollider.OnOverlapEnd = null;
+            context.VisitorCollider.OnOverlapBegin = null;
+            context.VisitorCollider.OnOverlapEnd = null;
+        }
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        Assert.That(context.SensorCollider.IsColliding, Is.False);
+        Assert.That(context.VisitorCollider.IsColliding, Is.False);
+        AssertNoCallbacks(context);
+
+        // Act 1
+        visitorTransform.Translation = new Vector2(150, 0);
+
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorCollider.IsColliding, Is.False);
+        Assert.That(context.VisitorCollider.IsColliding, Is.False);
+
+        // Act 2
+        visitorTransform.Translation = new Vector2(300, 0);
+
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 2
+        Assert.That(context.SensorCollider.IsColliding, Is.False);
+        Assert.That(context.VisitorCollider.IsColliding, Is.False);
+
+        if (configureCallbacks)
+        {
+            Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+            Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+            Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+            Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+            Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+            Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+            Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+            Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+        }
+        else
+        {
+            AssertNoCallbacks(context);
+        }
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenNoColliderIsSensor(bool visitorIsKinematic)
