@@ -64,7 +64,6 @@ public abstract class Collider2DComponent : Component
     // TODO: Add documentation.
     // TODO: Add documentation to overlap callbacks. Include information about undefined order of callbacks between colliders.
     // TODO: Add state synchronization tests.
-    // TODO: Test that non sensor colliders do not trigger overlap callbacks.
     // TODO: Test sensor events with substepping.
     // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
     public bool IsSensor { get; set; } = false;

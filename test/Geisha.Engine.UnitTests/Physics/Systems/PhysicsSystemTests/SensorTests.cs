@@ -77,6 +77,36 @@ public class SensorTests : PhysicsSystemTestsBase
 
     [TestCase(false)]
     [TestCase(true)]
+    public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenNoColliderIsSensor(bool visitorIsKinematic)
+    {
+        var context = CreateOverlappingSensorContext(visitorIsKinematic);
+        DisableCollisionResponseIfKinematic(context.SensorCollider);
+        DisableCollisionResponseIfKinematic(context.VisitorCollider);
+
+        context.SensorCollider.IsSensor = false;
+        context.VisitorCollider.IsSensor = false;
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        Assert.That(context.SensorCollider.IsColliding, Is.True);
+        Assert.That(context.VisitorCollider.IsColliding, Is.True);
+        AssertNoCallbacks(context);
+
+        // Act 1
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorCollider.IsColliding, Is.True);
+        Assert.That(context.VisitorCollider.IsColliding, Is.True);
+        AssertNoCallbacks(context);
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
     public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenOnlyAabbOverlaps_ButShapesDoNot(bool visitorIsKinematic)
     {
         var physicsSystem = GetPhysicsSystem();
