@@ -55,23 +55,24 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                var (overlap, mtv) = TestOverlap(kinematicBody1, kinematicBody2);
-
-                if (overlap is false)
-                {
-                    continue;
-                }
-
-                // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
                 if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
                 {
-                    sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
-                    continue;
+                    if (TestOverlap(kinematicBody1, kinematicBody2))
+                    {
+                        sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
+                    }
                 }
+                else
+                {
+                    var (overlap, mtv) = TestOverlapWithMtv(kinematicBody1, kinematicBody2);
 
-                var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, mtv);
-                kinematicBody1.Contacts.Add(contact);
-                kinematicBody2.Contacts.Add(contact);
+                    if (overlap)
+                    {
+                        var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, mtv);
+                        kinematicBody1.Contacts.Add(contact);
+                        kinematicBody2.Contacts.Add(contact);
+                    }
+                }
             }
         }
     }
@@ -99,23 +100,24 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                var (overlap, mtv) = TestOverlap(kinematicBody, staticBody);
-
-                if (overlap is false)
-                {
-                    continue;
-                }
-
-                // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
                 if (kinematicBody.IsSensor || staticBody.IsSensor)
                 {
-                    sensorOverlapCache.AddPair(kinematicBody, staticBody);
-                    continue;
+                    if (TestOverlap(kinematicBody, staticBody))
+                    {
+                        sensorOverlapCache.AddPair(kinematicBody, staticBody);
+                    }
                 }
+                else
+                {
+                    var (overlap, mtv) = TestOverlapWithMtv(kinematicBody, staticBody);
 
-                var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
-                kinematicBody.Contacts.Add(contact);
-                staticBody.Contacts.Add(contact);
+                    if (overlap)
+                    {
+                        var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
+                        kinematicBody.Contacts.Add(contact);
+                        staticBody.Contacts.Add(contact);
+                    }
+                }
             }
         }
     }
@@ -129,7 +131,40 @@ internal static class CollisionDetection
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static (bool overlap, MinimumTranslationVector mtv) TestOverlap(RigidBody2D body1, RigidBody2D body2)
+    private static bool TestOverlap(RigidBody2D body1, RigidBody2D body2)
+    {
+        var overlap = false;
+
+        if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
+        {
+            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedCircleCollider);
+        }
+        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Rectangle)
+        {
+            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider);
+        }
+        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Rectangle)
+        {
+            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider);
+        }
+        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Circle)
+        {
+            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedCircleCollider);
+        }
+        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
+        {
+            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider);
+        }
+        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Tile)
+        {
+            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider);
+        }
+
+        return overlap;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private static (bool overlap, MinimumTranslationVector mtv) TestOverlapWithMtv(RigidBody2D body1, RigidBody2D body2)
     {
         var overlap = false;
         var mtv = new MinimumTranslationVector();

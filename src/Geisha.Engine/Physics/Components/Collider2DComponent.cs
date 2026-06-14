@@ -60,7 +60,7 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
-    // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
+    // TODO: Test different shapes for sensors as once optimized overlap test is different from regular collision detection.
     /// <summary>
     ///     Gets or sets a value indicating whether this collider behaves as a sensor.
     /// </summary>

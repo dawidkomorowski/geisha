@@ -21,10 +21,12 @@ public class PhysicsSystemBenchmarks
     private ITimeSystem _timeSystem = null!;
     private IDebugRendererForTests _debugRenderer = null!;
     private readonly List<KinematicRigidBody2DComponent> _kinematicComponents = new();
+    private readonly List<Collider2DComponent> _colliderComponents = new();
 
     private void InitializePhysicsSystem()
     {
         _kinematicComponents.Clear();
+        _colliderComponents.Clear();
 
         _scene = TestSceneFactory.Create();
         _timeSystem = new TimeSystem(new CoreConfiguration { FixedUpdatesPerSecond = 60 });
@@ -39,10 +41,13 @@ public class PhysicsSystemBenchmarks
 
     private void CleanupPhysicsSystem()
     {
+        _kinematicComponents.Clear();
+        _colliderComponents.Clear();
         _scene.RemoveObserver(_physicsSystem);
         _physicsSystem = null!;
         _scene = null!;
         _debugRenderer.Dispose();
+        _timeSystem = null!;
     }
 
     [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_10000S))]
@@ -181,6 +186,40 @@ public class PhysicsSystemBenchmarks
         }
     }
 
+    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors))]
+    public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
+    {
+        InitializePhysicsSystem();
+        ConfigureUniformRandomScene(new SizeD(1000, 1000), 200, 1000, 50);
+
+        foreach (var collider in _colliderComponents)
+        {
+            if (collider.Entity.HasComponent<KinematicRigidBody2DComponent>())
+            {
+                collider.IsSensor = true;
+            }
+        }
+
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors)}[0]", 0.5);
+    }
+
+    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors))]
+    public void IterationCleanup_SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
+    {
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors)}[1]", 0.5);
+        CleanupPhysicsSystem();
+    }
+
+    [Benchmark]
+    public void SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
+    {
+        // Assuming 60FPS it simulates 10s.
+        for (var i = 0; i < 600; i++)
+        {
+            _physicsSystem.ProcessPhysics();
+        }
+    }
+
     private void ConfigureUniformRandomScene(SizeD bounds, int kinematicBodies, int staticBodies, int linearVelocityRange)
     {
         var random = new Random(0);
@@ -234,6 +273,8 @@ public class PhysicsSystemBenchmarks
 
         var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
         rectangleColliderComponent.Dimensions = new Vector2(width, height);
+
+        _colliderComponents.Add(rectangleColliderComponent);
     }
 
     private void CreateCircleStaticBody(Vector2 position, double radius)
@@ -244,6 +285,8 @@ public class PhysicsSystemBenchmarks
 
         var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
         circleColliderComponent.Radius = radius;
+
+        _colliderComponents.Add(circleColliderComponent);
     }
 
     private void CreateRectangleKinematicBody(Vector2 position, double width, double height, Vector2 linearVelocity, double angularVelocity)
@@ -260,6 +303,7 @@ public class PhysicsSystemBenchmarks
         kinematicRigidBody2DComponent.AngularVelocity = angularVelocity;
 
         _kinematicComponents.Add(kinematicRigidBody2DComponent);
+        _colliderComponents.Add(rectangleColliderComponent);
     }
 
     private void CreateCircleKinematicBody(Vector2 position, double radius, Vector2 linearVelocity, double angularVelocity)
@@ -276,6 +320,7 @@ public class PhysicsSystemBenchmarks
         kinematicRigidBody2DComponent.AngularVelocity = angularVelocity;
 
         _kinematicComponents.Add(kinematicRigidBody2DComponent);
+        _colliderComponents.Add(circleColliderComponent);
     }
 
     private void SaveVisualOutput(PhysicsSystem physicsSystem, string fileName, double scale = 1d)
