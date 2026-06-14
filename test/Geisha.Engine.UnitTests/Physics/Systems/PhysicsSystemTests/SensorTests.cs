@@ -21,7 +21,6 @@ public class SensorTests : PhysicsSystemTestsBase
     [TestCase(true, false, true, true, true)]
     [TestCase(true, true, false, true, true)]
     [TestCase(true, true, true, true, true)]
-    [TestCase(false, true, false, true, false)]
     public void Sensor_ShouldProduceNoCollision(bool firstBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsKinematic, bool secondBodyIsSensor,
         bool expectSensorEvent)
     {
@@ -73,6 +72,54 @@ public class SensorTests : PhysicsSystemTestsBase
         {
             Assert.That(overlapBeginFromFirstBody, Has.Count.Zero);
         }
+    }
+
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenBothCollidersAreStatic(bool firstBodyIsSensor, bool secondBodyIsSensor)
+    {
+        var physicsSystem = GetPhysicsSystem();
+        var firstBody = CreateCircleStaticBody(0, 0, 100);
+        var secondBody = CreateCircleStaticBody(150, 0, 100);
+
+        var firstCollider = firstBody.GetComponent<CircleColliderComponent>();
+        var secondCollider = secondBody.GetComponent<CircleColliderComponent>();
+
+        firstCollider.IsSensor = firstBodyIsSensor;
+        secondCollider.IsSensor = secondBodyIsSensor;
+
+        var overlapBeginFromFirst = new List<Collider2DComponent>();
+        var overlapBeginFromSecond = new List<Collider2DComponent>();
+        var overlapEndFromFirst = new List<Collider2DComponent>();
+        var overlapEndFromSecond = new List<Collider2DComponent>();
+
+        firstCollider.OnOverlapBegin = overlapBeginFromFirst.Add;
+        secondCollider.OnOverlapBegin = overlapBeginFromSecond.Add;
+        firstCollider.OnOverlapEnd = overlapEndFromFirst.Add;
+        secondCollider.OnOverlapEnd = overlapEndFromSecond.Add;
+
+        // Act 0
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0);
+
+        // Assert 0
+        Assert.That(firstCollider.IsColliding, Is.False);
+        Assert.That(secondCollider.IsColliding, Is.False);
+        Assert.That(overlapBeginFromFirst, Is.Empty);
+        Assert.That(overlapBeginFromSecond, Is.Empty);
+        Assert.That(overlapEndFromFirst, Is.Empty);
+        Assert.That(overlapEndFromSecond, Is.Empty);
+
+        // Act 1
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1);
+
+        // Assert 1
+        Assert.That(overlapBeginFromFirst, Is.Empty);
+        Assert.That(overlapBeginFromSecond, Is.Empty);
+        Assert.That(overlapEndFromFirst, Is.Empty);
+        Assert.That(overlapEndFromSecond, Is.Empty);
     }
 
     [TestCase(false)]
