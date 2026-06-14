@@ -9,7 +9,6 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-// TODO: Test sensor exact-overlap correctness: AABB overlap without shape overlap must not trigger OnOverlapBegin/OnOverlapEnd.
 // TODO: Test sensor overlap lifecycle when a body is removed/disposed during active overlap (define and verify OnOverlapEnd policy; no invalid callbacks).
 // TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
@@ -75,6 +74,43 @@ public class SensorTests : PhysicsSystemTestsBase
         {
             Assert.That(overlapBeginFromFirstBody, Has.Count.Zero);
         }
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenOnlyAabbOverlaps_ButShapesDoNot(bool visitorIsKinematic)
+    {
+        var physicsSystem = GetPhysicsSystem();
+        var sensorBody = CreateCircleKinematicBody(0, 0, 100);
+        var visitorBody = CreateBody(visitorIsKinematic, 170, 170, 100);
+
+        var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
+        var visitorCollider = visitorBody.GetComponent<CircleColliderComponent>();
+
+        var sensorBeginEvents = new List<Collider2DComponent>();
+        var sensorEndEvents = new List<Collider2DComponent>();
+        var visitorBeginEvents = new List<Collider2DComponent>();
+        var visitorEndEvents = new List<Collider2DComponent>();
+
+        sensorCollider.IsSensor = true;
+        sensorCollider.OnOverlapBegin = sensorBeginEvents.Add;
+        sensorCollider.OnOverlapEnd = sensorEndEvents.Add;
+        visitorCollider.OnOverlapBegin = visitorBeginEvents.Add;
+        visitorCollider.OnOverlapEnd = visitorEndEvents.Add;
+
+        // Act
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0, postDrawAction: debugRenderer =>
+        {
+            debugRenderer.DrawRectangle(sensorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(visitorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+        });
+
+        // Assert
+        Assert.That(sensorBeginEvents, Is.Empty);
+        Assert.That(sensorEndEvents, Is.Empty);
+        Assert.That(visitorBeginEvents, Is.Empty);
+        Assert.That(visitorEndEvents, Is.Empty);
     }
 
     [TestCase(false)]
