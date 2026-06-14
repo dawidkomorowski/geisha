@@ -61,6 +61,9 @@ Module-Specific Addenda:
   - Overload consistency: for the same query family, keep synchronization wording consistent across all overloads (point, bounds, overlap; span, list, and AsSpan variants).
   - Buffer retention caveat: for APIs writing collider references into caller-provided buffers, document GC retention implications for both span-backed buffers and list-backed buffers.
   - GC reference retention wording quality: explain that retention is about GC-managed object references kept in caller-provided buffers, why this can keep removed colliders alive, when it matters (for example, level reloads/entity destruction), and when clearing is appropriate; explicitly note that clearing every frame is usually unnecessary.
+  - Sensor overlap callback phrasing: avoid wording that implies only the other collider is a sensor. Prefer neutral wording such as "an overlap that involves at least one sensor collider."
+  - Callback participant symmetry: when overlap callbacks are delivered to both colliders in a qualifying pair, state that explicitly in docs for both callbacks.
+  - Callback ordering clarity: if begin/end ordering is defined per pair, document that guarantee and also document that ordering across different pairs is unspecified when applicable.
 
 Hard constraints:
 - Do not modify code unless explicitly asked.

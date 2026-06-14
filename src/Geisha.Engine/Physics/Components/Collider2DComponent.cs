@@ -60,12 +60,80 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     public bool Enabled { get; set; } = true;
 
-    // TODO: Add documentation.
-    // TODO: Add documentation to overlap callbacks. Include information about undefined order of callbacks between colliders.
     // TODO: Optimize - sensors do not need MTV - use simplified overlap test.
+    /// <summary>
+    ///     Gets or sets a value indicating whether this collider behaves as a sensor.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         A sensor collider participates in overlap detection but is intended for trigger-like behavior via
+    ///         overlap callbacks, rather than physical collision response.
+    ///     </para>
+    ///     <para>
+    ///         Sensors do not produce contacts with other colliders. As a result, sensor overlaps are not reported
+    ///         through regular contact-based collision detection APIs (for example <see cref="IsColliding" />,
+    ///         <see cref="ContactCount" />, or <c>GetContacts</c> overloads) and do not generate collision response.
+    ///     </para>
+    ///     <para>
+    ///         Sensor overlap notifications are reported through <see cref="OnOverlapBegin" /> and
+    ///         <see cref="OnOverlapEnd" />.
+    ///     </para>
+    ///     <para>
+    ///         The default value is <see langword="false"/>.
+    ///     </para>
+    /// </remarks>
     public bool IsSensor { get; set; } = false;
 
+    /// <summary>
+    ///     Gets or sets a callback invoked when this collider begins an overlap that involves at least one sensor collider.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         The callback receives the other collider in the overlap pair.
+    ///     </para>
+    ///     <para>
+    ///         Overlap callbacks are generated for overlaps that involve at least one sensor collider, and both
+    ///         colliders in such pair receive notifications. For example, when a sensor overlaps a non-sensor,
+    ///         both colliders are notified.
+    ///     </para>
+    ///     <para>
+    ///         Callback invocation happens as the final part of a physics simulation step, after simulation and
+    ///         collision solving complete.
+    ///     </para>
+    ///     <para>
+    ///         For a given pair of colliders, the begin callback is guaranteed to be invoked before the corresponding
+    ///         <see cref="OnOverlapEnd" /> callback.
+    ///     </para>
+    ///     <para>
+    ///         Across different overlap pairs in the same frame, invocation order is unspecified.
+    ///     </para>
+    /// </remarks>
     public Action<Collider2DComponent>? OnOverlapBegin { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a callback invoked when this collider ends an overlap that involves at least one sensor collider.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         The callback receives the other collider in the overlap pair.
+    ///     </para>
+    ///     <para>
+    ///         Overlap callbacks are generated for overlaps that involve at least one sensor collider, and both
+    ///         colliders in such pair receive notifications. For example, when a sensor overlaps a non-sensor,
+    ///         both colliders are notified.
+    ///     </para>
+    ///     <para>
+    ///         Callback invocation happens as the final part of a physics simulation step, after simulation and
+    ///         collision solving complete.
+    ///     </para>
+    ///     <para>
+    ///         For a given pair of colliders, the corresponding <see cref="OnOverlapBegin" /> callback is guaranteed
+    ///         to be invoked before this end callback.
+    ///     </para>
+    ///     <para>
+    ///         Across different overlap pairs in the same frame, invocation order is unspecified.
+    ///     </para>
+    /// </remarks>
     public Action<Collider2DComponent>? OnOverlapEnd { get; set; }
 
     /// <summary>
