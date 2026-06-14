@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -10,8 +11,6 @@ using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
-
-// TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
 
 [TestFixture]
 public class SensorTests : PhysicsSystemTestsBase
@@ -716,6 +715,129 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
         Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
         Assert.That(callbackOrder, Has.Count.EqualTo(4));
+    }
+
+    [Test]
+    public void Sensor_ShouldPreserveOverlapCacheIntegrity_WhenPairsAreAddedAndRemovedAcrossFrames()
+    {
+        var physicsSystem = GetPhysicsSystem();
+
+        // One sensor body overlapping three visitors creates three cached pairs in deterministic insertion order: A, B, C.
+        var sensorBody = CreateCircleKinematicBody(0, 0, 100);
+        var visitorA = CreateCircleStaticBody(130, 0, 100);
+        var visitorB = CreateCircleStaticBody(150, 0, 100);
+        var visitorC = CreateCircleStaticBody(170, 0, 100);
+
+        var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
+        var visitorColliderA = visitorA.GetComponent<CircleColliderComponent>();
+        var visitorColliderB = visitorB.GetComponent<CircleColliderComponent>();
+        var visitorColliderC = visitorC.GetComponent<CircleColliderComponent>();
+
+        var visitorTransformA = visitorA.GetComponent<Transform2DComponent>();
+        var visitorTransformB = visitorB.GetComponent<Transform2DComponent>();
+        var visitorTransformC = visitorC.GetComponent<Transform2DComponent>();
+
+        sensorCollider.IsSensor = true;
+
+        var beginEvents = new List<Collider2DComponent>();
+        var endEvents = new List<Collider2DComponent>();
+        sensorCollider.OnOverlapBegin = beginEvents.Add;
+        sensorCollider.OnOverlapEnd = endEvents.Add;
+
+        // Act 0: establish all three overlaps and populate cache with pairs A/B/C.
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0);
+
+        // Assert 0: exactly one begin per visitor, no ends.
+        Assert.That(beginEvents, Has.Count.EqualTo(3));
+        Assert.That(endEvents, Is.Empty);
+        Assert.That(CountEvents(beginEvents, visitorColliderA), Is.EqualTo(1));
+        Assert.That(CountEvents(beginEvents, visitorColliderB), Is.EqualTo(1));
+        Assert.That(CountEvents(beginEvents, visitorColliderC), Is.EqualTo(1));
+
+        // Act 1: remove middle pair (B) while A and C stay overlapping.
+        // This stresses stale removal with swap-remove and index rewrite for surviving pair(s).
+        visitorTransformB.Translation = new Vector2(450, 0);
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1);
+
+        // Assert 1: only B receives end, no new begins.
+        Assert.That(beginEvents, Has.Count.EqualTo(3));
+        Assert.That(endEvents, Has.Count.EqualTo(1));
+        Assert.That(endEvents[0], Is.EqualTo(visitorColliderB));
+
+        // Act 2: no transitions, just another frame.
+        // If index update after swap-remove was corrupted, orphaned pairs often re-fire begin/end here.
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2);
+
+        // Assert 2: no additional callbacks.
+        Assert.That(beginEvents, Has.Count.EqualTo(3));
+        Assert.That(endEvents, Has.Count.EqualTo(1));
+
+        // Act 3: re-add B to verify pair can be inserted again after stale cleanup.
+        visitorTransformB.Translation = new Vector2(150, 0);
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 3);
+
+        // Assert 3: B begins exactly once again.
+        Assert.That(beginEvents, Has.Count.EqualTo(4));
+        Assert.That(beginEvents[^1], Is.EqualTo(visitorColliderB));
+        Assert.That(endEvents, Has.Count.EqualTo(1));
+
+        // Act 4: remove A to force another stale cleanup on a different index layout.
+        visitorTransformA.Translation = new Vector2(450, 0);
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 4);
+
+        // Assert 4: A ends exactly once; other pairs remain stable.
+        Assert.That(beginEvents, Has.Count.EqualTo(4));
+        Assert.That(endEvents, Has.Count.EqualTo(2));
+        Assert.That(endEvents[^1], Is.EqualTo(visitorColliderA));
+
+        // Act 5: stability frame after second stale cleanup.
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 5);
+
+        // Assert 5: still no duplicate callbacks.
+        Assert.That(beginEvents, Has.Count.EqualTo(4));
+        Assert.That(endEvents, Has.Count.EqualTo(2));
+
+        // Act 6: re-add A to verify pair can be re-established after second cleanup.
+        visitorTransformA.Translation = new Vector2(130, 0);
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 6);
+
+        // Assert 6: A begins exactly once again.
+        Assert.That(beginEvents, Has.Count.EqualTo(5));
+        Assert.That(beginEvents[^1], Is.EqualTo(visitorColliderA));
+        Assert.That(endEvents, Has.Count.EqualTo(2));
+
+        // Act 7: remove C (the remaining original continuous pair).
+        visitorTransformC.Translation = new Vector2(450, 0);
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 7);
+
+        // Assert 7: C ends exactly once and no pair becomes orphaned/misattributed.
+        Assert.That(beginEvents, Has.Count.EqualTo(5));
+        Assert.That(endEvents, Has.Count.EqualTo(3));
+        Assert.That(endEvents[^1], Is.EqualTo(visitorColliderC));
+
+        Assert.That(CountEvents(beginEvents, visitorColliderA), Is.EqualTo(2));
+        Assert.That(CountEvents(beginEvents, visitorColliderB), Is.EqualTo(2));
+        Assert.That(CountEvents(beginEvents, visitorColliderC), Is.EqualTo(1));
+
+        Assert.That(CountEvents(endEvents, visitorColliderA), Is.EqualTo(1));
+        Assert.That(CountEvents(endEvents, visitorColliderB), Is.EqualTo(1));
+        Assert.That(CountEvents(endEvents, visitorColliderC), Is.EqualTo(1));
+        return;
+
+        static int CountEvents(List<Collider2DComponent> events, Collider2DComponent collider) => events.Count(other => other == collider);
     }
 
     private SensorOverlapContext CreateOverlappingSensorContext(bool visitorIsKinematic)
