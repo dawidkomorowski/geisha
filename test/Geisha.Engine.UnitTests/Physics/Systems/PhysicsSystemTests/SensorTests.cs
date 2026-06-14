@@ -79,47 +79,26 @@ public class SensorTests : PhysicsSystemTestsBase
     [TestCase(true, true)]
     public void Sensor_ShouldNotInvokeOverlapCallbacks_WhenBothCollidersAreStatic(bool firstBodyIsSensor, bool secondBodyIsSensor)
     {
-        var physicsSystem = GetPhysicsSystem();
-        var firstBody = CreateCircleStaticBody(0, 0, 100);
-        var secondBody = CreateCircleStaticBody(150, 0, 100);
+        var context = CreateOverlappingSensorContext(false, false);
 
-        var firstCollider = firstBody.GetComponent<CircleColliderComponent>();
-        var secondCollider = secondBody.GetComponent<CircleColliderComponent>();
-
-        firstCollider.IsSensor = firstBodyIsSensor;
-        secondCollider.IsSensor = secondBodyIsSensor;
-
-        var overlapBeginFromFirst = new List<Collider2DComponent>();
-        var overlapBeginFromSecond = new List<Collider2DComponent>();
-        var overlapEndFromFirst = new List<Collider2DComponent>();
-        var overlapEndFromSecond = new List<Collider2DComponent>();
-
-        firstCollider.OnOverlapBegin = overlapBeginFromFirst.Add;
-        secondCollider.OnOverlapBegin = overlapBeginFromSecond.Add;
-        firstCollider.OnOverlapEnd = overlapEndFromFirst.Add;
-        secondCollider.OnOverlapEnd = overlapEndFromSecond.Add;
+        context.SensorCollider.IsSensor = firstBodyIsSensor;
+        context.VisitorCollider.IsSensor = secondBodyIsSensor;
 
         // Act 0
-        physicsSystem.ProcessPhysics();
-        SaveVisualOutput(physicsSystem, 0);
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 0);
 
         // Assert 0
-        Assert.That(firstCollider.IsColliding, Is.False);
-        Assert.That(secondCollider.IsColliding, Is.False);
-        Assert.That(overlapBeginFromFirst, Is.Empty);
-        Assert.That(overlapBeginFromSecond, Is.Empty);
-        Assert.That(overlapEndFromFirst, Is.Empty);
-        Assert.That(overlapEndFromSecond, Is.Empty);
+        Assert.That(context.SensorCollider.IsColliding, Is.False);
+        Assert.That(context.VisitorCollider.IsColliding, Is.False);
+        AssertNoCallbacks(context);
 
         // Act 1
-        physicsSystem.ProcessPhysics();
-        SaveVisualOutput(physicsSystem, 1);
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 1);
 
         // Assert 1
-        Assert.That(overlapBeginFromFirst, Is.Empty);
-        Assert.That(overlapBeginFromSecond, Is.Empty);
-        Assert.That(overlapEndFromFirst, Is.Empty);
-        Assert.That(overlapEndFromSecond, Is.Empty);
+        AssertNoCallbacks(context);
     }
 
     [TestCase(false)]
@@ -568,9 +547,14 @@ public class SensorTests : PhysicsSystemTestsBase
 
     private SensorOverlapContext CreateOverlappingSensorContext(bool visitorIsKinematic)
     {
+        return CreateOverlappingSensorContext(true, visitorIsKinematic);
+    }
+
+    private SensorOverlapContext CreateOverlappingSensorContext(bool sensorIsKinematic, bool visitorIsKinematic)
+    {
         var physicsSystem = GetPhysicsSystem();
 
-        var sensorBody = CreateCircleKinematicBody(0, 0, 100);
+        var sensorBody = CreateBody(sensorIsKinematic, 0, 0, 100);
         var visitorBody = CreateBody(visitorIsKinematic, 150, 0, 100);
 
         var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
