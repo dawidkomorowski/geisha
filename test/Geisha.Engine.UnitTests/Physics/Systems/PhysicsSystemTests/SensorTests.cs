@@ -21,7 +21,8 @@ public class SensorTests : PhysicsSystemTestsBase
     [TestCase(true, true, false)]
     [TestCase(true, false, true)]
     [TestCase(true, true, true)]
-    public void Sensor_ShouldProduceNoCollision(bool secondBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsSensor)
+    public void Sensor_ShouldProduceNoCollisionAndInvokeOverlapBegin_WhenAtLeastOneColliderIsSensor(bool secondBodyIsKinematic, bool firstBodyIsSensor,
+        bool secondBodyIsSensor)
     {
         var context = CreateOverlappingSensorContext(secondBodyIsKinematic);
 
