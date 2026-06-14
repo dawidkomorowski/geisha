@@ -23,47 +23,44 @@ public class SensorTests : PhysicsSystemTestsBase
     [TestCase(true, true, true)]
     public void Sensor_ShouldProduceNoCollision(bool secondBodyIsKinematic, bool firstBodyIsSensor, bool secondBodyIsSensor)
     {
-        var physicsSystem = GetPhysicsSystem();
-        var firstBody = CreateCircleKinematicBody(0, 0, 100);
-        var secondBody = CreateBody(secondBodyIsKinematic, 150, 0, 100);
+        var context = CreateOverlappingSensorContext(secondBodyIsKinematic);
 
-        var firstBodyCollider = firstBody.GetComponent<CircleColliderComponent>();
-        var secondBodyCollider = secondBody.GetComponent<CircleColliderComponent>();
-        firstBodyCollider.IsSensor = firstBodyIsSensor;
-        secondBodyCollider.IsSensor = secondBodyIsSensor;
-
-        var overlapBeginFromFirstBody = new List<Collider2DComponent>();
-        firstBodyCollider.OnOverlapBegin = overlapBeginFromFirstBody.Add;
+        context.SensorCollider.IsSensor = firstBodyIsSensor;
+        context.VisitorCollider.IsSensor = secondBodyIsSensor;
 
         // Assume
-        Assert.That(firstBodyCollider.IsColliding, Is.False);
-        Assert.That(secondBodyCollider.IsColliding, Is.False);
+        Assert.That(context.SensorCollider.IsColliding, Is.False);
+        Assert.That(context.VisitorCollider.IsColliding, Is.False);
 
-        Assert.That(firstBodyCollider.Enabled, Is.True);
-        Assert.That(secondBodyCollider.Enabled, Is.True);
+        Assert.That(context.SensorCollider.Enabled, Is.True);
+        Assert.That(context.VisitorCollider.Enabled, Is.True);
 
         // Act
-        physicsSystem.ProcessPhysics();
+        context.PhysicsSystem.ProcessPhysics();
 
         // Assert
-        SaveVisualOutput(physicsSystem);
+        SaveVisualOutput(context.PhysicsSystem);
 
-        Assert.That(firstBodyCollider.IsColliding, Is.False);
-        Assert.That(firstBodyCollider.ContactCount, Is.Zero);
-        var firstTransform = firstBody.GetComponent<Transform2DComponent>();
+        Assert.That(context.SensorCollider.IsColliding, Is.False);
+        Assert.That(context.SensorCollider.ContactCount, Is.Zero);
+        var firstTransform = context.SensorCollider.Entity.GetComponent<Transform2DComponent>();
         Assert.That(firstTransform.Translation, Is.EqualTo(new Vector2(0, 0)));
         Assert.That(firstTransform.Rotation, Is.Zero);
         Assert.That(firstTransform.Scale, Is.EqualTo(Vector2.One));
 
-        Assert.That(secondBodyCollider.IsColliding, Is.False);
-        Assert.That(secondBodyCollider.ContactCount, Is.Zero);
-        var secondTransform = secondBody.GetComponent<Transform2DComponent>();
+        Assert.That(context.VisitorCollider.IsColliding, Is.False);
+        Assert.That(context.VisitorCollider.ContactCount, Is.Zero);
+        var secondTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
         Assert.That(secondTransform.Translation, Is.EqualTo(new Vector2(150, 0)));
         Assert.That(secondTransform.Rotation, Is.Zero);
         Assert.That(secondTransform.Scale, Is.EqualTo(Vector2.One));
 
-        Assert.That(overlapBeginFromFirstBody, Has.Count.EqualTo(1));
-        Assert.That(overlapBeginFromFirstBody[0], Is.EqualTo(secondBodyCollider));
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
     }
 
     [TestCase(true, false)]
