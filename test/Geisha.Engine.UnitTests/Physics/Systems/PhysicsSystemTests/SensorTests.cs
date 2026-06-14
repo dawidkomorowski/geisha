@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.Systems;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-// TODO: Test sensor events with substepping; ensure exactly one begin/end per logical transition across substeps.
 // TODO: Test sensor overlap cache cleanup/index integrity across frames (stale removal + swap-remove updates do not orphan or corrupt pairs).
 
 [TestFixture]
@@ -582,14 +583,155 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(2));
     }
 
+    [Test]
+    public void Sensor_ShouldInvokeBeginAndEndExactlyOnce_PerLogicalTransition_WithSubsteps()
+    {
+        var physicsConfiguration = new PhysicsConfiguration { Substeps = 8, EnableDebugRendering = true };
+        var context = CreateOverlappingSensorContext(sensorIsKinematic: true, visitorIsKinematic: false, physicsConfiguration);
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
+
+        visitorTransform.Translation = new Vector2(300, 0);
+
+        // Act 0
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 0);
+
+        // Assert 0
+        AssertNoCallbacks(context);
+
+        // Act 1
+        visitorTransform.Translation = new Vector2(150, 0);
+
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        // Act 2
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 2
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Is.Empty);
+        Assert.That(context.VisitorEndEvents, Is.Empty);
+
+        // Act 3
+        visitorTransform.Translation = new Vector2(300, 0);
+
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 3);
+
+        // Assert 3
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+
+        // Act 4
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 4);
+
+        // Assert 4
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void Sensor_ShouldInvokeBeginAndEndExactlyOnce_WhenFullTransitionOccursWithinSingleFrameAcrossSubsteps()
+    {
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(1.0 / 60.0));
+
+        var physicsConfiguration = new PhysicsConfiguration { Substeps = 8, EnableDebugRendering = true };
+        var context = CreateOverlappingSensorContext(sensorIsKinematic: false, visitorIsKinematic: true, physicsConfiguration);
+
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
+        var visitorBody = context.VisitorCollider.Entity.GetComponent<KinematicRigidBody2DComponent>();
+
+        var callbackOrder = new List<string>();
+        context.SensorCollider.OnOverlapBegin = collider =>
+        {
+            context.SensorBeginEvents.Add(collider);
+            callbackOrder.Add("begin");
+        };
+        context.VisitorCollider.OnOverlapBegin = collider =>
+        {
+            context.VisitorBeginEvents.Add(collider);
+            callbackOrder.Add("begin");
+        };
+        context.SensorCollider.OnOverlapEnd = collider =>
+        {
+            context.SensorEndEvents.Add(collider);
+            callbackOrder.Add("end");
+        };
+        context.VisitorCollider.OnOverlapEnd = collider =>
+        {
+            context.VisitorEndEvents.Add(collider);
+            callbackOrder.Add("end");
+        };
+
+        visitorTransform.Translation = new Vector2(-300, 0);
+        // With FixedDeltaTime = 1/60 s and velocity 36000, body travels 600 units in a single frame.
+        // Starting at X=-300, the center reaches X=300 after one ProcessPhysics call.
+        // With radius 100 for both circles and sensor at X=0, this means: outside overlap -> enter overlap -> exit overlap
+        // all within one frame while substeps are processed.
+        visitorBody.LinearVelocity = new Vector2(36000, 0);
+
+        // Act 0
+        SaveVisualOutput(context.PhysicsSystem, 0);
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 0
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(callbackOrder, Is.EqualTo(new[] { "begin", "begin", "end", "end" }));
+
+        // Act 1
+        visitorBody.LinearVelocity = Vector2.Zero;
+
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(callbackOrder, Has.Count.EqualTo(4));
+    }
+
     private SensorOverlapContext CreateOverlappingSensorContext(bool visitorIsKinematic)
     {
-        return CreateOverlappingSensorContext(true, visitorIsKinematic);
+        return CreateOverlappingSensorContext(true, visitorIsKinematic, null);
     }
 
     private SensorOverlapContext CreateOverlappingSensorContext(bool sensorIsKinematic, bool visitorIsKinematic)
     {
-        var physicsSystem = GetPhysicsSystem();
+        return CreateOverlappingSensorContext(sensorIsKinematic, visitorIsKinematic, null);
+    }
+
+    private SensorOverlapContext CreateOverlappingSensorContext(bool sensorIsKinematic, bool visitorIsKinematic,
+        PhysicsConfiguration? physicsConfiguration)
+    {
+        var physicsSystem = physicsConfiguration is null ? GetPhysicsSystem() : GetPhysicsSystem(physicsConfiguration);
 
         var sensorBody = CreateBody(sensorIsKinematic, 0, 0, 100);
         var visitorBody = CreateBody(visitorIsKinematic, 150, 0, 100);
