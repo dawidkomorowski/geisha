@@ -64,6 +64,51 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.VisitorEndEvents, Is.Empty);
     }
 
+    [TestCase(TestColliderShape.Circle, TestColliderShape.Circle)]
+    [TestCase(TestColliderShape.Circle, TestColliderShape.Rectangle)]
+    [TestCase(TestColliderShape.Circle, TestColliderShape.Tile)]
+    [TestCase(TestColliderShape.Rectangle, TestColliderShape.Circle)]
+    [TestCase(TestColliderShape.Rectangle, TestColliderShape.Rectangle)]
+    [TestCase(TestColliderShape.Rectangle, TestColliderShape.Tile)]
+    public void Sensor_ShouldInvokeOverlapBeginWithoutContacts_ForAllSupportedShapeCombinations(TestColliderShape sensorShape,
+        TestColliderShape visitorShape)
+    {
+        var physicsSystem = GetPhysicsSystem();
+
+        var (_, sensorCollider) = CreateBodyWithShape(sensorShape, isKinematic: true, x: -0.5, y: 0);
+        var (_, visitorCollider) = CreateBodyWithShape(visitorShape, isKinematic: false, x: 0, y: 0);
+
+        sensorCollider.IsSensor = true;
+        visitorCollider.IsSensor = false;
+
+        var beginFromSensor = new List<Collider2DComponent>();
+        var beginFromVisitor = new List<Collider2DComponent>();
+        var endFromSensor = new List<Collider2DComponent>();
+        var endFromVisitor = new List<Collider2DComponent>();
+
+        sensorCollider.OnOverlapBegin = beginFromSensor.Add;
+        visitorCollider.OnOverlapBegin = beginFromVisitor.Add;
+        sensorCollider.OnOverlapEnd = endFromSensor.Add;
+        visitorCollider.OnOverlapEnd = endFromVisitor.Add;
+
+        // Act
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0, 100);
+
+        // Assert
+        Assert.That(sensorCollider.IsColliding, Is.False);
+        Assert.That(visitorCollider.IsColliding, Is.False);
+        Assert.That(sensorCollider.ContactCount, Is.Zero);
+        Assert.That(visitorCollider.ContactCount, Is.Zero);
+
+        Assert.That(beginFromSensor, Has.Count.EqualTo(1));
+        Assert.That(beginFromSensor[0], Is.EqualTo(visitorCollider));
+        Assert.That(beginFromVisitor, Has.Count.EqualTo(1));
+        Assert.That(beginFromVisitor[0], Is.EqualTo(sensorCollider));
+        Assert.That(endFromSensor, Is.Empty);
+        Assert.That(endFromVisitor, Is.Empty);
+    }
+
     [TestCase(true, false)]
     [TestCase(false, true)]
     [TestCase(true, true)]
@@ -898,6 +943,43 @@ public class SensorTests : PhysicsSystemTestsBase
         return isKinematic
             ? CreateCircleKinematicBody(x, y, radius)
             : CreateCircleStaticBody(x, y, radius);
+    }
+
+    private (Entity entity, Collider2DComponent collider) CreateBodyWithShape(TestColliderShape shape, bool isKinematic, double x, double y)
+    {
+        return shape switch
+        {
+            TestColliderShape.Circle => CreateCircleBodyWithCollider(isKinematic, x, y),
+            TestColliderShape.Rectangle => CreateRectangleBodyWithCollider(isKinematic, x, y),
+            TestColliderShape.Tile when isKinematic => throw new ArgumentException("Tile collider cannot be kinematic."),
+            TestColliderShape.Tile => CreateTileBodyWithCollider(x, y),
+            _ => throw new ArgumentOutOfRangeException(nameof(shape), shape, null)
+        };
+    }
+
+    private (Entity entity, Collider2DComponent collider) CreateCircleBodyWithCollider(bool isKinematic, double x, double y)
+    {
+        var entity = isKinematic ? CreateCircleKinematicBody(x, y, 1) : CreateCircleStaticBody(x, y, 1);
+        return (entity, entity.GetComponent<CircleColliderComponent>());
+    }
+
+    private (Entity entity, Collider2DComponent collider) CreateRectangleBodyWithCollider(bool isKinematic, double x, double y)
+    {
+        var entity = isKinematic ? CreateRectangleKinematicBody(x, y, 1, 1) : CreateRectangleStaticBody(x, y, 1, 1);
+        return (entity, entity.GetComponent<RectangleColliderComponent>());
+    }
+
+    private (Entity entity, Collider2DComponent collider) CreateTileBodyWithCollider(double x, double y)
+    {
+        var entity = CreateTileStaticBody(x, y);
+        return (entity, entity.GetComponent<TileColliderComponent>());
+    }
+
+    public enum TestColliderShape
+    {
+        Circle,
+        Rectangle,
+        Tile
     }
 
     private sealed class SensorOverlapContext
