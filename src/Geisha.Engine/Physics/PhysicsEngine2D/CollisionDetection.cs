@@ -1,6 +1,6 @@
-﻿using Geisha.Engine.Core.Math;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
