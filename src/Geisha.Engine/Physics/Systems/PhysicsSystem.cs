@@ -422,6 +422,9 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     #endregion
 
+    // TODO: Sensor overlap callbacks are dispatched in two separate passes (all begin events first, then all end events).
+    //       If an overlap ends and later begins again within the same ProcessPhysics call (possible with Substeps > 1),
+    //       this will reorder callbacks (Begin invoked before the earlier End) for the same pair, which can break state machines that assume temporal ordering.
     private void InvokeEventCallbacks()
     {
         var sensorEvents = PhysicsScene2D.GetSensorEvents();
