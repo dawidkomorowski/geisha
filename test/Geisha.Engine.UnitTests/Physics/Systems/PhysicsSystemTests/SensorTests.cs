@@ -763,6 +763,89 @@ public class SensorTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void Sensor_ShouldInvoke_BeginEndBegin_WhenOverlapOscillates_WithinSingleFrameAcrossSubsteps()
+    {
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(1.0 / 60.0));
+
+        var physicsConfiguration = new PhysicsConfiguration { Substeps = 8, EnableDebugRendering = true };
+        var context = CreateOverlappingSensorContext(sensorIsKinematic: false, visitorIsKinematic: true, physicsConfiguration);
+
+        CreateRectangleStaticBody(300, 0, 100, 400);
+
+        var visitorTransform = context.VisitorCollider.Entity.GetComponent<Transform2DComponent>();
+        var visitorBody = context.VisitorCollider.Entity.GetComponent<KinematicRigidBody2DComponent>();
+        visitorBody.EnableCollisionResponse = true;
+
+        var callbackOrder = new List<string>();
+        context.SensorCollider.OnOverlapBegin = collider =>
+        {
+            context.SensorBeginEvents.Add(collider);
+            callbackOrder.Add("begin");
+        };
+        context.VisitorCollider.OnOverlapBegin = collider =>
+        {
+            context.VisitorBeginEvents.Add(collider);
+            callbackOrder.Add("begin");
+        };
+        context.SensorCollider.OnOverlapEnd = collider =>
+        {
+            context.SensorEndEvents.Add(collider);
+            callbackOrder.Add("end");
+        };
+        context.VisitorCollider.OnOverlapEnd = collider =>
+        {
+            context.VisitorEndEvents.Add(collider);
+            callbackOrder.Add("end");
+        };
+
+        visitorTransform.Translation = new Vector2(-300, 0);
+        // With FixedDeltaTime = 1/60 s and velocity 36000, body travels 600 units in a single frame.
+        // Starting at X=-300, the center would reach X=300 after one ProcessPhysics call, but it hits a wall and is blocked at X=150.
+        // Because of discrete collision detection it penetrates the wall and is then pushed back by the solver.
+        // With radius 100 for both circles and sensor at X=0 and static wall with width 100 and center at X = 300, this means:
+        //      outside overlap -> enter overlap -> exit overlap -> penetrate wall -> push back out of the wall -> enter overlap
+        // all within one frame while substeps are processed.
+        visitorBody.LinearVelocity = new Vector2(36000, 0);
+
+        // Act 0
+        SaveVisualOutput(context.PhysicsSystem, 0);
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 1);
+
+        // Assert 0
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorBeginEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.SensorBeginEvents[1], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents[0], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.VisitorBeginEvents[1], Is.EqualTo(context.SensorCollider));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.SensorEndEvents[0], Is.EqualTo(context.VisitorCollider));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents[0], Is.EqualTo(context.SensorCollider));
+
+        // Expected Timeline over the 8 Substeps (75 units per step):
+        // - Substeps 1-2: Visitor moves to X=-150, overlapping the Sensor -> [Begin]
+        // - Substeps 3-6: Visitor travels through Sensor, perfectly hitting the Wall at X=150 on step 6.
+        // - Substep 7: Visitor penetrates the Wall (X=225) and moves entirely out of Sensor range -> [End]
+        // - Substep 8: Physics solver corrects the penetration, pushing Visitor back to X=150 (inside Sensor) -> [Begin]
+        Assert.That(callbackOrder, Is.EqualTo(new[] { "begin", "begin", "end", "end", "begin", "begin" }));
+
+        // Act 1
+        visitorBody.LinearVelocity = Vector2.Zero;
+
+        context.PhysicsSystem.ProcessPhysics();
+        SaveVisualOutput(context.PhysicsSystem, 2);
+
+        // Assert 1
+        Assert.That(context.SensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(callbackOrder, Has.Count.EqualTo(6));
+    }
+
+    [Test]
     public void Sensor_ShouldPreserveOverlapCacheIntegrity_WhenPairsAreAddedAndRemovedAcrossFrames()
     {
         var physicsSystem = GetPhysicsSystem();
