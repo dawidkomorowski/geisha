@@ -402,6 +402,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var circleColliderComponent1 = entity1.CreateComponent<CircleColliderComponent>();
         circleColliderComponent1.Radius = 10.5;
         circleColliderComponent1.Enabled = true;
+        circleColliderComponent1.IsSensor = true;
         circleColliderComponent1.CollisionLayer = CollisionBitmask.FromValue(0b0011);
         circleColliderComponent1.CollisionMask = CollisionBitmask.FromValue(0b0101);
 
@@ -409,6 +410,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var circleColliderComponent2 = entity2.CreateComponent<CircleColliderComponent>();
         circleColliderComponent2.Radius = 20.75;
         circleColliderComponent2.Enabled = false;
+        circleColliderComponent2.IsSensor = false;
         circleColliderComponent2.CollisionLayer = CollisionBitmask.FromValue(0b1001);
         circleColliderComponent2.CollisionMask = CollisionBitmask.FromValue(0b0110);
 
@@ -424,6 +426,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent1 = loadedEntity1.GetComponent<CircleColliderComponent>();
         Assert.That(loadedComponent1.Radius, Is.EqualTo(circleColliderComponent1.Radius));
         Assert.That(loadedComponent1.Enabled, Is.EqualTo(circleColliderComponent1.Enabled));
+        Assert.That(loadedComponent1.IsSensor, Is.EqualTo(circleColliderComponent1.IsSensor));
         Assert.That(loadedComponent1.CollisionLayer, Is.EqualTo(circleColliderComponent1.CollisionLayer));
         Assert.That(loadedComponent1.CollisionMask, Is.EqualTo(circleColliderComponent1.CollisionMask));
 
@@ -432,6 +435,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent2 = loadedEntity2.GetComponent<CircleColliderComponent>();
         Assert.That(loadedComponent2.Radius, Is.EqualTo(circleColliderComponent2.Radius));
         Assert.That(loadedComponent2.Enabled, Is.EqualTo(circleColliderComponent2.Enabled));
+        Assert.That(loadedComponent2.IsSensor, Is.EqualTo(circleColliderComponent2.IsSensor));
         Assert.That(loadedComponent2.CollisionLayer, Is.EqualTo(circleColliderComponent2.CollisionLayer));
         Assert.That(loadedComponent2.CollisionMask, Is.EqualTo(circleColliderComponent2.CollisionMask));
     }
@@ -446,6 +450,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var rectangleColliderComponent1 = entity1.CreateComponent<RectangleColliderComponent>();
         rectangleColliderComponent1.Dimensions = new Vector2(100.5, 50.25);
         rectangleColliderComponent1.Enabled = true;
+        rectangleColliderComponent1.IsSensor = true;
         rectangleColliderComponent1.CollisionLayer = CollisionBitmask.FromValue(0b0001_0001);
         rectangleColliderComponent1.CollisionMask = CollisionBitmask.FromValue(0b0011_0011);
 
@@ -453,6 +458,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var rectangleColliderComponent2 = entity2.CreateComponent<RectangleColliderComponent>();
         rectangleColliderComponent2.Dimensions = new Vector2(25.5, 75.75);
         rectangleColliderComponent2.Enabled = false;
+        rectangleColliderComponent2.IsSensor = false;
         rectangleColliderComponent2.CollisionLayer = CollisionBitmask.FromValue(0b0101_0101);
         rectangleColliderComponent2.CollisionMask = CollisionBitmask.FromValue(0b1000_1000);
 
@@ -468,6 +474,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent1 = loadedEntity1.GetComponent<RectangleColliderComponent>();
         Assert.That(loadedComponent1.Dimensions, Is.EqualTo(rectangleColliderComponent1.Dimensions));
         Assert.That(loadedComponent1.Enabled, Is.EqualTo(rectangleColliderComponent1.Enabled));
+        Assert.That(loadedComponent1.IsSensor, Is.EqualTo(rectangleColliderComponent1.IsSensor));
         Assert.That(loadedComponent1.CollisionLayer, Is.EqualTo(rectangleColliderComponent1.CollisionLayer));
         Assert.That(loadedComponent1.CollisionMask, Is.EqualTo(rectangleColliderComponent1.CollisionMask));
 
@@ -476,6 +483,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent2 = loadedEntity2.GetComponent<RectangleColliderComponent>();
         Assert.That(loadedComponent2.Dimensions, Is.EqualTo(rectangleColliderComponent2.Dimensions));
         Assert.That(loadedComponent2.Enabled, Is.EqualTo(rectangleColliderComponent2.Enabled));
+        Assert.That(loadedComponent2.IsSensor, Is.EqualTo(rectangleColliderComponent2.IsSensor));
         Assert.That(loadedComponent2.CollisionLayer, Is.EqualTo(rectangleColliderComponent2.CollisionLayer));
         Assert.That(loadedComponent2.CollisionMask, Is.EqualTo(rectangleColliderComponent2.CollisionMask));
     }
@@ -489,12 +497,14 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var entity1 = CreateEntity(scene, "Entity1");
         var tileColliderComponent1 = entity1.CreateComponent<TileColliderComponent>();
         tileColliderComponent1.Enabled = true;
+        tileColliderComponent1.IsSensor = true;
         tileColliderComponent1.CollisionLayer = CollisionBitmask.FromValue(0b0000_1111);
         tileColliderComponent1.CollisionMask = CollisionBitmask.FromValue(0b1111_0000);
 
         var entity2 = CreateEntity(scene, "Entity2");
         var tileColliderComponent2 = entity2.CreateComponent<TileColliderComponent>();
         tileColliderComponent2.Enabled = false;
+        tileColliderComponent2.IsSensor = false;
         tileColliderComponent2.CollisionLayer = CollisionBitmask.FromValue(0b0011_1100);
         tileColliderComponent2.CollisionMask = CollisionBitmask.FromValue(0b1100_0011);
 
@@ -509,6 +519,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         AssertEntitiesAreEqual(loadedEntity1, entity1);
         var loadedComponent1 = loadedEntity1.GetComponent<TileColliderComponent>();
         Assert.That(loadedComponent1.Enabled, Is.EqualTo(tileColliderComponent1.Enabled));
+        Assert.That(loadedComponent1.IsSensor, Is.EqualTo(tileColliderComponent1.IsSensor));
         Assert.That(loadedComponent1.CollisionLayer, Is.EqualTo(tileColliderComponent1.CollisionLayer));
         Assert.That(loadedComponent1.CollisionMask, Is.EqualTo(tileColliderComponent1.CollisionMask));
 
@@ -516,6 +527,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         AssertEntitiesAreEqual(loadedEntity2, entity2);
         var loadedComponent2 = loadedEntity2.GetComponent<TileColliderComponent>();
         Assert.That(loadedComponent2.Enabled, Is.EqualTo(tileColliderComponent2.Enabled));
+        Assert.That(loadedComponent2.IsSensor, Is.EqualTo(tileColliderComponent2.IsSensor));
         Assert.That(loadedComponent2.CollisionLayer, Is.EqualTo(tileColliderComponent2.CollisionLayer));
         Assert.That(loadedComponent2.CollisionMask, Is.EqualTo(tileColliderComponent2.CollisionMask));
     }

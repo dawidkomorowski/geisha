@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics.Systems;
 
@@ -40,6 +41,7 @@ internal sealed class RigidBody2D
         SetRectangleCollider(rectangleColliderSize);
     }
 
+    public RuntimeId Id { get; } = RuntimeId.Next();
     public BodyType Type { get; }
     public ColliderType ColliderType { get; private set; }
     public CollisionNormalFilter CollisionNormalFilter { get; internal set; } = CollisionNormalFilter.None;
@@ -120,6 +122,8 @@ internal sealed class RigidBody2D
     }
 
     public bool EnableCollisionResponse { get; set; }
+
+    public bool IsSensor { get; set; }
 
     public uint CollisionLayer { get; set; } = uint.MaxValue;
     public uint CollisionMask { get; set; } = uint.MaxValue;

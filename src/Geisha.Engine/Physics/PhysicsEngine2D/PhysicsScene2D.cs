@@ -10,6 +10,8 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _bodies = new();
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
+    private readonly SensorOverlapCache _sensorOverlapCache = new(256);
+    private readonly List<SensorOverlapEvent> _sensorOverlapEvents = new(256);
 
     public PhysicsScene2D(SizeD tileSize)
     {
@@ -77,6 +79,8 @@ internal sealed class PhysicsScene2D
         var staticBodies = GetStaticBodiesAsSpan();
         var kinematicBodies = GetKinematicBodiesAsSpan();
 
+        ClearEvents();
+
         for (var substep = 0; substep < Substeps; substep++)
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
@@ -93,13 +97,15 @@ internal sealed class PhysicsScene2D
                 kinematicBody.RecomputeCollider();
             }
 
-            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies);
+            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies, _sensorOverlapCache);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
             {
                 ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
             }
+
+            GenerateEvents();
         }
     }
 
@@ -178,6 +184,8 @@ internal sealed class PhysicsScene2D
         }
     }
 
+    public ReadOnlySpan<SensorOverlapEvent> GetSensorOverlapEvents() => CollectionsMarshal.AsSpan(_sensorOverlapEvents);
+
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
     private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
 
@@ -195,6 +203,45 @@ internal sealed class PhysicsScene2D
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(body), "Unsupported body type.");
+        }
+    }
+
+    private void ClearEvents()
+    {
+        _sensorOverlapEvents.Clear();
+    }
+
+    private void GenerateEvents()
+    {
+        foreach (var sensorOverlap in _sensorOverlapCache.GetOverlaps())
+        {
+            RigidBody2D sensor;
+            RigidBody2D visitor;
+
+            if (sensorOverlap.Body1.IsSensor)
+            {
+                sensor = sensorOverlap.Body1;
+                visitor = sensorOverlap.Body2;
+            }
+            else
+            {
+                sensor = sensorOverlap.Body2;
+                visitor = sensorOverlap.Body1;
+            }
+
+            switch (sensorOverlap.CacheStatus)
+            {
+                case CacheStatus.New:
+                    _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.Begin));
+                    break;
+                case CacheStatus.Updated:
+                    break;
+                case CacheStatus.Stale:
+                    _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.End));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

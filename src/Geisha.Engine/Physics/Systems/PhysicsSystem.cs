@@ -282,6 +282,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         {
             proxy.SynchronizeComponents();
         }
+
+        InvokeEventCallbacks();
     }
 
     public void PreparePhysicsDebugInformation()
@@ -419,6 +421,35 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     }
 
     #endregion
+
+    private void InvokeEventCallbacks()
+    {
+        foreach (var sensorOverlapEvent in PhysicsScene2D.GetSensorOverlapEvents())
+        {
+            var proxy1 = sensorOverlapEvent.Sensor.Proxy;
+            var proxy2 = sensorOverlapEvent.Visitor.Proxy;
+
+            Debug.Assert(proxy1 is not null);
+            Debug.Assert(proxy2 is not null);
+
+            var collider1 = proxy1.Collider;
+            var collider2 = proxy2.Collider;
+
+            switch (sensorOverlapEvent.Type)
+            {
+                case SensorOverlapEvent.EventType.Begin:
+                    collider1.OnOverlapBegin?.Invoke(collider2);
+                    collider2.OnOverlapBegin?.Invoke(collider1);
+                    break;
+                case SensorOverlapEvent.EventType.End:
+                    collider1.OnOverlapEnd?.Invoke(collider2);
+                    collider2.OnOverlapEnd?.Invoke(collider1);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
 
     // TODO: Use ColliderSpanQueryHandler instead when migrated to .NET 9 (C# 13) -> it allows ref structs to implement interfaces.
     //       Then the span based query handler can implement IRigidBodyQueryHandler.

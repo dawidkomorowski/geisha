@@ -134,6 +134,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
         }
 
         _body.EnableCollisionDetection = Collider.Enabled;
+        _body.IsSensor = Collider.IsSensor;
         _body.CollisionLayer = Collider.CollisionLayer.Value;
         _body.CollisionMask = Collider.CollisionMask.Value;
 
