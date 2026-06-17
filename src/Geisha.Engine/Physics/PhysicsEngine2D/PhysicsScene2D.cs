@@ -11,8 +11,7 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
     private readonly SensorOverlapCache _sensorOverlapCache = new(256);
-    private readonly List<SensorOverlapBeginEvent> _sensorOverlapBeginEvents = new(256);
-    private readonly List<SensorOverlapEndEvent> _sensorOverlapEndEvents = new(256);
+    private readonly List<SensorOverlapEvent> _sensorOverlapEvents = new(256);
 
     public PhysicsScene2D(SizeD tileSize)
     {
@@ -185,10 +184,7 @@ internal sealed class PhysicsScene2D
         }
     }
 
-    public SensorEvents GetSensorEvents()
-    {
-        return new SensorEvents(CollectionsMarshal.AsSpan(_sensorOverlapBeginEvents), CollectionsMarshal.AsSpan(_sensorOverlapEndEvents));
-    }
+    public ReadOnlySpan<SensorOverlapEvent> GetSensorOverlapEvents() => CollectionsMarshal.AsSpan(_sensorOverlapEvents);
 
     private ReadOnlySpan<RigidBody2D> GetStaticBodiesAsSpan() => CollectionsMarshal.AsSpan(_staticBodies);
     private ReadOnlySpan<RigidBody2D> GetKinematicBodiesAsSpan() => CollectionsMarshal.AsSpan(_kinematicBodies);
@@ -212,8 +208,7 @@ internal sealed class PhysicsScene2D
 
     private void ClearEvents()
     {
-        _sensorOverlapBeginEvents.Clear();
-        _sensorOverlapEndEvents.Clear();
+        _sensorOverlapEvents.Clear();
     }
 
     private void GenerateEvents()
@@ -237,12 +232,12 @@ internal sealed class PhysicsScene2D
             switch (sensorOverlap.CacheStatus)
             {
                 case CacheStatus.New:
-                    _sensorOverlapBeginEvents.Add(new SensorOverlapBeginEvent(sensor, visitor));
+                    _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.Begin));
                     break;
                 case CacheStatus.Updated:
                     break;
                 case CacheStatus.Stale:
-                    _sensorOverlapEndEvents.Add(new SensorOverlapEndEvent(sensor, visitor));
+                    _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.End));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

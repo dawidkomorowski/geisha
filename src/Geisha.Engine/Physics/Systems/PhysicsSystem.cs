@@ -422,17 +422,12 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     #endregion
 
-    // TODO: Sensor overlap callbacks are dispatched in two separate passes (all begin events first, then all end events).
-    //       If an overlap ends and later begins again within the same ProcessPhysics call (possible with Substeps > 1),
-    //       this will reorder callbacks (Begin invoked before the earlier End) for the same pair, which can break state machines that assume temporal ordering.
     private void InvokeEventCallbacks()
     {
-        var sensorEvents = PhysicsScene2D.GetSensorEvents();
-
-        foreach (var beginEvent in sensorEvents.BeginEvents)
+        foreach (var sensorOverlapEvent in PhysicsScene2D.GetSensorOverlapEvents())
         {
-            var proxy1 = beginEvent.Sensor.Proxy;
-            var proxy2 = beginEvent.Visitor.Proxy;
+            var proxy1 = sensorOverlapEvent.Sensor.Proxy;
+            var proxy2 = sensorOverlapEvent.Visitor.Proxy;
 
             Debug.Assert(proxy1 is not null);
             Debug.Assert(proxy2 is not null);
@@ -440,23 +435,19 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             var collider1 = proxy1.Collider;
             var collider2 = proxy2.Collider;
 
-            collider1.OnOverlapBegin?.Invoke(collider2);
-            collider2.OnOverlapBegin?.Invoke(collider1);
-        }
-
-        foreach (var endEvent in sensorEvents.EndEvents)
-        {
-            var proxy1 = endEvent.Sensor.Proxy;
-            var proxy2 = endEvent.Visitor.Proxy;
-
-            Debug.Assert(proxy1 is not null);
-            Debug.Assert(proxy2 is not null);
-
-            var collider1 = proxy1.Collider;
-            var collider2 = proxy2.Collider;
-
-            collider1.OnOverlapEnd?.Invoke(collider2);
-            collider2.OnOverlapEnd?.Invoke(collider1);
+            switch (sensorOverlapEvent.Type)
+            {
+                case SensorOverlapEvent.EventType.Begin:
+                    collider1.OnOverlapBegin?.Invoke(collider2);
+                    collider2.OnOverlapBegin?.Invoke(collider1);
+                    break;
+                case SensorOverlapEvent.EventType.End:
+                    collider1.OnOverlapEnd?.Invoke(collider2);
+                    collider2.OnOverlapEnd?.Invoke(collider1);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 
