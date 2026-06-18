@@ -2,7 +2,6 @@
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-internal struct Test : IUnmanaged<Test>
+internal struct PhysicsSceneData : IUnmanaged<PhysicsSceneData>
 {
-    public int Value { get; set; }
 }
