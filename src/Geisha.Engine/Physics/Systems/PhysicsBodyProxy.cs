@@ -12,8 +12,9 @@ namespace Geisha.Engine.Physics.Systems;
 internal sealed class PhysicsBodyProxy : IDisposable
 {
     private readonly RigidBody2D _body;
+    private readonly RigidBody2D_V2 _bodyV2;
 
-    private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider,
+    private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform, Collider2DComponent collider,
         KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
         Transform = transform;
@@ -32,20 +33,30 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
+        _bodyV2 = Collider switch
+        {
+            CircleColliderComponent circleColliderComponent => physicsScene2Dv2.CreateBody(bodyType, circleColliderComponent.Radius),
+            RectangleColliderComponent rectangleColliderComponent => physicsScene2Dv2.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
+            TileColliderComponent => physicsScene2Dv2.CreateTileBody(),
+            _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
+        };
+
         _body.Proxy = this;
 
         SynchronizeBody();
     }
 
-    public static PhysicsBodyProxy CreateStatic(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider)
+    public static PhysicsBodyProxy CreateStatic(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform,
+        Collider2DComponent collider)
     {
-        return new PhysicsBodyProxy(physicsScene2D, transform, collider, null);
+        return new PhysicsBodyProxy(physicsScene2D, physicsScene2Dv2, transform, collider, null);
     }
 
-    public static PhysicsBodyProxy CreateKinematic(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider,
+    public static PhysicsBodyProxy CreateKinematic(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform,
+        Collider2DComponent collider,
         KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
-        return new PhysicsBodyProxy(physicsScene2D, transform, collider, kinematicBodyComponent);
+        return new PhysicsBodyProxy(physicsScene2D, physicsScene2Dv2, transform, collider, kinematicBodyComponent);
     }
 
     public Entity Entity => Transform.Entity;
@@ -109,6 +120,12 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
             _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
             _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
+
+            _bodyV2.Position = Transform.Translation;
+            _bodyV2.Rotation = Transform.Rotation;
+            _bodyV2.LinearVelocity = KinematicBodyComponent.LinearVelocity;
+            _bodyV2.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+            _bodyV2.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
         }
         else
         {
@@ -116,6 +133,9 @@ internal sealed class PhysicsBodyProxy : IDisposable
             {
                 _body.Position = Transform.Translation;
                 _body.Rotation = Transform.Rotation;
+
+                _bodyV2.Position = Transform.Translation;
+                _bodyV2.Rotation = Transform.Rotation;
             }
             else
             {
@@ -123,10 +143,17 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 var finalTransform = finalMatrix.ToTransform();
                 _body.Position = finalTransform.Translation;
                 _body.Rotation = finalTransform.Rotation;
+
+                _bodyV2.Position = finalTransform.Translation;
+                _bodyV2.Rotation = finalTransform.Rotation;
             }
 
             if (_body.ColliderType is ColliderType.Tile)
             {
+                Transform.Translation = _bodyV2.Position;
+                Transform.Rotation = _bodyV2.Rotation;
+                Transform.Scale = Vector2.One; // Tile collider does not support scaling.
+
                 Transform.Translation = _body.Position;
                 Transform.Rotation = _body.Rotation;
                 Transform.Scale = Vector2.One; // Tile collider does not support scaling.
@@ -138,16 +165,24 @@ internal sealed class PhysicsBodyProxy : IDisposable
         _body.CollisionLayer = Collider.CollisionLayer.Value;
         _body.CollisionMask = Collider.CollisionMask.Value;
 
+        _bodyV2.EnableCollisionDetection = Collider.Enabled;
+        _bodyV2.IsSensor = Collider.IsSensor;
+        _bodyV2.CollisionLayer = Collider.CollisionLayer.Value;
+        _bodyV2.CollisionMask = Collider.CollisionMask.Value;
+
         switch (Collider)
         {
             case CircleColliderComponent circleColliderComponent:
                 _body.SetCircleCollider(circleColliderComponent.Radius);
+                _bodyV2.SetCircleCollider(circleColliderComponent.Radius);
                 break;
             case RectangleColliderComponent rectangleColliderComponent:
                 _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
+                _bodyV2.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
                 break;
             case TileColliderComponent:
                 _body.SetTileCollider();
+                _bodyV2.SetTileCollider();
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
@@ -157,6 +192,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
     internal void SynchronizeComponents()
     {
         if (KinematicBodyComponent is null) return;
+
+        Transform.Translation = _bodyV2.Position;
+        Transform.Rotation = _bodyV2.Rotation;
+        KinematicBodyComponent.LinearVelocity = _bodyV2.LinearVelocity;
+        KinematicBodyComponent.AngularVelocity = _bodyV2.AngularVelocity;
 
         Transform.Translation = _body.Position;
         Transform.Rotation = _body.Rotation;

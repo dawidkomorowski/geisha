@@ -19,6 +19,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     private readonly ITimeSystem _timeSystem;
     private readonly IDebugRenderer _debugRenderer;
     private readonly PhysicsSystemState _physicsSystemState;
+    private readonly PhysicsScene2D_V2 _physicsScene2D;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, ITimeSystem timeSystem, IDebugRenderer debugRenderer)
     {
@@ -64,7 +65,13 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             PenetrationTolerance = physicsConfiguration.PenetrationTolerance
         };
 
-        _physicsSystemState = new PhysicsSystemState(PhysicsScene2D);
+        _physicsScene2D = PhysicsScene2D_V2.Create();
+        _physicsScene2D.Substeps = physicsConfiguration.Substeps;
+        _physicsScene2D.VelocityIterations = physicsConfiguration.VelocityIterations;
+        _physicsScene2D.PositionIterations = physicsConfiguration.PositionIterations;
+        _physicsScene2D.PenetrationTolerance = physicsConfiguration.PenetrationTolerance;
+
+        _physicsSystemState = new PhysicsSystemState(PhysicsScene2D, _physicsScene2D);
     }
 
     public PhysicsScene2D PhysicsScene2D { get; }
