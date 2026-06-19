@@ -11,4 +11,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public bool EnableCollisionDetection;
 
     public bool IsSensor;
+
+    public uint CollisionLayer;
+    public uint CollisionMask;
 }

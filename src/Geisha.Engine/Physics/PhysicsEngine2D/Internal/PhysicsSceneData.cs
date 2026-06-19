@@ -64,7 +64,13 @@ internal struct PhysicsSceneData
 
     public RigidBodyId CreateBody()
     {
-        Bodies.Add(new RigidBodyData());
+        var body = new RigidBodyData
+        {
+            CollisionLayer = uint.MaxValue,
+            CollisionMask = uint.MaxValue
+        };
+
+        Bodies.Add(body);
 
         return new RigidBodyId(PhysicsSceneId, Bodies.Count - 1, 1);
     }

@@ -59,13 +59,13 @@ internal readonly record struct RigidBody2D_V2 : IUnmanaged<RigidBody2D_V2>
     public uint CollisionLayer
     {
         get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        set => Physics2D.Body.SetCollisionLayer(Id, value);
     }
 
     public uint CollisionMask
     {
         get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        set => Physics2D.Body.SetCollisionMask(Id, value);
     }
 
     public void SetCircleCollider(double radius)

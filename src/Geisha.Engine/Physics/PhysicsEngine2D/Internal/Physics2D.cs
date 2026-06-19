@@ -80,29 +80,37 @@ internal static class Physics2D
         public static void SetPosition(RigidBodyId id, in Vector2 position)
         {
             ref var body = ref GetBodyData(id);
-
             body.Position = position;
         }
 
         public static void SetRotation(RigidBodyId id, double rotation)
         {
             ref var body = ref GetBodyData(id);
-
             body.Rotation = rotation;
         }
 
         public static void SetEnableCollisionDetection(RigidBodyId id, bool enableCollisionDetection)
         {
             ref var body = ref GetBodyData(id);
-
             body.EnableCollisionDetection = enableCollisionDetection;
         }
 
         public static void SetIsSensor(RigidBodyId id, bool isSensor)
         {
             ref var body = ref GetBodyData(id);
-
             body.IsSensor = isSensor;
+        }
+
+        public static void SetCollisionLayer(RigidBodyId id, uint collisionLayer)
+        {
+            ref var body = ref GetBodyData(id);
+            body.CollisionLayer = collisionLayer;
+        }
+
+        public static void SetCollisionMask(RigidBodyId id, uint collisionMask)
+        {
+            ref var body = ref GetBodyData(id);
+            body.CollisionMask = collisionMask;
         }
 
         private static ref RigidBodyData GetBodyData(RigidBodyId id)
