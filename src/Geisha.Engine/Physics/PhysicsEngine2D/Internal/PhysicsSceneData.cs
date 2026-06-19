@@ -4,16 +4,16 @@ using System.Runtime.InteropServices;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-internal struct PhysicsSceneContext
+internal struct PhysicsSceneData
 {
-    private static readonly List<PhysicsSceneContext> ContextList = new();
-    private static Span<PhysicsSceneContext> ContextSpan => CollectionsMarshal.AsSpan(ContextList);
+    private static readonly List<PhysicsSceneData> SceneList = new();
+    private static Span<PhysicsSceneData> SceneSpan => CollectionsMarshal.AsSpan(SceneList);
 
     public static PhysicsSceneId Create()
     {
-        var context = new PhysicsSceneContext
+        var context = new PhysicsSceneData
         {
-            Index = ContextList.Count,
+            Index = SceneList.Count,
             Version = 1,
             SimulationParameters = new SimulationParameters
             {
@@ -25,9 +25,9 @@ internal struct PhysicsSceneContext
             Bodies = new List<RigidBodyData>()
         };
 
-        ContextList.Add(context);
+        SceneList.Add(context);
 
-        if (ContextList.Count > 1000)
+        if (SceneList.Count > 1000)
         {
             // TODO: Implement deletion of allocated physics scene by physics system.
             // TODO: Reuse list slots.
@@ -37,12 +37,12 @@ internal struct PhysicsSceneContext
         return context.PhysicsSceneId;
     }
 
-    public static void Delete(int id)
+    public static void Delete(PhysicsSceneId id)
     {
         throw new NotImplementedException();
     }
 
-    public static ref PhysicsSceneContext Get(PhysicsSceneId id)
+    public static ref PhysicsSceneData Get(PhysicsSceneId id)
     {
         if (!id.IsValid)
         {
@@ -50,7 +50,7 @@ internal struct PhysicsSceneContext
         }
 
         // TODO: Validate ID.
-        return ref ContextSpan[id.Index];
+        return ref SceneSpan[id.Index];
     }
 
     private PhysicsSceneId PhysicsSceneId => new(Index, Version);

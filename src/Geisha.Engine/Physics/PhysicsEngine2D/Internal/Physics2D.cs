@@ -9,13 +9,13 @@ internal static class Physics2D
     {
         public static PhysicsSceneId Create()
         {
-            return PhysicsSceneContext.Create();
+            return PhysicsSceneData.Create();
         }
 
         public static void SetSubsteps(PhysicsSceneId id, int substeps)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            context.SimulationParameters.Substeps = substeps;
+            ref var scene = ref PhysicsSceneData.Get(id);
+            scene.SimulationParameters.Substeps = substeps;
         }
 
         public static int GetSubsteps(PhysicsSceneId id)
@@ -25,8 +25,8 @@ internal static class Physics2D
 
         public static void SetVelocityIterations(PhysicsSceneId id, int velocityIterations)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            context.SimulationParameters.VelocityIterations = velocityIterations;
+            ref var scene = ref PhysicsSceneData.Get(id);
+            scene.SimulationParameters.VelocityIterations = velocityIterations;
         }
 
         public static int GetVelocityIterations(PhysicsSceneId id)
@@ -36,8 +36,8 @@ internal static class Physics2D
 
         public static void SetPositionIterations(PhysicsSceneId id, int positionIterations)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            context.SimulationParameters.PositionIterations = positionIterations;
+            ref var scene = ref PhysicsSceneData.Get(id);
+            scene.SimulationParameters.PositionIterations = positionIterations;
         }
 
         public static int GetPositionIterations(PhysicsSceneId id)
@@ -47,8 +47,8 @@ internal static class Physics2D
 
         public static void SetPenetrationTolerance(PhysicsSceneId id, double penetrationTolerance)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            context.SimulationParameters.PenetrationTolerance = penetrationTolerance;
+            ref var scene = ref PhysicsSceneData.Get(id);
+            scene.SimulationParameters.PenetrationTolerance = penetrationTolerance;
         }
 
         public static double GetPenetrationTolerance(PhysicsSceneId id)
@@ -58,20 +58,20 @@ internal static class Physics2D
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            return context.CreateBody();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.CreateBody();
         }
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, in SizeD rectangleColliderSize)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            return context.CreateBody();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.CreateBody();
         }
 
         public static RigidBodyId CreateTileBody(PhysicsSceneId id)
         {
-            ref var context = ref PhysicsSceneContext.Get(id);
-            return context.CreateBody();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.CreateBody();
         }
     }
 
@@ -107,8 +107,8 @@ internal static class Physics2D
 
         private static ref RigidBodyData GetBodyData(RigidBodyId id)
         {
-            ref var context = ref PhysicsSceneContext.Get(id.PhysicsSceneId);
-            return ref context.GetBodyData(id);
+            ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
+            return ref scene.GetBodyData(id);
         }
     }
 }
