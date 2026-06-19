@@ -12,13 +12,18 @@ internal static class Physics2D
             return PhysicsSceneData.Create();
         }
 
+        public static int GetSubsteps(PhysicsSceneId id)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void SetSubsteps(PhysicsSceneId id, int substeps)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
             scene.SimulationParameters.Substeps = substeps;
         }
 
-        public static int GetSubsteps(PhysicsSceneId id)
+        public static int GetVelocityIterations(PhysicsSceneId id)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +34,7 @@ internal static class Physics2D
             scene.SimulationParameters.VelocityIterations = velocityIterations;
         }
 
-        public static int GetVelocityIterations(PhysicsSceneId id)
+        public static int GetPositionIterations(PhysicsSceneId id)
         {
             throw new NotImplementedException();
         }
@@ -40,7 +45,7 @@ internal static class Physics2D
             scene.SimulationParameters.PositionIterations = positionIterations;
         }
 
-        public static int GetPositionIterations(PhysicsSceneId id)
+        public static double GetPenetrationTolerance(PhysicsSceneId id)
         {
             throw new NotImplementedException();
         }
@@ -49,11 +54,6 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
             scene.SimulationParameters.PenetrationTolerance = penetrationTolerance;
-        }
-
-        public static double GetPenetrationTolerance(PhysicsSceneId id)
-        {
-            throw new NotImplementedException();
         }
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
@@ -77,10 +77,22 @@ internal static class Physics2D
 
     public static class Body
     {
+        public static Vector2 GetPosition(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.Position;
+        }
+
         public static void SetPosition(RigidBodyId id, in Vector2 position)
         {
             ref var body = ref GetBodyData(id);
             body.Position = position;
+        }
+
+        public static double GetRotation(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.Rotation;
         }
 
         public static void SetRotation(RigidBodyId id, double rotation)
@@ -111,6 +123,24 @@ internal static class Physics2D
         {
             ref var body = ref GetBodyData(id);
             body.CollisionMask = collisionMask;
+        }
+
+        public static void SetCircleCollider(RigidBodyId id, double radius)
+        {
+            ref var body = ref GetBodyData(id);
+            // TODO: Implement actual logic.
+        }
+
+        public static void SetRectangleCollider(RigidBodyId id, in SizeD size)
+        {
+            ref var body = ref GetBodyData(id);
+            // TODO: Implement actual logic.
+        }
+
+        public static void SetTileCollider(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            // TODO: Implement actual logic.
         }
 
         private static ref RigidBodyData GetBodyData(RigidBodyId id)

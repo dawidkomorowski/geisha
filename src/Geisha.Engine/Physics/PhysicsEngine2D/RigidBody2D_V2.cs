@@ -5,24 +5,17 @@ using Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-internal readonly record struct RigidBody2D_V2 : IUnmanaged<RigidBody2D_V2>
+internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<RigidBody2D_V2>
 {
-    public RigidBody2D_V2(RigidBodyId id)
-    {
-        Id = id;
-    }
-
-    public RigidBodyId Id { get; }
-
     public Vector2 Position
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Body.GetPosition(Id);
         set => Physics2D.Body.SetPosition(Id, value);
     }
 
     public double Rotation
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Body.GetRotation(Id);
         set => Physics2D.Body.SetRotation(Id, value);
     }
 
@@ -68,18 +61,7 @@ internal readonly record struct RigidBody2D_V2 : IUnmanaged<RigidBody2D_V2>
         set => Physics2D.Body.SetCollisionMask(Id, value);
     }
 
-    public void SetCircleCollider(double radius)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetRectangleCollider(in SizeD size)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetTileCollider()
-    {
-        throw new NotImplementedException();
-    }
+    public void SetCircleCollider(double radius) => Physics2D.Body.SetCircleCollider(Id, radius);
+    public void SetRectangleCollider(in SizeD size) => Physics2D.Body.SetRectangleCollider(Id, size);
+    public void SetTileCollider() => Physics2D.Body.SetTileCollider(Id);
 }
