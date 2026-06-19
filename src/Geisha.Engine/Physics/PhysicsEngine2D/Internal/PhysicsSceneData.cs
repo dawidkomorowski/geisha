@@ -27,7 +27,7 @@ internal struct PhysicsSceneData
 
         SceneList.Add(context);
 
-        if (SceneList.Count > 1000)
+        if (SceneList.Count > 2000)
         {
             // TODO: Implement deletion of allocated physics scene by physics system.
             // TODO: Reuse list slots.

@@ -101,10 +101,52 @@ internal static class Physics2D
             body.Rotation = rotation;
         }
 
+        public static Vector2 GetLinearVelocity(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.LinearVelocity;
+        }
+
+        public static void SetLinearVelocity(RigidBodyId id, in Vector2 linearVelocity)
+        {
+            ref var body = ref GetBodyData(id);
+            body.LinearVelocity = linearVelocity;
+        }
+
+        public static double GetAngularVelocity(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.AngularVelocity;
+        }
+
+        public static void SetAngularVelocity(RigidBodyId id, double angularVelocity)
+        {
+            ref var body = ref GetBodyData(id);
+            body.AngularVelocity = angularVelocity;
+        }
+
+        public static bool GetEnableCollisionDetection(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.EnableCollisionDetection;
+        }
+
         public static void SetEnableCollisionDetection(RigidBodyId id, bool enableCollisionDetection)
         {
             ref var body = ref GetBodyData(id);
             body.EnableCollisionDetection = enableCollisionDetection;
+        }
+
+        public static bool GetEnableCollisionResponse(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.EnableCollisionResponse;
+        }
+
+        public static void SetEnableCollisionResponse(RigidBodyId id, bool enableCollisionResponse)
+        {
+            ref var body = ref GetBodyData(id);
+            body.EnableCollisionResponse = enableCollisionResponse;
         }
 
         public static void SetIsSensor(RigidBodyId id, bool isSensor)

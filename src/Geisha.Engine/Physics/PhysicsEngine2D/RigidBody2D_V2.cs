@@ -21,26 +21,26 @@ internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<Rigi
 
     public Vector2 LinearVelocity
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Physics2D.Body.GetLinearVelocity(Id);
+        set => Physics2D.Body.SetLinearVelocity(Id, value);
     }
 
     public double AngularVelocity
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Physics2D.Body.GetAngularVelocity(Id);
+        set => Physics2D.Body.SetAngularVelocity(Id, value);
     }
 
     public bool EnableCollisionDetection
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Body.GetEnableCollisionDetection(Id);
         set => Physics2D.Body.SetEnableCollisionDetection(Id, value);
     }
 
     public bool EnableCollisionResponse
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Physics2D.Body.GetEnableCollisionResponse(Id);
+        set => Physics2D.Body.SetEnableCollisionResponse(Id, value);
     }
 
     public bool IsSensor

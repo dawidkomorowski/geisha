@@ -7,8 +7,11 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
 {
     public Vector2 Position;
     public double Rotation;
+    public Vector2 LinearVelocity;
+    public double AngularVelocity;
 
     public bool EnableCollisionDetection;
+    public bool EnableCollisionResponse;
 
     public bool IsSensor;
 
