@@ -6,14 +6,14 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal struct PhysicsSceneData
 {
-    private static readonly List<PhysicsSceneData> SceneList = new();
-    private static Span<PhysicsSceneData> SceneSpan => CollectionsMarshal.AsSpan(SceneList);
+    private static readonly List<PhysicsSceneData> Scenes = new();
+    private static Span<PhysicsSceneData> ScenesSpan => CollectionsMarshal.AsSpan(Scenes);
 
     public static PhysicsSceneId Create()
     {
         var context = new PhysicsSceneData
         {
-            Index = SceneList.Count,
+            Index = Scenes.Count,
             Version = 1,
             SimulationParameters = new SimulationParameters
             {
@@ -22,12 +22,14 @@ internal struct PhysicsSceneData
                 PositionIterations = 4,
                 PenetrationTolerance = 0.01
             },
-            Bodies = new List<RigidBodyData>()
+            Bodies = new List<RigidBodyData>(),
+            StaticBodyIndices = new List<int>(),
+            KinematicBodyIndices = new List<int>()
         };
 
-        SceneList.Add(context);
+        Scenes.Add(context);
 
-        if (SceneList.Count > 2000)
+        if (Scenes.Count > 2000)
         {
             // TODO: Implement deletion of allocated physics scene by physics system.
             // TODO: Reuse list slots.
@@ -37,7 +39,7 @@ internal struct PhysicsSceneData
         return context.PhysicsSceneId;
     }
 
-    public static void Delete(PhysicsSceneId id)
+    public static void Destroy(PhysicsSceneId id)
     {
         throw new NotImplementedException();
     }
@@ -50,7 +52,7 @@ internal struct PhysicsSceneData
         }
 
         // TODO: Validate ID.
-        return ref SceneSpan[id.Index];
+        return ref ScenesSpan[id.Index];
     }
 
     private PhysicsSceneId PhysicsSceneId => new(Index, Version);
@@ -61,18 +63,36 @@ internal struct PhysicsSceneData
     public SimulationParameters SimulationParameters;
 
     public List<RigidBodyData> Bodies;
+    public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(Bodies);
+    public List<int> StaticBodyIndices;
+    public List<int> KinematicBodyIndices;
 
-    public RigidBodyId CreateBody()
+    public RigidBodyId CreateBody(BodyType bodyType)
     {
         var body = new RigidBodyData
         {
+            Type = bodyType,
             CollisionLayer = uint.MaxValue,
             CollisionMask = uint.MaxValue
         };
 
         Bodies.Add(body);
 
-        return new RigidBodyId(PhysicsSceneId, Bodies.Count - 1, 1);
+        var rigidBodyId = new RigidBodyId(PhysicsSceneId, Bodies.Count - 1, 1);
+
+        switch (bodyType)
+        {
+            case BodyType.Static:
+                StaticBodyIndices.Add(rigidBodyId.Index);
+                break;
+            case BodyType.Kinematic:
+                KinematicBodyIndices.Add(rigidBodyId.Index);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(bodyType), bodyType, null);
+        }
+
+        return rigidBodyId;
     }
 
     public ref RigidBodyData GetBodyData(RigidBodyId id)

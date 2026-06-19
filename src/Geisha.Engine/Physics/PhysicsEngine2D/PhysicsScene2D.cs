@@ -90,7 +90,7 @@ internal sealed class PhysicsScene2D
                 ContactSolver.SolveVelocityConstraints(kinematicBodies);
             }
 
-            KinematicIntegration.IntegrateKinematicMotion(kinematicBodies, deltaTimeSeconds);
+            //KinematicIntegration.IntegrateKinematicMotion(kinematicBodies, deltaTimeSeconds);
 
             foreach (var kinematicBody in kinematicBodies)
             {

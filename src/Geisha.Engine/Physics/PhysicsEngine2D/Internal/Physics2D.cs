@@ -59,19 +59,33 @@ internal static class Physics2D
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.CreateBody();
+            return scene.CreateBody(bodyType);
         }
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, in SizeD rectangleColliderSize)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.CreateBody();
+            return scene.CreateBody(bodyType);
         }
 
         public static RigidBodyId CreateTileBody(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.CreateBody();
+            return scene.CreateBody(BodyType.Static);
+        }
+
+        public static void Simulate(PhysicsSceneId id, TimeSpan timeStep)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+
+            var substeps = scene.SimulationParameters.Substeps;
+
+            var deltaTimeSeconds = timeStep.TotalSeconds / substeps;
+
+            for (var substep = 0; substep < substeps; substep++)
+            {
+                KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
+            }
         }
     }
 

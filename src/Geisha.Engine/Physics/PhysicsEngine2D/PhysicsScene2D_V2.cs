@@ -66,4 +66,6 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
         var id = Physics2D.Scene.CreateTileBody(Id);
         return new RigidBody2D_V2(id);
     }
+
+    public void Simulate(TimeSpan timeStep) => Physics2D.Scene.Simulate(Id, timeStep);
 }

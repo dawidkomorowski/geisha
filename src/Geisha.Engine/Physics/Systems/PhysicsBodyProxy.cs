@@ -11,8 +11,8 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsBodyProxy : IDisposable
 {
-    private readonly RigidBody2D _body;
-    private readonly RigidBody2D_V2 _bodyV2;
+    private readonly RigidBody2D _bodyDeprecated;
+    private readonly RigidBody2D_V2 _body;
 
     private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform, Collider2DComponent collider,
         KinematicRigidBody2DComponent? kinematicBodyComponent)
@@ -25,7 +25,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
         var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
 
-        _body = Collider switch
+        _bodyDeprecated = Collider switch
         {
             CircleColliderComponent circleColliderComponent => physicsScene2D.CreateBody(bodyType, circleColliderComponent.Radius),
             RectangleColliderComponent rectangleColliderComponent => physicsScene2D.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
@@ -33,7 +33,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
-        _bodyV2 = Collider switch
+        _body = Collider switch
         {
             CircleColliderComponent circleColliderComponent => physicsScene2Dv2.CreateBody(bodyType, circleColliderComponent.Radius),
             RectangleColliderComponent rectangleColliderComponent => physicsScene2Dv2.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
@@ -41,7 +41,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
-        _body.Proxy = this;
+        _bodyDeprecated.Proxy = this;
 
         SynchronizeBody();
     }
@@ -64,17 +64,17 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public Collider2DComponent Collider { get; }
     public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
 
-    public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
-    public int ContactCount => _body.Contacts.Count;
+    public AxisAlignedRectangle BoundingRectangle => _bodyDeprecated.BoundingRectangle;
+    public int ContactCount => _bodyDeprecated.Contacts.Count;
 
     public int GetContacts(Span<Contact2D> contacts)
     {
-        var writeCount = Math.Min(_body.Contacts.Count, contacts.Length);
+        var writeCount = Math.Min(_bodyDeprecated.Contacts.Count, contacts.Length);
 
         for (var i = 0; i < writeCount; i++)
         {
-            var contact = _body.Contacts[i];
-            var thisIsBody1 = _body == contact.Body1;
+            var contact = _bodyDeprecated.Contacts[i];
+            var thisIsBody1 = _bodyDeprecated == contact.Body1;
             var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
             Debug.Assert(otherBody.Proxy != null, "otherBody.Proxy != null");
 
@@ -86,7 +86,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
 
                 // Convert local positions to be oriented according to body rotations.
-                thisLocalPosition = (Matrix3x3.CreateRotation(-_body.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
+                thisLocalPosition = (Matrix3x3.CreateRotation(-_bodyDeprecated.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
                 otherLocalPosition = (Matrix3x3.CreateRotation(-otherBody.Rotation) * otherLocalPosition.Homogeneous).ToVector2();
 
                 contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
@@ -100,15 +100,15 @@ internal sealed class PhysicsBodyProxy : IDisposable
         return writeCount;
     }
 
-    public bool ContainsPoint(in Vector2 point) => _body.ContainsPoint(point);
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _body.Overlaps(axisAlignedRectangle);
-    public bool Overlaps(in Circle circle) => _body.Overlaps(circle);
-    public bool Overlaps(in Rectangle rectangle) => _body.Overlaps(rectangle);
+    public bool ContainsPoint(in Vector2 point) => _bodyDeprecated.ContainsPoint(point);
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _bodyDeprecated.Overlaps(axisAlignedRectangle);
+    public bool Overlaps(in Circle circle) => _bodyDeprecated.Overlaps(circle);
+    public bool Overlaps(in Rectangle rectangle) => _bodyDeprecated.Overlaps(rectangle);
 
     public void Dispose()
     {
         Collider.PhysicsBodyProxy = null;
-        _body.Scene.RemoveBody(_body);
+        _bodyDeprecated.Scene.RemoveBody(_bodyDeprecated);
     }
 
     internal void SynchronizeBody()
@@ -120,12 +120,6 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
             _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
             _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
-
-            _bodyV2.Position = Transform.Translation;
-            _bodyV2.Rotation = Transform.Rotation;
-            _bodyV2.LinearVelocity = KinematicBodyComponent.LinearVelocity;
-            _bodyV2.AngularVelocity = KinematicBodyComponent.AngularVelocity;
-            _bodyV2.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
         }
         else
         {
@@ -133,9 +127,6 @@ internal sealed class PhysicsBodyProxy : IDisposable
             {
                 _body.Position = Transform.Translation;
                 _body.Rotation = Transform.Rotation;
-
-                _bodyV2.Position = Transform.Translation;
-                _bodyV2.Rotation = Transform.Rotation;
             }
             else
             {
@@ -143,17 +134,10 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 var finalTransform = finalMatrix.ToTransform();
                 _body.Position = finalTransform.Translation;
                 _body.Rotation = finalTransform.Rotation;
-
-                _bodyV2.Position = finalTransform.Translation;
-                _bodyV2.Rotation = finalTransform.Rotation;
             }
 
-            if (_body.ColliderType is ColliderType.Tile)
+            if (_bodyDeprecated.ColliderType is ColliderType.Tile)
             {
-                Transform.Translation = _bodyV2.Position;
-                Transform.Rotation = _bodyV2.Rotation;
-                Transform.Scale = Vector2.One; // Tile collider does not support scaling.
-
                 Transform.Translation = _body.Position;
                 Transform.Rotation = _body.Rotation;
                 Transform.Scale = Vector2.One; // Tile collider does not support scaling.
@@ -165,24 +149,16 @@ internal sealed class PhysicsBodyProxy : IDisposable
         _body.CollisionLayer = Collider.CollisionLayer.Value;
         _body.CollisionMask = Collider.CollisionMask.Value;
 
-        _bodyV2.EnableCollisionDetection = Collider.Enabled;
-        _bodyV2.IsSensor = Collider.IsSensor;
-        _bodyV2.CollisionLayer = Collider.CollisionLayer.Value;
-        _bodyV2.CollisionMask = Collider.CollisionMask.Value;
-
         switch (Collider)
         {
             case CircleColliderComponent circleColliderComponent:
                 _body.SetCircleCollider(circleColliderComponent.Radius);
-                _bodyV2.SetCircleCollider(circleColliderComponent.Radius);
                 break;
             case RectangleColliderComponent rectangleColliderComponent:
                 _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
-                _bodyV2.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
                 break;
             case TileColliderComponent:
                 _body.SetTileCollider();
-                _bodyV2.SetTileCollider();
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
@@ -192,11 +168,6 @@ internal sealed class PhysicsBodyProxy : IDisposable
     internal void SynchronizeComponents()
     {
         if (KinematicBodyComponent is null) return;
-
-        Transform.Translation = _bodyV2.Position;
-        Transform.Rotation = _bodyV2.Rotation;
-        KinematicBodyComponent.LinearVelocity = _bodyV2.LinearVelocity;
-        KinematicBodyComponent.AngularVelocity = _bodyV2.AngularVelocity;
 
         Transform.Translation = _body.Position;
         Transform.Rotation = _body.Rotation;

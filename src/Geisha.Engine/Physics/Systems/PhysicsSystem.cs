@@ -283,7 +283,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             proxy.SynchronizeBody();
         }
 
-        PhysicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
+        _physicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
 
         foreach (var proxy in physicsBodyProxies)
         {
