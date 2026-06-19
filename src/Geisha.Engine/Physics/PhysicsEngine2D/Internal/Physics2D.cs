@@ -181,22 +181,93 @@ internal static class Physics2D
             body.CollisionMask = collisionMask;
         }
 
+        public static AxisAlignedRectangle GetBoundingRectangle(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.BoundingRectangle;
+        }
+
         public static void SetCircleCollider(RigidBodyId id, double radius)
         {
             ref var body = ref GetBodyData(id);
+
             // TODO: Implement actual logic.
+
+            if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
+            {
+                //Scene.TileMap.RemoveTile(this);
+            }
+
+            body.ColliderType = ColliderType.Circle;
+            body.CircleColliderRadius = radius;
+            body.RectangleColliderSize = default;
+            body.RecomputeCollider();
         }
 
         public static void SetRectangleCollider(RigidBodyId id, in SizeD size)
         {
             ref var body = ref GetBodyData(id);
             // TODO: Implement actual logic.
+
+            if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
+            {
+                //Scene.TileMap.RemoveTile(this);
+            }
+
+            body.ColliderType = ColliderType.Rectangle;
+            body.CircleColliderRadius = 0;
+            body.RectangleColliderSize = size;
+            body.RecomputeCollider();
         }
 
         public static void SetTileCollider(RigidBodyId id)
         {
             ref var body = ref GetBodyData(id);
             // TODO: Implement actual logic.
+
+            if (body.Type is BodyType.Kinematic)
+            {
+                throw new InvalidOperationException("Kinematic body cannot be Tile collider.");
+            }
+
+            if (body.ColliderType is not ColliderType.Tile)
+            {
+                body.ColliderType = ColliderType.Tile;
+                //body.Position = Scene.TileMap.AlignPosition(_position);
+
+                if (body.EnableCollisionDetection)
+                {
+                    //Scene.TileMap.CreateTile(this);
+                }
+            }
+
+            body.CircleColliderRadius = 0;
+            //body.RectangleColliderSize = Scene.TileSize;
+            body.RecomputeCollider();
+        }
+
+        public static bool ContainsPoint(RigidBodyId id, in Vector2 point)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.ContainsPoint(point);
+        }
+
+        public static bool Overlaps(RigidBodyId id, in AxisAlignedRectangle axisAlignedRectangle)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.Overlaps(axisAlignedRectangle);
+        }
+
+        public static bool Overlaps(RigidBodyId id, in Circle circle)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.Overlaps(circle);
+        }
+
+        public static bool Overlaps(RigidBodyId id, in Rectangle rectangle)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.Overlaps(rectangle);
         }
 
         private static ref RigidBodyData GetBodyData(RigidBodyId id)

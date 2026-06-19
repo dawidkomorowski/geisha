@@ -61,7 +61,14 @@ internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<Rigi
         set => Physics2D.Body.SetCollisionMask(Id, value);
     }
 
+    public AxisAlignedRectangle BoundingRectangle => Physics2D.Body.GetBoundingRectangle(Id);
+
     public void SetCircleCollider(double radius) => Physics2D.Body.SetCircleCollider(Id, radius);
     public void SetRectangleCollider(in SizeD size) => Physics2D.Body.SetRectangleCollider(Id, size);
     public void SetTileCollider() => Physics2D.Body.SetTileCollider(Id);
+
+    public bool ContainsPoint(in Vector2 point) => Physics2D.Body.ContainsPoint(Id, point);
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => Physics2D.Body.Overlaps(Id, axisAlignedRectangle);
+    public bool Overlaps(in Circle circle) => Physics2D.Body.Overlaps(Id, circle);
+    public bool Overlaps(in Rectangle rectangle) => Physics2D.Body.Overlaps(Id, rectangle);
 }

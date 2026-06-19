@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Geisha.Engine.Core;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -71,7 +72,10 @@ internal struct PhysicsSceneData
     {
         var body = new RigidBodyData
         {
+            RuntimeId = RuntimeId.Next(),
             Type = bodyType,
+            CollisionNormalFilter = CollisionNormalFilter.None,
+            EnableCollisionDetection = true,
             CollisionLayer = uint.MaxValue,
             CollisionMask = uint.MaxValue
         };

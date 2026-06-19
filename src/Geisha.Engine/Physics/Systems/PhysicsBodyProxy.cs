@@ -64,7 +64,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public Collider2DComponent Collider { get; }
     public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
 
-    public AxisAlignedRectangle BoundingRectangle => _bodyDeprecated.BoundingRectangle;
+    public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
     public int ContactCount => _bodyDeprecated.Contacts.Count;
 
     public int GetContacts(Span<Contact2D> contacts)
@@ -100,10 +100,10 @@ internal sealed class PhysicsBodyProxy : IDisposable
         return writeCount;
     }
 
-    public bool ContainsPoint(in Vector2 point) => _bodyDeprecated.ContainsPoint(point);
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _bodyDeprecated.Overlaps(axisAlignedRectangle);
-    public bool Overlaps(in Circle circle) => _bodyDeprecated.Overlaps(circle);
-    public bool Overlaps(in Rectangle rectangle) => _bodyDeprecated.Overlaps(rectangle);
+    public bool ContainsPoint(in Vector2 point) => _body.ContainsPoint(point);
+    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _body.Overlaps(axisAlignedRectangle);
+    public bool Overlaps(in Circle circle) => _body.Overlaps(circle);
+    public bool Overlaps(in Rectangle rectangle) => _body.Overlaps(rectangle);
 
     public void Dispose()
     {
