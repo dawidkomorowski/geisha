@@ -9,4 +9,6 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public double Rotation;
 
     public bool EnableCollisionDetection;
+
+    public bool IsSensor;
 }
