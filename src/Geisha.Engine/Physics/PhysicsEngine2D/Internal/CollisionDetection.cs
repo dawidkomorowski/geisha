@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
@@ -11,8 +10,8 @@ internal static class CollisionDetection
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public static void DetectCollisions(ref PhysicsSceneData scene)
     {
-        //sensorOverlapCache.RemoveStale();
-        //sensorOverlapCache.MarkStale();
+        scene.SensorOverlapCache.RemoveStale();
+        scene.SensorOverlapCache.MarkStale();
 
         //foreach (var staticBody in staticBodies)
         //{
@@ -33,11 +32,13 @@ internal static class CollisionDetection
     {
         for (var i = 0; i < scene.KinematicBodyIndices.Count; i++)
         {
-            ref var kinematicBody1 = ref scene.BodiesSpan[i];
+            var body1Index = scene.KinematicBodyIndices[i];
+            ref var kinematicBody1 = ref scene.BodiesSpan[body1Index];
 
             for (var j = i + 1; j < scene.KinematicBodyIndices.Count; j++)
             {
-                ref var kinematicBody2 = ref scene.BodiesSpan[j];
+                var body2Index = scene.KinematicBodyIndices[j];
+                ref var kinematicBody2 = ref scene.BodiesSpan[body2Index];
 
                 if (kinematicBody1.EnableCollisionDetection is false || kinematicBody2.EnableCollisionDetection is false)
                 {
@@ -58,7 +59,7 @@ internal static class CollisionDetection
                 {
                     if (TestOverlap(ref kinematicBody1, ref kinematicBody2))
                     {
-                        //sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
+                        scene.SensorOverlapCache.AddPair(kinematicBody1.Id, kinematicBody2.Id);
                     }
                 }
                 else
@@ -106,7 +107,7 @@ internal static class CollisionDetection
                 {
                     if (TestOverlap(ref kinematicBody, ref staticBody))
                     {
-                        //sensorOverlapCache.AddPair(kinematicBody, staticBody);
+                        scene.SensorOverlapCache.AddPair(kinematicBody.Id, staticBody.Id);
                     }
                 }
                 else

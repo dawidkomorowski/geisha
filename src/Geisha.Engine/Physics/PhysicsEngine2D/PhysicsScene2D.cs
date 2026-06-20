@@ -214,35 +214,35 @@ internal sealed class PhysicsScene2D
 
     private void GenerateEvents()
     {
-        foreach (var sensorOverlap in _sensorOverlapCache.GetOverlaps())
-        {
-            RigidBody2D sensor;
-            RigidBody2D visitor;
+        //foreach (var sensorOverlap in _sensorOverlapCache.GetOverlaps())
+        //{
+        //    RigidBody2D sensor;
+        //    RigidBody2D visitor;
 
-            if (sensorOverlap.Body1.IsSensor)
-            {
-                sensor = sensorOverlap.Body1;
-                visitor = sensorOverlap.Body2;
-            }
-            else
-            {
-                sensor = sensorOverlap.Body2;
-                visitor = sensorOverlap.Body1;
-            }
+        //    if (sensorOverlap.Body1Id.IsSensor)
+        //    {
+        //        sensor = sensorOverlap.Body1Id;
+        //        visitor = sensorOverlap.Body2Id;
+        //    }
+        //    else
+        //    {
+        //        sensor = sensorOverlap.Body2Id;
+        //        visitor = sensorOverlap.Body1Id;
+        //    }
 
-            switch (sensorOverlap.CacheStatus)
-            {
-                case CacheStatus.New:
-                    _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.Begin));
-                    break;
-                case CacheStatus.Updated:
-                    break;
-                case CacheStatus.Stale:
-                    _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.End));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        //    switch (sensorOverlap.CacheStatus)
+        //    {
+        //        case CacheStatus.New:
+        //            _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.Begin));
+        //            break;
+        //        case CacheStatus.Updated:
+        //            break;
+        //        case CacheStatus.Stale:
+        //            _sensorOverlapEvents.Add(new SensorOverlapEvent(sensor, visitor, SensorOverlapEvent.EventType.End));
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
+        //}
     }
 }

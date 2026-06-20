@@ -2,15 +2,15 @@
 
 internal readonly struct SensorOverlapEvent
 {
-    public SensorOverlapEvent(RigidBody2D sensor, RigidBody2D visitor, EventType type)
+    public SensorOverlapEvent(RigidBodyId sensorId, RigidBodyId visitorId, EventType type)
     {
-        Sensor = sensor;
-        Visitor = visitor;
+        SensorId = sensorId;
+        VisitorId = visitorId;
         Type = type;
     }
 
-    public RigidBody2D Sensor { get; }
-    public RigidBody2D Visitor { get; }
+    public RigidBodyId SensorId { get; }
+    public RigidBodyId VisitorId { get; }
     public EventType Type { get; }
 
     public enum EventType

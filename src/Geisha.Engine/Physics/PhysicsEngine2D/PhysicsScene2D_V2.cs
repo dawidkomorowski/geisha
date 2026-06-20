@@ -103,4 +103,6 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
 
     public void QueryOverlap<TQueryHandler>(in Rectangle rectangle, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in rectangle, ref handler);
+
+    public ReadOnlySpan<SensorOverlapEvent> GetSensorOverlapEvents() => Physics2D.Scene.GetSensorOverlapEvents(Id);
 }

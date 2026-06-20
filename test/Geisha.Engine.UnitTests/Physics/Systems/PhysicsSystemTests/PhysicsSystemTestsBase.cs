@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -7,7 +6,6 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Physics.PhysicsEngine2D;
 using Geisha.Engine.Physics.Systems;
 using Geisha.TestUtils;
 using NSubstitute;

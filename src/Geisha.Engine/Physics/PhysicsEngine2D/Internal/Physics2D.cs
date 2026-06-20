@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
@@ -88,6 +89,8 @@ internal static class Physics2D
 
             var deltaTimeSeconds = timeStep.TotalSeconds / substeps;
 
+            ClearEvents(ref scene);
+
             for (var substep = 0; substep < substeps; substep++)
             {
                 KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
@@ -99,6 +102,8 @@ internal static class Physics2D
                 }
 
                 CollisionDetection.DetectCollisions(ref scene);
+
+                GenerateEvents(ref scene);
             }
         }
 
@@ -183,6 +188,53 @@ internal static class Physics2D
                     {
                         return;
                     }
+                }
+            }
+        }
+
+        public static ReadOnlySpan<SensorOverlapEvent> GetSensorOverlapEvents(PhysicsSceneId id)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return CollectionsMarshal.AsSpan(scene.SensorOverlapEvents);
+        }
+
+        private static void ClearEvents(ref PhysicsSceneData scene)
+        {
+            scene.SensorOverlapEvents.Clear();
+        }
+
+        private static void GenerateEvents(ref PhysicsSceneData scene)
+        {
+            foreach (var sensorOverlap in scene.SensorOverlapCache.GetOverlaps())
+            {
+                RigidBodyId sensorId;
+                RigidBodyId visitorId;
+
+                ref var body1 = ref scene.BodiesSpan[sensorOverlap.Body1Id.Index];
+
+                if (body1.IsSensor)
+                {
+                    sensorId = sensorOverlap.Body1Id;
+                    visitorId = sensorOverlap.Body2Id;
+                }
+                else
+                {
+                    sensorId = sensorOverlap.Body2Id;
+                    visitorId = sensorOverlap.Body1Id;
+                }
+
+                switch (sensorOverlap.CacheStatus)
+                {
+                    case CacheStatus.New:
+                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorId, visitorId, SensorOverlapEvent.EventType.Begin));
+                        break;
+                    case CacheStatus.Updated:
+                        break;
+                    case CacheStatus.Stale:
+                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorId, visitorId, SensorOverlapEvent.EventType.End));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }

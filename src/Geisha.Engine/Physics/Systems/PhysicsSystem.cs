@@ -451,13 +451,10 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     private void InvokeEventCallbacks()
     {
-        foreach (var sensorOverlapEvent in PhysicsScene2D.GetSensorOverlapEvents())
+        foreach (var sensorOverlapEvent in _physicsScene2D.GetSensorOverlapEvents())
         {
-            var proxy1 = sensorOverlapEvent.Sensor.Proxy;
-            var proxy2 = sensorOverlapEvent.Visitor.Proxy;
-
-            Debug.Assert(proxy1 is not null);
-            Debug.Assert(proxy2 is not null);
+            var proxy1 = _physicsSystemState.GetProxyById(sensorOverlapEvent.SensorId);
+            var proxy2 = _physicsSystemState.GetProxyById(sensorOverlapEvent.VisitorId);
 
             var collider1 = proxy1.Collider;
             var collider2 = proxy2.Collider;

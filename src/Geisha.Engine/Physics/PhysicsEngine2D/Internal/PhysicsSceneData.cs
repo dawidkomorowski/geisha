@@ -28,7 +28,9 @@ internal struct PhysicsSceneData
             TileMap = new TileMap(sceneDefinition.TileSize),
             Bodies = new List<RigidBodyData>(),
             StaticBodyIndices = new List<int>(),
-            KinematicBodyIndices = new List<int>()
+            KinematicBodyIndices = new List<int>(),
+            SensorOverlapCache = new SensorOverlapCache(256),
+            SensorOverlapEvents = new List<SensorOverlapEvent>(256)
         };
 
         Scenes.Add(scene);
@@ -73,6 +75,9 @@ internal struct PhysicsSceneData
     public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(Bodies);
     public List<int> StaticBodyIndices;
     public List<int> KinematicBodyIndices;
+
+    public SensorOverlapCache SensorOverlapCache;
+    public List<SensorOverlapEvent> SensorOverlapEvents;
 
     public RigidBodyId CreateBody(BodyType bodyType)
     {

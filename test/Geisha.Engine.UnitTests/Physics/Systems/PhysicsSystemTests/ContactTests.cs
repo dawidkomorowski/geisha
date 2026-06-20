@@ -1,11 +1,11 @@
-﻿using Geisha.Engine.Core.Collections;
-using Geisha.Engine.Core.Math;
-using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Physics;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics;
+using Geisha.Engine.Physics.Components;
+using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
