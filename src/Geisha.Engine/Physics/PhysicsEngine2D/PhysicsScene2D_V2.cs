@@ -1,15 +1,24 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 using Geisha.Engine.Physics.PhysicsEngine2D.Internal;
-using System;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
+internal readonly record struct PhysicsScene2DDefinition
+{
+    public SizeD TileSize { get; init; }
+    public int Substeps { get; init; }
+    public int VelocityIterations { get; init; }
+    public int PositionIterations { get; init; }
+    public double PenetrationTolerance { get; init; }
+}
+
 internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2>, IDisposable
 {
-    public static PhysicsScene2D_V2 Create()
+    public static PhysicsScene2D_V2 Create(in PhysicsScene2DDefinition sceneDefinition)
     {
-        var id = Physics2D.Scene.Create();
+        var id = Physics2D.Scene.Create(sceneDefinition);
         return new PhysicsScene2D_V2(id);
     }
 

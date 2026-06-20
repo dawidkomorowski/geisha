@@ -1,7 +1,7 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
-using System;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 

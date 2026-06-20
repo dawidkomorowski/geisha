@@ -1,5 +1,5 @@
-﻿using Geisha.Engine.Core.Math;
-using System;
+﻿using System;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -7,9 +7,9 @@ internal static class Physics2D
 {
     public static class Scene
     {
-        public static PhysicsSceneId Create()
+        public static PhysicsSceneId Create(in PhysicsScene2DDefinition sceneDefinition)
         {
-            return PhysicsSceneData.Create();
+            return PhysicsSceneData.Create(sceneDefinition);
         }
 
         public static int GetSubsteps(PhysicsSceneId id)
@@ -307,7 +307,8 @@ internal static class Physics2D
 
         public static void SetTileCollider(RigidBodyId id)
         {
-            ref var body = ref GetBodyData(id);
+            ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
+            ref var body = ref scene.GetBodyData(id);
             // TODO: Implement actual logic.
 
             if (body.Type is BodyType.Kinematic)
@@ -327,7 +328,7 @@ internal static class Physics2D
             }
 
             body.CircleColliderRadius = 0;
-            //body.RectangleColliderSize = Scene.TileSize;
+            body.RectangleColliderSize = scene.TileSize;
             body.RecomputeCollider();
         }
 

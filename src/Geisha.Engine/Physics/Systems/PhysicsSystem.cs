@@ -65,11 +65,16 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             PenetrationTolerance = physicsConfiguration.PenetrationTolerance
         };
 
-        _physicsScene2D = PhysicsScene2D_V2.Create();
-        _physicsScene2D.Substeps = physicsConfiguration.Substeps;
-        _physicsScene2D.VelocityIterations = physicsConfiguration.VelocityIterations;
-        _physicsScene2D.PositionIterations = physicsConfiguration.PositionIterations;
-        _physicsScene2D.PenetrationTolerance = physicsConfiguration.PenetrationTolerance;
+        var sceneDefinition = new PhysicsScene2DDefinition
+        {
+            TileSize = physicsConfiguration.TileSize,
+            Substeps = physicsConfiguration.Substeps,
+            VelocityIterations = physicsConfiguration.VelocityIterations,
+            PositionIterations = physicsConfiguration.PositionIterations,
+            PenetrationTolerance = physicsConfiguration.PenetrationTolerance
+        };
+
+        _physicsScene2D = PhysicsScene2D_V2.Create(sceneDefinition);
 
         _physicsSystemState = new PhysicsSystemState(PhysicsScene2D, _physicsScene2D);
     }

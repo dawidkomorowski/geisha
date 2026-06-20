@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -10,25 +11,26 @@ internal struct PhysicsSceneData
     private static readonly List<PhysicsSceneData> Scenes = new();
     private static Span<PhysicsSceneData> ScenesSpan => CollectionsMarshal.AsSpan(Scenes);
 
-    public static PhysicsSceneId Create()
+    public static PhysicsSceneId Create(in PhysicsScene2DDefinition sceneDefinition)
     {
-        var context = new PhysicsSceneData
+        var scene = new PhysicsSceneData
         {
             Index = Scenes.Count,
             Version = 1,
             SimulationParameters = new SimulationParameters
             {
-                Substeps = 1,
-                VelocityIterations = 4,
-                PositionIterations = 4,
-                PenetrationTolerance = 0.01
+                Substeps = sceneDefinition.Substeps > 0 ? sceneDefinition.Substeps : 1,
+                VelocityIterations = sceneDefinition.VelocityIterations > 0 ? sceneDefinition.VelocityIterations : 4,
+                PositionIterations = sceneDefinition.PositionIterations > 0 ? sceneDefinition.PositionIterations : 4,
+                PenetrationTolerance = sceneDefinition.PenetrationTolerance >= 0 ? sceneDefinition.PenetrationTolerance : 0.01
             },
+            TileSize = sceneDefinition.TileSize,
             Bodies = new List<RigidBodyData>(),
             StaticBodyIndices = new List<int>(),
             KinematicBodyIndices = new List<int>()
         };
 
-        Scenes.Add(context);
+        Scenes.Add(scene);
 
         if (Scenes.Count > 2000)
         {
@@ -37,7 +39,7 @@ internal struct PhysicsSceneData
             throw new InvalidOperationException();
         }
 
-        return context.PhysicsSceneId;
+        return scene.PhysicsSceneId;
     }
 
     public static void Destroy(PhysicsSceneId id)
@@ -62,6 +64,8 @@ internal struct PhysicsSceneData
     public int Version;
 
     public SimulationParameters SimulationParameters;
+
+    public SizeD TileSize;
 
     public List<RigidBodyData> Bodies;
     public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(Bodies);

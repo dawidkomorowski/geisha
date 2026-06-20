@@ -1,7 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
