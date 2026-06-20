@@ -453,6 +453,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     {
         foreach (var sensorOverlapEvent in _physicsScene2D.GetSensorOverlapEvents())
         {
+            // TODO: Throws when events are dispatched for a removed proxy.
             var proxy1 = _physicsSystemState.GetProxyById(sensorOverlapEvent.SensorId);
             var proxy2 = _physicsSystemState.GetProxyById(sensorOverlapEvent.VisitorId);
 
