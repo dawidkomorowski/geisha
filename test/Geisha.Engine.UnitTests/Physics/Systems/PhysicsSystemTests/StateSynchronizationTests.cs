@@ -2,6 +2,7 @@
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
@@ -63,8 +64,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
             collider1.SynchronizePhysicsState();
             entity2.GetComponent<RectangleColliderComponent>().SynchronizePhysicsState();
 
-            var body1 = GetBodyForEntity(physicsSystem, entity1);
-            var body2 = GetBodyForEntity(physicsSystem, entity2);
+            var body1 = physicsSystem.FindInternalBody(entity1);
+            var body2 = physicsSystem.FindInternalBody(entity2);
 
             Assert.That(body1.Position, Is.EqualTo(new Vector2(0, 0)));
             Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
@@ -318,9 +319,9 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         // Assume
         PerformSynchronization(physicsSystem);
 
-        var body1 = GetBodyForEntity(physicsSystem, entity1);
-        var body2 = GetBodyForEntity(physicsSystem, entity2);
-        var body3 = GetBodyForEntity(physicsSystem, entity3);
+        var body1 = physicsSystem.FindInternalBody(entity1);
+        var body2 = physicsSystem.FindInternalBody(entity2);
+        var body3 = physicsSystem.FindInternalBody(entity3);
 
         Assert.That(body1.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body1.ColliderType, Is.EqualTo(ColliderType.Rectangle));

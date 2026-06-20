@@ -6,6 +6,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
+using Geisha.Engine.Physics.Systems;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -204,7 +205,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
     }
 
@@ -232,7 +233,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
     }
 
@@ -259,7 +260,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
 
         // Act
@@ -297,7 +298,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
 
         // Act
@@ -336,7 +337,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
 
         // Act 1
@@ -408,7 +409,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
 
         // Act 1
@@ -485,7 +486,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
     }
 
@@ -516,7 +517,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
 
         // Act
@@ -554,7 +555,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
 
         // Act
@@ -593,7 +594,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var body = GetBodyForEntity(physicsSystem, entity);
+        var body = physicsSystem.FindInternalBody(entity);
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
 
         // Act 1
@@ -660,7 +661,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        var enabledBody = GetBodyForEntity(physicsSystem, enabledTile);
+        var enabledBody = physicsSystem.FindInternalBody(enabledTile);
         Assert.That(enabledBody.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
 
         // Act
