@@ -55,9 +55,9 @@ internal sealed class RigidBody2D
         {
             if (ColliderType is ColliderType.Tile)
             {
-                _position = EnableCollisionDetection
-                    ? Scene.TileMap.UpdateTile(this, _position, value)
-                    : Scene.TileMap.AlignPosition(value);
+                //_position = EnableCollisionDetection
+                //    ? Scene.TileMap.UpdateTile(this, _position, value)
+                //    : Scene.TileMap.AlignPosition(value);
             }
             else
             {
@@ -107,14 +107,14 @@ internal sealed class RigidBody2D
         {
             if (_enableCollisionDetection != value && ColliderType is ColliderType.Tile)
             {
-                if (value)
-                {
-                    Scene.TileMap.CreateTile(this);
-                }
-                else
-                {
-                    Scene.TileMap.RemoveTile(this);
-                }
+                //if (value)
+                //{
+                //    Scene.TileMap.CreateTile(this);
+                //}
+                //else
+                //{
+                //    Scene.TileMap.RemoveTile(this);
+                //}
             }
 
             _enableCollisionDetection = value;
@@ -144,7 +144,7 @@ internal sealed class RigidBody2D
     {
         if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
         {
-            Scene.TileMap.RemoveTile(this);
+            //Scene.TileMap.RemoveTile(this);
         }
 
         ColliderType = ColliderType.Circle;
@@ -157,7 +157,7 @@ internal sealed class RigidBody2D
     {
         if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
         {
-            Scene.TileMap.RemoveTile(this);
+            //Scene.TileMap.RemoveTile(this);
         }
 
         ColliderType = ColliderType.Rectangle;
@@ -180,7 +180,7 @@ internal sealed class RigidBody2D
 
             if (EnableCollisionDetection)
             {
-                Scene.TileMap.CreateTile(this);
+                //Scene.TileMap.CreateTile(this);
             }
         }
 

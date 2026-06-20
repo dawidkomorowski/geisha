@@ -25,6 +25,7 @@ internal struct PhysicsSceneData
                 PenetrationTolerance = sceneDefinition.PenetrationTolerance >= 0 ? sceneDefinition.PenetrationTolerance : 0.01
             },
             TileSize = sceneDefinition.TileSize,
+            TileMap = new TileMap(sceneDefinition.TileSize),
             Bodies = new List<RigidBodyData>(),
             StaticBodyIndices = new List<int>(),
             KinematicBodyIndices = new List<int>()
@@ -66,6 +67,7 @@ internal struct PhysicsSceneData
     public SimulationParameters SimulationParameters;
 
     public SizeD TileSize;
+    public TileMap TileMap;
 
     public List<RigidBodyData> Bodies;
     public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(Bodies);

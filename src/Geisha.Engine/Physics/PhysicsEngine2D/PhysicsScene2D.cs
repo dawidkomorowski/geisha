@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
@@ -54,7 +55,7 @@ internal sealed class PhysicsScene2D
     {
         if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
         {
-            TileMap.RemoveTile(body);
+            //TileMap.RemoveTile(body);
         }
 
         switch (body.Type)
