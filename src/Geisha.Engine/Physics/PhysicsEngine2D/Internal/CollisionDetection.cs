@@ -2,43 +2,42 @@
 using System.Runtime.CompilerServices;
 using Geisha.Engine.Core.Math;
 
-namespace Geisha.Engine.Physics.PhysicsEngine2D;
+namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 // Watch out with refactoring this class! It is performance critical and should be kept as fast as possible.
 // Trivial refactorings like combining methods or extracting methods can have a significant impact on performance.
 internal static class CollisionDetection
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public static void DetectCollisions(ReadOnlySpan<RigidBody2D> staticBodies, ReadOnlySpan<RigidBody2D> kinematicBodies,
-        SensorOverlapCache sensorOverlapCache)
+    public static void DetectCollisions(ref PhysicsSceneData scene)
     {
-        sensorOverlapCache.RemoveStale();
-        sensorOverlapCache.MarkStale();
+        //sensorOverlapCache.RemoveStale();
+        //sensorOverlapCache.MarkStale();
 
-        foreach (var staticBody in staticBodies)
-        {
-            staticBody.Contacts.Clear();
-        }
+        //foreach (var staticBody in staticBodies)
+        //{
+        //    staticBody.Contacts.Clear();
+        //}
 
-        foreach (var kinematicBody in kinematicBodies)
-        {
-            kinematicBody.Contacts.Clear();
-        }
+        //foreach (var kinematicBody in kinematicBodies)
+        //{
+        //    kinematicBody.Contacts.Clear();
+        //}
 
-        DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies, sensorOverlapCache);
-        DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies, sensorOverlapCache);
+        DetectCollisions_Kinematic_Vs_Kinematic(ref scene);
+        DetectCollisions_Kinematic_Vs_Static(ref scene);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void DetectCollisions_Kinematic_Vs_Kinematic(ReadOnlySpan<RigidBody2D> kinematicBodies, SensorOverlapCache sensorOverlapCache)
+    private static void DetectCollisions_Kinematic_Vs_Kinematic(ref PhysicsSceneData scene)
     {
-        for (var i = 0; i < kinematicBodies.Length; i++)
+        for (var i = 0; i < scene.KinematicBodyIndices.Count; i++)
         {
-            var kinematicBody1 = kinematicBodies[i];
+            ref var kinematicBody1 = ref scene.BodiesSpan[i];
 
-            for (var j = i + 1; j < kinematicBodies.Length; j++)
+            for (var j = i + 1; j < scene.KinematicBodyIndices.Count; j++)
             {
-                var kinematicBody2 = kinematicBodies[j];
+                ref var kinematicBody2 = ref scene.BodiesSpan[j];
 
                 if (kinematicBody1.EnableCollisionDetection is false || kinematicBody2.EnableCollisionDetection is false)
                 {
@@ -50,27 +49,27 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if (!TestAABB(kinematicBody1, kinematicBody2))
+                if (!TestAABB(ref kinematicBody1, ref kinematicBody2))
                 {
                     continue;
                 }
 
                 if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
                 {
-                    if (TestOverlap(kinematicBody1, kinematicBody2))
+                    if (TestOverlap(ref kinematicBody1, ref kinematicBody2))
                     {
-                        sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
+                        //sensorOverlapCache.AddPair(kinematicBody1, kinematicBody2);
                     }
                 }
                 else
                 {
-                    var (overlap, mtv) = TestOverlapWithMtv(kinematicBody1, kinematicBody2);
+                    var (overlap, mtv) = TestOverlapWithMtv(ref kinematicBody1, ref kinematicBody2);
 
                     if (overlap)
                     {
-                        var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, mtv);
-                        kinematicBody1.Contacts.Add(contact);
-                        kinematicBody2.Contacts.Add(contact);
+                        //var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, mtv);
+                        //kinematicBody1.Contacts.Add(contact);
+                        //kinematicBody2.Contacts.Add(contact);
                     }
                 }
             }
@@ -78,13 +77,16 @@ internal static class CollisionDetection
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void DetectCollisions_Kinematic_Vs_Static(ReadOnlySpan<RigidBody2D> kinematicBodies, ReadOnlySpan<RigidBody2D> staticBodies,
-        SensorOverlapCache sensorOverlapCache)
+    private static void DetectCollisions_Kinematic_Vs_Static(ref PhysicsSceneData scene)
     {
-        foreach (var kinematicBody in kinematicBodies)
+        foreach (var kinematicBodyIndex in scene.KinematicBodyIndices)
         {
-            foreach (var staticBody in staticBodies)
+            ref var kinematicBody = ref scene.BodiesSpan[kinematicBodyIndex];
+
+            foreach (var staticBodyIndex in scene.StaticBodyIndices)
             {
+                ref var staticBody = ref scene.BodiesSpan[staticBodyIndex];
+
                 if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
                 {
                     continue;
@@ -95,27 +97,27 @@ internal static class CollisionDetection
                     continue;
                 }
 
-                if (!TestAABB(kinematicBody, staticBody))
+                if (!TestAABB(ref kinematicBody, ref staticBody))
                 {
                     continue;
                 }
 
                 if (kinematicBody.IsSensor || staticBody.IsSensor)
                 {
-                    if (TestOverlap(kinematicBody, staticBody))
+                    if (TestOverlap(ref kinematicBody, ref staticBody))
                     {
-                        sensorOverlapCache.AddPair(kinematicBody, staticBody);
+                        //sensorOverlapCache.AddPair(kinematicBody, staticBody);
                     }
                 }
                 else
                 {
-                    var (overlap, mtv) = TestOverlapWithMtv(kinematicBody, staticBody);
+                    var (overlap, mtv) = TestOverlapWithMtv(ref kinematicBody, ref staticBody);
 
                     if (overlap)
                     {
-                        var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
-                        kinematicBody.Contacts.Add(contact);
-                        staticBody.Contacts.Add(contact);
+                        //var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
+                        //kinematicBody.Contacts.Add(contact);
+                        //staticBody.Contacts.Add(contact);
                     }
                 }
             }
@@ -125,13 +127,13 @@ internal static class CollisionDetection
     // This method is not part of TestOverlap because doing so breaks inlining and optimization of the method.
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     // ReSharper disable once InconsistentNaming
-    private static bool TestAABB(RigidBody2D body1, RigidBody2D body2)
+    private static bool TestAABB(ref RigidBodyData body1, ref RigidBodyData body2)
     {
         return body1.BoundingRectangle.Overlaps(body2.BoundingRectangle);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static bool TestOverlap(RigidBody2D body1, RigidBody2D body2)
+    private static bool TestOverlap(ref RigidBodyData body1, ref RigidBodyData body2)
     {
         var overlap = false;
 
@@ -164,7 +166,7 @@ internal static class CollisionDetection
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static (bool overlap, MinimumTranslationVector mtv) TestOverlapWithMtv(RigidBody2D body1, RigidBody2D body2)
+    private static (bool overlap, MinimumTranslationVector mtv) TestOverlapWithMtv(ref RigidBodyData body1, ref RigidBodyData body2)
     {
         var overlap = false;
         var mtv = new MinimumTranslationVector();

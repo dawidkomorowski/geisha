@@ -91,6 +91,14 @@ internal static class Physics2D
             for (var substep = 0; substep < substeps; substep++)
             {
                 KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
+
+                foreach (var index in scene.KinematicBodyIndices)
+                {
+                    ref var body = ref scene.BodiesSpan[index];
+                    body.RecomputeCollider();
+                }
+
+                CollisionDetection.DetectCollisions(ref scene);
             }
         }
 

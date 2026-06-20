@@ -98,7 +98,7 @@ internal sealed class PhysicsScene2D
                 kinematicBody.RecomputeCollider();
             }
 
-            CollisionDetection.DetectCollisions(staticBodies, kinematicBodies, _sensorOverlapCache);
+            //CollisionDetection.DetectCollisions(staticBodies, kinematicBodies, _sensorOverlapCache);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
