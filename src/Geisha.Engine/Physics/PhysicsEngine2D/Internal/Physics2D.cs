@@ -17,10 +17,10 @@ internal static class Physics2D
             throw new NotImplementedException();
         }
 
-        public static void SetSubsteps(PhysicsSceneId id, int substeps)
+        public static void SetSubsteps(PhysicsSceneId id, int value)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            scene.SimulationParameters.Substeps = substeps;
+            scene.SimulationParameters.Substeps = value;
         }
 
         public static int GetVelocityIterations(PhysicsSceneId id)
@@ -28,10 +28,10 @@ internal static class Physics2D
             throw new NotImplementedException();
         }
 
-        public static void SetVelocityIterations(PhysicsSceneId id, int velocityIterations)
+        public static void SetVelocityIterations(PhysicsSceneId id, int value)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            scene.SimulationParameters.VelocityIterations = velocityIterations;
+            scene.SimulationParameters.VelocityIterations = value;
         }
 
         public static int GetPositionIterations(PhysicsSceneId id)
@@ -39,10 +39,10 @@ internal static class Physics2D
             throw new NotImplementedException();
         }
 
-        public static void SetPositionIterations(PhysicsSceneId id, int positionIterations)
+        public static void SetPositionIterations(PhysicsSceneId id, int value)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            scene.SimulationParameters.PositionIterations = positionIterations;
+            scene.SimulationParameters.PositionIterations = value;
         }
 
         public static double GetPenetrationTolerance(PhysicsSceneId id)
@@ -50,10 +50,10 @@ internal static class Physics2D
             throw new NotImplementedException();
         }
 
-        public static void SetPenetrationTolerance(PhysicsSceneId id, double penetrationTolerance)
+        public static void SetPenetrationTolerance(PhysicsSceneId id, double value)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            scene.SimulationParameters.PenetrationTolerance = penetrationTolerance;
+            scene.SimulationParameters.PenetrationTolerance = value;
         }
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
@@ -200,7 +200,7 @@ internal static class Physics2D
             return body.Position;
         }
 
-        public static void SetPosition(RigidBodyId id, in Vector2 position)
+        public static void SetPosition(RigidBodyId id, in Vector2 value)
         {
             ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
             ref var body = ref scene.GetBodyData(id);
@@ -208,12 +208,12 @@ internal static class Physics2D
             if (body.ColliderType is ColliderType.Tile)
             {
                 body.Position = body.EnableCollisionDetection
-                    ? scene.TileMap.UpdateTile(ref body, body.Position, position)
-                    : scene.TileMap.AlignPosition(position);
+                    ? scene.TileMap.UpdateTile(ref body, body.Position, value)
+                    : scene.TileMap.AlignPosition(value);
             }
             else
             {
-                body.Position = position;
+                body.Position = value;
             }
         }
 
@@ -223,10 +223,10 @@ internal static class Physics2D
             return body.Rotation;
         }
 
-        public static void SetRotation(RigidBodyId id, double rotation)
+        public static void SetRotation(RigidBodyId id, double value)
         {
             ref var body = ref GetBodyData(id);
-            body.Rotation = body.ColliderType is ColliderType.Tile ? 0 : rotation;
+            body.Rotation = body.ColliderType is ColliderType.Tile ? 0 : value;
         }
 
         public static Vector2 GetLinearVelocity(RigidBodyId id)
@@ -235,7 +235,7 @@ internal static class Physics2D
             return body.LinearVelocity;
         }
 
-        public static void SetLinearVelocity(RigidBodyId id, in Vector2 linearVelocity)
+        public static void SetLinearVelocity(RigidBodyId id, in Vector2 value)
         {
             ref var body = ref GetBodyData(id);
 
@@ -244,7 +244,7 @@ internal static class Physics2D
                 return;
             }
 
-            body.LinearVelocity = linearVelocity;
+            body.LinearVelocity = value;
         }
 
         public static double GetAngularVelocity(RigidBodyId id)
@@ -253,7 +253,7 @@ internal static class Physics2D
             return body.AngularVelocity;
         }
 
-        public static void SetAngularVelocity(RigidBodyId id, double angularVelocity)
+        public static void SetAngularVelocity(RigidBodyId id, double value)
         {
             ref var body = ref GetBodyData(id);
 
@@ -262,9 +262,9 @@ internal static class Physics2D
                 return;
             }
 
-            body.AngularVelocity = angularVelocity;
+            body.AngularVelocity = value;
 
-            body.AngularVelocity = angularVelocity;
+            body.AngularVelocity = value;
         }
 
         public static bool GetEnableCollisionDetection(RigidBodyId id)
@@ -273,14 +273,14 @@ internal static class Physics2D
             return body.EnableCollisionDetection;
         }
 
-        public static void SetEnableCollisionDetection(RigidBodyId id, bool enableCollisionDetection)
+        public static void SetEnableCollisionDetection(RigidBodyId id, bool value)
         {
             ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
             ref var body = ref scene.GetBodyData(id);
 
-            if (body.EnableCollisionDetection != enableCollisionDetection && body.ColliderType is ColliderType.Tile)
+            if (body.EnableCollisionDetection != value && body.ColliderType is ColliderType.Tile)
             {
-                if (enableCollisionDetection)
+                if (value)
                 {
                     scene.TileMap.CreateTile(ref body);
                 }
@@ -290,7 +290,7 @@ internal static class Physics2D
                 }
             }
 
-            body.EnableCollisionDetection = enableCollisionDetection;
+            body.EnableCollisionDetection = value;
         }
 
         public static bool GetEnableCollisionResponse(RigidBodyId id)
@@ -299,28 +299,28 @@ internal static class Physics2D
             return body.EnableCollisionResponse;
         }
 
-        public static void SetEnableCollisionResponse(RigidBodyId id, bool enableCollisionResponse)
+        public static void SetEnableCollisionResponse(RigidBodyId id, bool value)
         {
             ref var body = ref GetBodyData(id);
-            body.EnableCollisionResponse = enableCollisionResponse;
+            body.EnableCollisionResponse = value;
         }
 
-        public static void SetIsSensor(RigidBodyId id, bool isSensor)
+        public static void SetIsSensor(RigidBodyId id, bool value)
         {
             ref var body = ref GetBodyData(id);
-            body.IsSensor = isSensor;
+            body.IsSensor = value;
         }
 
-        public static void SetCollisionLayer(RigidBodyId id, uint collisionLayer)
+        public static void SetCollisionLayer(RigidBodyId id, uint value)
         {
             ref var body = ref GetBodyData(id);
-            body.CollisionLayer = collisionLayer;
+            body.CollisionLayer = value;
         }
 
-        public static void SetCollisionMask(RigidBodyId id, uint collisionMask)
+        public static void SetCollisionMask(RigidBodyId id, uint value)
         {
             ref var body = ref GetBodyData(id);
-            body.CollisionMask = collisionMask;
+            body.CollisionMask = value;
         }
 
         public static SizeD GetRectangleColliderSize(RigidBodyId id)
