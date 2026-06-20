@@ -87,6 +87,91 @@ internal static class Physics2D
                 KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
             }
         }
+
+        //public static void QueryPoint<TQueryHandler>(PhysicsSceneId id, in Vector2 point, ref TQueryHandler handler)
+        //    where TQueryHandler : struct, IRigidBodyQueryHandler
+        //{
+        //    ref var scene = ref PhysicsSceneData.Get(id);
+
+        //    foreach (ref var body in scene.BodiesSpan)
+        //    {
+        //        if (body.ContainsPoint(point))
+        //        {
+        //            if (!handler.Handle(body))
+        //            {
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
+
+        //public static void QueryBounds<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        //    where TQueryHandler : struct, IRigidBodyQueryHandler
+        //{
+        //    ref var scene = ref PhysicsSceneData.Get(id);
+
+        //    foreach (ref var body in scene.BodiesSpan)
+        //    {
+        //        if (body.BoundingRectangle.Overlaps(axisAlignedRectangle))
+        //        {
+        //            if (!handler.Handle(body))
+        //            {
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
+
+        //public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        //    where TQueryHandler : struct, IRigidBodyQueryHandler
+        //{
+        //    ref var scene = ref PhysicsSceneData.Get(id);
+
+        //    foreach (ref var body in scene.BodiesSpan)
+        //    {
+        //        if (body.Overlaps(axisAlignedRectangle))
+        //        {
+        //            if (!handler.Handle(body))
+        //            {
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
+
+        //public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in Circle circle, ref TQueryHandler handler)
+        //    where TQueryHandler : struct, IRigidBodyQueryHandler
+        //{
+        //    ref var scene = ref PhysicsSceneData.Get(id);
+
+        //    foreach (ref var body in scene.BodiesSpan)
+        //    {
+        //        if (body.Overlaps(circle))
+        //        {
+        //            if (!handler.Handle(body))
+        //            {
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
+
+        //public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in Rectangle rectangle, ref TQueryHandler handler)
+        //    where TQueryHandler : struct, IRigidBodyQueryHandler
+        //{
+        //    ref var scene = ref PhysicsSceneData.Get(id);
+
+        //    foreach (ref var body in scene.BodiesSpan)
+        //    {
+        //        if (body.Overlaps(rectangle))
+        //        {
+        //            if (!handler.Handle(body))
+        //            {
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     public static class Body
