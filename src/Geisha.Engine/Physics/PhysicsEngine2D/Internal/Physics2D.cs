@@ -74,6 +74,12 @@ internal static class Physics2D
             return scene.CreateBody(BodyType.Static);
         }
 
+        public static void DestroyBody(RigidBodyId id)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
+            scene.DestroyBody(id);
+        }
+
         public static void Simulate(PhysicsSceneId id, TimeSpan timeStep)
         {
             ref var scene = ref PhysicsSceneData.Get(id);

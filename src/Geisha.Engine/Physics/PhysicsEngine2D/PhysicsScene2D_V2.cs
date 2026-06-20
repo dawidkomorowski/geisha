@@ -24,6 +24,7 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
 
     public void Dispose()
     {
+        // TODO: Does it make sense to implement IDisposable? Or maybe some other type of API?
         throw new NotImplementedException();
     }
 
@@ -74,6 +75,16 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
     {
         var id = Physics2D.Scene.CreateTileBody(Id);
         return new RigidBody2D_V2(id);
+    }
+
+    public void DestroyBody(RigidBody2D_V2 body)
+    {
+        if (Id != body.Id.PhysicsSceneId)
+        {
+            throw new ArgumentException("Body does not belong to this scene.");
+        }
+
+        Physics2D.Scene.DestroyBody(body.Id);
     }
 
     public void Simulate(TimeSpan timeStep) => Physics2D.Scene.Simulate(Id, timeStep);

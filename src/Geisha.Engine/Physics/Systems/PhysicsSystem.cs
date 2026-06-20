@@ -18,8 +18,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 {
     private readonly ITimeSystem _timeSystem;
     private readonly IDebugRenderer _debugRenderer;
-    private readonly PhysicsSystemState _physicsSystemState;
     private readonly PhysicsScene2D_V2 _physicsScene2D;
+    private readonly PhysicsSystemState _physicsSystemState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, ITimeSystem timeSystem, IDebugRenderer debugRenderer)
     {

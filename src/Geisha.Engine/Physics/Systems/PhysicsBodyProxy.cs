@@ -12,6 +12,7 @@ namespace Geisha.Engine.Physics.Systems;
 internal sealed class PhysicsBodyProxy : IDisposable
 {
     private readonly RigidBody2D _bodyDeprecated;
+    private readonly PhysicsScene2D_V2 _physicsScene;
     private readonly RigidBody2D_V2 _body;
 
     private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform, Collider2DComponent collider,
@@ -22,6 +23,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
         KinematicBodyComponent = kinematicBodyComponent;
 
         Collider.PhysicsBodyProxy = this;
+
+        _physicsScene = physicsScene2Dv2;
 
         var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
 
@@ -111,7 +114,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public void Dispose()
     {
         Collider.PhysicsBodyProxy = null;
-        _bodyDeprecated.Scene.RemoveBody(_bodyDeprecated);
+        _physicsScene.DestroyBody(_body);
     }
 
     internal void SynchronizeBody()
@@ -139,7 +142,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 _body.Rotation = finalTransform.Rotation;
             }
 
-            if (_bodyDeprecated.ColliderType is ColliderType.Tile)
+            if (_body.ColliderType is ColliderType.Tile)
             {
                 Transform.Translation = _body.Position;
                 Transform.Rotation = _body.Rotation;

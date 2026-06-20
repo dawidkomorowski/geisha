@@ -106,6 +106,30 @@ internal struct PhysicsSceneData
         return rigidBodyId;
     }
 
+    public void DestroyBody(RigidBodyId id)
+    {
+        ref var body = ref GetBodyData(id);
+
+        if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
+        {
+            TileMap.RemoveTile(ref body);
+        }
+
+        switch (body.Type)
+        {
+            case BodyType.Static:
+                Bodies[id.Index] = default;
+                StaticBodyIndices.Remove(id.Index);
+                break;
+            case BodyType.Kinematic:
+                Bodies[id.Index] = default;
+                KinematicBodyIndices.Remove(id.Index);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     public ref RigidBodyData GetBodyData(RigidBodyId id)
     {
         if (!id.IsValid)
