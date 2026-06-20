@@ -8,6 +8,8 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 internal struct RigidBodyData : IUnmanaged<RigidBodyData>
 {
     public RuntimeId RuntimeId;
+    public RigidBodyId Id;
+
     public BodyType Type;
     public ColliderType ColliderType;
     public CollisionNormalFilter CollisionNormalFilter;

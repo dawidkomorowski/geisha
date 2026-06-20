@@ -70,9 +70,12 @@ internal struct PhysicsSceneData
 
     public RigidBodyId CreateBody(BodyType bodyType)
     {
+        var rigidBodyId = new RigidBodyId(PhysicsSceneId, Bodies.Count, 1);
+
         var body = new RigidBodyData
         {
             RuntimeId = RuntimeId.Next(),
+            Id = rigidBodyId,
             Type = bodyType,
             CollisionNormalFilter = CollisionNormalFilter.None,
             EnableCollisionDetection = true,
@@ -81,8 +84,6 @@ internal struct PhysicsSceneData
         };
 
         Bodies.Add(body);
-
-        var rigidBodyId = new RigidBodyId(PhysicsSceneId, Bodies.Count - 1, 1);
 
         switch (bodyType)
         {

@@ -68,4 +68,19 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
     }
 
     public void Simulate(TimeSpan timeStep) => Physics2D.Scene.Simulate(Id, timeStep);
+
+    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryPoint(Id, in point, ref handler);
+
+    public void QueryBounds<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryBounds(Id, in axisAlignedRectangle, ref handler);
+
+    public void QueryOverlap<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in axisAlignedRectangle, ref handler);
+
+    public void QueryOverlap<TQueryHandler>(in Circle circle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in circle, ref handler);
+
+    public void QueryOverlap<TQueryHandler>(in Rectangle rectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in rectangle, ref handler);
 }

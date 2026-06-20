@@ -16,6 +16,7 @@ internal sealed class PhysicsSystemState
     private readonly PhysicsScene2D_V2 _physicsScene2DV2;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
     private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
+    private readonly Dictionary<RigidBodyId, PhysicsBodyProxy> _proxyById = new();
 
     public PhysicsSystemState(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2)
     {
@@ -24,6 +25,7 @@ internal sealed class PhysicsSystemState
     }
 
     public ReadOnlySpan<PhysicsBodyProxy> GetPhysicsBodyProxies() => CollectionsMarshal.AsSpan(_physicsBodyProxies);
+    public PhysicsBodyProxy GetProxyById(RigidBodyId id) => _proxyById[id];
 
     public void OnEntityParentChanged(Entity entity)
     {
@@ -145,6 +147,7 @@ internal sealed class PhysicsSystemState
         {
             var proxy = PhysicsBodyProxy.CreateStatic(_physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider);
             _physicsBodyProxies.Add(proxy);
+            _proxyById.Add(proxy.RigidBodyId, proxy);
             trackedEntity.PhysicsBodyProxy = proxy;
         }
 
@@ -153,6 +156,7 @@ internal sealed class PhysicsSystemState
             var proxy = PhysicsBodyProxy.CreateKinematic(_physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider,
                 trackedEntity.KinematicBodyComponent);
             _physicsBodyProxies.Add(proxy);
+            _proxyById.Add(proxy.RigidBodyId, proxy);
             trackedEntity.PhysicsBodyProxy = proxy;
         }
     }
@@ -162,6 +166,7 @@ internal sealed class PhysicsSystemState
         if (trackedEntity.PhysicsBodyProxy is null) return;
 
         _physicsBodyProxies.Remove(trackedEntity.PhysicsBodyProxy);
+        _proxyById.Remove(trackedEntity.PhysicsBodyProxy.RigidBodyId);
         trackedEntity.PhysicsBodyProxy.Dispose();
         trackedEntity.PhysicsBodyProxy = null;
     }

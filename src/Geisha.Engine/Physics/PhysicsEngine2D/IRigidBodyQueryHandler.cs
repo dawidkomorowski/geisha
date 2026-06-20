@@ -19,3 +19,8 @@ internal interface IRigidBodyQueryHandler
     /// </returns>
     bool Handle(RigidBody2D body);
 }
+
+internal interface IRigidBodyIdQueryHandler
+{
+    bool Handle(RigidBodyId id);
+}
