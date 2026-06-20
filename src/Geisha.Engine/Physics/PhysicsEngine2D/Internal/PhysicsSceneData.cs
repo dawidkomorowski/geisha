@@ -29,6 +29,7 @@ internal struct PhysicsSceneData
             Bodies = new List<RigidBodyData>(),
             StaticBodyIndices = new List<int>(),
             KinematicBodyIndices = new List<int>(),
+            Contacts = new List<ContactData>(256),
             SensorOverlapCache = new SensorOverlapCache(256),
             SensorOverlapEvents = new List<SensorOverlapEvent>(256)
         };
@@ -76,6 +77,9 @@ internal struct PhysicsSceneData
     public List<int> StaticBodyIndices;
     public List<int> KinematicBodyIndices;
 
+    public List<ContactData> Contacts;
+    public Span<ContactData> ContactsSpan => CollectionsMarshal.AsSpan(Contacts);
+
     public SensorOverlapCache SensorOverlapCache;
     public List<SensorOverlapEvent> SensorOverlapEvents;
 
@@ -91,7 +95,10 @@ internal struct PhysicsSceneData
             CollisionNormalFilter = CollisionNormalFilter.None,
             EnableCollisionDetection = true,
             CollisionLayer = uint.MaxValue,
-            CollisionMask = uint.MaxValue
+            CollisionMask = uint.MaxValue,
+            ContactCount = 0,
+            FirstContactIndex = ContactData.Link.NullIndex,
+            LastContactIndex = ContactData.Link.NullIndex
         };
 
         Bodies.Add(body);

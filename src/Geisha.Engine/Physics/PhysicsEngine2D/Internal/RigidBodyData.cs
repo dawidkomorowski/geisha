@@ -35,6 +35,11 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
 
     public AxisAlignedRectangle BoundingRectangle;
 
+    // Contacts
+    public int ContactCount;
+    public int FirstContactIndex;
+    public int LastContactIndex;
+
     public bool ContainsPoint(in Vector2 point) =>
         ColliderType switch
         {

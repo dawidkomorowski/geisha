@@ -88,7 +88,7 @@ internal sealed class PhysicsScene2D
             // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < VelocityIterations; i++)
             {
-                ContactSolver.SolveVelocityConstraints(kinematicBodies);
+                //ContactSolver.SolveVelocityConstraints(kinematicBodies);
             }
 
             //KinematicIntegration.IntegrateKinematicMotion(kinematicBodies, deltaTimeSeconds);
@@ -103,7 +103,7 @@ internal sealed class PhysicsScene2D
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
             {
-                ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
+                //ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
             }
 
             GenerateEvents();

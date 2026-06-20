@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Geisha.Engine.Core.Math;
+using System;
 using System.Runtime.InteropServices;
-using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -210,7 +210,7 @@ internal static class Physics2D
                 RigidBodyId sensorId;
                 RigidBodyId visitorId;
 
-                ref var body1 = ref scene.BodiesSpan[sensorOverlap.Body1Id.Index];
+                ref var body1 = ref scene.GetBodyData(sensorOverlap.Body1Id);
 
                 if (body1.IsSensor)
                 {
@@ -399,6 +399,44 @@ internal static class Physics2D
         {
             ref var body = ref GetBodyData(id);
             return body.BoundingRectangle;
+        }
+
+        public static int GetContactCount(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.ContactCount;
+        }
+
+        public static int GetContacts(RigidBodyId id, Span<Contact> contacts)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
+            ref var body = ref scene.GetBodyData(id);
+
+            if (body.ContactCount == 0)
+            {
+                return 0;
+            }
+
+            var contactIndex = body.FirstContactIndex;
+            var writeCount = 0;
+
+            while (contactIndex != ContactData.Link.NullIndex)
+            {
+                if (writeCount >= contacts.Length)
+                {
+                    break;
+                }
+
+                ref var contactData = ref scene.ContactsSpan[contactIndex];
+                contacts[writeCount] = new Contact(contactData.Link1.BodyId, contactData.Link2.BodyId, contactData.ContactManifold);
+
+                ref var link = ref contactData.Link1.BodyId == body.Id ? ref contactData.Link1 : ref contactData.Link2;
+                contactIndex = link.NextIndex;
+
+                writeCount++;
+            }
+
+            return writeCount;
         }
 
         public static void SetCircleCollider(RigidBodyId id, double radius)

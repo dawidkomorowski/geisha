@@ -11,20 +11,23 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsBodyProxy : IDisposable
 {
+    private readonly PhysicsSystemState _physicsSystemState;
     private readonly RigidBody2D _bodyDeprecated;
     private readonly PhysicsScene2D_V2 _physicsScene;
     private readonly RigidBody2D_V2 _body;
 
-    private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform, Collider2DComponent collider,
-        KinematicRigidBody2DComponent? kinematicBodyComponent)
+    private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2,
+        Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
+        _physicsSystemState = physicsSystemState;
+        _physicsScene = physicsScene2Dv2;
+
         Transform = transform;
         Collider = collider;
         KinematicBodyComponent = kinematicBodyComponent;
 
         Collider.PhysicsBodyProxy = this;
 
-        _physicsScene = physicsScene2Dv2;
 
         var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
 
@@ -49,17 +52,16 @@ internal sealed class PhysicsBodyProxy : IDisposable
         SynchronizeBody();
     }
 
-    public static PhysicsBodyProxy CreateStatic(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform,
-        Collider2DComponent collider)
+    public static PhysicsBodyProxy CreateStatic(PhysicsSystemState physicsSystemState, PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2,
+        Transform2DComponent transform, Collider2DComponent collider)
     {
-        return new PhysicsBodyProxy(physicsScene2D, physicsScene2Dv2, transform, collider, null);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, physicsScene2Dv2, transform, collider, null);
     }
 
-    public static PhysicsBodyProxy CreateKinematic(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2, Transform2DComponent transform,
-        Collider2DComponent collider,
-        KinematicRigidBody2DComponent? kinematicBodyComponent)
+    public static PhysicsBodyProxy CreateKinematic(PhysicsSystemState physicsSystemState, PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2,
+        Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
-        return new PhysicsBodyProxy(physicsScene2D, physicsScene2Dv2, transform, collider, kinematicBodyComponent);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, physicsScene2Dv2, transform, collider, kinematicBodyComponent);
     }
 
     public Entity Entity => Transform.Entity;
@@ -71,23 +73,30 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public RigidBody2D_V2 RigidBody => _body;
 
     public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
-    public int ContactCount => _bodyDeprecated.Contacts.Count;
+    public int ContactCount => _body.ContactCount;
 
     public int GetContacts(Span<Contact2D> contacts)
     {
-        var writeCount = Math.Min(_bodyDeprecated.Contacts.Count, contacts.Length);
+        var writeCount = Math.Min(_body.ContactCount, contacts.Length);
+
+        Span<Contact> bodyContacts = stackalloc Contact[writeCount];
+        var internalWriteCount = _body.GetContacts(bodyContacts);
+
+        Debug.Assert(writeCount == internalWriteCount, "Unexpected number of internal contacts.");
 
         for (var i = 0; i < writeCount; i++)
         {
-            var contact = _bodyDeprecated.Contacts[i];
-            var thisIsBody1 = _bodyDeprecated == contact.Body1;
-            var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
-            Debug.Assert(otherBody.Proxy != null, "otherBody.Proxy != null");
+            var contact = bodyContacts[i];
+            var contactManifold = contact.ContactManifold;
+
+            var thisIsBody1 = _body.Id == contact.Body1Id;
+            var otherBody = thisIsBody1 ? RigidBody2D_V2.GetById(contact.Body2Id) : RigidBody2D_V2.GetById(contact.Body1Id);
+            var otherProxy = _physicsSystemState.GetProxyById(otherBody.Id);
 
             FixedList2<ContactPoint2D> contactPoints2D = default;
-            for (var j = 0; j < contact.ContactPoints.Count; j++)
+            for (var j = 0; j < contactManifold.ContactPoints.Count; j++)
             {
-                var cp = contact.ContactPoints[j];
+                var cp = contactManifold.ContactPoints[j];
                 var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
                 var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
 
@@ -98,9 +107,9 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
             }
 
-            var collisionNormal = thisIsBody1 ? contact.CollisionNormal : -contact.CollisionNormal;
+            var collisionNormal = thisIsBody1 ? contactManifold.CollisionNormal : -contactManifold.CollisionNormal;
 
-            contacts[i] = new Contact2D(Collider, otherBody.Proxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
+            contacts[i] = new Contact2D(Collider, otherProxy.Collider, collisionNormal, contactManifold.PenetrationDepth, contactPoints2D.ToReadOnly());
         }
 
         return writeCount;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -373,29 +372,29 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             }
         }
 
-        foreach (var body in PhysicsScene2D.Bodies)
-        {
-            if (body.Type is not BodyType.Kinematic) continue;
+        //foreach (var body in PhysicsScene2D.Bodies)
+        //{
+        //    if (body.Type is not BodyType.Kinematic) continue;
 
-            foreach (var contact in body.Contacts)
-            {
-                for (var j = 0; j < contact.ContactPoints.Count; j++)
-                {
-                    // Drawing contacts based on body dimensions to make it scale between different sizes.
-                    // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
-                    // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
-                    _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
-                        contactPointColor);
+        //    foreach (var contact in body.Contacts)
+        //    {
+        //        for (var j = 0; j < contact.ContactPoints.Count; j++)
+        //        {
+        //            // Drawing contacts based on body dimensions to make it scale between different sizes.
+        //            // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
+        //            // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
+        //            _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
+        //                contactPointColor);
 
-                    var normalLen = body.BoundingRectangle.Width / 2d;
-                    var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
-                    var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
-                    var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
-                    _debugRenderer.DrawRectangle(normalRect, contactNormalColor,
-                        Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
-                }
-            }
-        }
+        //            var normalLen = body.BoundingRectangle.Width / 2d;
+        //            var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
+        //            var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
+        //            var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
+        //            _debugRenderer.DrawRectangle(normalRect, contactNormalColor,
+        //                Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
+        //        }
+        //    }
+        //}
     }
 
     #endregion

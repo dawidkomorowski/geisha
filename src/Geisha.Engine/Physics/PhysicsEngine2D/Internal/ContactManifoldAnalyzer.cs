@@ -3,11 +3,11 @@ using System.Diagnostics;
 using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.Math;
 
-namespace Geisha.Engine.Physics.PhysicsEngine2D;
+namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-internal static class ContactGenerator
+internal static class ContactManifoldAnalyzer
 {
-    public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
+    public static ContactManifold FindManifold(in RigidBodyData body1, in RigidBodyData body2, in MinimumTranslationVector mtv)
     {
         if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
         {
@@ -16,7 +16,7 @@ internal static class ContactGenerator
                 body2.TransformedCircleCollider,
                 mtv
             );
-            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new ContactManifold(mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Rectangle)
@@ -26,7 +26,7 @@ internal static class ContactGenerator
                 body2.TransformedRectangleCollider,
                 mtv
             );
-            return new Contact(body1, body2, mtv.Direction, mtv.Length, contactPoints);
+            return new ContactManifold(mtv.Direction, mtv.Length, contactPoints);
         }
 
         if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Rectangle)
@@ -36,7 +36,7 @@ internal static class ContactGenerator
                 body2.TransformedRectangleCollider,
                 mtv
             );
-            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new ContactManifold(mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Circle)
@@ -46,7 +46,7 @@ internal static class ContactGenerator
                 body2.TransformedCircleCollider,
                 mtv
             );
-            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new ContactManifold(mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
@@ -56,8 +56,8 @@ internal static class ContactGenerator
                 body2.TransformedRectangleCollider,
                 mtv
             );
-            var normal = RecalculateTileCollisionNormal(body1, body2, mtv.Direction);
-            return new Contact(body1, body2, normal, mtv.Length, contactPoints);
+            var normal = RecalculateTileCollisionNormal(in body1, in body2, mtv.Direction);
+            return new ContactManifold(normal, mtv.Length, contactPoints);
         }
 
         if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Tile)
@@ -67,8 +67,8 @@ internal static class ContactGenerator
                 body2.TransformedRectangleCollider,
                 mtv
             );
-            var normal = RecalculateTileCollisionNormal(body1, body2, mtv.Direction);
-            return new Contact(body1, body2, normal, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            var normal = RecalculateTileCollisionNormal(in body1, in body2, mtv.Direction);
+            return new ContactManifold(normal, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         throw new InvalidOperationException("Unsupported collider type pair for contact generation.");
@@ -235,7 +235,7 @@ internal static class ContactGenerator
         return count;
     }
 
-    private static Vector2 RecalculateTileCollisionNormal(RigidBody2D body1, RigidBody2D body2, in Vector2 normal)
+    private static Vector2 RecalculateTileCollisionNormal(in RigidBodyData body1, in RigidBodyData body2, in Vector2 normal)
     {
         Debug.Assert(body2.ColliderType == ColliderType.Tile, "body2.ColliderType == ColliderType.Tile");
 

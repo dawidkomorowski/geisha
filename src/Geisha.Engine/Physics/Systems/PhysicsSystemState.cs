@@ -145,7 +145,7 @@ internal sealed class PhysicsSystemState
 
         if (trackedEntity.IsStaticBody)
         {
-            var proxy = PhysicsBodyProxy.CreateStatic(_physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider);
+            var proxy = PhysicsBodyProxy.CreateStatic(this, _physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider);
             _physicsBodyProxies.Add(proxy);
             _proxyById.Add(proxy.RigidBodyId, proxy);
             trackedEntity.PhysicsBodyProxy = proxy;
@@ -153,7 +153,7 @@ internal sealed class PhysicsSystemState
 
         if (trackedEntity.IsKinematicBody)
         {
-            var proxy = PhysicsBodyProxy.CreateKinematic(_physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider,
+            var proxy = PhysicsBodyProxy.CreateKinematic(this, _physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider,
                 trackedEntity.KinematicBodyComponent);
             _physicsBodyProxies.Add(proxy);
             _proxyById.Add(proxy.RigidBodyId, proxy);
