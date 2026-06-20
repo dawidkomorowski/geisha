@@ -14,7 +14,6 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public ColliderType ColliderType;
     public CollisionNormalFilter CollisionNormalFilter;
 
-
     public Vector2 Position;
     public double Rotation;
     public Vector2 LinearVelocity;

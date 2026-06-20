@@ -83,8 +83,7 @@ public abstract class PhysicsSystemTestsBase
                Vector2Equality(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
 
-    private protected static RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
-        physicsSystem.PhysicsScene2D.Bodies.ToArray().Single(b => b.Proxy is not null && b.Proxy.Entity == entity);
+    private protected static RigidBody2D_V2 GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) => physicsSystem.FindInternalBody(entity);
 
     private protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
         CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);

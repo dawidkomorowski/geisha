@@ -176,6 +176,24 @@ internal static class Physics2D
 
     public static class Body
     {
+        public static BodyType GetType(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.Type;
+        }
+
+        public static ColliderType GetColliderType(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.ColliderType;
+        }
+
+        public static CollisionNormalFilter GetCollisionNormalFilter(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.CollisionNormalFilter;
+        }
+
         public static Vector2 GetPosition(RigidBodyId id)
         {
             ref var body = ref GetBodyData(id);
@@ -264,6 +282,12 @@ internal static class Physics2D
         {
             ref var body = ref GetBodyData(id);
             body.CollisionMask = collisionMask;
+        }
+
+        public static SizeD GetRectangleColliderSize(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.RectangleColliderSize;
         }
 
         public static AxisAlignedRectangle GetBoundingRectangle(RigidBodyId id)

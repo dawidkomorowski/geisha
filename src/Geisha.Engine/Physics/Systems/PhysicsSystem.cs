@@ -81,6 +81,21 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public PhysicsScene2D PhysicsScene2D { get; }
 
+    // TODO: Should it stay this way?
+    internal RigidBody2D_V2 FindInternalBody(Entity entity)
+    {
+        var proxies = _physicsSystemState.GetPhysicsBodyProxies();
+        foreach (var proxy in proxies)
+        {
+            if (proxy.Entity == entity)
+            {
+                return proxy.RigidBody;
+            }
+        }
+
+        throw new ArgumentException("Internal body not found for specified entity.");
+    }
+
     #region Implementation of IPhysicsSystem
 
     public bool EnableDebugRendering { get; set; }

@@ -7,6 +7,10 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<RigidBody2D_V2>
 {
+    public BodyType Type => Physics2D.Body.GetType(Id);
+    public ColliderType ColliderType => Physics2D.Body.GetColliderType(Id);
+    public CollisionNormalFilter CollisionNormalFilter => Physics2D.Body.GetCollisionNormalFilter(Id);
+
     public Vector2 Position
     {
         get => Physics2D.Body.GetPosition(Id);
@@ -61,6 +65,7 @@ internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<Rigi
         set => Physics2D.Body.SetCollisionMask(Id, value);
     }
 
+    public SizeD RectangleColliderSize => Physics2D.Body.GetRectangleColliderSize(Id);
     public AxisAlignedRectangle BoundingRectangle => Physics2D.Body.GetBoundingRectangle(Id);
 
     public void SetCircleCollider(double radius) => Physics2D.Body.SetCircleCollider(Id, radius);
