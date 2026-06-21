@@ -413,10 +413,22 @@ internal static class Physics2D
             body.IsSensor = value;
         }
 
+        public static uint GetCollisionLayer(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.CollisionLayer;
+        }
+
         public static void SetCollisionLayer(RigidBodyId id, uint value)
         {
             ref var body = ref GetBodyData(id);
             body.CollisionLayer = value;
+        }
+
+        public static uint GetCollisionMask(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.CollisionMask;
         }
 
         public static void SetCollisionMask(RigidBodyId id, uint value)

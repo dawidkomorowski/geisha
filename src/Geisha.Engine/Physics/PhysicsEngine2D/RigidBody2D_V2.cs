@@ -57,13 +57,13 @@ internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<Rigi
 
     public uint CollisionLayer
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Body.GetCollisionLayer(Id);
         set => Physics2D.Body.SetCollisionLayer(Id, value);
     }
 
     public uint CollisionMask
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Body.GetCollisionMask(Id);
         set => Physics2D.Body.SetCollisionMask(Id, value);
     }
 
