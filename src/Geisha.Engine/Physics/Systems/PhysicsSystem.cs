@@ -56,14 +56,6 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         _timeSystem = timeSystem;
         _debugRenderer = debugRenderer;
 
-        PhysicsScene2D = new PhysicsScene2D(physicsConfiguration.TileSize)
-        {
-            Substeps = physicsConfiguration.Substeps,
-            VelocityIterations = physicsConfiguration.VelocityIterations,
-            PositionIterations = physicsConfiguration.PositionIterations,
-            PenetrationTolerance = physicsConfiguration.PenetrationTolerance
-        };
-
         var sceneDefinition = new PhysicsScene2DDefinition
         {
             TileSize = physicsConfiguration.TileSize,
@@ -78,7 +70,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
     }
 
-    public PhysicsScene2D PhysicsScene2D { get; }
+    public PhysicsScene2D_V2 PhysicsScene2D => _physicsScene2D;
 
     // TODO: Should it stay this way?
     internal RigidBody2D_V2 FindInternalBody(Entity entity)
@@ -324,53 +316,53 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         Span<Vector2> points = stackalloc Vector2[2];
 
-        foreach (var body in PhysicsScene2D.Bodies)
-        {
-            var color = body.Type switch
-            {
-                BodyType.Static => staticBodyColor,
-                BodyType.Kinematic => kinematicBodyColor,
-                _ => throw new InvalidOperationException("Unsupported body type.")
-            };
+        //foreach (var body in PhysicsScene2D.Bodies)
+        //{
+        //    var color = body.Type switch
+        //    {
+        //        BodyType.Static => staticBodyColor,
+        //        BodyType.Kinematic => kinematicBodyColor,
+        //        _ => throw new InvalidOperationException("Unsupported body type.")
+        //    };
 
-            if (!body.EnableCollisionDetection)
-            {
-                color = disabledCollisionDetectionBodyColor;
-            }
+        //    if (!body.EnableCollisionDetection)
+        //    {
+        //        color = disabledCollisionDetectionBodyColor;
+        //    }
 
-            switch (body.ColliderType)
-            {
-                case ColliderType.Circle:
-                {
-                    _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
+        //    switch (body.ColliderType)
+        //    {
+        //        case ColliderType.Circle:
+        //        {
+        //            _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
 
-                    points[0] = Vector2.Zero;
-                    points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
-                    var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
-                    _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
+        //            points[0] = Vector2.Zero;
+        //            points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
+        //            var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+        //            _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
 
-                    break;
-                }
-                case ColliderType.Rectangle:
-                {
-                    var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
-                    var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
-                    _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
+        //            break;
+        //        }
+        //        case ColliderType.Rectangle:
+        //        {
+        //            var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
+        //            var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+        //            _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
 
-                    break;
-                }
-                case ColliderType.Tile:
-                {
-                    var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
-                    var transform = new Transform2D(body.Position, 0, Vector2.One);
-                    _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
+        //            break;
+        //        }
+        //        case ColliderType.Tile:
+        //        {
+        //            var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
+        //            var transform = new Transform2D(body.Position, 0, Vector2.One);
+        //            _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
 
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        //            break;
+        //        }
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
+        //}
 
         //foreach (var body in PhysicsScene2D.Bodies)
         //{

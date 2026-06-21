@@ -31,6 +31,8 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
     private PhysicsScene2D_V2(PhysicsSceneId id)
     {
         Id = id;
+        // TODO: Construct it on the fly to avoid storing?
+        Bodies = new BodiesView(id);
     }
 
     public PhysicsSceneId Id { get; }
@@ -58,6 +60,8 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
         get => throw new NotImplementedException();
         set => Physics2D.Scene.SetPenetrationTolerance(Id, value);
     }
+
+    public BodiesView Bodies { get; }
 
     public RigidBody2D_V2 CreateBody(BodyType bodyType, double circleColliderRadius)
     {
@@ -105,4 +109,18 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
         where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in rectangle, ref handler);
 
     public ReadOnlySpan<SensorOverlapEvent> GetSensorOverlapEvents() => Physics2D.Scene.GetSensorOverlapEvents(Id);
+
+    public readonly struct BodiesView
+    {
+        public BodiesView(PhysicsSceneId physicsSceneId)
+        {
+            PhysicsSceneId = physicsSceneId;
+        }
+
+        public PhysicsSceneId PhysicsSceneId { get; }
+
+        public int Count => Physics2D.Scene.GetBodyCount(PhysicsSceneId);
+
+        public RigidBody2D_V2 this[int index] => new(Physics2D.Scene.GetBodyByRawIndex(PhysicsSceneId, index));
+    }
 }

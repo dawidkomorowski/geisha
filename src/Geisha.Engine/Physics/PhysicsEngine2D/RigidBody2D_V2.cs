@@ -51,7 +51,7 @@ internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<Rigi
 
     public bool IsSensor
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Body.GetIsSensor(Id);
         set => Physics2D.Body.SetIsSensor(Id, value);
     }
 
@@ -68,6 +68,7 @@ internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<Rigi
     }
 
     public SizeD RectangleColliderSize => Physics2D.Body.GetRectangleColliderSize(Id);
+    public double CircleColliderRadius => Physics2D.Body.GetCircleColliderRadius(Id);
     public AxisAlignedRectangle BoundingRectangle => Physics2D.Body.GetBoundingRectangle(Id);
 
     public int ContactCount => Physics2D.Body.GetContactCount(Id);

@@ -57,6 +57,18 @@ internal static class Physics2D
             scene.SimulationParameters.PenetrationTolerance = value;
         }
 
+        public static int GetBodyCount(PhysicsSceneId id)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.Bodies.Count;
+        }
+
+        public static RigidBodyId GetBodyByRawIndex(PhysicsSceneId id, int rawIndex)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.BodiesSpan[rawIndex].Id;
+        }
+
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
@@ -389,6 +401,12 @@ internal static class Physics2D
             body.EnableCollisionResponse = value;
         }
 
+        public static bool GetIsSensor(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.IsSensor;
+        }
+
         public static void SetIsSensor(RigidBodyId id, bool value)
         {
             ref var body = ref GetBodyData(id);
@@ -411,6 +429,12 @@ internal static class Physics2D
         {
             ref var body = ref GetBodyData(id);
             return body.RectangleColliderSize;
+        }
+
+        public static double GetCircleColliderRadius(RigidBodyId id)
+        {
+            ref var body = ref GetBodyData(id);
+            return body.CircleColliderRadius;
         }
 
         public static AxisAlignedRectangle GetBoundingRectangle(RigidBodyId id)
