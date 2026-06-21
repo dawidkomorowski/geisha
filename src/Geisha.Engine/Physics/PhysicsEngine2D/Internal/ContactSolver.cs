@@ -10,7 +10,7 @@ internal static class ContactSolver
             ref var body2 = ref scene.GetBodyData(contact.Link2.BodyId);
 
             var solveBody1 = body1.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
-            var solveBody2 = body2.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
+            var solveBody2 = body2.Type is BodyType.Kinematic && body2.EnableCollisionResponse;
 
             if (!solveBody1 && !solveBody2)
             {
@@ -61,7 +61,7 @@ internal static class ContactSolver
             ref var body2 = ref scene.GetBodyData(contact.Link2.BodyId);
 
             var solveBody1 = body1.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
-            var solveBody2 = body2.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
+            var solveBody2 = body2.Type is BodyType.Kinematic && body2.EnableCollisionResponse;
 
             if (!solveBody1 && !solveBody2)
             {
