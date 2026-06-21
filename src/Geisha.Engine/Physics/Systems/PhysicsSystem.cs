@@ -306,6 +306,9 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public void PreparePhysicsDebugInformation()
     {
+        // TODO: Redesign debug drawing so the internal physics engine does the drawing.
+        //       That should be better as it has access to internal data structures and more information. 
+
         if (!EnableDebugRendering) return;
 
         var staticBodyColor = Color.Green;
@@ -316,77 +319,93 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         Span<Vector2> points = stackalloc Vector2[2];
 
-        //foreach (var body in PhysicsScene2D.Bodies)
-        //{
-        //    var color = body.Type switch
-        //    {
-        //        BodyType.Static => staticBodyColor,
-        //        BodyType.Kinematic => kinematicBodyColor,
-        //        _ => throw new InvalidOperationException("Unsupported body type.")
-        //    };
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
+        {
+            var body = _physicsScene2D.Bodies[i];
 
-        //    if (!body.EnableCollisionDetection)
-        //    {
-        //        color = disabledCollisionDetectionBodyColor;
-        //    }
+            var color = body.Type switch
+            {
+                BodyType.Static => staticBodyColor,
+                BodyType.Kinematic => kinematicBodyColor,
+                _ => throw new InvalidOperationException("Unsupported body type.")
+            };
 
-        //    switch (body.ColliderType)
-        //    {
-        //        case ColliderType.Circle:
-        //        {
-        //            _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
+            if (!body.EnableCollisionDetection)
+            {
+                color = disabledCollisionDetectionBodyColor;
+            }
 
-        //            points[0] = Vector2.Zero;
-        //            points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
-        //            var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
-        //            _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
+            switch (body.ColliderType)
+            {
+                case ColliderType.Circle:
+                {
+                    var circle = new Circle(body.Position, body.CircleColliderRadius);
+                    _debugRenderer.DrawCircle(circle, color);
 
-        //            break;
-        //        }
-        //        case ColliderType.Rectangle:
-        //        {
-        //            var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
-        //            var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
-        //            _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
+                    points[0] = Vector2.Zero;
+                    points[1] = points[0] + Vector2.UnitX * body.CircleColliderRadius;
+                    var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                    _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
 
-        //            break;
-        //        }
-        //        case ColliderType.Tile:
-        //        {
-        //            var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
-        //            var transform = new Transform2D(body.Position, 0, Vector2.One);
-        //            _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
+                    break;
+                }
+                case ColliderType.Rectangle:
+                {
+                    var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
+                    var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                    _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
 
-        //            break;
-        //        }
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
+                    break;
+                }
+                case ColliderType.Tile:
+                {
+                    var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
+                    var transform = new Transform2D(body.Position, 0, Vector2.One);
+                    _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
 
-        //foreach (var body in PhysicsScene2D.Bodies)
-        //{
-        //    if (body.Type is not BodyType.Kinematic) continue;
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
-        //    foreach (var contact in body.Contacts)
-        //    {
-        //        for (var j = 0; j < contact.ContactPoints.Count; j++)
-        //        {
-        //            // Drawing contacts based on body dimensions to make it scale between different sizes.
-        //            // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
-        //            // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
-        //            _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
-        //                contactPointColor);
+        Span<Contact> contacts = stackalloc Contact[32];
 
-        //            var normalLen = body.BoundingRectangle.Width / 2d;
-        //            var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
-        //            var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
-        //            var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
-        //            _debugRenderer.DrawRectangle(normalRect, contactNormalColor,
-        //                Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
-        //        }
-        //    }
-        //}
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
+        {
+            var body = _physicsScene2D.Bodies[i];
+            if (body.Type is not BodyType.Kinematic) continue;
+
+            if (body.ContactCount > contacts.Length)
+            {
+                // TODO: Temporary workaround. The drawing should be moved into internal Physics engine.
+                contacts = stackalloc Contact[body.ContactCount];
+            }
+
+            var contactCount = body.GetContacts(contacts);
+
+            for (var ci = 0; ci < contactCount; ci++)
+            {
+                ref var contact = ref contacts[ci];
+                var contactManifold = contact.ContactManifold;
+                for (var j = 0; j < contactManifold.ContactPoints.Count; j++)
+                {
+                    // Drawing contacts based on body dimensions to make it scale between different sizes.
+                    // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
+                    // TODO: It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
+                    _debugRenderer.DrawCircle(new Circle(contactManifold.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
+                        contactPointColor);
+
+                    var normalLen = body.BoundingRectangle.Width / 2d;
+                    var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
+                    var sign = Math.Sign(-contactManifold.CollisionNormal.Cross(Vector2.UnitX));
+                    var normalRot = contactManifold.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
+                    _debugRenderer.DrawRectangle(normalRect, contactNormalColor,
+                        Matrix3x3.CreateTRS(contactManifold.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
+                }
+            }
+        }
     }
 
     #endregion
