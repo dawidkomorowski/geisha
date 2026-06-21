@@ -136,21 +136,21 @@ internal struct PhysicsSceneData
             TileMap.RemoveTile(ref body);
         }
 
+        DestroyContactsForBody(ref body);
+
+        var denseIndex = BodyIndicesSpan[id.Index].DenseIndex;
+
         switch (body.Type)
         {
             case BodyType.Static:
-                StaticBodyIndices.Remove(id.Index);
+                StaticBodyIndices.Remove(denseIndex);
                 break;
             case BodyType.Kinematic:
-                KinematicBodyIndices.Remove(id.Index);
+                KinematicBodyIndices.Remove(denseIndex);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        DestroyContactsForBody(ref body);
-
-        var denseIndex = BodyIndicesSpan[id.Index].DenseIndex;
 
         if (denseIndex == Bodies.Count - 1)
         {
@@ -160,12 +160,28 @@ internal struct PhysicsSceneData
         else
         {
             // Otherwise swap-remove with last element.
-            BodiesSpan[denseIndex] = BodiesSpan[^1];
-            Bodies.RemoveAt(Bodies.Count - 1);
+            var oldDenseIndex = Bodies.Count - 1;
+            BodiesSpan[denseIndex] = BodiesSpan[oldDenseIndex];
+            Bodies.RemoveAt(oldDenseIndex);
 
             // Update index pointer.
             var movedBodyIndex = BodiesSpan[denseIndex].Id.Index;
             BodyIndicesSpan[movedBodyIndex].DenseIndex = denseIndex;
+
+            // Update body type indices.
+            switch (BodiesSpan[denseIndex].Type)
+            {
+                case BodyType.Static:
+                    StaticBodyIndices.Remove(oldDenseIndex);
+                    StaticBodyIndices.Add(denseIndex);
+                    break;
+                case BodyType.Kinematic:
+                    KinematicBodyIndices.Remove(oldDenseIndex);
+                    KinematicBodyIndices.Add(denseIndex);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         BodyIndicesSpan[id.Index].Version++;
