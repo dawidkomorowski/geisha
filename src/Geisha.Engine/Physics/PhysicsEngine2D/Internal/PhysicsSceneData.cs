@@ -26,6 +26,7 @@ internal struct PhysicsSceneData
             },
             TileSize = sceneDefinition.TileSize,
             TileMap = new TileMap(sceneDefinition.TileSize),
+            BodyIndices = new List<BodyIndex>(),
             Bodies = new List<RigidBodyData>(),
             StaticBodyIndices = new List<int>(),
             KinematicBodyIndices = new List<int>(),
@@ -72,6 +73,8 @@ internal struct PhysicsSceneData
     public SizeD TileSize;
     public TileMap TileMap;
 
+    public List<BodyIndex> BodyIndices;
+    public Span<BodyIndex> BodyIndicesSpan => CollectionsMarshal.AsSpan(BodyIndices);
     public List<RigidBodyData> Bodies;
     public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(Bodies);
     public List<int> StaticBodyIndices;
@@ -83,9 +86,15 @@ internal struct PhysicsSceneData
     public SensorOverlapCache SensorOverlapCache;
     public List<SensorOverlapEvent> SensorOverlapEvents;
 
-    public RigidBodyId CreateBody(BodyType bodyType)
+    public ref RigidBodyData CreateBody(BodyType bodyType)
     {
-        var rigidBodyId = new RigidBodyId(PhysicsSceneId, Bodies.Count, 1);
+        var rigidBodyId = new RigidBodyId(PhysicsSceneId, BodyIndices.Count, 1);
+
+        // TODO: Reuse index slots.
+        BodyIndices.Add(default);
+        ref var bodyIndex = ref BodyIndicesSpan[rigidBodyId.Index];
+        bodyIndex.DenseIndex = Bodies.Count;
+        bodyIndex.Version = rigidBodyId.Version;
 
         var body = new RigidBodyData
         {
@@ -106,16 +115,16 @@ internal struct PhysicsSceneData
         switch (bodyType)
         {
             case BodyType.Static:
-                StaticBodyIndices.Add(rigidBodyId.Index);
+                StaticBodyIndices.Add(bodyIndex.DenseIndex);
                 break;
             case BodyType.Kinematic:
-                KinematicBodyIndices.Add(rigidBodyId.Index);
+                KinematicBodyIndices.Add(bodyIndex.DenseIndex);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(bodyType), bodyType, null);
         }
 
-        return rigidBodyId;
+        return ref BodiesSpan[Bodies.Count - 1];
     }
 
     public void DestroyBody(RigidBodyId id)
@@ -130,16 +139,35 @@ internal struct PhysicsSceneData
         switch (body.Type)
         {
             case BodyType.Static:
-                Bodies[id.Index] = default;
                 StaticBodyIndices.Remove(id.Index);
                 break;
             case BodyType.Kinematic:
-                Bodies[id.Index] = default;
                 KinematicBodyIndices.Remove(id.Index);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        var denseIndex = BodyIndicesSpan[id.Index].DenseIndex;
+
+        if (denseIndex == Bodies.Count - 1)
+        {
+            // If the last element is being removed, just remove it.
+            Bodies.RemoveAt(denseIndex);
+        }
+        else
+        {
+            // Otherwise swap-remove with last element.
+            BodiesSpan[denseIndex] = BodiesSpan[^1];
+            Bodies.RemoveAt(Bodies.Count - 1);
+
+            // Update index pointer.
+            var movedBodyIndex = BodiesSpan[denseIndex].Id.Index;
+            BodyIndicesSpan[movedBodyIndex].DenseIndex = denseIndex;
+        }
+
+        BodyIndicesSpan[id.Index].Version++;
+        BodyIndicesSpan[id.Index].DenseIndex = BodyIndex.NullIndex;
     }
 
     public ref RigidBodyData GetBodyData(RigidBodyId id)
@@ -149,8 +177,20 @@ internal struct PhysicsSceneData
             throw new ArgumentException("Invalid body ID.");
         }
 
-        // TODO: Validate ID.
-        var bodies = CollectionsMarshal.AsSpan(Bodies);
-        return ref bodies[id.Index];
+        var bodyIndex = BodyIndicesSpan[id.Index];
+        if (bodyIndex.Version != id.Version)
+        {
+            throw new ArgumentException("Version mismatch detected. The ID is no longer valid.");
+        }
+
+        return ref BodiesSpan[bodyIndex.DenseIndex];
+    }
+
+    public struct BodyIndex
+    {
+        public const int NullIndex = -1;
+
+        public int DenseIndex;
+        public int Version;
     }
 }

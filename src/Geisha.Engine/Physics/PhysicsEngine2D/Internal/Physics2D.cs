@@ -72,19 +72,31 @@ internal static class Physics2D
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.CreateBody(bodyType);
+            ref var body = ref scene.CreateBody(bodyType);
+
+            Body.SetCircleCollider(body.Id, circleColliderRadius);
+
+            return body.Id;
         }
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, in SizeD rectangleColliderSize)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.CreateBody(bodyType);
+            ref var body = ref scene.CreateBody(bodyType);
+
+            Body.SetRectangleCollider(body.Id, rectangleColliderSize);
+
+            return body.Id;
         }
 
         public static RigidBodyId CreateTileBody(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.CreateBody(BodyType.Static);
+            ref var body = ref scene.CreateBody(BodyType.Static);
+
+            Body.SetTileCollider(body.Id);
+
+            return body.Id;
         }
 
         public static void DestroyBody(RigidBodyId id)
