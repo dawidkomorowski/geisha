@@ -148,6 +148,8 @@ internal struct PhysicsSceneData
                 throw new ArgumentOutOfRangeException();
         }
 
+        DestroyContactsForBody(ref body);
+
         var denseIndex = BodyIndicesSpan[id.Index].DenseIndex;
 
         if (denseIndex == Bodies.Count - 1)
@@ -192,5 +194,146 @@ internal struct PhysicsSceneData
 
         public int DenseIndex;
         public int Version;
+    }
+
+    private void DestroyContactsForBody(ref RigidBodyData body)
+    {
+        var contactIndex = body.FirstContactIndex;
+
+        while (contactIndex != ContactData.Link.NullIndex)
+        {
+            ref var contact = ref ContactsSpan[contactIndex];
+            ref var body1 = ref GetBodyData(contact.Link1.BodyId);
+            ref var body2 = ref GetBodyData(contact.Link2.BodyId);
+
+            if (contact.Link1.PrevIndex != ContactData.Link.NullIndex)
+            {
+                ref var prevContact = ref ContactsSpan[contact.Link1.PrevIndex];
+                if (prevContact.Link1.BodyId == contact.Link1.BodyId)
+                {
+                    prevContact.Link1.NextIndex = contact.Link1.NextIndex;
+                }
+                else
+                {
+                    prevContact.Link2.NextIndex = contact.Link1.NextIndex;
+                }
+            }
+
+            if (contact.Link2.PrevIndex != ContactData.Link.NullIndex)
+            {
+                ref var prevContact = ref ContactsSpan[contact.Link2.PrevIndex];
+                if (prevContact.Link1.BodyId == contact.Link2.BodyId)
+                {
+                    prevContact.Link1.NextIndex = contact.Link2.NextIndex;
+                }
+                else
+                {
+                    prevContact.Link2.NextIndex = contact.Link2.NextIndex;
+                }
+            }
+
+            if (body1.FirstContactIndex == contactIndex)
+            {
+                body1.FirstContactIndex = contact.Link1.NextIndex;
+            }
+
+            if (body2.FirstContactIndex == contactIndex)
+            {
+                body2.FirstContactIndex = contact.Link2.NextIndex;
+            }
+
+            if (body1.LastContactIndex == contactIndex)
+            {
+                body1.LastContactIndex = contact.Link1.PrevIndex;
+            }
+
+            if (body2.LastContactIndex == contactIndex)
+            {
+                body2.LastContactIndex = contact.Link2.PrevIndex;
+            }
+
+            body1.ContactCount--;
+            body2.ContactCount--;
+
+            var nextIndex = contact.Link1.BodyId == body.Id ? contact.Link1.NextIndex : contact.Link2.NextIndex;
+
+            if (contactIndex == Contacts.Count - 1)
+            {
+                // If the last element is being removed, just remove it.
+                Contacts.RemoveAt(contactIndex);
+            }
+            else
+            {
+                // Otherwise swap-remove with last element.
+                ContactsSpan[contactIndex] = ContactsSpan[^1];
+                Contacts.RemoveAt(Contacts.Count - 1);
+
+                // Update contact links.
+                var oldIndex = Contacts.Count;
+                ref var swappedContact = ref ContactsSpan[contactIndex];
+
+                if (swappedContact.Link1.PrevIndex != ContactData.Link.NullIndex)
+                {
+                    ref var prevContact = ref ContactsSpan[swappedContact.Link1.PrevIndex];
+
+                    if (prevContact.Link1.NextIndex == oldIndex)
+                    {
+                        prevContact.Link1.NextIndex = contactIndex;
+                    }
+
+                    if (prevContact.Link2.NextIndex == oldIndex)
+                    {
+                        prevContact.Link2.NextIndex = contactIndex;
+                    }
+                }
+
+                if (swappedContact.Link2.PrevIndex != ContactData.Link.NullIndex)
+                {
+                    ref var prevContact = ref ContactsSpan[swappedContact.Link2.PrevIndex];
+
+                    if (prevContact.Link1.NextIndex == oldIndex)
+                    {
+                        prevContact.Link1.NextIndex = contactIndex;
+                    }
+
+                    if (prevContact.Link2.NextIndex == oldIndex)
+                    {
+                        prevContact.Link2.NextIndex = contactIndex;
+                    }
+                }
+
+                if (swappedContact.Link1.NextIndex != ContactData.Link.NullIndex)
+                {
+                    ref var nextContact = ref ContactsSpan[swappedContact.Link1.NextIndex];
+
+                    if (nextContact.Link1.PrevIndex == oldIndex)
+                    {
+                        nextContact.Link1.PrevIndex = contactIndex;
+                    }
+
+                    if (nextContact.Link2.PrevIndex == oldIndex)
+                    {
+                        nextContact.Link2.PrevIndex = contactIndex;
+                    }
+                }
+
+                if (swappedContact.Link2.NextIndex != ContactData.Link.NullIndex)
+                {
+                    ref var nextContact = ref ContactsSpan[swappedContact.Link2.NextIndex];
+
+                    if (nextContact.Link1.PrevIndex == oldIndex)
+                    {
+                        nextContact.Link1.PrevIndex = contactIndex;
+                    }
+
+                    if (nextContact.Link2.PrevIndex == oldIndex)
+                    {
+                        nextContact.Link2.PrevIndex = contactIndex;
+                    }
+                }
+            }
+
+            contactIndex = nextIndex;
+        }
     }
 }
