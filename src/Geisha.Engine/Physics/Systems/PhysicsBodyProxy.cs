@@ -12,11 +12,10 @@ namespace Geisha.Engine.Physics.Systems;
 internal sealed class PhysicsBodyProxy : IDisposable
 {
     private readonly PhysicsSystemState _physicsSystemState;
-    private readonly RigidBody2D _bodyDeprecated;
     private readonly PhysicsScene2D_V2 _physicsScene;
     private readonly RigidBody2D_V2 _body;
 
-    private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2,
+    private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
         Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
         _physicsSystemState = physicsSystemState;
@@ -28,16 +27,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
         Collider.PhysicsBodyProxy = this;
 
-
         var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
-
-        _bodyDeprecated = Collider switch
-        {
-            CircleColliderComponent circleColliderComponent => physicsScene2D.CreateBody(bodyType, circleColliderComponent.Radius),
-            RectangleColliderComponent rectangleColliderComponent => physicsScene2D.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
-            TileColliderComponent => physicsScene2D.CreateTileBody(),
-            _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
-        };
 
         _body = Collider switch
         {
@@ -47,21 +37,19 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
-        _bodyDeprecated.Proxy = this;
-
         SynchronizeBody();
     }
 
-    public static PhysicsBodyProxy CreateStatic(PhysicsSystemState physicsSystemState, PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2,
+    public static PhysicsBodyProxy CreateStatic(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
         Transform2DComponent transform, Collider2DComponent collider)
     {
-        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, physicsScene2Dv2, transform, collider, null);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2Dv2, transform, collider, null);
     }
 
-    public static PhysicsBodyProxy CreateKinematic(PhysicsSystemState physicsSystemState, PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2,
+    public static PhysicsBodyProxy CreateKinematic(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
         Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
-        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, physicsScene2Dv2, transform, collider, kinematicBodyComponent);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2Dv2, transform, collider, kinematicBodyComponent);
     }
 
     public Entity Entity => Transform.Entity;
@@ -101,7 +89,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
 
                 // Convert local positions to be oriented according to body rotations.
-                thisLocalPosition = (Matrix3x3.CreateRotation(-_bodyDeprecated.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
+                thisLocalPosition = (Matrix3x3.CreateRotation(-_body.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
                 otherLocalPosition = (Matrix3x3.CreateRotation(-otherBody.Rotation) * otherLocalPosition.Homogeneous).ToVector2();
 
                 contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));

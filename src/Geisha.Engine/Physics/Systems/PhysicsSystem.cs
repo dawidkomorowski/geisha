@@ -75,7 +75,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         _physicsScene2D = PhysicsScene2D_V2.Create(sceneDefinition);
 
-        _physicsSystemState = new PhysicsSystemState(PhysicsScene2D, _physicsScene2D);
+        _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
     }
 
     public PhysicsScene2D PhysicsScene2D { get; }

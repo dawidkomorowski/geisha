@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Physics.PhysicsEngine2D;
+namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal static class ContactSolver
 {

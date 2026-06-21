@@ -12,16 +12,14 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsSystemState
 {
-    private readonly PhysicsScene2D _physicsScene2D;
-    private readonly PhysicsScene2D_V2 _physicsScene2DV2;
+    private readonly PhysicsScene2D_V2 _physicsScene2D;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
     private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
     private readonly Dictionary<RigidBodyId, PhysicsBodyProxy> _proxyById = new();
 
-    public PhysicsSystemState(PhysicsScene2D physicsScene2D, in PhysicsScene2D_V2 physicsScene2Dv2)
+    public PhysicsSystemState(in PhysicsScene2D_V2 physicsScene2D)
     {
         _physicsScene2D = physicsScene2D;
-        _physicsScene2DV2 = physicsScene2Dv2;
     }
 
     public ReadOnlySpan<PhysicsBodyProxy> GetPhysicsBodyProxies() => CollectionsMarshal.AsSpan(_physicsBodyProxies);
@@ -145,7 +143,7 @@ internal sealed class PhysicsSystemState
 
         if (trackedEntity.IsStaticBody)
         {
-            var proxy = PhysicsBodyProxy.CreateStatic(this, _physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider);
+            var proxy = PhysicsBodyProxy.CreateStatic(this, _physicsScene2D, trackedEntity.Transform, trackedEntity.Collider);
             _physicsBodyProxies.Add(proxy);
             _proxyById.Add(proxy.RigidBodyId, proxy);
             trackedEntity.PhysicsBodyProxy = proxy;
@@ -153,7 +151,7 @@ internal sealed class PhysicsSystemState
 
         if (trackedEntity.IsKinematicBody)
         {
-            var proxy = PhysicsBodyProxy.CreateKinematic(this, _physicsScene2D, _physicsScene2DV2, trackedEntity.Transform, trackedEntity.Collider,
+            var proxy = PhysicsBodyProxy.CreateKinematic(this, _physicsScene2D, trackedEntity.Transform, trackedEntity.Collider,
                 trackedEntity.KinematicBodyComponent);
             _physicsBodyProxies.Add(proxy);
             _proxyById.Add(proxy.RigidBodyId, proxy);

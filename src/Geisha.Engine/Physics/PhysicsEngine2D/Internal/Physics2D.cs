@@ -85,14 +85,20 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
 
-            var substeps = scene.SimulationParameters.Substeps;
-
-            var deltaTimeSeconds = timeStep.TotalSeconds / substeps;
+            var simulationParameters = scene.SimulationParameters;
+            var deltaTimeSeconds = timeStep.TotalSeconds / simulationParameters.Substeps;
 
             ClearEvents(ref scene);
 
-            for (var substep = 0; substep < substeps; substep++)
+            for (var substep = 0; substep < simulationParameters.Substeps; substep++)
             {
+                // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
+                // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
+                for (var i = 0; i < simulationParameters.VelocityIterations; i++)
+                {
+                    //ContactSolver.SolveVelocityConstraints(kinematicBodies);
+                }
+
                 KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
 
                 foreach (var index in scene.KinematicBodyIndices)
@@ -102,6 +108,12 @@ internal static class Physics2D
                 }
 
                 CollisionDetection.DetectCollisions(ref scene);
+
+                // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
+                for (var i = 0; i < simulationParameters.PositionIterations; i++)
+                {
+                    //ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
+                }
 
                 GenerateEvents(ref scene);
             }
