@@ -96,7 +96,7 @@ internal static class Physics2D
                 // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
                 for (var i = 0; i < simulationParameters.VelocityIterations; i++)
                 {
-                    //ContactSolver.SolveVelocityConstraints(kinematicBodies);
+                    ContactSolver.SolveVelocityConstraints(ref scene);
                 }
 
                 KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
@@ -112,7 +112,13 @@ internal static class Physics2D
                 // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
                 for (var i = 0; i < simulationParameters.PositionIterations; i++)
                 {
-                    //ContactSolver.SolvePositionConstraints(kinematicBodies, PenetrationTolerance);
+                    ContactSolver.SolvePositionConstraints(ref scene);
+                }
+
+                foreach (var index in scene.KinematicBodyIndices)
+                {
+                    ref var body = ref scene.BodiesSpan[index];
+                    body.RecomputeCollider();
                 }
 
                 GenerateEvents(ref scene);

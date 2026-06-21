@@ -1,107 +1,108 @@
-﻿using System;
-
-namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
+﻿namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal static class ContactSolver
 {
-    //public static void SolveVelocityConstraints(ReadOnlySpan<RigidBody2D> kinematicBodies)
-    //{
-    //    foreach (var kinematicBody in kinematicBodies)
-    //    {
-    //        if (kinematicBody.EnableCollisionResponse is false)
-    //        {
-    //            continue;
-    //        }
+    public static void SolveVelocityConstraints(ref PhysicsSceneData scene)
+    {
+        foreach (ref var contact in scene.ContactsSpan)
+        {
+            ref var body1 = ref scene.GetBodyData(contact.Link1.BodyId);
+            ref var body2 = ref scene.GetBodyData(contact.Link2.BodyId);
 
-    //        foreach (var contact in kinematicBody.Contacts)
-    //        {
-    //            var vc = VelocityConstraint(contact);
+            var solveBody1 = body1.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
+            var solveBody2 = body2.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
 
-    //            // TODO This threshold is arbitrary. It could be configurable.
-    //            if (vc < 0)
-    //            {
-    //                continue;
-    //            }
+            if (!solveBody1 && !solveBody2)
+            {
+                continue;
+            }
 
-    //            var normalImpulse = contact.CollisionNormal * vc;
+            var vc = VelocityConstraint(in contact, in body1, in body2);
 
-    //            if (contact.Body1.Type is BodyType.Kinematic && contact.Body1.EnableCollisionResponse &&
-    //                contact.Body2.Type is BodyType.Kinematic && contact.Body2.EnableCollisionResponse)
-    //            {
-    //                // TODO As both kinematic bodies share the same contact it is solved twice. This is not optimal.
-    //                normalImpulse *= 0.5;
-    //                contact.Body1.LinearVelocity += normalImpulse;
-    //                contact.Body2.LinearVelocity -= normalImpulse;
-    //            }
-    //            else
-    //            {
-    //                if (contact.Body2 == kinematicBody)
-    //                {
-    //                    normalImpulse = -normalImpulse;
-    //                }
+            // TODO This threshold is arbitrary. It could be configurable.
+            if (vc < 0)
+            {
+                continue;
+            }
 
-    //                kinematicBody.LinearVelocity += normalImpulse;
-    //            }
-    //        }
-    //    }
-    //}
+            var normalImpulse = contact.ContactManifold.CollisionNormal * vc;
 
-    //private static double VelocityConstraint(Contact contact)
-    //{
-    //    var relativeVelocity = contact.Body1.LinearVelocity - contact.Body2.LinearVelocity;
-    //    return -relativeVelocity.Dot(contact.CollisionNormal);
-    //}
+            if (solveBody1 && solveBody2)
+            {
+                normalImpulse *= 0.5;
+                body1.LinearVelocity += normalImpulse;
+                body2.LinearVelocity -= normalImpulse;
+            }
+            else
+            {
+                if (solveBody1)
+                {
+                    body1.LinearVelocity += normalImpulse;
+                }
+                else
+                {
+                    body2.LinearVelocity -= normalImpulse;
+                }
+            }
+        }
+    }
 
-    //public static void SolvePositionConstraints(ReadOnlySpan<RigidBody2D> kinematicBodies, double penetrationTolerance)
-    //{
-    //    foreach (var kinematicBody in kinematicBodies)
-    //    {
-    //        if (kinematicBody.EnableCollisionResponse is false)
-    //        {
-    //            continue;
-    //        }
+    private static double VelocityConstraint(in ContactData contact, in RigidBodyData body1, in RigidBodyData body2)
+    {
+        var relativeVelocity = body1.LinearVelocity - body2.LinearVelocity;
+        return -relativeVelocity.Dot(contact.ContactManifold.CollisionNormal);
+    }
 
-    //        foreach (var contact in kinematicBody.Contacts)
-    //        {
-    //            var pc = PositionConstraint(contact) - penetrationTolerance;
+    public static void SolvePositionConstraints(ref PhysicsSceneData scene)
+    {
+        foreach (ref var contact in scene.ContactsSpan)
+        {
+            ref var body1 = ref scene.GetBodyData(contact.Link1.BodyId);
+            ref var body2 = ref scene.GetBodyData(contact.Link2.BodyId);
 
-    //            if (pc < 0)
-    //            {
-    //                continue;
-    //            }
+            var solveBody1 = body1.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
+            var solveBody2 = body2.Type is BodyType.Kinematic && body1.EnableCollisionResponse;
 
-    //            var translation = contact.CollisionNormal * pc;
+            if (!solveBody1 && !solveBody2)
+            {
+                continue;
+            }
 
-    //            if (contact.Body1.Type is BodyType.Kinematic && contact.Body1.EnableCollisionResponse &&
-    //                contact.Body2.Type is BodyType.Kinematic && contact.Body2.EnableCollisionResponse)
-    //            {
-    //                // TODO As both kinematic bodies share the same contact it is solved twice. This is not optimal.
-    //                // TODO Both bodies are moved but only one has recomputed collider. This is inconsistent.
-    //                translation *= 0.5;
-    //                contact.Body1.Position += translation;
-    //                contact.Body2.Position -= translation;
-    //            }
-    //            else
-    //            {
-    //                if (contact.Body2 == kinematicBody)
-    //                {
-    //                    translation = -translation;
-    //                }
+            var pc = PositionConstraint(in contact, in body1, in body2) - scene.SimulationParameters.PenetrationTolerance;
 
-    //                kinematicBody.Position += translation;
-    //            }
-    //        }
+            if (pc < 0)
+            {
+                continue;
+            }
 
-    //        kinematicBody.RecomputeCollider();
-    //    }
-    //}
+            var translation = contact.ContactManifold.CollisionNormal * pc;
 
-    //private static double PositionConstraint(Contact contact)
-    //{
-    //    var cp = contact.ContactPoints[0];
-    //    var p1 = contact.Body1.Position + cp.LocalPosition1;
-    //    var p2 = contact.Body2.Position + cp.LocalPosition2;
-    //    var relativePosition = p1 - p2;
-    //    return contact.PenetrationDepth - relativePosition.Dot(contact.CollisionNormal);
-    //}
+            if (solveBody1 && solveBody2)
+            {
+                translation *= 0.5;
+                body1.Position += translation;
+                body2.Position -= translation;
+            }
+            else
+            {
+                if (solveBody1)
+                {
+                    body1.Position += translation;
+                }
+                else
+                {
+                    body2.Position -= translation;
+                }
+            }
+        }
+    }
+
+    private static double PositionConstraint(in ContactData contact, in RigidBodyData body1, in RigidBodyData body2)
+    {
+        var cp = contact.ContactManifold.ContactPoints[0];
+        var p1 = body1.Position + cp.LocalPosition1;
+        var p2 = body2.Position + cp.LocalPosition2;
+        var relativePosition = p1 - p2;
+        return contact.ContactManifold.PenetrationDepth - relativePosition.Dot(contact.ContactManifold.CollisionNormal);
+    }
 }
