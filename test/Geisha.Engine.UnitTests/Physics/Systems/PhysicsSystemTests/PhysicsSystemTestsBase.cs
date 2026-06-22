@@ -13,9 +13,22 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+public sealed class EnableVisualOutputAttribute : PropertyAttribute
+{
+    public static string PropertyName => nameof(EnableVisualOutputAttribute).Replace("Attribute", "");
+
+    public EnableVisualOutputAttribute() : base(true)
+    {
+    }
+}
+
 public abstract class PhysicsSystemTestsBase
 {
-    private const bool EnableVisualOutput = false;
+    private const bool GlobalEnableVisualOutput = false;
+    private static bool AttributeEnableVisualOutput => TestContext.CurrentContext.Test.Properties.ContainsKey(EnableVisualOutputAttribute.PropertyName);
+    private static bool EffectiveEnableVisualOutput => AttributeEnableVisualOutput || GlobalEnableVisualOutput;
+
     private IDebugRendererForTests _debugRendererForTests = null!;
     private protected Scene Scene = null!;
     private protected ITimeSystem TimeSystem = null!;
@@ -37,7 +50,7 @@ public abstract class PhysicsSystemTestsBase
         TimeSystem = Substitute.For<ITimeSystem>();
         TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(1.0 / 60.0));
         DebugRenderer = Substitute.For<IDebugRenderer>();
-        _debugRendererForTests = TestKit.CreateDebugRenderer(DebugRenderer, EnableVisualOutput);
+        _debugRendererForTests = TestKit.CreateDebugRenderer(DebugRenderer, EffectiveEnableVisualOutput);
     }
 
     [TearDown]
@@ -51,7 +64,7 @@ public abstract class PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             PenetrationTolerance = 0d,
-            EnableDebugRendering = EnableVisualOutput
+            EnableDebugRendering = EffectiveEnableVisualOutput
         };
         return GetPhysicsSystem(physicsConfiguration);
     }
