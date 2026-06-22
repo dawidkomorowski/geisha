@@ -699,5 +699,49 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(rectangleContacts2, Has.Count.Zero);
     }
 
+    [Test]
+    [Description("Regression test for incorrect contacts removal when removed body has multiple contacts.")]
+    public void KinematicBody_ShouldClearContactsWithMultipleBodies_WhenKinematicBodyIsRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateRectangleKinematicBody(0, 0, 100, 50);
+        var staticBody1 = CreateRectangleStaticBody(-75, 0, 100, 50);
+        var staticBody2 = CreateRectangleStaticBody(75, 0, 100, 50);
+
+        var kinematicCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticCollider1 = staticBody1.GetComponent<RectangleColliderComponent>();
+        var staticCollider2 = staticBody2.GetComponent<RectangleColliderComponent>();
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0);
+
+        // Assume
+        Assert.That(kinematicCollider.IsColliding, Is.True);
+        Assert.That(staticCollider1.IsColliding, Is.True);
+        Assert.That(staticCollider2.IsColliding, Is.True);
+
+        // Act
+        kinematicBody.RemoveComponent(kinematicBody.GetComponent<Transform2DComponent>());
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1);
+
+        // Assert
+        var kinematicContacts = new List<Contact2D>();
+        Assert.That(kinematicCollider.IsColliding, Is.False);
+        Assert.That(kinematicCollider.GetContacts(kinematicContacts), Is.Zero);
+        Assert.That(kinematicContacts, Has.Count.Zero);
+
+        var staticContacts1 = new List<Contact2D>();
+        Assert.That(staticCollider1.IsColliding, Is.False);
+        Assert.That(staticCollider1.GetContacts(staticContacts1), Is.Zero);
+        Assert.That(staticContacts1, Has.Count.Zero);
+
+        var staticContacts2 = new List<Contact2D>();
+        Assert.That(staticCollider2.IsColliding, Is.False);
+        Assert.That(staticCollider2.GetContacts(staticContacts2), Is.Zero);
+        Assert.That(staticContacts2, Has.Count.Zero);
+    }
+
     #endregion
 }
