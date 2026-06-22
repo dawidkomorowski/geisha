@@ -702,7 +702,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    [Description("Regression test for incorrect contacts removal when removed body has multiple contacts.")]
+    [Description("Regression test for incorrect contacts removal when removed body has multiple contacts and those are the only contacts in physics scene.")]
     public void KinematicBody_ShouldClearContactsWithMultipleBodies_WhenKinematicBodyIsRemoved()
     {
         // Arrange
@@ -787,13 +787,24 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertContacts(collider3, collider2, collider4);
         AssertContacts(collider4, collider1, collider3);
 
-        // Act 1
+        // Act 1.1
         kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<Transform2DComponent>());
 
+        // Assert 1.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(0));
+        Assert.That(collider2.ContactCount, Is.EqualTo(1));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(1));
+
+        AssertContacts(collider2, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider3);
+
+        // Act 1.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 1);
 
-        // Assert 1
+        // Assert 1.2
         Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
 
         // Check that components are correctly linked to internal rigid bodies.
@@ -837,13 +848,24 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertContacts(collider3, collider2, collider4);
         AssertContacts(collider4, collider1, collider3);
 
-        // Act 3
+        // Act 3.1
         kinematicBody2.RemoveComponent(kinematicBody2.GetComponent<Transform2DComponent>());
 
+        // Assert 3.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(1));
+        Assert.That(collider2.ContactCount, Is.EqualTo(0));
+        Assert.That(collider3.ContactCount, Is.EqualTo(1));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider4);
+        AssertContacts(collider3, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 3.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 3);
 
-        // Assert 3
+        // Assert 3.2
         Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
 
         // Check that components are correctly linked to internal rigid bodies.
@@ -887,13 +909,24 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertContacts(collider3, collider2, collider4);
         AssertContacts(collider4, collider1, collider3);
 
-        // Act 5
+        // Act 5.1
         kinematicBody3.RemoveComponent(kinematicBody3.GetComponent<Transform2DComponent>());
 
+        // Assert 5.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(1));
+        Assert.That(collider3.ContactCount, Is.EqualTo(0));
+        Assert.That(collider4.ContactCount, Is.EqualTo(1));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1);
+        AssertContacts(collider4, collider1);
+
+        // Act 5.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 5);
 
-        // Assert 5
+        // Assert 5.2
         Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
 
         // Check that components are correctly linked to internal rigid bodies.
@@ -937,13 +970,24 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertContacts(collider3, collider2, collider4);
         AssertContacts(collider4, collider1, collider3);
 
-        // Act 7
+        // Act 7.1
         kinematicBody4.RemoveComponent(kinematicBody4.GetComponent<Transform2DComponent>());
 
+        // Assert 7.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(1));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(1));
+        Assert.That(collider4.ContactCount, Is.EqualTo(0));
+
+        AssertContacts(collider1, collider2);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2);
+
+        // Act 7.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 7);
 
-        // Assert 7
+        // Assert 7.2
         Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
 
         // Check that components are correctly linked to internal rigid bodies.
