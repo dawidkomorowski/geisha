@@ -347,6 +347,9 @@ internal struct PhysicsSceneData
                         nextContact.Link2.PrevIndex = contactIndex;
                     }
                 }
+
+                // BUG: After swap the indexes on the bodies are not updated.
+                //      Add unit test reproducing the issue first.
             }
 
             contactIndex = nextIndex;
