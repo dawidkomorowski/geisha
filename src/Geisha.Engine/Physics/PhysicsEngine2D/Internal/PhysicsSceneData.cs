@@ -348,8 +348,33 @@ internal struct PhysicsSceneData
                     }
                 }
 
-                // BUG: After swap the indexes on the bodies are not updated.
-                //      Add unit test reproducing the issue first.
+                ref var swappedContactBody1 = ref GetBodyData(swappedContact.Link1.BodyId);
+                ref var swappedContactBody2 = ref GetBodyData(swappedContact.Link2.BodyId);
+
+                if (swappedContactBody1.FirstContactIndex == oldIndex)
+                {
+                    swappedContactBody1.FirstContactIndex = contactIndex;
+                }
+
+                if (swappedContactBody2.FirstContactIndex == oldIndex)
+                {
+                    swappedContactBody2.FirstContactIndex = contactIndex;
+                }
+
+                if (swappedContactBody1.LastContactIndex == oldIndex)
+                {
+                    swappedContactBody1.LastContactIndex = contactIndex;
+                }
+
+                if (swappedContactBody2.LastContactIndex == oldIndex)
+                {
+                    swappedContactBody2.LastContactIndex = contactIndex;
+                }
+
+                if (nextIndex == oldIndex)
+                {
+                    nextIndex = contactIndex;
+                }
             }
 
             contactIndex = nextIndex;
