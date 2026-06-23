@@ -77,7 +77,7 @@ internal struct PhysicsSceneData
     {
         if (!IsValid(id))
         {
-            throw new ArgumentException("Invalid scene ID.");
+            throw new ArgumentException("Invalid Physics Scene ID.");
         }
 
         return ref Scenes[id.Index];
@@ -99,7 +99,6 @@ internal struct PhysicsSceneData
     public SizeD TileSize;
     public TileMap TileMap;
 
-
     // Sparse body array
     private struct BodyIndex
     {
@@ -112,7 +111,7 @@ internal struct PhysicsSceneData
     private List<BodyIndex> _bodyIndices;
 
     // TODO: Optimize span properties - convert to methods and cache span if used multiple times in a method?
-    //       How to avoid pitfall of cached span and modified list?
+    //       How to avoid pitfall of cached span and modified list? Where possible keep up-to-date span and update on list modifications.
     private Span<BodyIndex> BodyIndicesSpan => CollectionsMarshal.AsSpan(_bodyIndices);
 
     // Dense body array
@@ -233,19 +232,16 @@ internal struct PhysicsSceneData
 
     public ref RigidBodyData GetBodyData(RigidBodyId id)
     {
-        if (!id.IsValid)
+        if (!IsValidBodyId(id))
         {
-            throw new ArgumentException("Invalid body ID.");
+            throw new ArgumentException("Invalid Rigid Body ID.");
         }
 
-        var bodyIndex = BodyIndicesSpan[id.Index];
-        if (bodyIndex.Version != id.Version)
-        {
-            throw new ArgumentException("Version mismatch detected. The ID is no longer valid.");
-        }
-
+        ref var bodyIndex = ref BodyIndicesSpan[id.Index];
         return ref BodiesSpan[bodyIndex.DenseIndex];
     }
+
+    public bool IsValidBodyId(RigidBodyId id) => id.IsValid && BodyIndicesSpan[id.Index].Version == id.Version;
 
     private void DestroyContactsForBody(ref RigidBodyData body)
     {
