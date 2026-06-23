@@ -7,110 +7,136 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
+// TODO: How to make it thread safe?
 internal struct PhysicsSceneData
 {
-    // TODO: Maybe it is worth to encapsulate free-list logic into dedicated generic data structure?
     private static readonly PhysicsSceneData[] Scenes = new PhysicsSceneData[32];
-    private static int FirstFreeIndex = 0;
+    private static int _firstFreeIndex = 0;
     private const int NoFreeIndex = -1;
 
     static PhysicsSceneData()
     {
         for (var i = 0; i < Scenes.Length; i++)
         {
-            Scenes[i].NextFreeIndex = i + 1;
+            Scenes[i]._index = i;
+            Scenes[i]._nextFreeIndex = i + 1;
         }
 
-        Scenes[^1].NextFreeIndex = NoFreeIndex;
+        Scenes[^1]._nextFreeIndex = NoFreeIndex;
     }
 
     public static PhysicsSceneId Create(in PhysicsScene2DDefinition sceneDefinition)
     {
-        if (FirstFreeIndex == NoFreeIndex)
+        if (_firstFreeIndex == NoFreeIndex)
         {
             throw new InvalidOperationException("There are no available free slots to allocate new Physics Scene.");
         }
 
-        var scene = new PhysicsSceneData
+        ref var scene = ref Scenes[_firstFreeIndex];
+
+        Debug.Assert(scene._index == _firstFreeIndex, "Corrupted scene index.");
+
+        scene._version++;
+        scene.SimulationParameters = new SimulationParameters
         {
-            Index = FirstFreeIndex,
-            Version = Scenes[FirstFreeIndex].Version + 1,
-            NextFreeIndex = Scenes[FirstFreeIndex].NextFreeIndex,
-            SimulationParameters = new SimulationParameters
-            {
-                Substeps = sceneDefinition.Substeps > 0 ? sceneDefinition.Substeps : 1,
-                VelocityIterations = sceneDefinition.VelocityIterations > 0 ? sceneDefinition.VelocityIterations : 4,
-                PositionIterations = sceneDefinition.PositionIterations > 0 ? sceneDefinition.PositionIterations : 4,
-                PenetrationTolerance = sceneDefinition.PenetrationTolerance >= 0 ? sceneDefinition.PenetrationTolerance : 0.01
-            },
-            TileSize = sceneDefinition.TileSize,
-            TileMap = new TileMap(sceneDefinition.TileSize),
-            BodyIndices = new List<BodyIndex>(),
-            Bodies = new List<RigidBodyData>(),
-            StaticBodyIndices = new List<int>(),
-            KinematicBodyIndices = new List<int>(),
-            Contacts = new List<ContactData>(256),
-            SensorOverlapCache = new SensorOverlapCache(256),
-            SensorOverlapEvents = new List<SensorOverlapEvent>(256)
+            Substeps = sceneDefinition.Substeps > 0 ? sceneDefinition.Substeps : 1,
+            VelocityIterations = sceneDefinition.VelocityIterations > 0 ? sceneDefinition.VelocityIterations : 4,
+            PositionIterations = sceneDefinition.PositionIterations > 0 ? sceneDefinition.PositionIterations : 4,
+            PenetrationTolerance = sceneDefinition.PenetrationTolerance >= 0 ? sceneDefinition.PenetrationTolerance : 0.01
         };
+        scene.TileSize = sceneDefinition.TileSize;
+        scene.TileMap = new TileMap(sceneDefinition.TileSize);
+        scene._bodyIndices = new List<BodyIndex>();
+        scene._bodies = new List<RigidBodyData>();
+        scene.StaticBodyIndices = new List<int>();
+        scene.KinematicBodyIndices = new List<int>();
+        scene.Contacts = new List<ContactData>(256);
+        scene.SensorOverlapCache = new SensorOverlapCache(256);
+        scene.SensorOverlapEvents = new List<SensorOverlapEvent>(256);
 
-        Scenes[FirstFreeIndex] = scene;
-
-        FirstFreeIndex = Scenes[FirstFreeIndex].NextFreeIndex;
+        _firstFreeIndex = scene._nextFreeIndex;
 
         return scene.PhysicsSceneId;
     }
 
     public static void Destroy(PhysicsSceneId id)
     {
-        // TODO: Implement deletion of allocated physics scene by physics system.
-        // TODO: Reuse list slots.
-        throw new NotImplementedException("Implement scene destroy.");
+        ref var scene = ref Get(id);
+
+        var index = scene._index;
+        var version = scene._version;
+        scene = default;
+        scene._index = index;
+        scene._version = version + 1;
+        scene._nextFreeIndex = _firstFreeIndex;
+
+        _firstFreeIndex = index;
     }
 
     public static ref PhysicsSceneData Get(PhysicsSceneId id)
     {
-        if (!id.IsValid)
+        if (!IsValid(id))
         {
             throw new ArgumentException("Invalid scene ID.");
         }
 
-        // TODO: Validate ID.
         return ref Scenes[id.Index];
     }
 
-    private PhysicsSceneId PhysicsSceneId => new(Index, Version);
+    public static bool IsValid(PhysicsSceneId id) => id.IsValid && Scenes[id.Index]._version == id.Version;
 
-    public int Index;
-    public int Version;
-    public int NextFreeIndex;
+    // Indexing and versioning
+    private PhysicsSceneId PhysicsSceneId => new(_index, _version);
 
+    private int _index;
+    private int _version;
+    private int _nextFreeIndex;
+
+    // Simulation parameters
     public SimulationParameters SimulationParameters;
 
+    // Tile map
     public SizeD TileSize;
     public TileMap TileMap;
 
-    public List<BodyIndex> BodyIndices;
-    public Span<BodyIndex> BodyIndicesSpan => CollectionsMarshal.AsSpan(BodyIndices);
-    public List<RigidBodyData> Bodies;
-    public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(Bodies);
+
+    // Sparse body array
+    private struct BodyIndex
+    {
+        public const int NullIndex = -1;
+
+        public int DenseIndex;
+        public int Version;
+    }
+
+    private List<BodyIndex> _bodyIndices;
+
+    // TODO: Optimize span properties - convert to methods and cache span if used multiple times in a method?
+    //       How to avoid pitfall of cached span and modified list?
+    private Span<BodyIndex> BodyIndicesSpan => CollectionsMarshal.AsSpan(_bodyIndices);
+
+    // Dense body array
+    private List<RigidBodyData> _bodies;
+    public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(_bodies);
     public List<int> StaticBodyIndices;
     public List<int> KinematicBodyIndices;
 
+    // Contacts
     public List<ContactData> Contacts;
     public Span<ContactData> ContactsSpan => CollectionsMarshal.AsSpan(Contacts);
 
+    // Sensors
     public SensorOverlapCache SensorOverlapCache;
     public List<SensorOverlapEvent> SensorOverlapEvents;
 
     public ref RigidBodyData CreateBody(BodyType bodyType)
     {
-        var rigidBodyId = new RigidBodyId(PhysicsSceneId, BodyIndices.Count, 1);
+        var rigidBodyId = new RigidBodyId(PhysicsSceneId, _bodyIndices.Count, 1);
 
         // TODO: Reuse index slots.
-        BodyIndices.Add(default);
+        _bodyIndices.Add(default);
         ref var bodyIndex = ref BodyIndicesSpan[rigidBodyId.Index];
-        bodyIndex.DenseIndex = Bodies.Count;
+        bodyIndex.DenseIndex = _bodies.Count;
         bodyIndex.Version = rigidBodyId.Version;
 
         var body = new RigidBodyData
@@ -127,7 +153,7 @@ internal struct PhysicsSceneData
             LastContactIndex = ContactData.Link.NullIndex
         };
 
-        Bodies.Add(body);
+        _bodies.Add(body);
 
         switch (bodyType)
         {
@@ -141,7 +167,7 @@ internal struct PhysicsSceneData
                 throw new ArgumentOutOfRangeException(nameof(bodyType), bodyType, null);
         }
 
-        return ref BodiesSpan[Bodies.Count - 1];
+        return ref BodiesSpan[_bodies.Count - 1];
     }
 
     public void DestroyBody(RigidBodyId id)
@@ -169,17 +195,17 @@ internal struct PhysicsSceneData
                 throw new ArgumentOutOfRangeException();
         }
 
-        if (denseIndex == Bodies.Count - 1)
+        if (denseIndex == _bodies.Count - 1)
         {
             // If the last element is being removed, just remove it.
-            Bodies.RemoveAt(denseIndex);
+            _bodies.RemoveAt(denseIndex);
         }
         else
         {
             // Otherwise swap-remove with last element.
-            var oldDenseIndex = Bodies.Count - 1;
+            var oldDenseIndex = _bodies.Count - 1;
             BodiesSpan[denseIndex] = BodiesSpan[oldDenseIndex];
-            Bodies.RemoveAt(oldDenseIndex);
+            _bodies.RemoveAt(oldDenseIndex);
 
             // Update index pointer.
             var movedBodyIndex = BodiesSpan[denseIndex].Id.Index;
@@ -219,14 +245,6 @@ internal struct PhysicsSceneData
         }
 
         return ref BodiesSpan[bodyIndex.DenseIndex];
-    }
-
-    public struct BodyIndex
-    {
-        public const int NullIndex = -1;
-
-        public int DenseIndex;
-        public int Version;
     }
 
     private void DestroyContactsForBody(ref RigidBodyData body)

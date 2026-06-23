@@ -59,6 +59,7 @@ public abstract class PhysicsSystemTestsBase
     {
         _debugRendererForTests.Dispose();
         _physicsSystem?.Dispose();
+        _physicsSystem = null;
     }
 
     private protected PhysicsSystem GetPhysicsSystem()

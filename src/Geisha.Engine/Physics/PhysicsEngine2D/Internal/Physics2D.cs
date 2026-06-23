@@ -65,7 +65,7 @@ internal static class Physics2D
         public static int GetBodyCount(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.Bodies.Count;
+            return scene.BodiesSpan.Length;
         }
 
         public static RigidBodyId GetBodyByRawIndex(PhysicsSceneId id, int rawIndex)
