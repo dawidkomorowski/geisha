@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -100,7 +101,7 @@ internal struct PhysicsSceneData
     public TileMap TileMap;
 
     // Sparse body array
-    private struct BodyIndex
+    private struct BodyIndex : IUnmanaged<BodyIndex>
     {
         public const int NullIndex = -1;
 

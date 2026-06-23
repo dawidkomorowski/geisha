@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -12,7 +13,7 @@ internal enum CacheStatus
     Stale
 }
 
-internal struct SensorOverlap
+internal struct SensorOverlap : IUnmanaged<SensorOverlap>
 {
     public SensorOverlap(RigidBodyId body1Id, RigidBodyId body2Id)
     {
@@ -101,7 +102,7 @@ internal sealed class SensorOverlapCache
     private Span<SensorOverlap> GetOverlapsAsSpan() => CollectionsMarshal.AsSpan(_overlaps);
     public ReadOnlySpan<SensorOverlap> GetOverlaps() => GetOverlapsAsSpan();
 
-    private readonly record struct CacheKey
+    private readonly record struct CacheKey : IUnmanaged<CacheKey>
     {
         public readonly int Body1Id;
         public readonly int Body2Id;

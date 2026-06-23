@@ -1,6 +1,8 @@
-﻿namespace Geisha.Engine.Physics.PhysicsEngine2D;
+﻿using Geisha.Engine.Core.Memory;
 
-internal readonly struct SensorOverlapEvent
+namespace Geisha.Engine.Physics.PhysicsEngine2D;
+
+internal readonly struct SensorOverlapEvent : IUnmanaged<SensorOverlapEvent>
 {
     public SensorOverlapEvent(RigidBodyId sensorId, RigidBodyId visitorId, EventType type)
     {
