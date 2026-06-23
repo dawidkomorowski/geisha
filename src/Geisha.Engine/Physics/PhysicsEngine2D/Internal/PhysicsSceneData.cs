@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -47,6 +46,7 @@ internal struct PhysicsSceneData
         };
         scene.TileSize = sceneDefinition.TileSize;
         scene.TileMap = new TileMap(sceneDefinition.TileSize);
+        scene._firstFreeBodyIndex = NoFreeIndex;
         scene._bodyIndices = new List<BodyIndex>();
         scene._bodies = new List<RigidBodyData>();
         scene.StaticBodyIndices = new List<int>();
@@ -107,8 +107,10 @@ internal struct PhysicsSceneData
 
         public int DenseIndex;
         public int Version;
+        public int NextFreeIndex;
     }
 
+    private int _firstFreeBodyIndex;
     private List<BodyIndex> _bodyIndices;
 
     // TODO: Optimize span properties - convert to methods and cache span if used multiple times in a method?
@@ -131,17 +133,28 @@ internal struct PhysicsSceneData
 
     public ref RigidBodyData CreateBody(BodyType bodyType)
     {
-        var rigidBodyId = new RigidBodyId(PhysicsSceneId, _bodyIndices.Count, 1);
+        int sparseIndex;
 
-        // TODO: Reuse index slots.
-        _bodyIndices.Add(default);
-        ref var bodyIndex = ref BodyIndicesSpan[rigidBodyId.Index];
+        if (_firstFreeBodyIndex == NoFreeIndex)
+        {
+            sparseIndex = _bodyIndices.Count;
+            _bodyIndices.Add(default);
+            BodyIndicesSpan[sparseIndex].NextFreeIndex = NoFreeIndex;
+        }
+        else
+        {
+            sparseIndex = _firstFreeBodyIndex;
+            _firstFreeBodyIndex = BodyIndicesSpan[sparseIndex].NextFreeIndex;
+        }
+
+        ref var bodyIndex = ref BodyIndicesSpan[sparseIndex];
         bodyIndex.DenseIndex = _bodies.Count;
-        bodyIndex.Version = rigidBodyId.Version;
+        bodyIndex.Version++;
+
+        var rigidBodyId = new RigidBodyId(PhysicsSceneId, sparseIndex, bodyIndex.Version);
 
         var body = new RigidBodyData
         {
-            RuntimeId = RuntimeId.Next(),
             Id = rigidBodyId,
             Type = bodyType,
             CollisionNormalFilter = CollisionNormalFilter.None,
@@ -229,6 +242,8 @@ internal struct PhysicsSceneData
 
         BodyIndicesSpan[id.Index].Version++;
         BodyIndicesSpan[id.Index].DenseIndex = BodyIndex.NullIndex;
+        BodyIndicesSpan[id.Index].NextFreeIndex = _firstFreeBodyIndex;
+        _firstFreeBodyIndex = id.Index;
     }
 
     public ref RigidBodyData GetBodyData(RigidBodyId id)

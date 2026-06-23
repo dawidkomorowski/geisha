@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -7,7 +6,6 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal struct RigidBodyData : IUnmanaged<RigidBodyData>
 {
-    public RuntimeId RuntimeId;
     public RigidBodyId Id;
 
     public BodyType Type;
