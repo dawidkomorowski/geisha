@@ -13,7 +13,7 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
-internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISceneObserver
+internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISceneObserver, IDisposable
 {
     private readonly ITimeSystem _timeSystem;
     private readonly IDebugRenderer _debugRenderer;
@@ -68,6 +68,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         _physicsScene2D = PhysicsScene2D_V2.Create(sceneDefinition);
 
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
+    }
+
+    public void Dispose()
+    {
+        PhysicsScene2D_V2.Destroy(_physicsScene2D);
     }
 
     public PhysicsScene2D_V2 PhysicsScene2D => _physicsScene2D;

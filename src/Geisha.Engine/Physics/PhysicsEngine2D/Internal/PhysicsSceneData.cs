@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
@@ -37,11 +38,11 @@ internal struct PhysicsSceneData
 
         Scenes.Add(scene);
 
-        if (Scenes.Count > 2000)
+        if (Scenes.Count > 10)
         {
             // TODO: Implement deletion of allocated physics scene by physics system.
             // TODO: Reuse list slots.
-            throw new InvalidOperationException();
+            throw new NotImplementedException("Scene reallocation not yet implemented.");
         }
 
         return scene.PhysicsSceneId;
@@ -224,6 +225,9 @@ internal struct PhysicsSceneData
 
             if (contact.Link1.PrevIndex != ContactData.Link.NullIndex)
             {
+                // TODO: Assert for debugging only - random crash is observed in Benchmark application when
+                //       moving from one physics benchmark to another.
+                Debug.Assert(contact.Link1.PrevIndex >= 0 && contact.Link1.PrevIndex < ContactsSpan.Length);
                 ref var prevContact = ref ContactsSpan[contact.Link1.PrevIndex];
                 if (prevContact.Link1.BodyId == contact.Link1.BodyId)
                 {

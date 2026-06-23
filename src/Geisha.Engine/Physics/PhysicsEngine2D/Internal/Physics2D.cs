@@ -13,6 +13,11 @@ internal static class Physics2D
             return PhysicsSceneData.Create(sceneDefinition);
         }
 
+        public static void Destroy(PhysicsSceneId id)
+        {
+            PhysicsSceneData.Destroy(id);
+        }
+
         public static int GetSubsteps(PhysicsSceneId id)
         {
             throw new NotImplementedException();

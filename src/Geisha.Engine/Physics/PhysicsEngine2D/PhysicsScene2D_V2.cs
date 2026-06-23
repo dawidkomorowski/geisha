@@ -14,7 +14,8 @@ internal readonly record struct PhysicsScene2DDefinition
     public double PenetrationTolerance { get; init; }
 }
 
-internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2>, IDisposable
+// TODO: Add API to test validity of existing handle.
+internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2>
 {
     public static PhysicsScene2D_V2 Create(in PhysicsScene2DDefinition sceneDefinition)
     {
@@ -22,10 +23,9 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
         return new PhysicsScene2D_V2(id);
     }
 
-    public void Dispose()
+    public static void Destroy(PhysicsScene2D_V2 scene)
     {
-        // TODO: Does it make sense to implement IDisposable? Or maybe some other type of API?
-        throw new NotImplementedException();
+        Physics2D.Scene.Destroy(scene.Id);
     }
 
     private PhysicsScene2D_V2(PhysicsSceneId id)
