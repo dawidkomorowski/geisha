@@ -9,15 +9,33 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal struct PhysicsSceneData
 {
-    private static readonly List<PhysicsSceneData> Scenes = new();
-    private static Span<PhysicsSceneData> ScenesSpan => CollectionsMarshal.AsSpan(Scenes);
+    // TODO: Maybe it is worth to encapsulate free-list logic into dedicated generic data structure?
+    private static readonly PhysicsSceneData[] Scenes = new PhysicsSceneData[32];
+    private static int FirstFreeIndex = 0;
+    private const int NoFreeIndex = -1;
+
+    static PhysicsSceneData()
+    {
+        for (var i = 0; i < Scenes.Length; i++)
+        {
+            Scenes[i].NextFreeIndex = i + 1;
+        }
+
+        Scenes[^1].NextFreeIndex = NoFreeIndex;
+    }
 
     public static PhysicsSceneId Create(in PhysicsScene2DDefinition sceneDefinition)
     {
+        if (FirstFreeIndex == NoFreeIndex)
+        {
+            throw new InvalidOperationException("There are no available free slots to allocate new Physics Scene.");
+        }
+
         var scene = new PhysicsSceneData
         {
-            Index = Scenes.Count,
-            Version = 1,
+            Index = FirstFreeIndex,
+            Version = Scenes[FirstFreeIndex].Version + 1,
+            NextFreeIndex = Scenes[FirstFreeIndex].NextFreeIndex,
             SimulationParameters = new SimulationParameters
             {
                 Substeps = sceneDefinition.Substeps > 0 ? sceneDefinition.Substeps : 1,
@@ -36,21 +54,18 @@ internal struct PhysicsSceneData
             SensorOverlapEvents = new List<SensorOverlapEvent>(256)
         };
 
-        Scenes.Add(scene);
+        Scenes[FirstFreeIndex] = scene;
 
-        if (Scenes.Count > 10)
-        {
-            // TODO: Implement deletion of allocated physics scene by physics system.
-            // TODO: Reuse list slots.
-            throw new NotImplementedException("Scene reallocation not yet implemented.");
-        }
+        FirstFreeIndex = Scenes[FirstFreeIndex].NextFreeIndex;
 
         return scene.PhysicsSceneId;
     }
 
     public static void Destroy(PhysicsSceneId id)
     {
-        throw new NotImplementedException();
+        // TODO: Implement deletion of allocated physics scene by physics system.
+        // TODO: Reuse list slots.
+        throw new NotImplementedException("Implement scene destroy.");
     }
 
     public static ref PhysicsSceneData Get(PhysicsSceneId id)
@@ -61,13 +76,14 @@ internal struct PhysicsSceneData
         }
 
         // TODO: Validate ID.
-        return ref ScenesSpan[id.Index];
+        return ref Scenes[id.Index];
     }
 
     private PhysicsSceneId PhysicsSceneId => new(Index, Version);
 
     public int Index;
     public int Version;
+    public int NextFreeIndex;
 
     public SimulationParameters SimulationParameters;
 

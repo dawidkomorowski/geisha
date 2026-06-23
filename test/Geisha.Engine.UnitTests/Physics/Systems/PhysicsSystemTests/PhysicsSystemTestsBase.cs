@@ -33,6 +33,7 @@ public abstract class PhysicsSystemTestsBase
     private protected Scene Scene = null!;
     private protected ITimeSystem TimeSystem = null!;
     private protected IDebugRenderer DebugRenderer = null!;
+    private PhysicsSystem? _physicsSystem;
 
     private protected const double Epsilon = 1e-6;
     private protected static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
@@ -57,6 +58,7 @@ public abstract class PhysicsSystemTestsBase
     public void TearDown()
     {
         _debugRendererForTests.Dispose();
+        _physicsSystem?.Dispose();
     }
 
     private protected PhysicsSystem GetPhysicsSystem()
@@ -72,6 +74,8 @@ public abstract class PhysicsSystemTestsBase
     private protected PhysicsSystem GetPhysicsSystem(PhysicsConfiguration configuration)
     {
         var physicsSystem = new PhysicsSystem(configuration, TimeSystem, _debugRendererForTests);
+        _physicsSystem = physicsSystem;
+
         Scene.AddObserver(physicsSystem);
         return physicsSystem;
     }
