@@ -12,14 +12,14 @@ namespace Geisha.Engine.Physics.Systems;
 internal sealed class PhysicsBodyProxy : IDisposable
 {
     private readonly PhysicsSystemState _physicsSystemState;
-    private readonly PhysicsScene2D_V2 _physicsScene;
+    private readonly PhysicsScene2D _physicsScene;
     private readonly RigidBody2D _body;
 
-    private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
+    private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
         Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
         _physicsSystemState = physicsSystemState;
-        _physicsScene = physicsScene2Dv2;
+        _physicsScene = physicsScene2D;
 
         Transform = transform;
         Collider = collider;
@@ -31,25 +31,25 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
         _body = Collider switch
         {
-            CircleColliderComponent circleColliderComponent => physicsScene2Dv2.CreateBody(bodyType, circleColliderComponent.Radius),
-            RectangleColliderComponent rectangleColliderComponent => physicsScene2Dv2.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
-            TileColliderComponent => physicsScene2Dv2.CreateTileBody(),
+            CircleColliderComponent circleColliderComponent => physicsScene2D.CreateBody(bodyType, circleColliderComponent.Radius),
+            RectangleColliderComponent rectangleColliderComponent => physicsScene2D.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
+            TileColliderComponent => physicsScene2D.CreateTileBody(),
             _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
         SynchronizeBody();
     }
 
-    public static PhysicsBodyProxy CreateStatic(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
+    public static PhysicsBodyProxy CreateStatic(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
         Transform2DComponent transform, Collider2DComponent collider)
     {
-        return new PhysicsBodyProxy(physicsSystemState, physicsScene2Dv2, transform, collider, null);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, transform, collider, null);
     }
 
-    public static PhysicsBodyProxy CreateKinematic(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
+    public static PhysicsBodyProxy CreateKinematic(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
         Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
-        return new PhysicsBodyProxy(physicsSystemState, physicsScene2Dv2, transform, collider, kinematicBodyComponent);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, transform, collider, kinematicBodyComponent);
     }
 
     public Entity Entity => Transform.Entity;

@@ -15,20 +15,20 @@ internal readonly record struct PhysicsScene2DDefinition
 }
 
 // TODO: Add API to test validity of existing handle.
-internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2>
+internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
 {
-    public static PhysicsScene2D_V2 Create(in PhysicsScene2DDefinition sceneDefinition)
+    public static PhysicsScene2D Create(in PhysicsScene2DDefinition sceneDefinition)
     {
         var id = Physics2D.Scene.Create(sceneDefinition);
-        return new PhysicsScene2D_V2(id);
+        return new PhysicsScene2D(id);
     }
 
-    public static void Destroy(PhysicsScene2D_V2 scene)
+    public static void Destroy(PhysicsScene2D scene)
     {
         Physics2D.Scene.Destroy(scene.Id);
     }
 
-    private PhysicsScene2D_V2(PhysicsSceneId id)
+    private PhysicsScene2D(PhysicsSceneId id)
     {
         Id = id;
         // TODO: Construct it on the fly to avoid storing?

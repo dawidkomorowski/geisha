@@ -17,7 +17,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 {
     private readonly ITimeSystem _timeSystem;
     private readonly IDebugRenderer _debugRenderer;
-    private readonly PhysicsScene2D_V2 _physicsScene2D;
+    private readonly PhysicsScene2D _physicsScene2D;
     private readonly PhysicsSystemState _physicsSystemState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, ITimeSystem timeSystem, IDebugRenderer debugRenderer)
@@ -65,17 +65,17 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             PenetrationTolerance = physicsConfiguration.PenetrationTolerance
         };
 
-        _physicsScene2D = PhysicsScene2D_V2.Create(sceneDefinition);
+        _physicsScene2D = PhysicsScene2D.Create(sceneDefinition);
 
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
     }
 
     public void Dispose()
     {
-        PhysicsScene2D_V2.Destroy(_physicsScene2D);
+        PhysicsScene2D.Destroy(_physicsScene2D);
     }
 
-    public PhysicsScene2D_V2 PhysicsScene2D => _physicsScene2D;
+    public PhysicsScene2D PhysicsScene2D => _physicsScene2D;
 
     // TODO: Should it stay this way?
     internal RigidBody2D FindInternalBody(Entity entity)

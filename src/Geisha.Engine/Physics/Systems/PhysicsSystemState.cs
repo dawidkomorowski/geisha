@@ -12,12 +12,12 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsSystemState
 {
-    private readonly PhysicsScene2D_V2 _physicsScene2D;
+    private readonly PhysicsScene2D _physicsScene2D;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
     private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
     private readonly Dictionary<RigidBodyId, PhysicsBodyProxy> _proxyById = new();
 
-    public PhysicsSystemState(in PhysicsScene2D_V2 physicsScene2D)
+    public PhysicsSystemState(in PhysicsScene2D physicsScene2D)
     {
         _physicsScene2D = physicsScene2D;
     }
