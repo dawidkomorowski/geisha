@@ -702,7 +702,8 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    [Description("Regression test for incorrect contacts removal when removed body has multiple contacts and those are the only contacts in physics scene.")]
+    [Description(
+        "Regression test for incorrect contacts removal when removed body has multiple (>=3) contacts and those are the only contacts in physics scene.")]
     public void KinematicBody_ShouldClearContactsWithMultipleBodies_WhenKinematicBodyIsRemoved()
     {
         // Arrange
@@ -710,10 +711,12 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 100, 50);
         var staticBody1 = CreateRectangleStaticBody(-75, 0, 100, 50);
         var staticBody2 = CreateRectangleStaticBody(75, 0, 100, 50);
+        var staticBody3 = CreateRectangleStaticBody(0, 60, 50, 100);
 
         var kinematicCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
         var staticCollider1 = staticBody1.GetComponent<RectangleColliderComponent>();
         var staticCollider2 = staticBody2.GetComponent<RectangleColliderComponent>();
+        var staticCollider3 = staticBody3.GetComponent<RectangleColliderComponent>();
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 0);
@@ -722,6 +725,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(kinematicCollider.IsColliding, Is.True);
         Assert.That(staticCollider1.IsColliding, Is.True);
         Assert.That(staticCollider2.IsColliding, Is.True);
+        Assert.That(staticCollider3.IsColliding, Is.True);
 
         // Act
         kinematicBody.RemoveComponent(kinematicBody.GetComponent<Transform2DComponent>());
@@ -743,6 +747,11 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(staticCollider2.IsColliding, Is.False);
         Assert.That(staticCollider2.GetContacts(staticContacts2), Is.Zero);
         Assert.That(staticContacts2, Has.Count.Zero);
+
+        var staticContacts3 = new List<Contact2D>();
+        Assert.That(staticCollider3.IsColliding, Is.False);
+        Assert.That(staticCollider3.GetContacts(staticContacts3), Is.Zero);
+        Assert.That(staticContacts3, Has.Count.Zero);
     }
 
     #endregion

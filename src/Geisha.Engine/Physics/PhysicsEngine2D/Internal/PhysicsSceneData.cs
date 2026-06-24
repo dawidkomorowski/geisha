@@ -294,8 +294,6 @@ internal struct PhysicsSceneData
                 }
             }
 
-            // TODO: Fixing links for next contacts was missing producing a crash in Benchmark application when moving from one physics benchmark to another.
-            //       No test reproduced this issue. How to reproduce it in test to avoid future regression?
             if (contact.Link1.NextIndex != ContactData.Link.NullIndex)
             {
                 ref var nextContact = ref ContactsSpan[contact.Link1.NextIndex];
