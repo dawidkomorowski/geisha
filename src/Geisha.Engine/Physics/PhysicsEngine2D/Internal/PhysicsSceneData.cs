@@ -261,19 +261,15 @@ internal struct PhysicsSceneData
 
     private void DestroyContactsForBody(ref RigidBodyData body)
     {
-        var contactIndex = body.FirstContactIndex;
-
-        while (contactIndex != ContactData.Link.NullIndex)
+        while (body.FirstContactIndex != ContactData.Link.NullIndex)
         {
+            var contactIndex = body.FirstContactIndex;
             ref var contact = ref ContactsSpan[contactIndex];
             ref var body1 = ref GetBodyData(contact.Link1.BodyId);
             ref var body2 = ref GetBodyData(contact.Link2.BodyId);
 
             if (contact.Link1.PrevIndex != ContactData.Link.NullIndex)
             {
-                // TODO: Assert for debugging only - random crash is observed in Benchmark application when
-                //       moving from one physics benchmark to another.
-                Debug.Assert(contact.Link1.PrevIndex >= 0 && contact.Link1.PrevIndex < ContactsSpan.Length);
                 ref var prevContact = ref ContactsSpan[contact.Link1.PrevIndex];
                 if (prevContact.Link1.BodyId == contact.Link1.BodyId)
                 {
@@ -295,6 +291,34 @@ internal struct PhysicsSceneData
                 else
                 {
                     prevContact.Link2.NextIndex = contact.Link2.NextIndex;
+                }
+            }
+
+            // TODO: Fixing links for next contacts was missing producing a crash in Benchmark application when moving from one physics benchmark to another.
+            //       No test reproduced this issue. How to reproduce it in test to avoid future regression?
+            if (contact.Link1.NextIndex != ContactData.Link.NullIndex)
+            {
+                ref var nextContact = ref ContactsSpan[contact.Link1.NextIndex];
+                if (nextContact.Link1.BodyId == contact.Link1.BodyId)
+                {
+                    nextContact.Link1.PrevIndex = contact.Link1.PrevIndex;
+                }
+                else
+                {
+                    nextContact.Link2.PrevIndex = contact.Link1.PrevIndex;
+                }
+            }
+
+            if (contact.Link2.NextIndex != ContactData.Link.NullIndex)
+            {
+                ref var nextContact = ref ContactsSpan[contact.Link2.NextIndex];
+                if (nextContact.Link1.BodyId == contact.Link2.BodyId)
+                {
+                    nextContact.Link1.PrevIndex = contact.Link2.PrevIndex;
+                }
+                else
+                {
+                    nextContact.Link2.PrevIndex = contact.Link2.PrevIndex;
                 }
             }
 
@@ -320,8 +344,6 @@ internal struct PhysicsSceneData
 
             body1.ContactCount--;
             body2.ContactCount--;
-
-            var nextIndex = contact.Link1.BodyId == body.Id ? contact.Link1.NextIndex : contact.Link2.NextIndex;
 
             if (contactIndex == Contacts.Count - 1)
             {
@@ -420,14 +442,7 @@ internal struct PhysicsSceneData
                 {
                     swappedContactBody2.LastContactIndex = contactIndex;
                 }
-
-                if (nextIndex == oldIndex)
-                {
-                    nextIndex = contactIndex;
-                }
             }
-
-            contactIndex = nextIndex;
         }
     }
 }
