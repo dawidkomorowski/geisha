@@ -16,6 +16,7 @@ internal sealed class PhysicsSystemState
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
     private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
     private readonly Dictionary<RigidBodyId, PhysicsBodyProxy> _proxyById = new();
+    private readonly Dictionary<RigidBodyId, Collider2DComponent> _removedCollidersCache = new();
 
     public PhysicsSystemState(in PhysicsScene2D physicsScene2D)
     {
@@ -24,6 +25,9 @@ internal sealed class PhysicsSystemState
 
     public ReadOnlySpan<PhysicsBodyProxy> GetPhysicsBodyProxies() => CollectionsMarshal.AsSpan(_physicsBodyProxies);
     public PhysicsBodyProxy GetProxyById(RigidBodyId id) => _proxyById[id];
+    public PhysicsBodyProxy? GetProxyByIdOrNull(RigidBodyId id) => _proxyById.GetValueOrDefault(id);
+    public Collider2DComponent? GetRemovedColliderByIdOrNull(RigidBodyId id) => _removedCollidersCache.GetValueOrDefault(id);
+    public void ClearRemovedCollidersCache() => _removedCollidersCache.Clear();
 
     public void OnEntityParentChanged(Entity entity)
     {
@@ -161,11 +165,13 @@ internal sealed class PhysicsSystemState
 
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (trackedEntity.PhysicsBodyProxy is null) return;
+        var proxy = trackedEntity.PhysicsBodyProxy;
+        if (proxy is null) return;
 
-        _physicsBodyProxies.Remove(trackedEntity.PhysicsBodyProxy);
-        _proxyById.Remove(trackedEntity.PhysicsBodyProxy.RigidBodyId);
-        trackedEntity.PhysicsBodyProxy.Dispose();
+        _physicsBodyProxies.Remove(proxy);
+        _proxyById.Remove(proxy.RigidBodyId);
+        _removedCollidersCache[proxy.RigidBodyId] = proxy.Collider;
+        proxy.Dispose();
         trackedEntity.PhysicsBodyProxy = null;
     }
 

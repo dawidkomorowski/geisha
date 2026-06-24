@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -307,6 +308,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         }
 
         InvokeEventCallbacks();
+
+        _physicsSystemState.ClearRemovedCollidersCache();
     }
 
     public void PreparePhysicsDebugInformation()
@@ -468,12 +471,14 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     {
         foreach (var sensorOverlapEvent in _physicsScene2D.GetSensorOverlapEvents())
         {
-            // TODO: Throws when events are dispatched for a removed proxy.
-            var proxy1 = _physicsSystemState.GetProxyById(sensorOverlapEvent.SensorId);
-            var proxy2 = _physicsSystemState.GetProxyById(sensorOverlapEvent.VisitorId);
+            var proxy1 = _physicsSystemState.GetProxyByIdOrNull(sensorOverlapEvent.Body1Id);
+            var proxy2 = _physicsSystemState.GetProxyByIdOrNull(sensorOverlapEvent.Body2Id);
 
-            var collider1 = proxy1.Collider;
-            var collider2 = proxy2.Collider;
+            var collider1 = proxy1?.Collider ?? _physicsSystemState.GetRemovedColliderByIdOrNull(sensorOverlapEvent.Body1Id);
+            var collider2 = proxy2?.Collider ?? _physicsSystemState.GetRemovedColliderByIdOrNull(sensorOverlapEvent.Body2Id);
+
+            Debug.Assert(collider1 is not null, "Collider1 is null. Physics state may be corrupted.");
+            Debug.Assert(collider2 is not null, "Collider2 is null. Physics state may be corrupted.");
 
             switch (sensorOverlapEvent.Type)
             {

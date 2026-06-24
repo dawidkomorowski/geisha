@@ -254,31 +254,15 @@ internal static class Physics2D
         {
             foreach (var sensorOverlap in scene.SensorOverlapCache.GetOverlaps())
             {
-                RigidBodyId sensorId;
-                RigidBodyId visitorId;
-
-                ref var body1 = ref scene.GetBodyData(sensorOverlap.Body1Id);
-
-                if (body1.IsSensor)
-                {
-                    sensorId = sensorOverlap.Body1Id;
-                    visitorId = sensorOverlap.Body2Id;
-                }
-                else
-                {
-                    sensorId = sensorOverlap.Body2Id;
-                    visitorId = sensorOverlap.Body1Id;
-                }
-
                 switch (sensorOverlap.CacheStatus)
                 {
                     case CacheStatus.New:
-                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorId, visitorId, SensorOverlapEvent.EventType.Begin));
+                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorOverlap.Body1Id, sensorOverlap.Body2Id, SensorOverlapEvent.EventType.Begin));
                         break;
                     case CacheStatus.Updated:
                         break;
                     case CacheStatus.Stale:
-                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorId, visitorId, SensorOverlapEvent.EventType.End));
+                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorOverlap.Body1Id, sensorOverlap.Body2Id, SensorOverlapEvent.EventType.End));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
