@@ -63,25 +63,25 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
 
     public BodiesView Bodies { get; }
 
-    public RigidBody2D_V2 CreateBody(BodyType bodyType, double circleColliderRadius)
+    public RigidBody2D CreateBody(BodyType bodyType, double circleColliderRadius)
     {
         var id = Physics2D.Scene.CreateBody(Id, bodyType, circleColliderRadius);
-        return new RigidBody2D_V2(id);
+        return new RigidBody2D(id);
     }
 
-    public RigidBody2D_V2 CreateBody(BodyType bodyType, in SizeD rectangleColliderSize)
+    public RigidBody2D CreateBody(BodyType bodyType, in SizeD rectangleColliderSize)
     {
         var id = Physics2D.Scene.CreateBody(Id, bodyType, rectangleColliderSize);
-        return new RigidBody2D_V2(id);
+        return new RigidBody2D(id);
     }
 
-    public RigidBody2D_V2 CreateTileBody()
+    public RigidBody2D CreateTileBody()
     {
         var id = Physics2D.Scene.CreateTileBody(Id);
-        return new RigidBody2D_V2(id);
+        return new RigidBody2D(id);
     }
 
-    public void DestroyBody(RigidBody2D_V2 body)
+    public void DestroyBody(RigidBody2D body)
     {
         if (Id != body.Id.PhysicsSceneId)
         {
@@ -121,6 +121,6 @@ internal readonly record struct PhysicsScene2D_V2 : IUnmanaged<PhysicsScene2D_V2
 
         public int Count => Physics2D.Scene.GetBodyCount(PhysicsSceneId);
 
-        public RigidBody2D_V2 this[int index] => new(Physics2D.Scene.GetBodyByRawIndex(PhysicsSceneId, index));
+        public RigidBody2D this[int index] => new(Physics2D.Scene.GetBodyByRawIndex(PhysicsSceneId, index));
     }
 }

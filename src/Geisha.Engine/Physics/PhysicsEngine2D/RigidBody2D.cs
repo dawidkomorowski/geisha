@@ -5,9 +5,9 @@ using Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-internal readonly record struct RigidBody2D_V2(RigidBodyId Id) : IUnmanaged<RigidBody2D_V2>
+internal readonly record struct RigidBody2D(RigidBodyId Id) : IUnmanaged<RigidBody2D>
 {
-    public static RigidBody2D_V2 GetById(RigidBodyId id) => new(id);
+    public static RigidBody2D GetById(RigidBodyId id) => new(id);
 
     public BodyType Type => Physics2D.Body.GetType(Id);
     public ColliderType ColliderType => Physics2D.Body.GetColliderType(Id);

@@ -13,7 +13,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
 {
     private readonly PhysicsSystemState _physicsSystemState;
     private readonly PhysicsScene2D_V2 _physicsScene;
-    private readonly RigidBody2D_V2 _body;
+    private readonly RigidBody2D _body;
 
     private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, in PhysicsScene2D_V2 physicsScene2Dv2,
         Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
@@ -58,7 +58,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
 
     public RigidBodyId RigidBodyId => _body.Id;
-    public RigidBody2D_V2 RigidBody => _body;
+    public RigidBody2D RigidBody => _body;
 
     public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
     public int ContactCount => _body.ContactCount;
@@ -78,7 +78,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             var contactManifold = contact.ContactManifold;
 
             var thisIsBody1 = _body.Id == contact.Body1Id;
-            var otherBody = thisIsBody1 ? RigidBody2D_V2.GetById(contact.Body2Id) : RigidBody2D_V2.GetById(contact.Body1Id);
+            var otherBody = thisIsBody1 ? RigidBody2D.GetById(contact.Body2Id) : RigidBody2D.GetById(contact.Body1Id);
             var otherProxy = _physicsSystemState.GetProxyById(otherBody.Id);
 
             FixedList2<ContactPoint2D> contactPoints2D = default;

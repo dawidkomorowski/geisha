@@ -78,7 +78,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     public PhysicsScene2D_V2 PhysicsScene2D => _physicsScene2D;
 
     // TODO: Should it stay this way?
-    internal RigidBody2D_V2 FindInternalBody(Entity entity)
+    internal RigidBody2D FindInternalBody(Entity entity)
     {
         var proxies = _physicsSystemState.GetPhysicsBodyProxies();
         foreach (var proxy in proxies)
