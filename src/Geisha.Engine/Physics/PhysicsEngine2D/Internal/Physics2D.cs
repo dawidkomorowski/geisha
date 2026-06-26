@@ -302,6 +302,8 @@ internal static class Physics2D
             ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
             ref var body = ref scene.GetBodyData(id);
 
+            if (body.Position == value) return;
+
             if (body.ColliderType is ColliderType.Tile)
             {
                 body.Position = body.EnableCollisionDetection
@@ -312,6 +314,8 @@ internal static class Physics2D
             {
                 body.Position = value;
             }
+
+            body.RecomputeCollider();
         }
 
         public static double GetRotation(RigidBodyId id)
@@ -323,7 +327,12 @@ internal static class Physics2D
         public static void SetRotation(RigidBodyId id, double value)
         {
             ref var body = ref GetBodyData(id);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (body.Rotation == value) return;
+
             body.Rotation = body.ColliderType is ColliderType.Tile ? 0 : value;
+            body.RecomputeCollider();
         }
 
         public static Vector2 GetLinearVelocity(RigidBodyId id)
@@ -499,6 +508,12 @@ internal static class Physics2D
             ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
             ref var body = ref scene.GetBodyData(id);
 
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (body.ColliderType is ColliderType.Circle && body.CircleColliderRadius == radius)
+            {
+                return;
+            }
+
             if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
             {
                 scene.TileMap.RemoveTile(ref body);
@@ -515,6 +530,11 @@ internal static class Physics2D
             ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
             ref var body = ref scene.GetBodyData(id);
 
+            if (body.ColliderType is ColliderType.Rectangle && body.RectangleColliderSize == size)
+            {
+                return;
+            }
+
             if (body.ColliderType is ColliderType.Tile && body.EnableCollisionDetection)
             {
                 scene.TileMap.RemoveTile(ref body);
@@ -530,6 +550,11 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
             ref var body = ref scene.GetBodyData(id);
+
+            if (body.ColliderType is ColliderType.Tile)
+            {
+                return;
+            }
 
             if (body.Type is BodyType.Kinematic)
             {
