@@ -25,7 +25,15 @@ namespace Geisha.Engine.Physics.Components;
 /// </remarks>
 public abstract class Collider2DComponent : Component
 {
+    // TODO: This could be replaced with field keyword in .NET 10 (C# 14).
+    // TODO: When field keyword is used, consider searching for other places in the codebase where it could be used as well.
+    private bool _enabled = true;
+    private bool _isSensor = false;
+    private CollisionBitmask _collisionLayer = CollisionBitmask.All;
+    private CollisionBitmask _collisionMask = CollisionBitmask.All;
+
     internal PhysicsBodyProxy? PhysicsBodyProxy { get; set; }
+    internal bool IsDirty { get; set; } = true;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Collider2DComponent" /> class attached to the specified entity.
@@ -58,7 +66,15 @@ public abstract class Collider2DComponent : Component
     ///         The default value is <see langword="true"/>.
     ///     </para>
     /// </remarks>
-    public bool Enabled { get; set; } = true;
+    public bool Enabled
+    {
+        get => _enabled;
+        set
+        {
+            _enabled = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets or sets a value indicating whether this collider behaves as a sensor.
@@ -81,7 +97,15 @@ public abstract class Collider2DComponent : Component
     ///         The default value is <see langword="false"/>.
     ///     </para>
     /// </remarks>
-    public bool IsSensor { get; set; } = false;
+    public bool IsSensor
+    {
+        get => _isSensor;
+        set
+        {
+            _isSensor = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets or sets a callback invoked when this collider begins an overlap that involves at least one sensor collider.
@@ -154,7 +178,15 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     /// <seealso cref="CollisionMask" />
     /// <seealso cref="CollisionBitmask" />
-    public CollisionBitmask CollisionLayer { get; set; } = CollisionBitmask.All;
+    public CollisionBitmask CollisionLayer
+    {
+        get => _collisionLayer;
+        set
+        {
+            _collisionLayer = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets or sets the collision mask bitmask that defines which layers this collider can collide with.
@@ -176,7 +208,15 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     /// <seealso cref="CollisionLayer" />
     /// <seealso cref="CollisionBitmask" />
-    public CollisionBitmask CollisionMask { get; set; } = CollisionBitmask.All;
+    public CollisionBitmask CollisionMask
+    {
+        get => _collisionMask;
+        set
+        {
+            _collisionMask = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets the axis-aligned bounding rectangle of this collider as computed at the last physics simulation step.

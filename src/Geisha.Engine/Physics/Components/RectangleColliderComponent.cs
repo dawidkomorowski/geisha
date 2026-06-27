@@ -25,6 +25,8 @@ namespace Geisha.Engine.Physics.Components;
 [ComponentId("Geisha.Engine.Physics.RectangleColliderComponent")]
 public sealed class RectangleColliderComponent : Collider2DComponent
 {
+    private Vector2 _dimensions;
+
     internal RectangleColliderComponent(Entity entity) : base(entity)
     {
     }
@@ -38,7 +40,15 @@ public sealed class RectangleColliderComponent : Collider2DComponent
     ///     It determines the area used for collision detection and physics interactions.
     ///     A larger dimensions result in a bigger collision area for the associated entity.
     /// </remarks>
-    public Vector2 Dimensions { get; set; }
+    public Vector2 Dimensions
+    {
+        get => _dimensions;
+        set
+        {
+            _dimensions = value;
+            IsDirty = true;
+        }
+    }
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)

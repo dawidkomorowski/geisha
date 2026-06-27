@@ -147,25 +147,30 @@ internal sealed class PhysicsBodyProxy : IDisposable
             }
         }
 
-        _body.EnableCollisionDetection = Collider.Enabled;
-        _body.IsSensor = Collider.IsSensor;
-        _body.CollisionLayer = Collider.CollisionLayer.Value;
-        _body.CollisionMask = Collider.CollisionMask.Value;
-
-        switch (Collider)
+        if (Collider.IsDirty)
         {
-            case CircleColliderComponent circleColliderComponent:
-                _body.SetCircleCollider(circleColliderComponent.Radius);
-                break;
-            case RectangleColliderComponent rectangleColliderComponent:
-                _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
-                break;
-            case TileColliderComponent:
-                _body.SetTileCollider();
-                break;
-            default:
-                throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
+            _body.EnableCollisionDetection = Collider.Enabled;
+            _body.IsSensor = Collider.IsSensor;
+            _body.CollisionLayer = Collider.CollisionLayer.Value;
+            _body.CollisionMask = Collider.CollisionMask.Value;
+
+            switch (Collider)
+            {
+                case CircleColliderComponent circleColliderComponent:
+                    _body.SetCircleCollider(circleColliderComponent.Radius);
+                    break;
+                case RectangleColliderComponent rectangleColliderComponent:
+                    _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
+                    break;
+                case TileColliderComponent:
+                    _body.SetTileCollider();
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
+            }
         }
+
+        Collider.IsDirty = false;
     }
 
     internal void SynchronizeComponents()
