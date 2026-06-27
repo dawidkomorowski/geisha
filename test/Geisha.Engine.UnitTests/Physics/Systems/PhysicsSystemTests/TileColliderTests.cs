@@ -6,7 +6,6 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
-using Geisha.Engine.Physics.Systems;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -4,9 +4,8 @@ internal static class KinematicIntegration
 {
     public static void IntegrateKinematicMotion(ref PhysicsSceneData scene, double deltaTimeSeconds)
     {
-        foreach (var index in scene.KinematicBodyIndices)
+        foreach (ref var body in scene.KinematicBodiesSpan)
         {
-            ref var body = ref scene.BodiesSpan[index];
             body.Position += body.LinearVelocity * deltaTimeSeconds;
             body.Rotation += body.AngularVelocity * deltaTimeSeconds;
         }

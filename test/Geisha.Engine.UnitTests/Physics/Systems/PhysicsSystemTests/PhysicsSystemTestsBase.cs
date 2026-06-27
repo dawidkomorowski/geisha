@@ -16,18 +16,37 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class EnableVisualOutputAttribute : PropertyAttribute
 {
-    public static string PropertyName => nameof(EnableVisualOutputAttribute).Replace("Attribute", "");
-
     public EnableVisualOutputAttribute() : base(true)
     {
+    }
+
+    public static bool IsSetForCurrentTest()
+    {
+        var propertyName = nameof(EnableVisualOutputAttribute).Replace("Attribute", "");
+        var hasProperty = TestContext.CurrentContext.Test.Properties.ContainsKey(propertyName);
+
+        if (hasProperty)
+        {
+            return true;
+        }
+
+        var testClassName = TestContext.CurrentContext.Test.ClassName ?? throw new InvalidOperationException("Test.ClassName is null.");
+        var testMethodName = TestContext.CurrentContext.Test.MethodName ?? throw new InvalidOperationException("Test.MethodName is null.");
+
+        var testClass = Type.GetType(testClassName) ?? throw new InvalidOperationException("Test class not found.");
+        var testMethod = testClass.GetMethod(testMethodName) ?? throw new InvalidOperationException("Test method not found.");
+
+        var testClassHasAttribute = testClass.GetCustomAttributes(typeof(EnableVisualOutputAttribute), true).Length > 0;
+        var testMethodHasAttribute = testMethod.GetCustomAttributes(typeof(EnableVisualOutputAttribute), true).Length > 0;
+
+        return testClassHasAttribute || testMethodHasAttribute;
     }
 }
 
 public abstract class PhysicsSystemTestsBase
 {
     private const bool GlobalEnableVisualOutput = false;
-    private static bool AttributeEnableVisualOutput => TestContext.CurrentContext.Test.Properties.ContainsKey(EnableVisualOutputAttribute.PropertyName);
-    private static bool EffectiveEnableVisualOutput => AttributeEnableVisualOutput || GlobalEnableVisualOutput;
+    private static bool EffectiveEnableVisualOutput => EnableVisualOutputAttribute.IsSetForCurrentTest() || GlobalEnableVisualOutput;
 
     private IDebugRendererForTests _debugRendererForTests = null!;
     private protected Scene Scene = null!;

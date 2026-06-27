@@ -48,9 +48,9 @@ internal struct PhysicsSceneData
         scene.TileMap = new TileMap(sceneDefinition.TileSize);
         scene._firstFreeBodyIndex = NoFreeIndex;
         scene._bodyIndices = new List<BodyIndex>();
+        scene._staticBodyCount = 0;
+        scene._kinematicBodyCount = 0;
         scene._bodies = new List<RigidBodyData>();
-        scene.StaticBodyIndices = new List<int>();
-        scene.KinematicBodyIndices = new List<int>();
         scene.Contacts = new List<ContactData>(256);
         scene.SensorOverlapCache = new SensorOverlapCache(256);
         scene.SensorOverlapEvents = new List<SensorOverlapEvent>(256);
@@ -118,10 +118,12 @@ internal struct PhysicsSceneData
     private Span<BodyIndex> BodyIndicesSpan => CollectionsMarshal.AsSpan(_bodyIndices);
 
     // Dense body array
+    private int _staticBodyCount;
+    private int _kinematicBodyCount;
     private List<RigidBodyData> _bodies;
     public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(_bodies);
-    public List<int> StaticBodyIndices;
-    public List<int> KinematicBodyIndices;
+    public Span<RigidBodyData> StaticBodiesSpan => BodiesSpan.Slice(0, _staticBodyCount);
+    public Span<RigidBodyData> KinematicBodiesSpan => BodiesSpan.Slice(_staticBodyCount, _kinematicBodyCount);
 
     // Contacts
     public List<ContactData> Contacts;
@@ -171,16 +173,24 @@ internal struct PhysicsSceneData
         switch (bodyType)
         {
             case BodyType.Static:
-                StaticBodyIndices.Add(bodyIndex.DenseIndex);
+                if (_kinematicBodyCount > 0)
+                {
+                    // Swap bodies to keep layout: all static, then, all kinematic.
+                    SwapBodies(_staticBodyCount, bodyIndex.DenseIndex);
+                }
+
+                _staticBodyCount++;
                 break;
             case BodyType.Kinematic:
-                KinematicBodyIndices.Add(bodyIndex.DenseIndex);
+                _kinematicBodyCount++;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(bodyType), bodyType, null);
         }
 
-        return ref BodiesSpan[_bodies.Count - 1];
+        Debug.Assert(BodiesLayoutIsValid(), "Invalid bodies layout.");
+
+        return ref BodiesSpan[bodyIndex.DenseIndex];
     }
 
     public void DestroyBody(RigidBodyId id)
@@ -199,10 +209,18 @@ internal struct PhysicsSceneData
         switch (body.Type)
         {
             case BodyType.Static:
-                StaticBodyIndices.Remove(denseIndex);
+                _staticBodyCount--;
+
+                if (_kinematicBodyCount > 0 && denseIndex < _staticBodyCount)
+                {
+                    SwapBodies(_staticBodyCount, denseIndex);
+                    denseIndex = _staticBodyCount;
+                    body = ref BodiesSpan[denseIndex];
+                }
+
                 break;
             case BodyType.Kinematic:
-                KinematicBodyIndices.Remove(denseIndex);
+                _kinematicBodyCount--;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -223,27 +241,14 @@ internal struct PhysicsSceneData
             // Update index pointer.
             var movedBodyIndex = BodiesSpan[denseIndex].Id.Index;
             BodyIndicesSpan[movedBodyIndex].DenseIndex = denseIndex;
-
-            // Update body type indices.
-            switch (BodiesSpan[denseIndex].Type)
-            {
-                case BodyType.Static:
-                    StaticBodyIndices.Remove(oldDenseIndex);
-                    StaticBodyIndices.Add(denseIndex);
-                    break;
-                case BodyType.Kinematic:
-                    KinematicBodyIndices.Remove(oldDenseIndex);
-                    KinematicBodyIndices.Add(denseIndex);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         BodyIndicesSpan[id.Index].Version++;
         BodyIndicesSpan[id.Index].DenseIndex = BodyIndex.NullIndex;
         BodyIndicesSpan[id.Index].NextFreeIndex = _firstFreeBodyIndex;
         _firstFreeBodyIndex = id.Index;
+
+        Debug.Assert(BodiesLayoutIsValid(), "Invalid bodies layout.");
     }
 
     public ref RigidBodyData GetBodyData(RigidBodyId id)
@@ -258,6 +263,13 @@ internal struct PhysicsSceneData
     }
 
     public bool IsValidBodyId(RigidBodyId id) => id.IsValid && BodyIndicesSpan[id.Index].Version == id.Version;
+
+    private void SwapBodies(int index1, int index2)
+    {
+        (BodiesSpan[index1], BodiesSpan[index2]) = (BodiesSpan[index2], BodiesSpan[index1]);
+        BodyIndicesSpan[BodiesSpan[index1].Id.Index].DenseIndex = index1;
+        BodyIndicesSpan[BodiesSpan[index2].Id.Index].DenseIndex = index2;
+    }
 
     private void DestroyContactsForBody(ref RigidBodyData body)
     {
@@ -442,5 +454,23 @@ internal struct PhysicsSceneData
                 }
             }
         }
+    }
+
+    private bool BodiesLayoutIsValid()
+    {
+        var allowedType = BodyType.Static;
+        foreach (ref var body in BodiesSpan)
+        {
+            if (body.Type == allowedType) continue;
+            if (body.Type is BodyType.Kinematic && allowedType is BodyType.Static)
+            {
+                allowedType = BodyType.Kinematic;
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }

@@ -34,15 +34,13 @@ internal static class CollisionDetection
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void DetectCollisions_Kinematic_Vs_Kinematic(ref PhysicsSceneData scene)
     {
-        for (var i = 0; i < scene.KinematicBodyIndices.Count; i++)
+        for (var i = 0; i < scene.KinematicBodiesSpan.Length; i++)
         {
-            var body1Index = scene.KinematicBodyIndices[i];
-            ref var kinematicBody1 = ref scene.BodiesSpan[body1Index];
+            ref var kinematicBody1 = ref scene.KinematicBodiesSpan[i];
 
-            for (var j = i + 1; j < scene.KinematicBodyIndices.Count; j++)
+            for (var j = i + 1; j < scene.KinematicBodiesSpan.Length; j++)
             {
-                var body2Index = scene.KinematicBodyIndices[j];
-                ref var kinematicBody2 = ref scene.BodiesSpan[body2Index];
+                ref var kinematicBody2 = ref scene.KinematicBodiesSpan[j];
 
                 if (kinematicBody1.EnableCollisionDetection is false || kinematicBody2.EnableCollisionDetection is false)
                 {
@@ -82,14 +80,10 @@ internal static class CollisionDetection
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void DetectCollisions_Kinematic_Vs_Static(ref PhysicsSceneData scene)
     {
-        foreach (var kinematicBodyIndex in scene.KinematicBodyIndices)
+        foreach (ref var kinematicBody in scene.KinematicBodiesSpan)
         {
-            ref var kinematicBody = ref scene.BodiesSpan[kinematicBodyIndex];
-
-            foreach (var staticBodyIndex in scene.StaticBodyIndices)
+            foreach (ref var staticBody in scene.StaticBodiesSpan)
             {
-                ref var staticBody = ref scene.BodiesSpan[staticBodyIndex];
-
                 if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
                 {
                     continue;
