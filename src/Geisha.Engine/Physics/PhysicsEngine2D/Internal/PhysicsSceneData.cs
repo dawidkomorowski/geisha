@@ -112,19 +112,19 @@ internal struct PhysicsSceneData
 
     private int _firstFreeBodyIndex;
     private List<BodyIndex> _bodyIndices;
-    private Span<BodyIndex> GetBodyIndicesSpan() => CollectionsMarshal.AsSpan(_bodyIndices);
+    private readonly Span<BodyIndex> GetBodyIndicesSpan() => CollectionsMarshal.AsSpan(_bodyIndices);
 
     // Dense body array
     private int _staticBodyCount;
     private int _kinematicBodyCount;
     private List<RigidBodyData> _bodies;
-    public Span<RigidBodyData> GetBodiesSpan() => CollectionsMarshal.AsSpan(_bodies);
-    public Span<RigidBodyData> GetStaticBodiesSpan() => GetBodiesSpan().Slice(0, _staticBodyCount);
-    public Span<RigidBodyData> GetKinematicBodiesSpan() => GetBodiesSpan().Slice(_staticBodyCount, _kinematicBodyCount);
+    public readonly Span<RigidBodyData> GetBodiesSpan() => CollectionsMarshal.AsSpan(_bodies);
+    public readonly Span<RigidBodyData> GetStaticBodiesSpan() => GetBodiesSpan().Slice(0, _staticBodyCount);
+    public readonly Span<RigidBodyData> GetKinematicBodiesSpan() => GetBodiesSpan().Slice(_staticBodyCount, _kinematicBodyCount);
 
     // Contacts
     public List<ContactData> Contacts;
-    public Span<ContactData> GetContactsSpan() => CollectionsMarshal.AsSpan(Contacts);
+    public readonly Span<ContactData> GetContactsSpan() => CollectionsMarshal.AsSpan(Contacts);
 
     // Sensors
     public SensorOverlapCache SensorOverlapCache;
@@ -255,7 +255,7 @@ internal struct PhysicsSceneData
         Debug.Assert(BodiesLayoutIsValid(), "Invalid bodies layout.");
     }
 
-    public ref RigidBodyData GetBodyData(RigidBodyId id)
+    public readonly ref RigidBodyData GetBodyData(RigidBodyId id)
     {
         if (!IsValidBodyId(id))
         {
@@ -269,7 +269,7 @@ internal struct PhysicsSceneData
         return ref bodiesSpan[bodyIndex.DenseIndex];
     }
 
-    public bool IsValidBodyId(RigidBodyId id) => id.IsValid && GetBodyIndicesSpan()[id.Index].Version == id.Version;
+    public readonly bool IsValidBodyId(RigidBodyId id) => id.IsValid && GetBodyIndicesSpan()[id.Index].Version == id.Version;
 
     private void SwapBodies(int index1, int index2)
     {
@@ -468,7 +468,7 @@ internal struct PhysicsSceneData
         }
     }
 
-    private bool BodiesLayoutIsValid()
+    private readonly bool BodiesLayoutIsValid()
     {
         var allowedType = BodyType.Static;
         foreach (ref var body in GetBodiesSpan())

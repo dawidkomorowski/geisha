@@ -115,159 +115,48 @@ internal static class Physics2D
         public static void Simulate(PhysicsSceneId id, TimeSpan timeStep)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-
-            var simulationParameters = scene.SimulationParameters;
-            var deltaTimeSeconds = timeStep.TotalSeconds / simulationParameters.Substeps;
-
-            ClearEvents(ref scene);
-
-            for (var substep = 0; substep < simulationParameters.Substeps; substep++)
-            {
-                // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
-                // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
-                for (var i = 0; i < simulationParameters.VelocityIterations; i++)
-                {
-                    ContactSolver.SolveVelocityConstraints(ref scene);
-                }
-
-                KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
-
-                foreach (ref var body in scene.GetKinematicBodiesSpan())
-                {
-                    body.RecomputeCollider();
-                }
-
-                CollisionDetection.DetectCollisions(ref scene);
-
-                // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
-                for (var i = 0; i < simulationParameters.PositionIterations; i++)
-                {
-                    ContactSolver.SolvePositionConstraints(ref scene);
-                }
-
-                foreach (ref var body in scene.GetKinematicBodiesSpan())
-                {
-                    body.RecomputeCollider();
-                }
-
-                GenerateEvents(ref scene);
-            }
+            SimulationPipeline.Step(ref scene, timeStep);
         }
 
         public static void QueryPoint<TQueryHandler>(PhysicsSceneId id, in Vector2 point, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-
-            foreach (ref var body in scene.GetBodiesSpan())
-            {
-                if (body.ContainsPoint(point))
-                {
-                    if (!handler.Handle(body.Id))
-                    {
-                        return;
-                    }
-                }
-            }
+            SceneQuery.QueryPoint(in scene, in point, ref handler);
         }
 
         public static void QueryBounds<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-
-            foreach (ref var body in scene.GetBodiesSpan())
-            {
-                if (body.BoundingRectangle.Overlaps(axisAlignedRectangle))
-                {
-                    if (!handler.Handle(body.Id))
-                    {
-                        return;
-                    }
-                }
-            }
+            SceneQuery.QueryBounds(in scene, in axisAlignedRectangle, ref handler);
         }
 
         public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-
-            foreach (ref var body in scene.GetBodiesSpan())
-            {
-                if (body.Overlaps(axisAlignedRectangle))
-                {
-                    if (!handler.Handle(body.Id))
-                    {
-                        return;
-                    }
-                }
-            }
+            SceneQuery.QueryOverlap(in scene, in axisAlignedRectangle, ref handler);
         }
 
         public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in Circle circle, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-
-            foreach (ref var body in scene.GetBodiesSpan())
-            {
-                if (body.Overlaps(circle))
-                {
-                    if (!handler.Handle(body.Id))
-                    {
-                        return;
-                    }
-                }
-            }
+            SceneQuery.QueryOverlap(in scene, in circle, ref handler);
         }
 
         public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in Rectangle rectangle, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-
-            foreach (ref var body in scene.GetBodiesSpan())
-            {
-                if (body.Overlaps(rectangle))
-                {
-                    if (!handler.Handle(body.Id))
-                    {
-                        return;
-                    }
-                }
-            }
+            SceneQuery.QueryOverlap(in scene, in rectangle, ref handler);
         }
 
         public static ReadOnlySpan<SensorOverlapEvent> GetSensorOverlapEvents(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
             return CollectionsMarshal.AsSpan(scene.SensorOverlapEvents);
-        }
-
-        private static void ClearEvents(ref PhysicsSceneData scene)
-        {
-            scene.SensorOverlapEvents.Clear();
-        }
-
-        private static void GenerateEvents(ref PhysicsSceneData scene)
-        {
-            foreach (var sensorOverlap in scene.SensorOverlapCache.GetOverlaps())
-            {
-                switch (sensorOverlap.CacheStatus)
-                {
-                    case CacheStatus.New:
-                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorOverlap.Body1Id, sensorOverlap.Body2Id, SensorOverlapEvent.EventType.Begin));
-                        break;
-                    case CacheStatus.Updated:
-                        break;
-                    case CacheStatus.Stale:
-                        scene.SensorOverlapEvents.Add(new SensorOverlapEvent(sensorOverlap.Body1Id, sensorOverlap.Body2Id, SensorOverlapEvent.EventType.End));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
         }
     }
 
