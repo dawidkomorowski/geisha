@@ -130,7 +130,7 @@ internal static class Physics2D
 
                 KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
 
-                foreach (ref var body in scene.KinematicBodiesSpan)
+                foreach (ref var body in scene.GetKinematicBodiesSpan())
                 {
                     body.RecomputeCollider();
                 }
@@ -143,7 +143,7 @@ internal static class Physics2D
                     ContactSolver.SolvePositionConstraints(ref scene);
                 }
 
-                foreach (ref var body in scene.KinematicBodiesSpan)
+                foreach (ref var body in scene.GetKinematicBodiesSpan())
                 {
                     body.RecomputeCollider();
                 }

@@ -122,8 +122,8 @@ internal struct PhysicsSceneData
     private int _kinematicBodyCount;
     private List<RigidBodyData> _bodies;
     public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(_bodies);
-    public Span<RigidBodyData> StaticBodiesSpan => BodiesSpan.Slice(0, _staticBodyCount);
-    public Span<RigidBodyData> KinematicBodiesSpan => BodiesSpan.Slice(_staticBodyCount, _kinematicBodyCount);
+    public Span<RigidBodyData> GetStaticBodiesSpan() => BodiesSpan.Slice(0, _staticBodyCount);
+    public Span<RigidBodyData> GetKinematicBodiesSpan() => BodiesSpan.Slice(_staticBodyCount, _kinematicBodyCount);
 
     // Contacts
     public List<ContactData> Contacts;
