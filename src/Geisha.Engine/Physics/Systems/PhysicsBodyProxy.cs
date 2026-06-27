@@ -14,6 +14,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     private readonly PhysicsSystemState _physicsSystemState;
     private readonly PhysicsScene2D _physicsScene;
     private readonly RigidBody2D _body;
+    private TransformCache _transformCache;
 
     private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
         Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
@@ -116,28 +117,31 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
     internal void SynchronizeBody()
     {
-        if (KinematicBodyComponent is not null)
+        // Synchronize transform component.
+        Vector2 position;
+        double rotation;
+
+        if (Entity.IsRoot)
         {
-            _body.Position = Transform.Translation;
-            _body.Rotation = Transform.Rotation;
-            _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
-            _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
-            _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
+            position = Transform.Translation;
+            rotation = Transform.Rotation;
         }
         else
         {
-            if (Entity.IsRoot)
-            {
-                _body.Position = Transform.Translation;
-                _body.Rotation = Transform.Rotation;
-            }
-            else
-            {
-                var finalMatrix = Transform.ComputeWorldTransformMatrix();
-                var finalTransform = finalMatrix.ToTransform();
-                _body.Position = finalTransform.Translation;
-                _body.Rotation = finalTransform.Rotation;
-            }
+            var finalMatrix = Transform.ComputeWorldTransformMatrix();
+            var finalTransform = finalMatrix.ToTransform();
+            position = finalTransform.Translation;
+            rotation = finalTransform.Rotation;
+        }
+
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (_transformCache.Position != position || _transformCache.Rotation != rotation)
+        {
+            _transformCache.Position = position;
+            _transformCache.Rotation = rotation;
+
+            _body.Position = position;
+            _body.Rotation = rotation;
 
             if (_body.ColliderType is ColliderType.Tile)
             {
@@ -147,6 +151,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             }
         }
 
+        // Synchronize collider component.
         if (Collider.IsDirty)
         {
             _body.EnableCollisionDetection = Collider.Enabled;
@@ -171,6 +176,14 @@ internal sealed class PhysicsBodyProxy : IDisposable
         }
 
         Collider.IsDirty = false;
+
+        // Synchronize kinematic component.
+        if (KinematicBodyComponent is not null)
+        {
+            _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
+            _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+            _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
+        }
     }
 
     internal void SynchronizeComponents()
@@ -181,5 +194,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
         Transform.Rotation = _body.Rotation;
         KinematicBodyComponent.LinearVelocity = _body.LinearVelocity;
         KinematicBodyComponent.AngularVelocity = _body.AngularVelocity;
+    }
+
+    private struct TransformCache
+    {
+        public Vector2 Position;
+        public double Rotation;
     }
 }
