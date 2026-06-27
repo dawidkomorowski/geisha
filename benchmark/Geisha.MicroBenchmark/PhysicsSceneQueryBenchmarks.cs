@@ -53,6 +53,7 @@ public class PhysicsSceneQueryBenchmarks
         SaveVisualOutput("PhysicsSceneQueryBenchmarks[1]");
 
         _scene.RemoveObserver(_physicsSystem);
+        _physicsSystem.Dispose();
         _physicsSystem = null!;
         _scene = null!;
         _debugRenderer.Dispose();

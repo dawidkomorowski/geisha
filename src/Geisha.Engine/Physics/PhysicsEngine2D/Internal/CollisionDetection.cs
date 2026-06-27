@@ -117,7 +117,7 @@ internal static class CollisionDetection
     // ReSharper disable once InconsistentNaming
     private static bool TestAABB(ref RigidBodyData body1, ref RigidBodyData body2)
     {
-        return body1.BoundingRectangle.Overlaps(body2.BoundingRectangle);
+        return body1.AABB.Overlaps(body2.AABB);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
