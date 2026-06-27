@@ -5,9 +5,67 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-internal static class ContactManifoldAnalyzer
+internal static class ContactManager
 {
-    public static ContactManifold FindManifold(in RigidBodyData body1, in RigidBodyData body2, in MinimumTranslationVector mtv)
+    public static void ClearContacts(ref PhysicsSceneData scene)
+    {
+        scene.Contacts.Clear();
+
+        foreach (ref var body in scene.GetBodiesSpan())
+        {
+            body.ContactCount = 0;
+            body.FirstContactIndex = ContactData.Link.NullIndex;
+            body.LastContactIndex = ContactData.Link.NullIndex;
+        }
+    }
+
+    public static void CreateContact(ref PhysicsSceneData scene, ref RigidBodyData body1, ref RigidBodyData body2, in MinimumTranslationVector mtv)
+    {
+        var contactManifold = ComputeManifold(in body1, in body2, mtv);
+
+        ContactData contact = default;
+        contact.ContactManifold = contactManifold;
+        contact.Link1.BodyId = body1.Id;
+        contact.Link1.PrevIndex = body1.LastContactIndex;
+        contact.Link1.NextIndex = ContactData.Link.NullIndex;
+        contact.Link2.BodyId = body2.Id;
+        contact.Link2.PrevIndex = body2.LastContactIndex;
+        contact.Link2.NextIndex = ContactData.Link.NullIndex;
+
+        var currentIndex = scene.Contacts.Count;
+        scene.Contacts.Add(contact);
+        var contactsSpan = scene.GetContactsSpan();
+
+        if (body1.ContactCount == 0)
+        {
+            body1.FirstContactIndex = currentIndex;
+        }
+        else
+        {
+            ref var prevContact = ref contactsSpan[body1.LastContactIndex];
+            ref var link = ref prevContact.Link1.BodyId == body1.Id ? ref prevContact.Link1 : ref prevContact.Link2;
+            link.NextIndex = currentIndex;
+        }
+
+        body1.LastContactIndex = currentIndex;
+        body1.ContactCount++;
+
+        if (body2.ContactCount == 0)
+        {
+            body2.FirstContactIndex = currentIndex;
+        }
+        else
+        {
+            ref var prevContact = ref contactsSpan[body2.LastContactIndex];
+            ref var link = ref prevContact.Link1.BodyId == body2.Id ? ref prevContact.Link1 : ref prevContact.Link2;
+            link.NextIndex = currentIndex;
+        }
+
+        body2.LastContactIndex = currentIndex;
+        body2.ContactCount++;
+    }
+
+    private static ContactManifold ComputeManifold(in RigidBodyData body1, in RigidBodyData body2, in MinimumTranslationVector mtv)
     {
         if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
         {

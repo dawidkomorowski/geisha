@@ -13,22 +13,10 @@ internal static class CollisionDetection
         scene.SensorOverlapCache.RemoveStale();
         scene.SensorOverlapCache.MarkStale();
 
-        ClearContacts(ref scene);
+        ContactManager.ClearContacts(ref scene);
 
         DetectCollisions_Kinematic_Vs_Kinematic(ref scene);
         DetectCollisions_Kinematic_Vs_Static(ref scene);
-    }
-
-    private static void ClearContacts(ref PhysicsSceneData scene)
-    {
-        scene.Contacts.Clear();
-
-        foreach (ref var body in scene.GetBodiesSpan())
-        {
-            body.ContactCount = 0;
-            body.FirstContactIndex = ContactData.Link.NullIndex;
-            body.LastContactIndex = ContactData.Link.NullIndex;
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -72,7 +60,7 @@ internal static class CollisionDetection
 
                     if (overlap)
                     {
-                        CreateContact(ref scene, ref kinematicBody1, ref kinematicBody2, mtv);
+                        ContactManager.CreateContact(ref scene, ref kinematicBody1, ref kinematicBody2, mtv);
                     }
                 }
             }
@@ -117,7 +105,7 @@ internal static class CollisionDetection
 
                     if (overlap)
                     {
-                        CreateContact(ref scene, ref kinematicBody, ref staticBody, mtv);
+                        ContactManager.CreateContact(ref scene, ref kinematicBody, ref staticBody, mtv);
                     }
                 }
             }
@@ -197,51 +185,5 @@ internal static class CollisionDetection
         }
 
         return (overlap, mtv);
-    }
-
-    private static void CreateContact(ref PhysicsSceneData scene, ref RigidBodyData body1, ref RigidBodyData body2, in MinimumTranslationVector mtv)
-    {
-        var contactManifold = ContactManifoldAnalyzer.FindManifold(in body1, in body2, mtv);
-
-        ContactData contact = default;
-        contact.ContactManifold = contactManifold;
-        contact.Link1.BodyId = body1.Id;
-        contact.Link1.PrevIndex = body1.LastContactIndex;
-        contact.Link1.NextIndex = ContactData.Link.NullIndex;
-        contact.Link2.BodyId = body2.Id;
-        contact.Link2.PrevIndex = body2.LastContactIndex;
-        contact.Link2.NextIndex = ContactData.Link.NullIndex;
-
-        var currentIndex = scene.Contacts.Count;
-        scene.Contacts.Add(contact);
-        var contactsSpan = scene.GetContactsSpan();
-
-        if (body1.ContactCount == 0)
-        {
-            body1.FirstContactIndex = currentIndex;
-        }
-        else
-        {
-            ref var prevContact = ref contactsSpan[body1.LastContactIndex];
-            ref var link = ref prevContact.Link1.BodyId == body1.Id ? ref prevContact.Link1 : ref prevContact.Link2;
-            link.NextIndex = currentIndex;
-        }
-
-        body1.LastContactIndex = currentIndex;
-        body1.ContactCount++;
-
-        if (body2.ContactCount == 0)
-        {
-            body2.FirstContactIndex = currentIndex;
-        }
-        else
-        {
-            ref var prevContact = ref contactsSpan[body2.LastContactIndex];
-            ref var link = ref prevContact.Link1.BodyId == body2.Id ? ref prevContact.Link1 : ref prevContact.Link2;
-            link.NextIndex = currentIndex;
-        }
-
-        body2.LastContactIndex = currentIndex;
-        body2.ContactCount++;
     }
 }
