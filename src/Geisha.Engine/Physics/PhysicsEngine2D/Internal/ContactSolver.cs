@@ -4,7 +4,7 @@ internal static class ContactSolver
 {
     public static void SolveVelocityConstraints(ref PhysicsSceneData scene)
     {
-        foreach (ref var contact in scene.ContactsSpan)
+        foreach (ref var contact in scene.GetContactsSpan())
         {
             ref var body1 = ref scene.GetBodyData(contact.Link1.BodyId);
             ref var body2 = ref scene.GetBodyData(contact.Link2.BodyId);
@@ -55,7 +55,7 @@ internal static class ContactSolver
 
     public static void SolvePositionConstraints(ref PhysicsSceneData scene)
     {
-        foreach (ref var contact in scene.ContactsSpan)
+        foreach (ref var contact in scene.GetContactsSpan())
         {
             ref var body1 = ref scene.GetBodyData(contact.Link1.BodyId);
             ref var body2 = ref scene.GetBodyData(contact.Link2.BodyId);

@@ -65,13 +65,15 @@ internal static class Physics2D
         public static int GetBodyCount(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.BodiesSpan.Length;
+            var bodiesSpan = scene.GetBodiesSpan();
+            return bodiesSpan.Length;
         }
 
         public static RigidBodyId GetBodyByRawIndex(PhysicsSceneId id, int rawIndex)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            return scene.BodiesSpan[rawIndex].Id;
+            var bodiesSpan = scene.GetBodiesSpan();
+            return bodiesSpan[rawIndex].Id;
         }
 
         public static RigidBodyId CreateBody(PhysicsSceneId id, BodyType bodyType, double circleColliderRadius)
@@ -157,7 +159,7 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
 
-            foreach (ref var body in scene.BodiesSpan)
+            foreach (ref var body in scene.GetBodiesSpan())
             {
                 if (body.ContainsPoint(point))
                 {
@@ -174,7 +176,7 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
 
-            foreach (ref var body in scene.BodiesSpan)
+            foreach (ref var body in scene.GetBodiesSpan())
             {
                 if (body.BoundingRectangle.Overlaps(axisAlignedRectangle))
                 {
@@ -191,7 +193,7 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
 
-            foreach (ref var body in scene.BodiesSpan)
+            foreach (ref var body in scene.GetBodiesSpan())
             {
                 if (body.Overlaps(axisAlignedRectangle))
                 {
@@ -208,7 +210,7 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
 
-            foreach (ref var body in scene.BodiesSpan)
+            foreach (ref var body in scene.GetBodiesSpan())
             {
                 if (body.Overlaps(circle))
                 {
@@ -225,7 +227,7 @@ internal static class Physics2D
         {
             ref var scene = ref PhysicsSceneData.Get(id);
 
-            foreach (ref var body in scene.BodiesSpan)
+            foreach (ref var body in scene.GetBodiesSpan())
             {
                 if (body.Overlaps(rectangle))
                 {
@@ -479,6 +481,7 @@ internal static class Physics2D
                 return 0;
             }
 
+            var contactsSpan = scene.GetContactsSpan();
             var contactIndex = body.FirstContactIndex;
             var writeCount = 0;
 
@@ -489,7 +492,7 @@ internal static class Physics2D
                     break;
                 }
 
-                ref var contactData = ref scene.ContactsSpan[contactIndex];
+                ref var contactData = ref contactsSpan[contactIndex];
                 contacts[writeCount] = new Contact(contactData.Link1.BodyId, contactData.Link2.BodyId, contactData.ContactManifold);
 
                 ref var link = ref contactData.Link1.BodyId == body.Id ? ref contactData.Link1 : ref contactData.Link2;

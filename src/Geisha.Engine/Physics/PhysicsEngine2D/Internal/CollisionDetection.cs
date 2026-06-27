@@ -23,7 +23,7 @@ internal static class CollisionDetection
     {
         scene.Contacts.Clear();
 
-        foreach (ref var body in scene.BodiesSpan)
+        foreach (ref var body in scene.GetBodiesSpan())
         {
             body.ContactCount = 0;
             body.FirstContactIndex = ContactData.Link.NullIndex;
@@ -214,6 +214,7 @@ internal static class CollisionDetection
 
         var currentIndex = scene.Contacts.Count;
         scene.Contacts.Add(contact);
+        var contactsSpan = scene.GetContactsSpan();
 
         if (body1.ContactCount == 0)
         {
@@ -221,7 +222,7 @@ internal static class CollisionDetection
         }
         else
         {
-            ref var prevContact = ref scene.ContactsSpan[body1.LastContactIndex];
+            ref var prevContact = ref contactsSpan[body1.LastContactIndex];
             ref var link = ref prevContact.Link1.BodyId == body1.Id ? ref prevContact.Link1 : ref prevContact.Link2;
             link.NextIndex = currentIndex;
         }
@@ -235,7 +236,7 @@ internal static class CollisionDetection
         }
         else
         {
-            ref var prevContact = ref scene.ContactsSpan[body2.LastContactIndex];
+            ref var prevContact = ref contactsSpan[body2.LastContactIndex];
             ref var link = ref prevContact.Link1.BodyId == body2.Id ? ref prevContact.Link1 : ref prevContact.Link2;
             link.NextIndex = currentIndex;
         }

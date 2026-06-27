@@ -112,22 +112,19 @@ internal struct PhysicsSceneData
 
     private int _firstFreeBodyIndex;
     private List<BodyIndex> _bodyIndices;
-
-    // TODO: Optimize span properties - convert to methods and cache span if used multiple times in a method?
-    //       How to avoid pitfall of cached span and modified list? Where possible keep up-to-date span and update on list modifications.
-    private Span<BodyIndex> BodyIndicesSpan => CollectionsMarshal.AsSpan(_bodyIndices);
+    private Span<BodyIndex> GetBodyIndicesSpan() => CollectionsMarshal.AsSpan(_bodyIndices);
 
     // Dense body array
     private int _staticBodyCount;
     private int _kinematicBodyCount;
     private List<RigidBodyData> _bodies;
-    public Span<RigidBodyData> BodiesSpan => CollectionsMarshal.AsSpan(_bodies);
-    public Span<RigidBodyData> GetStaticBodiesSpan() => BodiesSpan.Slice(0, _staticBodyCount);
-    public Span<RigidBodyData> GetKinematicBodiesSpan() => BodiesSpan.Slice(_staticBodyCount, _kinematicBodyCount);
+    public Span<RigidBodyData> GetBodiesSpan() => CollectionsMarshal.AsSpan(_bodies);
+    public Span<RigidBodyData> GetStaticBodiesSpan() => GetBodiesSpan().Slice(0, _staticBodyCount);
+    public Span<RigidBodyData> GetKinematicBodiesSpan() => GetBodiesSpan().Slice(_staticBodyCount, _kinematicBodyCount);
 
     // Contacts
     public List<ContactData> Contacts;
-    public Span<ContactData> ContactsSpan => CollectionsMarshal.AsSpan(Contacts);
+    public Span<ContactData> GetContactsSpan() => CollectionsMarshal.AsSpan(Contacts);
 
     // Sensors
     public SensorOverlapCache SensorOverlapCache;
@@ -136,20 +133,22 @@ internal struct PhysicsSceneData
     public ref RigidBodyData CreateBody(BodyType bodyType)
     {
         int sparseIndex;
+        var bodyIndicesSpan = GetBodyIndicesSpan();
 
         if (_firstFreeBodyIndex == NoFreeIndex)
         {
             sparseIndex = _bodyIndices.Count;
             _bodyIndices.Add(default);
-            BodyIndicesSpan[sparseIndex].NextFreeIndex = NoFreeIndex;
+            bodyIndicesSpan = GetBodyIndicesSpan();
+            bodyIndicesSpan[sparseIndex].NextFreeIndex = NoFreeIndex;
         }
         else
         {
             sparseIndex = _firstFreeBodyIndex;
-            _firstFreeBodyIndex = BodyIndicesSpan[sparseIndex].NextFreeIndex;
+            _firstFreeBodyIndex = bodyIndicesSpan[sparseIndex].NextFreeIndex;
         }
 
-        ref var bodyIndex = ref BodyIndicesSpan[sparseIndex];
+        ref var bodyIndex = ref bodyIndicesSpan[sparseIndex];
         bodyIndex.DenseIndex = _bodies.Count;
         bodyIndex.Version++;
 
@@ -190,7 +189,8 @@ internal struct PhysicsSceneData
 
         Debug.Assert(BodiesLayoutIsValid(), "Invalid bodies layout.");
 
-        return ref BodiesSpan[bodyIndex.DenseIndex];
+        var bodiesSpan = GetBodiesSpan();
+        return ref bodiesSpan[bodyIndex.DenseIndex];
     }
 
     public void DestroyBody(RigidBodyId id)
@@ -204,7 +204,10 @@ internal struct PhysicsSceneData
 
         DestroyContactsForBody(ref body);
 
-        var denseIndex = BodyIndicesSpan[id.Index].DenseIndex;
+        var bodyIndicesSpan = GetBodyIndicesSpan();
+        var bodiesSpan = GetBodiesSpan();
+
+        var denseIndex = bodyIndicesSpan[id.Index].DenseIndex;
 
         switch (body.Type)
         {
@@ -215,7 +218,7 @@ internal struct PhysicsSceneData
                 {
                     SwapBodies(_staticBodyCount, denseIndex);
                     denseIndex = _staticBodyCount;
-                    body = ref BodiesSpan[denseIndex];
+                    body = ref bodiesSpan[denseIndex];
                 }
 
                 break;
@@ -235,17 +238,18 @@ internal struct PhysicsSceneData
         {
             // Otherwise swap-remove with last element.
             var oldDenseIndex = _bodies.Count - 1;
-            BodiesSpan[denseIndex] = BodiesSpan[oldDenseIndex];
+            bodiesSpan[denseIndex] = bodiesSpan[oldDenseIndex];
             _bodies.RemoveAt(oldDenseIndex);
+            bodiesSpan = GetBodiesSpan();
 
             // Update index pointer.
-            var movedBodyIndex = BodiesSpan[denseIndex].Id.Index;
-            BodyIndicesSpan[movedBodyIndex].DenseIndex = denseIndex;
+            var movedBodyIndex = bodiesSpan[denseIndex].Id.Index;
+            bodyIndicesSpan[movedBodyIndex].DenseIndex = denseIndex;
         }
 
-        BodyIndicesSpan[id.Index].Version++;
-        BodyIndicesSpan[id.Index].DenseIndex = BodyIndex.NullIndex;
-        BodyIndicesSpan[id.Index].NextFreeIndex = _firstFreeBodyIndex;
+        bodyIndicesSpan[id.Index].Version++;
+        bodyIndicesSpan[id.Index].DenseIndex = BodyIndex.NullIndex;
+        bodyIndicesSpan[id.Index].NextFreeIndex = _firstFreeBodyIndex;
         _firstFreeBodyIndex = id.Index;
 
         Debug.Assert(BodiesLayoutIsValid(), "Invalid bodies layout.");
@@ -258,17 +262,23 @@ internal struct PhysicsSceneData
             throw new ArgumentException("Invalid Rigid Body ID.");
         }
 
-        ref var bodyIndex = ref BodyIndicesSpan[id.Index];
-        return ref BodiesSpan[bodyIndex.DenseIndex];
+        var bodyIndicesSpan = GetBodyIndicesSpan();
+        var bodiesSpan = GetBodiesSpan();
+
+        ref var bodyIndex = ref bodyIndicesSpan[id.Index];
+        return ref bodiesSpan[bodyIndex.DenseIndex];
     }
 
-    public bool IsValidBodyId(RigidBodyId id) => id.IsValid && BodyIndicesSpan[id.Index].Version == id.Version;
+    public bool IsValidBodyId(RigidBodyId id) => id.IsValid && GetBodyIndicesSpan()[id.Index].Version == id.Version;
 
     private void SwapBodies(int index1, int index2)
     {
-        (BodiesSpan[index1], BodiesSpan[index2]) = (BodiesSpan[index2], BodiesSpan[index1]);
-        BodyIndicesSpan[BodiesSpan[index1].Id.Index].DenseIndex = index1;
-        BodyIndicesSpan[BodiesSpan[index2].Id.Index].DenseIndex = index2;
+        var bodyIndicesSpan = GetBodyIndicesSpan();
+        var bodiesSpan = GetBodiesSpan();
+
+        (bodiesSpan[index1], bodiesSpan[index2]) = (bodiesSpan[index2], bodiesSpan[index1]);
+        bodyIndicesSpan[bodiesSpan[index1].Id.Index].DenseIndex = index1;
+        bodyIndicesSpan[bodiesSpan[index2].Id.Index].DenseIndex = index2;
     }
 
     private void DestroyContactsForBody(ref RigidBodyData body)
@@ -276,13 +286,14 @@ internal struct PhysicsSceneData
         while (body.FirstContactIndex != ContactData.Link.NullIndex)
         {
             var contactIndex = body.FirstContactIndex;
-            ref var contact = ref ContactsSpan[contactIndex];
+            var contactsSpan = GetContactsSpan();
+            ref var contact = ref contactsSpan[contactIndex];
             ref var body1 = ref GetBodyData(contact.Link1.BodyId);
             ref var body2 = ref GetBodyData(contact.Link2.BodyId);
 
             if (contact.Link1.PrevIndex != ContactData.Link.NullIndex)
             {
-                ref var prevContact = ref ContactsSpan[contact.Link1.PrevIndex];
+                ref var prevContact = ref contactsSpan[contact.Link1.PrevIndex];
                 if (prevContact.Link1.BodyId == contact.Link1.BodyId)
                 {
                     prevContact.Link1.NextIndex = contact.Link1.NextIndex;
@@ -295,7 +306,7 @@ internal struct PhysicsSceneData
 
             if (contact.Link2.PrevIndex != ContactData.Link.NullIndex)
             {
-                ref var prevContact = ref ContactsSpan[contact.Link2.PrevIndex];
+                ref var prevContact = ref contactsSpan[contact.Link2.PrevIndex];
                 if (prevContact.Link1.BodyId == contact.Link2.BodyId)
                 {
                     prevContact.Link1.NextIndex = contact.Link2.NextIndex;
@@ -308,7 +319,7 @@ internal struct PhysicsSceneData
 
             if (contact.Link1.NextIndex != ContactData.Link.NullIndex)
             {
-                ref var nextContact = ref ContactsSpan[contact.Link1.NextIndex];
+                ref var nextContact = ref contactsSpan[contact.Link1.NextIndex];
                 if (nextContact.Link1.BodyId == contact.Link1.BodyId)
                 {
                     nextContact.Link1.PrevIndex = contact.Link1.PrevIndex;
@@ -321,7 +332,7 @@ internal struct PhysicsSceneData
 
             if (contact.Link2.NextIndex != ContactData.Link.NullIndex)
             {
-                ref var nextContact = ref ContactsSpan[contact.Link2.NextIndex];
+                ref var nextContact = ref contactsSpan[contact.Link2.NextIndex];
                 if (nextContact.Link1.BodyId == contact.Link2.BodyId)
                 {
                     nextContact.Link1.PrevIndex = contact.Link2.PrevIndex;
@@ -363,16 +374,17 @@ internal struct PhysicsSceneData
             else
             {
                 // Otherwise swap-remove with last element.
-                ContactsSpan[contactIndex] = ContactsSpan[^1];
+                contactsSpan[contactIndex] = contactsSpan[^1];
                 Contacts.RemoveAt(Contacts.Count - 1);
+                contactsSpan = GetContactsSpan();
 
                 // Update contact links.
                 var oldIndex = Contacts.Count;
-                ref var swappedContact = ref ContactsSpan[contactIndex];
+                ref var swappedContact = ref contactsSpan[contactIndex];
 
                 if (swappedContact.Link1.PrevIndex != ContactData.Link.NullIndex)
                 {
-                    ref var prevContact = ref ContactsSpan[swappedContact.Link1.PrevIndex];
+                    ref var prevContact = ref contactsSpan[swappedContact.Link1.PrevIndex];
 
                     if (prevContact.Link1.NextIndex == oldIndex)
                     {
@@ -387,7 +399,7 @@ internal struct PhysicsSceneData
 
                 if (swappedContact.Link2.PrevIndex != ContactData.Link.NullIndex)
                 {
-                    ref var prevContact = ref ContactsSpan[swappedContact.Link2.PrevIndex];
+                    ref var prevContact = ref contactsSpan[swappedContact.Link2.PrevIndex];
 
                     if (prevContact.Link1.NextIndex == oldIndex)
                     {
@@ -402,7 +414,7 @@ internal struct PhysicsSceneData
 
                 if (swappedContact.Link1.NextIndex != ContactData.Link.NullIndex)
                 {
-                    ref var nextContact = ref ContactsSpan[swappedContact.Link1.NextIndex];
+                    ref var nextContact = ref contactsSpan[swappedContact.Link1.NextIndex];
 
                     if (nextContact.Link1.PrevIndex == oldIndex)
                     {
@@ -417,7 +429,7 @@ internal struct PhysicsSceneData
 
                 if (swappedContact.Link2.NextIndex != ContactData.Link.NullIndex)
                 {
-                    ref var nextContact = ref ContactsSpan[swappedContact.Link2.NextIndex];
+                    ref var nextContact = ref contactsSpan[swappedContact.Link2.NextIndex];
 
                     if (nextContact.Link1.PrevIndex == oldIndex)
                     {
@@ -459,7 +471,7 @@ internal struct PhysicsSceneData
     private bool BodiesLayoutIsValid()
     {
         var allowedType = BodyType.Static;
-        foreach (ref var body in BodiesSpan)
+        foreach (ref var body in GetBodiesSpan())
         {
             if (body.Type == allowedType) continue;
             if (body.Type is BodyType.Kinematic && allowedType is BodyType.Static)
