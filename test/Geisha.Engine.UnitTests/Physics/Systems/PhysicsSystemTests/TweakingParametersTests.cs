@@ -92,9 +92,11 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
     }
 
-    [TestCase(1, 37.5)]
-    [TestCase(2, 33.59375)]
-    [TestCase(3, 25.048828125)]
+    // Exact expected values are dependent on body creation order and internal order of Physics Engine processing.
+    // Therefore, the main reason for these tests is to show that increasing the velocity iterations makes the expected velocity closer to perfect solution.
+    [TestCase(1, 34.375)]
+    [TestCase(2, 25.1953125)]
+    [TestCase(3, 18.78662109375)]
     public void VelocityIterationsTest_IncreasingVelocityIterations_MakesVelocitiesOfBodiesMoreAccurate(int velocityIterations, double expectedVelocityX)
     {
         // Arrange
