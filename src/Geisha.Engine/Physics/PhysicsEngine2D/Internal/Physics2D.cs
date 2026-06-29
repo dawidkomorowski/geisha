@@ -1,6 +1,6 @@
-﻿using Geisha.Engine.Core.Math;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -20,7 +20,8 @@ internal static class Physics2D
 
         public static int GetSubsteps(PhysicsSceneId id)
         {
-            throw new NotImplementedException();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.SimulationParameters.Substeps;
         }
 
         public static void SetSubsteps(PhysicsSceneId id, int value)
@@ -31,7 +32,8 @@ internal static class Physics2D
 
         public static int GetVelocityIterations(PhysicsSceneId id)
         {
-            throw new NotImplementedException();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.SimulationParameters.VelocityIterations;
         }
 
         public static void SetVelocityIterations(PhysicsSceneId id, int value)
@@ -42,7 +44,8 @@ internal static class Physics2D
 
         public static int GetPositionIterations(PhysicsSceneId id)
         {
-            throw new NotImplementedException();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.SimulationParameters.PositionIterations;
         }
 
         public static void SetPositionIterations(PhysicsSceneId id, int value)
@@ -53,7 +56,8 @@ internal static class Physics2D
 
         public static double GetPenetrationTolerance(PhysicsSceneId id)
         {
-            throw new NotImplementedException();
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.SimulationParameters.PenetrationTolerance;
         }
 
         public static void SetPenetrationTolerance(PhysicsSceneId id, double value)

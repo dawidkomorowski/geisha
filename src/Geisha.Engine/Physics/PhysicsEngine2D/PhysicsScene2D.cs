@@ -39,25 +39,25 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
 
     public int Substeps
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Scene.GetSubsteps(Id);
         set => Physics2D.Scene.SetSubsteps(Id, value);
     }
 
     public int VelocityIterations
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Scene.GetVelocityIterations(Id);
         set => Physics2D.Scene.SetVelocityIterations(Id, value);
     }
 
     public int PositionIterations
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Scene.GetPositionIterations(Id);
         set => Physics2D.Scene.SetPositionIterations(Id, value);
     }
 
     public double PenetrationTolerance
     {
-        get => throw new NotImplementedException();
+        get => Physics2D.Scene.GetPenetrationTolerance(Id);
         set => Physics2D.Scene.SetPenetrationTolerance(Id, value);
     }
 
