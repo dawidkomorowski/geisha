@@ -4,6 +4,9 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.PhysicsEngine2D;
 
+// These tests cover a minimal set of internal parts of the low level physics engine (PhysicsEngine2D). The main
+// tests for the physics functionality are provided by the physics system tests. Physics system is a higher level
+// component of the whole game engine that integrates the low level physics engine with the rest of the game engine.
 [TestFixture]
 public class PhysicsEngine2DTests
 {
