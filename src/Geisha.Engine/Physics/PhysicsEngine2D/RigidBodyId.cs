@@ -1,10 +1,12 @@
-﻿namespace Geisha.Engine.Physics.PhysicsEngine2D;
+﻿using Geisha.Engine.Core.Memory;
 
-internal readonly record struct RigidBodyId
+namespace Geisha.Engine.Physics.PhysicsEngine2D;
+
+internal readonly record struct RigidBodyId : IUnmanaged<RigidBodyId>
 {
     private readonly int _value;
 
-    public static RigidBodyId Invalid => default;
+    public static RigidBodyId Null => default;
 
     public RigidBodyId(PhysicsSceneId physicsSceneId, int index, int version)
     {
@@ -16,5 +18,7 @@ internal readonly record struct RigidBodyId
     public PhysicsSceneId PhysicsSceneId { get; }
     public int Index => _value - 1;
     public int Version { get; }
-    public bool IsValid => _value > 0;
+
+    public bool IsNull => !IsNotNull;
+    public bool IsNotNull => _value > 0;
 }

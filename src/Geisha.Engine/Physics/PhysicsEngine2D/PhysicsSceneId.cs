@@ -1,11 +1,13 @@
-﻿namespace Geisha.Engine.Physics.PhysicsEngine2D;
+﻿using Geisha.Engine.Core.Memory;
+
+namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 // TODO: Maybe using int8 or int16 would be enough for internal values and would yield better performance?
-internal readonly record struct PhysicsSceneId
+internal readonly record struct PhysicsSceneId : IUnmanaged<PhysicsSceneId>
 {
     private readonly int _value;
 
-    public static PhysicsSceneId Invalid => default;
+    public static PhysicsSceneId Null => default;
 
     public PhysicsSceneId(int index, int version)
     {
@@ -16,6 +18,6 @@ internal readonly record struct PhysicsSceneId
     public int Index => _value - 1;
     public int Version { get; }
 
-    // TODO: Rename to IsNull or similar and keep the Valid semantic for real validity check by querying physics database?
-    public bool IsValid => _value > 0;
+    public bool IsNull => !IsNotNull;
+    public bool IsNotNull => _value > 0;
 }

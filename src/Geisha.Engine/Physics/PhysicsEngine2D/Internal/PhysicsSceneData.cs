@@ -84,7 +84,7 @@ internal struct PhysicsSceneData
         return ref Scenes[id.Index];
     }
 
-    public static bool IsValid(PhysicsSceneId id) => id.IsValid && Scenes[id.Index]._version == id.Version;
+    public static bool IsValid(PhysicsSceneId id) => id.IsNotNull && Scenes[id.Index]._version == id.Version;
 
     // Indexing and versioning
     private PhysicsSceneId PhysicsSceneId => new(_index, _version);
@@ -269,7 +269,7 @@ internal struct PhysicsSceneData
         return ref bodiesSpan[bodyIndex.DenseIndex];
     }
 
-    public readonly bool IsValidBodyId(RigidBodyId id) => id.IsValid && GetBodyIndicesSpan()[id.Index].Version == id.Version;
+    public readonly bool IsValidBodyId(RigidBodyId id) => id.IsNotNull && GetBodyIndicesSpan()[id.Index].Version == id.Version;
 
     private void SwapBodies(int index1, int index2)
     {

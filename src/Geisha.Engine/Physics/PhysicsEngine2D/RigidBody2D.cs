@@ -9,6 +9,9 @@ internal readonly record struct RigidBody2D(RigidBodyId Id) : IUnmanaged<RigidBo
 {
     public static RigidBody2D GetById(RigidBodyId id) => new(id);
 
+    // TODO: Add tests?
+    public bool IsValid => Physics2D.Body.IsValid(Id);
+
     public BodyType Type => Physics2D.Body.GetType(Id);
     public ColliderType ColliderType => Physics2D.Body.GetColliderType(Id);
     public CollisionNormalFilter CollisionNormalFilter => Physics2D.Body.GetCollisionNormalFilter(Id);

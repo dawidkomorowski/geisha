@@ -14,7 +14,6 @@ internal readonly record struct PhysicsScene2DDefinition
     public double PenetrationTolerance { get; init; }
 }
 
-// TODO: Add API to test validity of existing handle.
 internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
 {
     public static PhysicsScene2D Create(in PhysicsScene2DDefinition sceneDefinition)
@@ -36,6 +35,9 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
     }
 
     public PhysicsSceneId Id { get; }
+
+    // TODO: Add tests?
+    public bool IsValid => Physics2D.Scene.IsValid(Id);
 
     public int Substeps
     {

@@ -18,6 +18,8 @@ internal static class Physics2D
             PhysicsSceneData.Destroy(id);
         }
 
+        public static bool IsValid(PhysicsSceneId id) => PhysicsSceneData.IsValid(id);
+
         public static int GetSubsteps(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
@@ -166,6 +168,17 @@ internal static class Physics2D
 
     public static class Body
     {
+        public static bool IsValid(RigidBodyId id)
+        {
+            if (!PhysicsSceneData.IsValid(id.PhysicsSceneId))
+            {
+                return false;
+            }
+
+            ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
+            return scene.IsValidBodyId(id);
+        }
+
         public static BodyType GetType(RigidBodyId id)
         {
             ref var body = ref GetBodyData(id);
