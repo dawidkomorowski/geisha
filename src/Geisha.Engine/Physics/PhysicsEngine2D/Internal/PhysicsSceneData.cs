@@ -7,9 +7,17 @@ using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-// TODO: How to make it thread safe?
+/// <summary>
+///     Thread safety: <see cref="Create" /> and <see cref="Destroy" /> are locked to allow concurrent usage under
+///     the "one scene per thread" model - multiple threads each owning and exclusively operating on their own scene.
+///     Per-scene operations (<see cref="CreateBody" />, <see cref="DestroyBody" />, Simulate, etc.) do
+///     not require locking because a scene slot is exclusively owned by a single thread after <see cref="Create" />
+///     returns.
+/// </summary>
 internal struct PhysicsSceneData
 {
+    // TODO: Migrate to System.Threading.Lock once the project targets .NET 9+ / C# 13+.
+    private static readonly object SlotAllocationLock = new();
     private static readonly PhysicsSceneData[] Scenes = new PhysicsSceneData[32];
     private static int _firstFreeIndex = 0;
     private const int NoFreeIndex = -1;
@@ -27,51 +35,57 @@ internal struct PhysicsSceneData
 
     public static PhysicsSceneId Create(in PhysicsScene2DDefinition sceneDefinition)
     {
-        if (_firstFreeIndex == NoFreeIndex)
+        lock (SlotAllocationLock)
         {
-            throw new InvalidOperationException("There are no available free slots to allocate new Physics Scene.");
+            if (_firstFreeIndex == NoFreeIndex)
+            {
+                throw new InvalidOperationException("There are no available free slots to allocate new Physics Scene.");
+            }
+
+            ref var scene = ref Scenes[_firstFreeIndex];
+
+            Debug.Assert(scene._index == _firstFreeIndex, "Corrupted scene index.");
+
+            scene._version++;
+            scene.SimulationParameters = new SimulationParameters
+            {
+                Substeps = sceneDefinition.Substeps > 0 ? sceneDefinition.Substeps : 1,
+                VelocityIterations = sceneDefinition.VelocityIterations > 0 ? sceneDefinition.VelocityIterations : 4,
+                PositionIterations = sceneDefinition.PositionIterations > 0 ? sceneDefinition.PositionIterations : 4,
+                PenetrationTolerance = sceneDefinition.PenetrationTolerance >= 0 ? sceneDefinition.PenetrationTolerance : 0.01
+            };
+            scene.TileSize = sceneDefinition.TileSize;
+            scene.TileMap = new TileMap(sceneDefinition.TileSize);
+            scene._firstFreeBodyIndex = NoFreeIndex;
+            scene._bodyIndices = new List<BodyIndex>();
+            scene._staticBodyCount = 0;
+            scene._kinematicBodyCount = 0;
+            scene._bodies = new List<RigidBodyData>();
+            scene.Contacts = new List<ContactData>(256);
+            scene.SensorOverlapCache = new SensorOverlapCache(256);
+            scene.SensorOverlapEvents = new List<SensorOverlapEvent>(256);
+
+            _firstFreeIndex = scene._nextFreeIndex;
+
+            return scene.PhysicsSceneId;
         }
-
-        ref var scene = ref Scenes[_firstFreeIndex];
-
-        Debug.Assert(scene._index == _firstFreeIndex, "Corrupted scene index.");
-
-        scene._version++;
-        scene.SimulationParameters = new SimulationParameters
-        {
-            Substeps = sceneDefinition.Substeps > 0 ? sceneDefinition.Substeps : 1,
-            VelocityIterations = sceneDefinition.VelocityIterations > 0 ? sceneDefinition.VelocityIterations : 4,
-            PositionIterations = sceneDefinition.PositionIterations > 0 ? sceneDefinition.PositionIterations : 4,
-            PenetrationTolerance = sceneDefinition.PenetrationTolerance >= 0 ? sceneDefinition.PenetrationTolerance : 0.01
-        };
-        scene.TileSize = sceneDefinition.TileSize;
-        scene.TileMap = new TileMap(sceneDefinition.TileSize);
-        scene._firstFreeBodyIndex = NoFreeIndex;
-        scene._bodyIndices = new List<BodyIndex>();
-        scene._staticBodyCount = 0;
-        scene._kinematicBodyCount = 0;
-        scene._bodies = new List<RigidBodyData>();
-        scene.Contacts = new List<ContactData>(256);
-        scene.SensorOverlapCache = new SensorOverlapCache(256);
-        scene.SensorOverlapEvents = new List<SensorOverlapEvent>(256);
-
-        _firstFreeIndex = scene._nextFreeIndex;
-
-        return scene.PhysicsSceneId;
     }
 
     public static void Destroy(PhysicsSceneId id)
     {
-        ref var scene = ref Get(id);
+        lock (SlotAllocationLock)
+        {
+            ref var scene = ref Get(id);
 
-        var index = scene._index;
-        var version = scene._version;
-        scene = default;
-        scene._index = index;
-        scene._version = version + 1;
-        scene._nextFreeIndex = _firstFreeIndex;
+            var index = scene._index;
+            var version = scene._version;
+            scene = default;
+            scene._index = index;
+            scene._version = version + 1;
+            scene._nextFreeIndex = _firstFreeIndex;
 
-        _firstFreeIndex = index;
+            _firstFreeIndex = index;
+        }
     }
 
     public static ref PhysicsSceneData Get(PhysicsSceneId id)
