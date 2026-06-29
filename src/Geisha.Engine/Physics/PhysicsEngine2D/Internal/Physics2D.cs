@@ -68,6 +68,12 @@ internal static class Physics2D
             scene.SimulationParameters.PenetrationTolerance = value;
         }
 
+        public static SizeD GetTileSize(PhysicsSceneId id)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.TileSize;
+        }
+
         public static int GetBodyCount(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);

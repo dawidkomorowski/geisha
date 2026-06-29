@@ -63,6 +63,8 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
         set => Physics2D.Scene.SetPenetrationTolerance(Id, value);
     }
 
+    public SizeD TileSize => Physics2D.Scene.GetTileSize(Id);
+
     public BodiesView Bodies { get; }
 
     public RigidBody2D CreateBody(BodyType bodyType, double circleColliderRadius)
