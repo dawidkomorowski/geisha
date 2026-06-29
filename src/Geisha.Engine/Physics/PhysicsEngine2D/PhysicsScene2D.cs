@@ -123,6 +123,6 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
 
         public int Count => Physics2D.Scene.GetBodyCount(PhysicsSceneId);
 
-        public RigidBody2D this[int index] => new(Physics2D.Scene.GetBodyByRawIndex(PhysicsSceneId, index));
+        public RigidBody2D this[int index] => RigidBody2D.GetById(Physics2D.Scene.GetBodyByRawIndex(PhysicsSceneId, index));
     }
 }
