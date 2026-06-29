@@ -36,7 +36,6 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
 
     public PhysicsSceneId Id { get; }
 
-    // TODO: Add tests?
     public bool IsValid => Physics2D.Scene.IsValid(Id);
 
     public int Substeps
