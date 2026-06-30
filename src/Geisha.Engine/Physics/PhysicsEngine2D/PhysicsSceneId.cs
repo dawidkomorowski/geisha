@@ -2,7 +2,6 @@
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-// TODO: Maybe using int8 or int16 would be enough for internal values and would yield better performance?
 internal readonly record struct PhysicsSceneId : IUnmanaged<PhysicsSceneId>
 {
     private readonly int _value;
