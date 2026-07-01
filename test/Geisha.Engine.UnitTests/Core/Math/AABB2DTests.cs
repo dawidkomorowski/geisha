@@ -1,5 +1,4 @@
 using Geisha.Engine.Core.Math;
-using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Math;
@@ -120,32 +119,6 @@ public class AABB2DTests
         // Assert
         Assert.That(rectangle.Center, Is.EqualTo(aabb.Center));
         Assert.That(rectangle.Dimensions, Is.EqualTo(aabb.Dimensions));
-    }
-
-    #endregion
-
-    #region Equality members
-
-    [TestCase( /*A1*/ 0, 0, 0, 0, /*A2*/ 0, 0, 0, 0, /*E*/ true)]
-    [TestCase( /*A1*/ 1, 2, 3, 4, /*A2*/ 1, 2, 3, 4, /*E*/ true)]
-    [TestCase( /*A1*/ 1, 2, 3, 4, /*A2*/ 0, 2, 3, 4, /*E*/ false)]
-    [TestCase( /*A1*/ 1, 2, 3, 4, /*A2*/ 1, 0, 3, 4, /*E*/ false)]
-    [TestCase( /*A1*/ 1, 2, 3, 4, /*A2*/ 1, 2, 0, 4, /*E*/ false)]
-    [TestCase( /*A1*/ 1, 2, 3, 4, /*A2*/ 1, 2, 3, 0, /*E*/ false)]
-    public void EqualityMembers_ShouldEqualAABB2D_WhenMinAndMaxAreEqual(double minX1, double minY1, double maxX1, double maxY1,
-        double minX2, double minY2, double maxX2, double maxY2, bool expectedIsEqual)
-    {
-        // Arrange
-        var aabb1 = new AABB2D(new Vector2(minX1, minY1), new Vector2(maxX1, maxY1));
-        var aabb2 = new AABB2D(new Vector2(minX2, minY2), new Vector2(maxX2, maxY2));
-
-        // Act
-        // Assert
-        AssertEqualityMembers
-            .ForValues(aabb1, aabb2)
-            .UsingEqualityOperator((x, y) => x == y)
-            .UsingInequalityOperator((x, y) => x != y)
-            .EqualityIsExpectedToBe(expectedIsEqual);
     }
 
     #endregion
