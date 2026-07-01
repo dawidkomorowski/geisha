@@ -43,7 +43,7 @@ public class AABB2DTests
     public void Center_Test(double minX, double minY, double maxX, double maxY, double centerX, double centerY)
     {
         // Arrange
-        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+        var aabb = new AABB2D(minX, minY, maxX, maxY);
 
         // Act
         // Assert
@@ -56,7 +56,7 @@ public class AABB2DTests
     public void Size_Test(double minX, double minY, double maxX, double maxY, double sizeX, double sizeY)
     {
         // Arrange
-        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+        var aabb = new AABB2D(minX, minY, maxX, maxY);
 
         // Act
         // Assert
@@ -69,7 +69,7 @@ public class AABB2DTests
     public void Width_Test(double minX, double minY, double maxX, double maxY, double width)
     {
         // Arrange
-        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+        var aabb = new AABB2D(minX, minY, maxX, maxY);
 
         // Act
         // Assert
@@ -82,7 +82,7 @@ public class AABB2DTests
     public void Height_Test(double minX, double minY, double maxX, double maxY, double height)
     {
         // Arrange
-        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+        var aabb = new AABB2D(minX, minY, maxX, maxY);
 
         // Act
         // Assert
@@ -107,7 +107,7 @@ public class AABB2DTests
     public void Contains(double minX, double minY, double maxX, double maxY, double pointX, double pointY, bool expected)
     {
         // Arrange
-        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+        var aabb = new AABB2D(minX, minY, maxX, maxY);
         var point = new Vector2(pointX, pointY);
 
         // Act
@@ -135,8 +135,8 @@ public class AABB2DTests
         double minX2, double minY2, double maxX2, double maxY2, bool expected)
     {
         // Arrange
-        var aabb1 = new AABB2D(new Vector2(minX1, minY1), new Vector2(maxX1, maxY1));
-        var aabb2 = new AABB2D(new Vector2(minX2, minY2), new Vector2(maxX2, maxY2));
+        var aabb1 = new AABB2D(minX1, minY1, maxX1, maxY1);
+        var aabb2 = new AABB2D(minX2, minY2, maxX2, maxY2);
 
         // Act
         var actual = aabb1.Overlaps(aabb2);
@@ -149,7 +149,7 @@ public class AABB2DTests
     public void ToAxisAlignedRectangle_ShouldReturnAxisAlignedRectangleWithSameCenterAndSize()
     {
         // Arrange
-        var aabb = new AABB2D(new Vector2(0, 0), new Vector2(10, 6));
+        var aabb = new AABB2D(0, 0, 10, 6);
 
         // Act
         var rectangle = aabb.ToAxisAlignedRectangle();
