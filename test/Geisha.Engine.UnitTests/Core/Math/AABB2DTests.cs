@@ -128,9 +128,9 @@ public class AABB2DTests
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 6, 10, 12, /*E*/ true)]
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, -6, 10, 0, /*E*/ true)]
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 11, 0, 17, 6, /*E*/ false)]
-    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -6, 0, -1, 6, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -7, 0, -1, 6, /*E*/ false)]
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 7, 10, 13, /*E*/ false)]
-    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, -6, 10, -1, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, -7, 10, -1, /*E*/ false)]
     public void Overlaps(double minX1, double minY1, double maxX1, double maxY1,
         double minX2, double minY2, double maxX2, double maxY2, bool expected)
     {
