@@ -31,7 +31,7 @@ public readonly record struct AABB2D
     public double Height => Max.Y - Min.Y;
 
     public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
-    public bool Contains(in AABB2D other) => false;
+    public bool Contains(in AABB2D other) => Min.X <= other.Min.X && Max.X >= other.Max.X && Min.Y <= other.Min.Y && Max.Y >= other.Max.Y;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Overlaps(in AABB2D other) => Max.X >= other.Min.X && Min.X <= other.Max.X && Max.Y >= other.Min.Y && Min.Y <= other.Max.Y;

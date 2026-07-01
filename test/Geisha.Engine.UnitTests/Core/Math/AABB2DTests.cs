@@ -104,7 +104,7 @@ public class AABB2DTests
     [TestCase( /*AABB*/ 0, 0, 10, 6, /*P*/ 11, 3, /*E*/ false)]
     [TestCase( /*AABB*/ 0, 0, 10, 6, /*P*/ 5, -1, /*E*/ false)]
     [TestCase( /*AABB*/ 0, 0, 10, 6, /*P*/ 5, 7, /*E*/ false)]
-    public void Contains(double minX, double minY, double maxX, double maxY, double pointX, double pointY, bool expected)
+    public void Contains_Point_Test(double minX, double minY, double maxX, double maxY, double pointX, double pointY, bool expected)
     {
         // Arrange
         var aabb = new AABB2D(minX, minY, maxX, maxY);
@@ -112,6 +112,34 @@ public class AABB2DTests
 
         // Act
         var actual = aabb.Contains(point);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 0, 10, 6, /*E*/ true)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 1, 8, 5, /*E*/ true)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 1, 8, 5, /*E*/ true)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 1, 10, 5, /*E*/ true)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 0, 8, 5, /*E*/ true)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 1, 8, 6, /*E*/ true)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -1, 1, 8, 5, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 1, 11, 5, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, -1, 8, 5, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 1, 8, 7, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 11, 0, 17, 6, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -7, 0, -1, 6, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 7, 10, 13, /*E*/ false)]
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, -7, 10, -1, /*E*/ false)]
+    public void Contains_AABB2D_Test(double minX1, double minY1, double maxX1, double maxY1,
+        double minX2, double minY2, double maxX2, double maxY2, bool expected)
+    {
+        // Arrange
+        var aabb1 = new AABB2D(minX1, minY1, maxX1, maxY1);
+        var aabb2 = new AABB2D(minX2, minY2, maxX2, maxY2);
+
+        // Act
+        var actual = aabb1.Contains(aabb2);
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
@@ -131,7 +159,7 @@ public class AABB2DTests
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -7, 0, -1, 6, /*E*/ false)]
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 7, 10, 13, /*E*/ false)]
     [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, -7, 10, -1, /*E*/ false)]
-    public void Overlaps(double minX1, double minY1, double maxX1, double maxY1,
+    public void Overlaps_Test(double minX1, double minY1, double maxX1, double maxY1,
         double minX2, double minY2, double maxX2, double maxY2, bool expected)
     {
         // Arrange
