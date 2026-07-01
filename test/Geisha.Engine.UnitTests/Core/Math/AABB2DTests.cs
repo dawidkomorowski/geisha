@@ -21,6 +21,18 @@ public class AABB2DTests
         Assert.That(aabb.Max, Is.EqualTo(new Vector2(5, 8)));
     }
 
+    [Test]
+    public void Constructor_FromMinXMinYMaxXMaxY_ShouldSetMinAndMax()
+    {
+        // Arrange
+        // Act
+        var aabb = new AABB2D(1, 2, 5, 8);
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(1, 2)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(5, 8)));
+    }
+
     #endregion
 
     #region Properties
@@ -38,17 +50,43 @@ public class AABB2DTests
         Assert.That(aabb.Center, Is.EqualTo(new Vector2(centerX, centerY)));
     }
 
-    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*Dimensions*/ 10, 6)]
-    [TestCase( /*Min*/ -5, -3, /*Max*/ 4, 5, /*Dimensions*/ 9, 8)]
-    [TestCase( /*Min*/ 1, 2, /*Max*/ 4, 6, /*Dimensions*/ 3, 4)]
-    public void Dimensions_Test(double minX, double minY, double maxX, double maxY, double dimX, double dimY)
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*Size*/ 10, 6)]
+    [TestCase( /*Min*/ -5, -3, /*Max*/ 4, 5, /*Size*/ 9, 8)]
+    [TestCase( /*Min*/ 1, 2, /*Max*/ 4, 6, /*Size*/ 3, 4)]
+    public void Size_Test(double minX, double minY, double maxX, double maxY, double sizeX, double sizeY)
     {
         // Arrange
         var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
 
         // Act
         // Assert
-        Assert.That(aabb.Dimensions, Is.EqualTo(new Vector2(dimX, dimY)));
+        Assert.That(aabb.Size, Is.EqualTo(new Vector2(sizeX, sizeY)));
+    }
+
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*Width*/ 10)]
+    [TestCase( /*Min*/ -5, -3, /*Max*/ 4, 5, /*Width*/ 9)]
+    [TestCase( /*Min*/ 1, 2, /*Max*/ 4, 6, /*Width*/ 3)]
+    public void Width_Test(double minX, double minY, double maxX, double maxY, double width)
+    {
+        // Arrange
+        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+
+        // Act
+        // Assert
+        Assert.That(aabb.Width, Is.EqualTo(width));
+    }
+
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*Height*/ 6)]
+    [TestCase( /*Min*/ -5, -3, /*Max*/ 4, 5, /*Height*/ 8)]
+    [TestCase( /*Min*/ 1, 2, /*Max*/ 4, 6, /*Height*/ 4)]
+    public void Height_Test(double minX, double minY, double maxX, double maxY, double height)
+    {
+        // Arrange
+        var aabb = new AABB2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+
+        // Act
+        // Assert
+        Assert.That(aabb.Height, Is.EqualTo(height));
     }
 
     #endregion
@@ -108,7 +146,7 @@ public class AABB2DTests
     }
 
     [Test]
-    public void ToAxisAlignedRectangle_ShouldReturnAxisAlignedRectangleWithSameCenterAndDimensions()
+    public void ToAxisAlignedRectangle_ShouldReturnAxisAlignedRectangleWithSameCenterAndSize()
     {
         // Arrange
         var aabb = new AABB2D(new Vector2(0, 0), new Vector2(10, 6));
@@ -118,7 +156,7 @@ public class AABB2DTests
 
         // Assert
         Assert.That(rectangle.Center, Is.EqualTo(aabb.Center));
-        Assert.That(rectangle.Dimensions, Is.EqualTo(aabb.Dimensions));
+        Assert.That(rectangle.Dimensions, Is.EqualTo(aabb.Size));
     }
 
     #endregion
