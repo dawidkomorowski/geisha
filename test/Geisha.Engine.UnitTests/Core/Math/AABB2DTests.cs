@@ -40,8 +40,8 @@ public class AABB2DTests
     }
 
     [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*Dimensions*/ 10, 6)]
-    [TestCase( /*Min*/ -5, -3, /*Max*/ 5, 3, /*Dimensions*/ 10, 6)]
-    [TestCase( /*Min*/ 1, 2, /*Max*/ 5, 8, /*Dimensions*/ 4, 6)]
+    [TestCase( /*Min*/ -5, -3, /*Max*/ 4, 5, /*Dimensions*/ 9, 8)]
+    [TestCase( /*Min*/ 1, 2, /*Max*/ 4, 6, /*Dimensions*/ 3, 4)]
     public void Dimensions_Test(double minX, double minY, double maxX, double maxY, double dimX, double dimY)
     {
         // Arrange
