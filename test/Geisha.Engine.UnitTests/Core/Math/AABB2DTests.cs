@@ -35,6 +35,156 @@ public class AABB2DTests
 
     #endregion
 
+    #region Factory methods
+
+    [Test]
+    public void FromSize_FromVector2_ShouldCreateAABBCentredAtOriginWithGivenSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromSize(new Vector2(10, 6));
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-5, -3)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(5, 3)));
+    }
+
+    [Test]
+    public void FromSize_FromSizeD_ShouldCreateAABBCentredAtOriginWithGivenSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromSize(new SizeD(10, 6));
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-5, -3)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(5, 3)));
+    }
+
+    [Test]
+    public void FromSize_FromSize_ShouldCreateAABBCentredAtOriginWithGivenSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromSize(new Size(10, 6));
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-5, -3)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(5, 3)));
+    }
+
+    [Test]
+    public void FromSize_FromWidthAndHeight_ShouldCreateAABBCentredAtOriginWithGivenSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromSize(10, 6);
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-5, -3)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(5, 3)));
+    }
+
+    [Test]
+    public void FromCenterAndSize_FromVector2AndVector2_ShouldCreateAABBWithGivenCenterAndSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromCenterAndSize(new Vector2(2, 3), new Vector2(10, 6));
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-3, 0)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(7, 6)));
+    }
+
+    [Test]
+    public void FromCenterAndSize_FromVector2AndSizeD_ShouldCreateAABBWithGivenCenterAndSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromCenterAndSize(new Vector2(2, 3), new SizeD(10, 6));
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-3, 0)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(7, 6)));
+    }
+
+    [Test]
+    public void FromCenterAndSize_FromVector2AndSize_ShouldCreateAABBWithGivenCenterAndSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromCenterAndSize(new Vector2(2, 3), new Size(10, 6));
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-3, 0)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(7, 6)));
+    }
+
+    [Test]
+    public void FromCenterAndSize_FromCenterXCenterYWidthHeight_ShouldCreateAABBWithGivenCenterAndSize()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromCenterAndSize(2, 3, 10, 6);
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-3, 0)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(7, 6)));
+    }
+
+    [TestCase(new double[] { }, /*Min*/ 0, 0, /*Max*/ 0, 0)]
+    [TestCase(new[] { 3.0, 4.0 }, /*Min*/ 3, 4, /*Max*/ 3, 4)]
+    [TestCase(new[] { 2.0, -3.0, /**/ 8.0, 5.0, /**/ 1.0, 4.0 }, /*Min*/ 1, -3, /*Max*/ 8, 5)]
+    public void FromPoints_Test(double[] points, double minX, double minY, double maxX, double maxY)
+    {
+        // Arrange
+        var pointsAsVectors = new Vector2[points.Length / 2];
+        for (var i = 0; i < points.Length; i += 2)
+        {
+            pointsAsVectors[i / 2] = new Vector2(points[i], points[i + 1]);
+        }
+
+        // Act
+        var aabb = AABB2D.FromPoints(pointsAsVectors);
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(minX, minY)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(maxX, maxY)));
+    }
+
+    [TestCase(new double[] { }, /*Min*/ 0, 0, /*Max*/ 0, 0)]
+    [TestCase(new[]
+    {
+        /*A1*/ 0.0, 0.0, 10.0, 6.0
+    }, /*Min*/ 0, 0, /*Max*/ 10, 6)]
+    [TestCase(new[]
+    {
+        /*A1*/ 0.0, 0.0, 10.0, 6.0, /*A2*/ -2.0, -1.0, 5.0, 4.0
+    }, /*Min*/ -2, -1, /*Max*/ 10, 6)]
+    [TestCase(new[]
+    {
+        /*A1*/ 0.0, 0.0, 10.0, 6.0, /*A2*/ 3.0, 2.0, 15.0, 9.0
+    }, /*Min*/ 0, 0, /*Max*/ 15, 9)]
+    public void FromAABBs_Test(double[] aabbs, double minX, double minY, double maxX, double maxY)
+    {
+        // Arrange
+        var aabbsAsStructures = new AABB2D[aabbs.Length / 4];
+        for (var i = 0; i < aabbs.Length; i += 4)
+        {
+            aabbsAsStructures[i / 4] = new AABB2D(aabbs[i], aabbs[i + 1], aabbs[i + 2], aabbs[i + 3]);
+        }
+
+        // Act
+        var aabb = AABB2D.FromAABBs(aabbsAsStructures);
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(minX, minY)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(maxX, maxY)));
+    }
+
+    #endregion
+
     #region Properties
 
     [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*Center*/ 5, 3)]

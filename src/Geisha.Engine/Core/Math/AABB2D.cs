@@ -23,16 +23,75 @@ public readonly record struct AABB2D
     {
     }
 
-    public static AABB2D FromSize(in Vector2 size) => default;
-    public static AABB2D FromSize(in SizeD size) => default;
-    public static AABB2D FromSize(in Size size) => default;
-    public static AABB2D FromSize(double width, double height) => default;
-    public static AABB2D FromCenterAndSize(in Vector2 center, in Vector2 size) => default;
-    public static AABB2D FromCenterAndSize(in Vector2 center, in SizeD size) => default;
-    public static AABB2D FromCenterAndSize(in Vector2 center, in Size size) => default;
-    public static AABB2D FromCenterAndSize(double centerX, double centerY, double width, double height) => default;
-    public static AABB2D FromPoints(ReadOnlySpan<Vector2> points) => default;
-    public static AABB2D FromAABBs(ReadOnlySpan<AABB2D> aabbs) => default;
+    public static AABB2D FromSize(in Vector2 size)
+    {
+        var halfSize = size * 0.5;
+        return new AABB2D(-halfSize, halfSize);
+    }
+
+    public static AABB2D FromSize(in SizeD size) => FromSize(size.ToVector2());
+    public static AABB2D FromSize(in Size size) => FromSize(size.ToVector2());
+
+    public static AABB2D FromSize(double width, double height)
+    {
+        var halfWidth = width * 0.5;
+        var halfHeight = height * 0.5;
+        return new AABB2D(-halfWidth, -halfHeight, halfWidth, halfHeight);
+    }
+
+    public static AABB2D FromCenterAndSize(in Vector2 center, in Vector2 size)
+    {
+        var halfSize = size * 0.5;
+        return new AABB2D(center - halfSize, center + halfSize);
+    }
+
+    public static AABB2D FromCenterAndSize(in Vector2 center, in SizeD size) => FromCenterAndSize(center, size.ToVector2());
+    public static AABB2D FromCenterAndSize(in Vector2 center, in Size size) => FromCenterAndSize(center, size.ToVector2());
+
+    public static AABB2D FromCenterAndSize(double centerX, double centerY, double width, double height)
+    {
+        var halfWidth = width * 0.5;
+        var halfHeight = height * 0.5;
+        return new AABB2D(centerX - halfWidth, centerY - halfHeight, centerX + halfWidth, centerY + halfHeight);
+    }
+
+    public static AABB2D FromPoints(ReadOnlySpan<Vector2> points)
+    {
+        if (points.Length == 0)
+        {
+            return default;
+        }
+
+        var min = points[0];
+        var max = points[0];
+
+        for (var i = 1; i < points.Length; i++)
+        {
+            min = Vector2.Min(min, points[i]);
+            max = Vector2.Max(max, points[i]);
+        }
+
+        return new AABB2D(min, max);
+    }
+
+    public static AABB2D FromAABBs(ReadOnlySpan<AABB2D> aabbs)
+    {
+        if (aabbs.Length == 0)
+        {
+            return default;
+        }
+
+        var min = aabbs[0].Min;
+        var max = aabbs[0].Max;
+
+        for (var i = 1; i < aabbs.Length; i++)
+        {
+            min = Vector2.Min(min, aabbs[i].Min);
+            max = Vector2.Max(max, aabbs[i].Max);
+        }
+
+        return new AABB2D(min, max);
+    }
 
     public Vector2 Min { get; }
     public Vector2 Max { get; }
