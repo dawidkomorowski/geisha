@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math;
@@ -21,6 +22,17 @@ public readonly record struct AABB2D
     public AABB2D(double minX, double minY, double maxX, double maxY) : this(new Vector2(minX, minY), new Vector2(maxX, maxY))
     {
     }
+
+    public static AABB2D FromSize(in Vector2 size) => default;
+    public static AABB2D FromSize(in SizeD size) => default;
+    public static AABB2D FromSize(in Size size) => default;
+    public static AABB2D FromSize(double width, double height) => default;
+    public static AABB2D FromCenterAndSize(in Vector2 center, in Vector2 size) => default;
+    public static AABB2D FromCenterAndSize(in Vector2 center, in SizeD size) => default;
+    public static AABB2D FromCenterAndSize(in Vector2 center, in Size size) => default;
+    public static AABB2D FromCenterAndSize(double centerX, double centerY, double width, double height) => default;
+    public static AABB2D FromPoints(ReadOnlySpan<Vector2> points) => default;
+    public static AABB2D FromAABBs(ReadOnlySpan<AABB2D> aabbs) => default;
 
     public Vector2 Min { get; }
     public Vector2 Max { get; }
