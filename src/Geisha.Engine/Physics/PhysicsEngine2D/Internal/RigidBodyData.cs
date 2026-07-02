@@ -45,8 +45,8 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
         ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Contains(point),
-            ColliderType.Rectangle => BoundingRectangle.Contains(point) && TransformedRectangleCollider.Contains(point),
-            ColliderType.Tile => BoundingRectangle.Contains(point),
+            ColliderType.Rectangle => AABB.Contains(point) && TransformedRectangleCollider.Contains(point),
+            ColliderType.Tile => AABB.Contains(point),
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -64,8 +64,8 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
         ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Overlaps(circle),
-            ColliderType.Rectangle => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
-            ColliderType.Tile => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
+            ColliderType.Rectangle => AABB.Overlaps(circle.ComputeAABB()) && TransformedRectangleCollider.Overlaps(circle),
+            ColliderType.Tile => AABB.Overlaps(circle.ComputeAABB()) && TransformedRectangleCollider.Overlaps(circle),
             _ => throw new ArgumentOutOfRangeException()
         };
 
