@@ -184,8 +184,7 @@ public interface IPhysicsSystem
     /// </returns>
     /// <remarks>
     ///     <para>
-    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
-    ///         geometry.
+    ///         This method tests overlap using axis-aligned bounding boxes (AABBs), not exact collider geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -212,8 +211,7 @@ public interface IPhysicsSystem
     /// <returns>Number of colliders written to <paramref name="colliders" />.</returns>
     /// <remarks>
     ///     <para>
-    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
-    ///         geometry.
+    ///         This method tests overlap using axis-aligned bounding boxes (AABBs), not exact collider geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -249,8 +247,7 @@ public interface IPhysicsSystem
     ///         to the written count.
     ///     </para>
     ///     <para>
-    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
-    ///         geometry.
+    ///         This method tests overlap using axis-aligned bounding boxes (AABBs), not exact collider geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -288,8 +285,7 @@ public interface IPhysicsSystem
     ///         resized.
     ///     </para>
     ///     <para>
-    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
-    ///         geometry.
+    ///         This method tests overlap using axis-aligned bounding boxes (AABBs), not exact collider geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
