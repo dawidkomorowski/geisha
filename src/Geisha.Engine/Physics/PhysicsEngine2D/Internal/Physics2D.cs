@@ -137,11 +137,11 @@ internal static class Physics2D
             SceneQuery.QueryPoint(in scene, in point, ref handler);
         }
 
-        public static void QueryBounds<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        public static void QueryBounds<TQueryHandler>(PhysicsSceneId id, in AABB2D aabb, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            SceneQuery.QueryBounds(in scene, in axisAlignedRectangle, ref handler);
+            SceneQuery.QueryBounds(in scene, in aabb, ref handler);
         }
 
         public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
