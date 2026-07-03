@@ -171,10 +171,10 @@ public interface IPhysicsSystem
     ReadOnlySpan<Collider2DComponent> QueryPointAsSpan(in Vector2 point, List<Collider2DComponent> colliders);
 
     /// <summary>
-    ///     Finds colliders whose bounding rectangles overlap the specified axis-aligned rectangle and writes them into
+    ///     Finds colliders whose bounding boxes overlap the specified axis-aligned bounding box and writes them into
     ///     the provided <paramref name="colliders" /> span.
     /// </summary>
-    /// <param name="axisAlignedRectangle">Axis-aligned rectangle in world space to test.</param>
+    /// <param name="aabb">Axis-aligned bounding box in world space to test.</param>
     /// <param name="colliders">
     ///     Destination span for query results. If fewer elements are available than matching colliders, only the
     ///     colliders that fit are written.
@@ -184,8 +184,8 @@ public interface IPhysicsSystem
     /// </returns>
     /// <remarks>
     ///     <para>
-    ///         This method tests overlap against collider bounding rectangles
-    ///         (<see cref="Collider2DComponent.BoundingRectangle" />), not exact collider geometry.
+    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
+    ///         geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -199,21 +199,21 @@ public interface IPhysicsSystem
     ///         needed. Clearing on every query or every frame is typically unnecessary.
     ///     </para>
     /// </remarks>
-    int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders);
+    int QueryBounds(in AABB2D aabb, Span<Collider2DComponent> colliders);
 
     /// <summary>
-    ///     Finds colliders whose bounding rectangles overlap the specified axis-aligned rectangle and writes them into
+    ///     Finds colliders whose bounding boxes overlap the specified axis-aligned bounding box and writes them into
     ///     the provided <paramref name="colliders" /> list.
     /// </summary>
-    /// <param name="axisAlignedRectangle">Axis-aligned rectangle in world space to test.</param>
+    /// <param name="aabb">Axis-aligned bounding box in world space to test.</param>
     /// <param name="colliders">
     ///     Destination list for query results. The list is cleared before writing the results.
     /// </param>
     /// <returns>Number of colliders written to <paramref name="colliders" />.</returns>
     /// <remarks>
     ///     <para>
-    ///         This method tests overlap against collider bounding rectangles
-    ///         (<see cref="Collider2DComponent.BoundingRectangle" />), not exact collider geometry.
+    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
+    ///         geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -228,13 +228,13 @@ public interface IPhysicsSystem
     ///         unnecessary.
     ///     </para>
     /// </remarks>
-    int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders);
+    int QueryBounds(in AABB2D aabb, List<Collider2DComponent> colliders);
 
     /// <summary>
-    ///     Finds colliders whose bounding rectangles overlap the specified axis-aligned rectangle, writes them into
+    ///     Finds colliders whose bounding boxes overlap the specified axis-aligned bounding box, writes them into
     ///     the provided <paramref name="colliders" /> span, and returns a view over the written range.
     /// </summary>
-    /// <param name="axisAlignedRectangle">Axis-aligned rectangle in world space to test.</param>
+    /// <param name="aabb">Axis-aligned bounding box in world space to test.</param>
     /// <param name="colliders">
     ///     Destination span for query results. If fewer elements are available than matching colliders, only the
     ///     colliders that fit are written.
@@ -245,12 +245,12 @@ public interface IPhysicsSystem
     /// <remarks>
     ///     <para>
     ///         This overload is equivalent to calling
-    ///         <see cref="QueryBounds(in AxisAlignedRectangle, Span{Collider2DComponent})" /> and slicing the buffer
+    ///         <see cref="QueryBounds(in AABB2D, Span{Collider2DComponent})" /> and slicing the buffer
     ///         to the written count.
     ///     </para>
     ///     <para>
-    ///         This method tests overlap against collider bounding rectangles
-    ///         (<see cref="Collider2DComponent.BoundingRectangle" />), not exact collider geometry.
+    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
+    ///         geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -264,13 +264,13 @@ public interface IPhysicsSystem
     ///         needed. Clearing on every query or every frame is typically unnecessary.
     ///     </para>
     /// </remarks>
-    ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders);
+    ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AABB2D aabb, Span<Collider2DComponent> colliders);
 
     /// <summary>
-    ///     Finds colliders whose bounding rectangles overlap the specified axis-aligned rectangle, writes them into
+    ///     Finds colliders whose bounding boxes overlap the specified axis-aligned bounding box, writes them into
     ///     the provided <paramref name="colliders" /> list, and returns a view over the written range.
     /// </summary>
-    /// <param name="axisAlignedRectangle">Axis-aligned rectangle in world space to test.</param>
+    /// <param name="aabb">Axis-aligned bounding box in world space to test.</param>
     /// <param name="colliders">
     ///     Destination list for query results. The list is cleared before writing the results.
     /// </param>
@@ -280,7 +280,7 @@ public interface IPhysicsSystem
     /// <remarks>
     ///     <para>
     ///         This overload is equivalent to calling
-    ///         <see cref="QueryBounds(in AxisAlignedRectangle, List{Collider2DComponent})" /> and slicing the list to
+    ///         <see cref="QueryBounds(in AABB2D, List{Collider2DComponent})" /> and slicing the list to
     ///         the written count.
     ///     </para>
     ///     <para>
@@ -288,8 +288,8 @@ public interface IPhysicsSystem
     ///         resized.
     ///     </para>
     ///     <para>
-    ///         This method tests overlap against collider bounding rectangles
-    ///         (<see cref="Collider2DComponent.BoundingRectangle" />), not exact collider geometry.
+    ///         This method tests overlap against each collider's axis-aligned bounding box (AABB), not exact collider
+    ///         geometry.
     ///     </para>
     ///     <para>
     ///         This query observes physics state from the most recently synchronized data. If transform or collider
@@ -304,7 +304,7 @@ public interface IPhysicsSystem
     ///         unnecessary.
     ///     </para>
     /// </remarks>
-    ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders);
+    ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AABB2D aabb, List<Collider2DComponent> colliders);
 
     /// <summary>
     ///     Finds colliders that overlap the specified axis-aligned rectangle and writes them into the provided

@@ -267,18 +267,18 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
-        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 1, 1);
         var colliders = new Collider2DComponent[bufferSize];
 
         // Act
-        var written = physicsSystem.QueryBounds(rectangleToQuery, colliders);
+        var written = physicsSystem.QueryBounds(aabbToQuery, colliders);
 
         // Assert
         Assert.That(written, Is.EqualTo(expectedWritten));
 
         for (var i = 0; i < written; i++)
         {
-            Assert.That(colliders[i].BoundingRectangle.Overlaps(rectangleToQuery), Is.True);
+            Assert.That(colliders[i].BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -294,10 +294,10 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
-        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 1, 1);
 
         var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
-        Assert.That(fillerCollider.BoundingRectangle.Overlaps(rectangleToQuery), Is.False);
+        Assert.That(fillerCollider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.False);
 
         var colliders = new List<Collider2DComponent>(initialListSize);
         for (var i = 0; i < initialListSize; i++)
@@ -308,7 +308,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         var initialCapacity = colliders.Capacity;
 
         // Act
-        var written = physicsSystem.QueryBounds(rectangleToQuery, colliders);
+        var written = physicsSystem.QueryBounds(aabbToQuery, colliders);
 
         // Assert
         Assert.That(written, Is.EqualTo(expectedWritten));
@@ -317,7 +317,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
         for (var i = 0; i < written; i++)
         {
-            Assert.That(colliders[i].BoundingRectangle.Overlaps(rectangleToQuery), Is.True);
+            Assert.That(colliders[i].BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -333,18 +333,18 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
-        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 1, 1);
         var colliders = new Collider2DComponent[bufferSize];
 
         // Act
-        var view = physicsSystem.QueryBoundsAsSpan(rectangleToQuery, colliders);
+        var view = physicsSystem.QueryBoundsAsSpan(aabbToQuery, colliders);
 
         // Assert
         Assert.That(view.Length, Is.EqualTo(expectedWritten));
 
         foreach (var collider in view)
         {
-            Assert.That(collider.BoundingRectangle.Overlaps(rectangleToQuery), Is.True);
+            Assert.That(collider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -360,10 +360,10 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         CreateCollidersAtOrigin(collidersCount);
         physicsSystem.SynchronizePhysicsState();
 
-        var rectangleToQuery = new AxisAlignedRectangle(0, 0, 1, 1);
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 1, 1);
 
         var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
-        Assert.That(fillerCollider.BoundingRectangle.Overlaps(rectangleToQuery), Is.False);
+        Assert.That(fillerCollider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.False);
 
         var colliders = new List<Collider2DComponent>(initialListSize);
         for (var i = 0; i < initialListSize; i++)
@@ -374,7 +374,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         var initialCapacity = colliders.Capacity;
 
         // Act
-        var view = physicsSystem.QueryBoundsAsSpan(rectangleToQuery, colliders);
+        var view = physicsSystem.QueryBoundsAsSpan(aabbToQuery, colliders);
 
         // Assert
         Assert.That(view.Length, Is.EqualTo(expectedWritten));
@@ -383,7 +383,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
         foreach (var collider in view)
         {
-            Assert.That(collider.BoundingRectangle.Overlaps(rectangleToQuery), Is.True);
+            Assert.That(collider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -391,7 +391,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         string Name,
         Func<SceneQueryTests, Collider2DComponent> CreateCollider,
         PhysicsConfiguration PhysicsConfiguration,
-        AxisAlignedRectangle RectangleToQuery,
+        AABB2D AabbToQuery,
         bool ExpectedHit,
         double VisualScale
     );
@@ -401,35 +401,35 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         // Circle
         yield return new QueryBoundsGeometryTestCase("QueryBounds_01_Geometry_Circle_AabbFullyInside",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(0, 0, 2, 2), true, 10d);
+            AABB2D.FromCenterAndSize(0, 0, 2, 2), true, 10d);
         yield return new QueryBoundsGeometryTestCase("QueryBounds_02_Geometry_Circle_AabbTouchingEdge",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(11, 0, 2, 2), true, 10d);
+            AABB2D.FromCenterAndSize(11, 0, 2, 2), true, 10d);
         yield return new QueryBoundsGeometryTestCase("QueryBounds_03_Geometry_Circle_AabbOutside",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(11.0001, 0, 2, 2), false, 10d);
+            AABB2D.FromCenterAndSize(11.0001, 0, 2, 2), false, 10d);
         yield return new QueryBoundsGeometryTestCase("QueryBounds_04_Geometry_Circle_AabbOverlapOutsideShape",
             t => t.CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(9, 9, 1, 1), true, 10d);
+            AABB2D.FromCenterAndSize(9, 9, 1, 1), true, 10d);
 
         // Rectangle
         yield return new QueryBoundsGeometryTestCase("QueryBounds_05_Geometry_Rectangle_AabbFullyInside",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(0, 0, 2, 2), true, 10d);
+            AABB2D.FromCenterAndSize(0, 0, 2, 2), true, 10d);
         yield return new QueryBoundsGeometryTestCase("QueryBounds_06_Geometry_Rectangle_AabbOutside",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, 0).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(11.0001, 0, 2, 2), false, 10d);
+            AABB2D.FromCenterAndSize(11.0001, 0, 2, 2), false, 10d);
         yield return new QueryBoundsGeometryTestCase("QueryBounds_07_Geometry_Rectangle_RotatedAabbOverlapOutsideShape",
             t => t.CreateRectangleStaticBody(0, 0, 20, 10, Math.PI / 6).GetComponent<RectangleColliderComponent>(), CreatePhysicsConfiguration(),
-            new AxisAlignedRectangle(11, -2, 1, 1), true, 10d);
+            AABB2D.FromCenterAndSize(11, -2, 1, 1), true, 10d);
 
         // Tile
         yield return new QueryBoundsGeometryTestCase("QueryBounds_08_Geometry_Tile_AabbInside",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
-            new AxisAlignedRectangle(0, 0, 0.2, 0.2), true, 40d);
+            AABB2D.FromCenterAndSize(0, 0, 0.2, 0.2), true, 40d);
         yield return new QueryBoundsGeometryTestCase("QueryBounds_09_Geometry_Tile_AabbOutside",
             t => t.CreateTileStaticBody(0, 0).GetComponent<TileColliderComponent>(), CreatePhysicsConfiguration(1, 1),
-            new AxisAlignedRectangle(1.0001, 0, 1, 1), false, 40d);
+            AABB2D.FromCenterAndSize(1.0001, 0, 1, 1), false, 40d);
     }
 
     private static IEnumerable<TestCaseData> QueryBoundsGeometryTestCases() =>
@@ -449,12 +449,12 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         SaveVisualOutput(physicsSystem, scale: testCase.VisualScale,
             postDrawAction: renderer =>
             {
-                renderer.DrawRectangle(testCase.RectangleToQuery, queryShapeColor, Matrix3x3.Identity);
+                renderer.DrawRectangle(testCase.AabbToQuery.ToAxisAlignedRectangle(), queryShapeColor, Matrix3x3.Identity);
                 renderer.DrawRectangle(collider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
             });
 
         // Act
-        var written = physicsSystem.QueryBounds(testCase.RectangleToQuery, colliders);
+        var written = physicsSystem.QueryBounds(testCase.AabbToQuery, colliders);
 
         // Assert
         Assert.That(written, Is.EqualTo(testCase.ExpectedHit ? 1 : 0));

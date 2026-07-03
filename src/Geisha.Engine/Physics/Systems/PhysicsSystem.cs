@@ -166,15 +166,15 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return queryHandler.Count;
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
-        var written = QueryBounds(axisAlignedRectangle, colliders);
+        var written = QueryBounds(aabb, colliders);
         return colliders.Slice(0, written);
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
-        var written = QueryBounds(axisAlignedRectangle, colliders);
+        var written = QueryBounds(aabb, colliders);
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
