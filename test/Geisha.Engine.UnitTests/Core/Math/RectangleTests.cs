@@ -233,6 +233,35 @@ public class RectangleTests
         Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using<Vector2>(Vector2Equality));
     }
 
+    [Test]
+    public void ComputeAABB_ShouldReturnMinimalAABBContainingThisRectangle_WhenRectangleIsAxisAligned()
+    {
+        // Arrange
+        var rectangle = new Rectangle(new Vector2(4, 2), new Vector2(10, 6));
+
+        // Act
+        var aabb = rectangle.ComputeAABB();
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-1, -1)));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(9, 5)));
+    }
+
+    [Test]
+    public void ComputeAABB_ShouldReturnMinimalAABBContainingThisRectangle_WhenRectangleIsNotAxisAligned()
+    {
+        // Arrange
+        var rectangle = new Rectangle(new Vector2(4, 2), new Vector2(10, 6))
+            .Transform(Matrix3x3.CreateRotation(Angle.DegreesToRadians(30)));
+
+        // Act
+        var aabb = rectangle.ComputeAABB();
+
+        // Assert
+        Assert.That(aabb.Min, Is.EqualTo(new Vector2(-3.366026, -1.366026)).Using<Vector2>(Vector2Equality));
+        Assert.That(aabb.Max, Is.EqualTo(new Vector2(8.294228, 8.830127)).Using<Vector2>(Vector2Equality));
+    }
+
     [TestCase(0, 0, 20, 10)]
     [TestCase(12, -34, 56, 78)]
     public void WriteVertices_ShouldWriteVerticesIntoSpan(double x, double y, double w, double h)

@@ -72,9 +72,9 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public bool Overlaps(in Rectangle rectangle) =>
         ColliderType switch
         {
-            ColliderType.Circle => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedCircleCollider.Overlaps(rectangle),
-            ColliderType.Rectangle => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(rectangle),
-            ColliderType.Tile => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(rectangle),
+            ColliderType.Circle => AABB.Overlaps(rectangle.ComputeAABB()) && TransformedCircleCollider.Overlaps(rectangle),
+            ColliderType.Rectangle => AABB.Overlaps(rectangle.ComputeAABB()) && TransformedRectangleCollider.Overlaps(rectangle),
+            ColliderType.Tile => AABB.Overlaps(rectangle.ComputeAABB()) && TransformedRectangleCollider.Overlaps(rectangle),
             _ => throw new ArgumentOutOfRangeException()
         };
 

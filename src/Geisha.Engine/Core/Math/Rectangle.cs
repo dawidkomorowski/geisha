@@ -196,6 +196,14 @@ namespace Geisha.Engine.Core.Math
             return new AxisAlignedRectangle(vertices);
         }
 
+        // TODO: Add documentation.
+        public AABB2D ComputeAABB()
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            WriteVertices(vertices);
+            return AABB2D.FromPoints(vertices);
+        }
+
         /// <summary>
         ///     Writes vertices of <see cref="Rectangle" /> into span in counterclockwise orientation.
         /// </summary>
