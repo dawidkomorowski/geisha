@@ -13,16 +13,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class Collider2DComponentTests : PhysicsSystemTestsBase
 {
-    #region BoundingRectangle
+    #region BoundingBox
 
     [TestCase(0, 0, 10, 0, 0, 20, 20)] // Circle at origin
     [TestCase(0, 0, 5, 0, 0, 10, 10)] // Smaller radius
     [TestCase(5, 3, 10, 5, 3, 20, 20)] // Circle offset from origin
-    public void BoundingRectangle_CircleCollider_ShouldReturnCorrectAxisAlignedRectangle(
+    public void BoundingBox_CircleCollider_ShouldReturnCorrectAABB2D(
         double cx, double cy, double cr, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
+        var expectedBoundingBox = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsSystem = GetPhysicsSystem();
         var circle = CreateCircleStaticBody(cx, cy, cr);
@@ -31,21 +31,21 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = circleCollider.BoundingBox;
+        var boundingBox = circleCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));
+        Assert.That(boundingBox, Is.EqualTo(expectedBoundingBox));
     }
 
     [TestCase(0, 0, 20, 10, 0, 0, 0, 20, 10)] // Rectangle at origin
     [TestCase(0, 0, 10, 5, 0, 0, 0, 10, 5)] // Smaller dimensions
     [TestCase(5, 3, 20, 10, 0, 5, 3, 20, 10)] // Rectangle offset from origin
     [TestCase(0, 0, 20, 10, Math.PI / 6, 0, 0, 22.320508075688775, 18.660254037844386)] // Rotated 30°
-    public void BoundingRectangle_RectangleCollider_ShouldReturnCorrectAxisAlignedRectangle(
+    public void BoundingBox_RectangleCollider_ShouldReturnCorrectAABB2D(
         double rx, double ry, double rw, double rh, double rr, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
+        var expectedBoundingBox = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsSystem = GetPhysicsSystem();
         var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
@@ -54,20 +54,20 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = rectangleCollider.BoundingBox;
+        var boundingBox = rectangleCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle).Using<AABB2D>(ToleranceEquality.ForAABB2D(1e-9)));
+        Assert.That(boundingBox, Is.EqualTo(expectedBoundingBox).Using<AABB2D>(ToleranceEquality.ForAABB2D(1e-9)));
     }
 
     [TestCase(0, 0, 1, 1, 0, 0, 1, 1)] // Tile at origin, default size
     [TestCase(5, 3, 1, 1, 5, 3, 1, 1)] // Tile offset from origin, default size
     [TestCase(0, 0, 2, 3, 0, 0, 2, 3)] // Tile at origin, custom size
-    public void BoundingRectangle_TileCollider_ShouldReturnCorrectAxisAlignedRectangle(
+    public void BoundingBox_TileCollider_ShouldReturnCorrectAABB2D(
         double tx, double ty, double tw, double th, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
+        var expectedBoundingBox = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsConfiguration = new PhysicsConfiguration { TileSize = new SizeD(tw, th) };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
@@ -77,10 +77,10 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = tileCollider.BoundingBox;
+        var boundingBox = tileCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));
+        Assert.That(boundingBox, Is.EqualTo(expectedBoundingBox));
     }
 
     #endregion
