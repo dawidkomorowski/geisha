@@ -31,8 +31,6 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public SizeD RectangleColliderSize;
     public Rectangle TransformedRectangleCollider;
 
-    public AxisAlignedRectangle BoundingRectangle; // TODO: Remove and update public APIs.
-
     // ReSharper disable once InconsistentNaming
     public AABB2D AABB;
 
@@ -85,14 +83,12 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
         {
             case ColliderType.Circle:
                 TransformedCircleCollider = new Circle(CircleColliderRadius).Transform(transform.ToMatrix());
-                BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
-                AABB = new AABB2D(BoundingRectangle.Min, BoundingRectangle.Max); // TODO: Get rid of BoundingRectangle.
+                AABB = TransformedCircleCollider.ComputeAABB();
                 break;
             case ColliderType.Rectangle:
             case ColliderType.Tile:
                 TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform.ToMatrix());
-                BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
-                AABB = new AABB2D(BoundingRectangle.Min, BoundingRectangle.Max); // TODO: Get rid of BoundingRectangle.
+                AABB = TransformedRectangleCollider.ComputeAABB();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
