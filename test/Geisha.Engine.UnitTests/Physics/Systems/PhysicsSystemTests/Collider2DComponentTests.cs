@@ -22,7 +22,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         double cx, double cy, double cr, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+        var expectedBoundingRectangle = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsSystem = GetPhysicsSystem();
         var circle = CreateCircleStaticBody(cx, cy, cr);
@@ -45,7 +45,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         double rx, double ry, double rw, double rh, double rr, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+        var expectedBoundingRectangle = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsSystem = GetPhysicsSystem();
         var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
@@ -57,7 +57,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         var boundingRectangle = rectangleCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle).Using<AxisAlignedRectangle>(ToleranceEquality.ForAxisAlignedRectangle(1e-9)));
+        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle).Using<AABB2D>(ToleranceEquality.ForAABB2D(1e-9)));
     }
 
     [TestCase(0, 0, 1, 1, 0, 0, 1, 1)] // Tile at origin, default size
@@ -67,7 +67,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         double tx, double ty, double tw, double th, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+        var expectedBoundingRectangle = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsConfiguration = new PhysicsConfiguration { TileSize = new SizeD(tw, th) };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);

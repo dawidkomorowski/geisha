@@ -219,11 +219,11 @@ public abstract class Collider2DComponent : Component
     }
 
     /// <summary>
-    ///     Gets the axis-aligned bounding rectangle of this collider as computed at the last physics simulation step.
+    ///     Gets the axis-aligned bounding box of this collider as computed at the last physics simulation step.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         The bounding rectangle is an <see cref="AxisAlignedRectangle" /> that fully encloses the collider geometry
+    ///         The bounding box is an <see cref="AABB2D" /> that fully encloses the collider geometry
     ///         in world space, taking into account the collider's shape, position, and rotation.
     ///     </para>
     ///     <para>
@@ -242,7 +242,7 @@ public abstract class Collider2DComponent : Component
     ///         the order in which components are created and configured: properties set before the physics body is
     ///         registered are reflected immediately, while properties set after are not visible until the first
     ///         simulation step completes. If <see cref="Core.Components.Transform2DComponent" /> is not yet present on
-    ///         the entity, this property returns a <see langword="default" /> <see cref="AxisAlignedRectangle" />.
+    ///         the entity, this property returns a <see langword="default" /> <see cref="AABB2D" />.
     ///     </para>
     ///     <para>
     ///         <b>Consistency across entities:</b> Because all values are taken from the same completed simulation step,

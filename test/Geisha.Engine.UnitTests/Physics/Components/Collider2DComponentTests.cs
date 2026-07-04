@@ -52,7 +52,7 @@ public class Collider2DComponentTests
         var collider = _entity.CreateComponent<RectangleColliderComponent>();
 
         // Assert
-        Assert.That(collider.BoundingBox, Is.EqualTo(default(AxisAlignedRectangle)));
+        Assert.That(collider.BoundingBox, Is.EqualTo(default(AABB2D)));
         Assert.That(collider.IsColliding, Is.False);
         Assert.That(collider.ContactCount, Is.Zero);
 

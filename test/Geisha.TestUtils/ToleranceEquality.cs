@@ -12,8 +12,8 @@ public static class ToleranceEquality
     public static Func<Matrix3x3, Matrix3x3, bool> ForMatrix3x3(double tolerance) => (m1, m2) => AlmostEquals(m1, m2, tolerance);
     public static Func<Transform2D, Transform2D, bool> ForTransform2D(double tolerance) => (t1, t2) => AlmostEquals(t1, t2, tolerance);
 
-    public static Func<AxisAlignedRectangle, AxisAlignedRectangle, bool> ForAxisAlignedRectangle(double tolerance) =>
-        (r1, r2) => AlmostEquals(r1, r2, tolerance);
+    // ReSharper disable once InconsistentNaming
+    public static Func<AABB2D, AABB2D, bool> ForAABB2D(double tolerance) => (a1, a2) => AlmostEquals(a1, a2, tolerance);
 
     private static bool AlmostEquals(double x, double y, double tolerance) => Math.Abs(x - y) <= tolerance;
 
@@ -33,7 +33,7 @@ public static class ToleranceEquality
         AlmostEquals(t1.Rotation, t2.Rotation, tolerance) &&
         AlmostEquals(t1.Scale, t2.Scale, tolerance);
 
-    private static bool AlmostEquals(in AxisAlignedRectangle r1, in AxisAlignedRectangle r2, double tolerance) =>
-        AlmostEquals(r1.Center, r2.Center, tolerance) &&
-        AlmostEquals(r1.Dimensions, r2.Dimensions, tolerance);
+    private static bool AlmostEquals(in AABB2D a1, in AABB2D a2, double tolerance) =>
+        AlmostEquals(a1.Min, a2.Min, tolerance) &&
+        AlmostEquals(a1.Max, a2.Max, tolerance);
 }

@@ -60,8 +60,8 @@ public abstract class PhysicsSystemTestsBase
     // ReSharper disable once InconsistentNaming
     private protected static Func<Matrix3x3, Matrix3x3, bool> Matrix3x3Equality => ToleranceEquality.ForMatrix3x3(Epsilon);
 
-    private protected static Func<AxisAlignedRectangle, AxisAlignedRectangle, bool> AxisAlignedRectangleEquality =>
-        ToleranceEquality.ForAxisAlignedRectangle(Epsilon);
+    // ReSharper disable once InconsistentNaming
+    private protected static Func<AABB2D, AABB2D, bool> AABB2DEquality => ToleranceEquality.ForAABB2D(Epsilon);
 
     [SetUp]
     public void SetUp()
