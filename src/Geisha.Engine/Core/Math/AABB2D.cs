@@ -5,8 +5,6 @@ using System.Runtime.CompilerServices;
 namespace Geisha.Engine.Core.Math;
 
 // TODO: Add documentation.
-// TODO: Add tests.
-// TODO: Add missing APIs.
 // ReSharper disable once InconsistentNaming
 public readonly record struct AABB2D
 {
