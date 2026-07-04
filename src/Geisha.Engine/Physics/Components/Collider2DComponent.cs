@@ -232,7 +232,7 @@ public abstract class Collider2DComponent : Component
     ///         to the collider's shape properties (such as <see cref="CircleColliderComponent.Radius" /> or
     ///         <see cref="RectangleColliderComponent.Dimensions" />) after the last simulation step will not be reflected
     ///         until the next physics simulation step completes. This means that within a single game loop iteration, if
-    ///         game code modifies the transform or collider and then immediately reads <see cref="BoundingRectangle" />,
+    ///         game code modifies the transform or collider and then immediately reads <see cref="BoundingBox" />,
     ///         the returned value will still correspond to the state before the modification.
     ///     </para>
     ///     <para>
@@ -246,13 +246,13 @@ public abstract class Collider2DComponent : Component
     ///     </para>
     ///     <para>
     ///         <b>Consistency across entities:</b> Because all values are taken from the same completed simulation step,
-    ///         reading <see cref="BoundingRectangle" /> from multiple colliders within the same game loop iteration
+    ///         reading <see cref="BoundingBox" /> from multiple colliders within the same game loop iteration
     ///         provides a globally consistent snapshot of the physics state, unaffected by the order in which individual
     ///         entities are updated during that iteration.
     ///     </para>
     /// </remarks>
     /// <seealso cref="SynchronizePhysicsState" />
-    public AxisAlignedRectangle BoundingRectangle => PhysicsBodyProxy?.BoundingRectangle ?? default;
+    public AABB2D BoundingBox => PhysicsBodyProxy?.BoundingBox ?? default;
 
     /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
@@ -442,7 +442,7 @@ public abstract class Collider2DComponent : Component
     /// <remarks>
     ///     <para>
     ///         This method performs a geometric containment test against the actual collider shape, not just
-    ///         <see cref="BoundingRectangle" /> containment.
+    ///         <see cref="BoundingBox" /> containment.
     ///     </para>
     ///     <para>
     ///         This query observes collider state from the most recently synchronized physics data. If transform or
@@ -526,13 +526,13 @@ public abstract class Collider2DComponent : Component
     ///         Calling this method pushes the current state of the entity's physics components —
     ///         <see cref="Core.Components.Transform2DComponent" />, this collider's properties, and
     ///         <see cref="KinematicRigidBody2DComponent" /> if present — into the underlying physics body, making those
-    ///         values visible to physics-related APIs such as <see cref="BoundingRectangle" /> before the next physics
+    ///         values visible to physics-related APIs such as <see cref="BoundingBox" /> before the next physics
     ///         simulation step runs.
     ///     </para>
     ///     <para>
     ///         <b>Typical use case:</b> When an entity's transform or collider properties are modified and the updated
     ///         physics state must be observed in the same game loop iteration — for example, reading
-    ///         <see cref="BoundingRectangle" /> immediately after repositioning an entity — call this method after the
+    ///         <see cref="BoundingBox" /> immediately after repositioning an entity — call this method after the
     ///         modification to ensure the physics body reflects the new state.
     ///     </para>
     ///     <para>

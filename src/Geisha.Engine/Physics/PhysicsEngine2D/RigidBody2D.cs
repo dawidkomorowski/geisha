@@ -71,7 +71,7 @@ internal readonly record struct RigidBody2D(RigidBodyId Id) : IUnmanaged<RigidBo
 
     public SizeD RectangleColliderSize => Physics2D.Body.GetRectangleColliderSize(Id);
     public double CircleColliderRadius => Physics2D.Body.GetCircleColliderRadius(Id);
-    public AxisAlignedRectangle BoundingRectangle => Physics2D.Body.GetBoundingRectangle(Id);
+    public AABB2D BoundingBox => Physics2D.Body.GetBoundingBox(Id);
 
     public int ContactCount => Physics2D.Body.GetContactCount(Id);
     public int GetContacts(Span<Contact> contacts) => Physics2D.Body.GetContacts(Id, contacts);

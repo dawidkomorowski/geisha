@@ -31,7 +31,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = circleCollider.BoundingRectangle;
+        var boundingRectangle = circleCollider.BoundingBox;
 
         // Assert
         Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));
@@ -54,7 +54,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = rectangleCollider.BoundingRectangle;
+        var boundingRectangle = rectangleCollider.BoundingBox;
 
         // Assert
         Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle).Using<AxisAlignedRectangle>(ToleranceEquality.ForAxisAlignedRectangle(1e-9)));
@@ -77,7 +77,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = tileCollider.BoundingRectangle;
+        var boundingRectangle = tileCollider.BoundingBox;
 
         // Assert
         Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));

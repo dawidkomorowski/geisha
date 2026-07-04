@@ -29,13 +29,13 @@ public interface IPhysicsSystem
     ///         <see cref="Geisha.Engine.Core.Components.Transform2DComponent" />, collider properties, and
     ///         <see cref="KinematicRigidBody2DComponent" /> if present — into their
     ///         underlying physics bodies, making those values visible to physics-related APIs such as
-    ///         <see cref="Collider2DComponent.BoundingRectangle" /> before the next
+    ///         <see cref="Collider2DComponent.BoundingBox" /> before the next
     ///         physics simulation step runs.
     ///     </para>
     ///     <para>
     ///         <b>Typical use case:</b> After setting up a scene — for example, loading a game level and positioning
     ///         all entities — call this method once to ensure that physics-related APIs such as
-    ///         <see cref="Collider2DComponent.BoundingRectangle" /> return correctly initialized values from the very first
+    ///         <see cref="Collider2DComponent.BoundingBox" /> return correctly initialized values from the very first
     ///         frame the scene is processed, before the physics simulation step has had a chance to run.
     ///     </para>
     ///     <para>

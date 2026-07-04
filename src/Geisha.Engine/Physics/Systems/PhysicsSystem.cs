@@ -401,10 +401,10 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                     // Drawing contacts based on body dimensions to make it scale between different sizes.
                     // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
                     // TODO: It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
-                    _debugRenderer.DrawCircle(new Circle(contactManifold.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
+                    _debugRenderer.DrawCircle(new Circle(contactManifold.ContactPoints[j].WorldPosition, body.BoundingBox.Width / 20d),
                         contactPointColor);
 
-                    var normalLen = body.BoundingRectangle.Width / 2d;
+                    var normalLen = body.BoundingBox.Width / 2d;
                     var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
                     var sign = Math.Sign(-contactManifold.CollisionNormal.Cross(Vector2.UnitX));
                     var normalRot = contactManifold.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);

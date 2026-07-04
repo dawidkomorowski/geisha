@@ -278,7 +278,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
         for (var i = 0; i < written; i++)
         {
-            Assert.That(colliders[i].BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
+            Assert.That(colliders[i].BoundingBox.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -297,7 +297,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 1, 1);
 
         var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
-        Assert.That(fillerCollider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.False);
+        Assert.That(fillerCollider.BoundingBox.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.False);
 
         var colliders = new List<Collider2DComponent>(initialListSize);
         for (var i = 0; i < initialListSize; i++)
@@ -317,7 +317,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
         for (var i = 0; i < written; i++)
         {
-            Assert.That(colliders[i].BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
+            Assert.That(colliders[i].BoundingBox.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -344,7 +344,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
         foreach (var collider in view)
         {
-            Assert.That(collider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
+            Assert.That(collider.BoundingBox.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -363,7 +363,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 1, 1);
 
         var fillerCollider = CreateCircleStaticBody(100, 100, 10).GetComponent<CircleColliderComponent>();
-        Assert.That(fillerCollider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.False);
+        Assert.That(fillerCollider.BoundingBox.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.False);
 
         var colliders = new List<Collider2DComponent>(initialListSize);
         for (var i = 0; i < initialListSize; i++)
@@ -383,7 +383,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
 
         foreach (var collider in view)
         {
-            Assert.That(collider.BoundingRectangle.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
+            Assert.That(collider.BoundingBox.Overlaps(aabbToQuery.ToAxisAlignedRectangle()), Is.True);
         }
     }
 
@@ -450,7 +450,7 @@ public class SceneQueryTests : PhysicsSystemTestsBase
             postDrawAction: renderer =>
             {
                 renderer.DrawRectangle(testCase.AabbToQuery.ToAxisAlignedRectangle(), queryShapeColor, Matrix3x3.Identity);
-                renderer.DrawRectangle(collider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+                renderer.DrawRectangle(collider.BoundingBox, Color.Gray, Matrix3x3.Identity);
             });
 
         // Act

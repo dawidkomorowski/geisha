@@ -242,8 +242,8 @@ public class SensorTests : PhysicsSystemTestsBase
         context.PhysicsSystem.ProcessPhysics();
         SaveVisualOutput(context.PhysicsSystem, 0, postDrawAction: debugRenderer =>
         {
-            debugRenderer.DrawRectangle(context.SensorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
-            debugRenderer.DrawRectangle(context.VisitorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(context.SensorCollider.BoundingBox, Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(context.VisitorCollider.BoundingBox, Color.Gray, Matrix3x3.Identity);
         });
 
         // Assert

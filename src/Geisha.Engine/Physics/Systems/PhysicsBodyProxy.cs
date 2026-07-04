@@ -61,7 +61,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public RigidBodyId RigidBodyId => _body.Id;
     public RigidBody2D RigidBody => _body;
 
-    public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
+    public AABB2D BoundingBox => _body.BoundingBox;
     public int ContactCount => _body.ContactCount;
 
     public int GetContacts(Span<Contact2D> contacts)

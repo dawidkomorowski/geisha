@@ -371,10 +371,10 @@ internal static class Physics2D
             return body.CircleColliderRadius;
         }
 
-        public static AxisAlignedRectangle GetBoundingRectangle(RigidBodyId id)
+        public static AABB2D GetBoundingBox(RigidBodyId id)
         {
             ref var body = ref GetBodyData(id);
-            return body.BoundingRectangle;
+            return body.AABB;
         }
 
         public static int GetContactCount(RigidBodyId id)
