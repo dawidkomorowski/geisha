@@ -43,6 +43,39 @@ refactor; they are the natural next iteration.
 
 ---
 
+## Review tracking checklist (living tracker)
+
+Single source of truth for iteration. Update the **Status** box as items are addressed
+(`[ ]` open · `[~]` in progress · `[x]` resolved · `[-]` won't fix / deferred). Each `ID` links to the
+detailed finding by section.
+
+| ID | Status | Prio | Type | Item | Ref |
+|----|--------|------|------|------|-----|
+| R5 | [ ] | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
+| R1 | [ ] | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
+| R2 | [ ] | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
+| R3 | [ ] | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
+| R6 | [ ] | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
+| R7 | [ ] | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
+| R13 | [ ] | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose + allocation rules | §5, §6 |
+| R14 | [ ] | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
+| R4 | [ ] | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
+| R8 | [ ] | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
+| R9 | [ ] | P3 | Perf | Skip second `RecomputeCollider` when position solver made no correction | §4.5 |
+| R10 | [ ] | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
+| R11 | [ ] | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
+| R12 | [ ] | P3 | Test | Assert `Allocated == 0` in simulation benchmarks | §7 |
+| R15 | [ ] | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
+| R16 | [ ] | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
+| R17 | [ ] | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
+| R18 | [ ] | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
+| R19 | [ ] | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
+| R20 | [ ] | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
+
+**Progress:** 0 / 20 resolved · P1: 0/1 · P2: 0/7 · P3: 0/12
+
+---
+
 ## 2. Architecture assessment
 
 The layering is clean and each stage has a single responsibility:
@@ -74,7 +107,7 @@ Strong points:
 
 ## 3. Bugs / correctness
 
-### 3.1 **[Bug][P2]** Duplicated assignment in `Physics2D.Body.SetAngularVelocity`
+### 3.1 · `R1` **[Bug][P2]** Duplicated assignment in `Physics2D.Body.SetAngularVelocity`
 `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/Physics2D.cs`
 
 ```csharp
@@ -85,7 +118,7 @@ body.AngularVelocity = value;   // <-- duplicated
 Harmless functionally, but it is a copy-paste defect and should be removed. Its presence suggests the
 setters were written quickly; worth a quick scan of the sibling setters for similar slips.
 
-### 3.2 **[Bug][P2]** `SensorOverlapCache.CacheKey` ignores handle version (and scene)
+### 3.2 · `R2` **[Bug][P2]** `SensorOverlapCache.CacheKey` ignores handle version (and scene)
 `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SensorOverlapCache.cs`
 
 `CacheKey` is built from `RigidBodyId.Index` only. Because sparse indices are recycled via the free
@@ -98,7 +131,7 @@ This is an edge case (requires same-frame index reuse with an overlapping partne
 correctness hole in the event stream. Recommend incorporating `Version` (and optionally the scene) into
 the key, or asserting that recycled indices cannot alias a live overlap within a frame.
 
-### 3.3 **[Arch][P2]** Thread-safety relies on an undocumented-at-call-site invariant
+### 3.3 · `R3` **[Arch][P2]** Thread-safety relies on an undocumented-at-call-site invariant
 `PhysicsSceneData` exposes a shared `static PhysicsSceneData[] Scenes`. `Create`/`Destroy` take a lock,
 but `Get`/`IsValid` read the shared array with no lock or memory barrier. The class comment documents
 the "one scene per thread" model, which makes this safe *in practice*, but:
@@ -109,7 +142,7 @@ the "one scene per thread" model, which makes this safe *in practice*, but:
 - Consider an owning-thread id captured on `Create` plus a `Debug.Assert` in `Get`, or an explicit note
   in the public-facing docs that scene handles are thread-affine.
 
-### 3.4 **[Nit][P3]** Destroyed-body `End` events depend on the removed-collider cache
+### 3.4 · `R4` **[Nit][P3]** Destroyed-body `End` events depend on the removed-collider cache
 `PhysicsSystem.InvokeEventCallbacks` correctly falls back to `GetRemovedColliderByIdOrNull` when a body
 was destroyed mid-overlap, and `ClearRemovedCollidersCache()` runs at end of `ProcessPhysics`. This is
 a good design, but it is subtle and only lightly asserted (`Debug.Assert(collider1 is not null …)`).
@@ -120,7 +153,7 @@ with a valid collider reference (the lifetime tests may already cover part of th
 
 ## 4. Performance
 
-### 4.1 **[Perf][P1]** Hot-path handle resolution dominates the solver loops
+### 4.1 · `R5` **[Perf][P1]** Hot-path handle resolution dominates the solver loops
 `ContactSolver.SolveVelocityConstraints` / `SolvePositionConstraints` (and the debug/contact walk)
 resolve bodies per contact, per iteration, per substep:
 
@@ -145,7 +178,7 @@ chasing. Suggestions (increasing effort):
   validated `GetBodyData` for the API boundary.
 - Hoist `GetBodiesSpan()` once per solver pass instead of per contact.
 
-### 4.2 **[Perf][P2]** `RigidBodyData` is a large AoS struct mixing hot and cold fields
+### 4.2 · `R6` **[Perf][P2]** `RigidBodyData` is a large AoS struct mixing hot and cold fields
 A single struct holds position/rotation/velocity **and** collision layer/mask, sensor flag, collider
 sizes, contact bookkeeping, AABB, **and both** `TransformedCircleCollider` and
 `TransformedRectangleCollider` (only one is ever valid for a given body). Consequences:
@@ -159,7 +192,7 @@ Future options: split hot/cold into parallel arrays (SoA), or at least collapse 
 colliders (they are mutually exclusive). Worth measuring the struct size and its effect on the
 narrowphase sweep.
 
-### 4.3 **[Perf][P2]** Broadphase is O(n²) with no spatial acceleration
+### 4.3 · `R7` **[Perf][P2]** Broadphase is O(n²) with no spatial acceleration
 `DetectCollisions_Kinematic_Vs_Kinematic` (pairwise) and `_Kinematic_Vs_Static` (each kinematic × every
 static) have no spatial partitioning. `TileMap` exists but is used only for collision-normal filtering,
 not broadphase pruning. For scenes with many static tiles this is the dominant scaling cost.
@@ -168,12 +201,12 @@ This is arguably **out of scope** for #740 (which targets data layout, not the a
 single biggest runtime-scaling risk and should be captured as a follow-up (e.g. reuse the tile grid, or
 a uniform grid / sort-and-sweep on the dense arrays which are already contiguous and partitioned).
 
-### 4.4 **[Perf][P3]** Repeated span materialization
+### 4.4 · `R8` **[Perf][P3]** Repeated span materialization
 `GetBodiesSpan()` / `GetBodyIndicesSpan()` / `GetContactsSpan()` call `CollectionsMarshal.AsSpan` on
 every invocation and are called very frequently inside loops. Individually cheap, but hoisting them out
 of inner loops (or caching for the duration of a stage) removes redundant work.
 
-### 4.5 **[Perf][P3]** `RecomputeCollider` runs twice per substep for every kinematic body
+### 4.5 · `R9` **[Perf][P3]** `RecomputeCollider` runs twice per substep for every kinematic body
 Each call builds a `Transform2D`, converts to matrix, transforms the shape, and recomputes the AABB.
 Necessary for correctness after integration and after position correction, but a candidate for
 micro-optimization (e.g. skip the second recompute when the position solver made no correction — the
@@ -188,10 +221,10 @@ existing TODOs about early-out on solved constraints would enable this).
   benchmark/regression to lock this in.)
 - **Query API:** span overloads use `ArrayPool<Collider2DComponent>.Shared.Rent/Return` and struct
   query handlers → no allocation and no boxing (generic constraint `where T : struct`). ✅
-- **Body creation:** `_bodies` and `_bodyIndices` are created as `new List<T>()` (capacity 0), so early
+- **Body creation:** `R10` `_bodies` and `_bodyIndices` are created as `new List<T>()` (capacity 0), so early
   insertions reallocate until warmed; steady state is allocation-free (amortized doubling). Consider
   pre-sizing like `Contacts` (256) to avoid churn during scene load. ⚠️
-- **Tile creation:** `TileMap` uses `Dictionary<TilePosition, List<RigidBodyId>>` and allocates a new
+- **Tile creation:** `R11` `TileMap` uses `Dictionary<TilePosition, List<RigidBodyId>>` and allocates a new
   `List` per newly occupied tile. Documented conceptually as an "explicit event", but tile-heavy level
   loading will allocate; worth noting in the allocation-rules doc. ⚠️
 
@@ -199,26 +232,26 @@ existing TODOs about early-out on solved constraints would enable this).
 
 ## 6. Code quality / maintainability
 
-- **[Docs][P2]** `IUnmanaged<T>` and `AABB2D` both carry `// TODO: Add documentation`. `AABB2D` is now
+- `R13` **[Docs][P2]** `IUnmanaged<T>` and `AABB2D` both carry `// TODO: Add documentation`. `AABB2D` is now
   used in the **public** query API surface (`IPhysicsSystem`), so it should get XML docs to match the
   rest of the public math types before release. `IUnmanaged<T>`'s real purpose (compile-time `unmanaged`
   enforcement) is non-obvious for an empty interface and should be documented so it is not "cleaned up"
   as dead code later.
-- **[Arch][P2]** `PhysicsSceneData.DestroyContactsForBody` is long and performs intricate manual
+- `R14` **[Arch][P2]** `PhysicsSceneData.DestroyContactsForBody` is long and performs intricate manual
   linked-list surgery over the swapped-remove contact array. The commit history
   (`Fix contact link updates when destroying contacts`, `Update body contact indices after swap`,
   `Document bug: body indexes not updated after swap`) shows this was bug-prone. It is well-commented
   and asserted, but is a prime candidate for extracting small helpers (unlink-link, fix-links-after-swap)
   and dedicated unit tests targeting the swap-remap paths directly.
-- **[Nit][P3]** Dead commented-out `ColliderSpanQueryHandler` block in `PhysicsSystem.cs`. Keep it only
+- `R15` **[Nit][P3]** Dead commented-out `ColliderSpanQueryHandler` block in `PhysicsSystem.cs`. Keep it only
   if the associated TODO (`.NET 9` ref-struct interfaces) is tracked in an issue; otherwise remove.
-- **[Nit][P3]** `PhysicsScene2D` stores a `BodiesView` with a `// TODO: Construct it on the fly` — minor;
+- `R16` **[Nit][P3]** `PhysicsScene2D` stores a `BodiesView` with a `// TODO: Construct it on the fly` — minor;
   the struct is cheap, but it means `PhysicsScene2D` is not purely `{ Id }`.
-- **[Nit][P3]** Large collider-type `if/else` dispatch is duplicated across `TestOverlap`,
+- `R17` **[Nit][P3]** Large collider-type `if/else` dispatch is duplicated across `TestOverlap`,
   `TestOverlapWithMtv`, and `ContactManager.ComputeManifold`. The `CollisionDetection` header comment
   explicitly warns this is intentional for inlining/perf — fine, but note the maintenance cost (adding a
   collider shape touches several parallel chains).
-- **[Nit][P3]** Numerous `// TODO` markers remain (debug drawing relocation, `.NET 9/10` migrations,
+- `R18` **[Nit][P3]** Numerous `// TODO` markers remain (debug drawing relocation, `.NET 9/10` migrations,
   minimum-velocity threshold, early-out on solved constraints). All reasonable; ensure they are linked
   to tracking issues so they are not lost.
 
@@ -236,31 +269,24 @@ existing TODOs about early-out on solved constraints would enable this).
   automatically rather than by eyeballing benchmark output.
 
 Suggested additional tests:
-- Same-frame body destroy + create that reuses an index while a sensor overlap is active (guards §3.2).
-- Destroy a body that is party to multiple contacts, asserting all peer link indices remain consistent
+- `R12` Assert `Allocated == 0` in the simulation `[MemoryDiagnoser]` benchmarks to lock in the
+  no-allocation guarantee automatically.
+- `R19` Same-frame body destroy + create that reuses an index while a sensor overlap is active (guards §3.2).
+- `R20` Destroy a body that is party to multiple contacts, asserting all peer link indices remain consistent
   (targets `DestroyContactsForBody`).
 
 ---
 
 ## 8. Prioritized follow-up list
 
-**P1**
-1. Reduce hot-path handle-resolution cost in the solvers (store dense index in `ContactData` and/or add
-   an unchecked internal accessor; hoist span fetches). (§4.1)
+> All follow-up items are consolidated into the **[Review tracking checklist](#review-tracking-checklist-living-tracker)**
+> near the top of this document (single source of truth — update statuses there). This section keeps only
+> the recommended ordering for a focused iteration.
 
-**P2**
-2. Remove duplicated `SetAngularVelocity` assignment. (§3.1)
-3. Include `Version` in `SensorOverlapCache.CacheKey`. (§3.2)
-4. Document/guard the thread-affinity invariant of `PhysicsSceneData`. (§3.3)
-5. Revisit `RigidBodyData` layout: collapse the two transformed colliders and/or split hot/cold. (§4.2)
-6. Add XML docs to `AABB2D` (public API) and document `IUnmanaged<T>`'s purpose + the allocation rules. (§5, §6)
-7. Extract helpers + targeted tests for `DestroyContactsForBody`. (§6)
-
-**P3 / future**
-8. Spatial broadphase to replace O(n²) (likely a separate issue). (§4.3)
-9. Pre-size body lists; note tile-map allocation behavior. (§5)
-10. Assert `Allocated == 0` in simulation benchmarks. (§7)
-11. Clean up dead `ColliderSpanQueryHandler`, resolve/track remaining TODOs. (§6)
+1. **P1** — `R5` Reduce hot-path handle resolution in the solvers.
+2. **P2** — `R1` duplicated `SetAngularVelocity` · `R2` `CacheKey` version · `R3` thread-affinity guard ·
+   `R6` `RigidBodyData` layout · `R7` broadphase · `R13` docs · `R14` `DestroyContactsForBody` refactor+tests.
+3. **P3** — `R4` `R8` `R9` `R10` `R11` `R12` `R15` `R16` `R17` `R18` `R19` `R20` (nits, micro-opts, extra tests).
 
 ---
 
