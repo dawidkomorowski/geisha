@@ -281,8 +281,6 @@ internal static class Physics2D
             }
 
             body.AngularVelocity = value;
-
-            body.AngularVelocity = value;
         }
 
         public static bool GetEnableCollisionDetection(RigidBodyId id)

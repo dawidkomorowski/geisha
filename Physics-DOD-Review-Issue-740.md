@@ -45,34 +45,34 @@ refactor; they are the natural next iteration.
 
 ## Review tracking checklist (living tracker)
 
-Single source of truth for iteration. Update the **Status** box as items are addressed
-(`[ ]` open · `[~]` in progress · `[x]` resolved · `[-]` won't fix / deferred). Each `ID` links to the
+Single source of truth for iteration. Update the **Status** cell as items are addressed:
+⬜ open · 🟡 in progress · ✅ resolved · ⏸️ deferred / won't fix. Each `ID` links to the
 detailed finding by section.
 
 | ID | Status | Prio | Type | Item | Ref |
 |----|--------|------|------|------|-----|
-| R5 | [ ] | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
-| R1 | [ ] | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
-| R2 | [ ] | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
-| R3 | [ ] | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
-| R6 | [ ] | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
-| R7 | [ ] | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
-| R13 | [ ] | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose + allocation rules | §5, §6 |
-| R14 | [ ] | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
-| R4 | [ ] | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
-| R8 | [ ] | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
-| R9 | [ ] | P3 | Perf | Skip second `RecomputeCollider` when position solver made no correction | §4.5 |
-| R10 | [ ] | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
-| R11 | [ ] | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
-| R12 | [ ] | P3 | Test | Assert `Allocated == 0` in simulation benchmarks | §7 |
-| R15 | [ ] | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
-| R16 | [ ] | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
-| R17 | [ ] | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
-| R18 | [ ] | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
-| R19 | [ ] | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
-| R20 | [ ] | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
+| R5 | ⬜ | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
+| R1 | ✅ | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
+| R2 | ⬜ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
+| R3 | ⬜ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
+| R6 | ⬜ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
+| R7 | ⬜ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
+| R13 | ⬜ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose + allocation rules | §5, §6 |
+| R14 | ⬜ | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
+| R4 | ⬜ | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
+| R8 | ⬜ | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
+| R9 | ⬜ | P3 | Perf | Skip second `RecomputeCollider` when position solver made no correction | §4.5 |
+| R10 | ⬜ | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
+| R11 | ⬜ | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
+| R12 | ⬜ | P3 | Test | Assert `Allocated == 0` in simulation benchmarks | §7 |
+| R15 | ⬜ | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
+| R16 | ⬜ | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
+| R17 | ⬜ | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
+| R18 | ⬜ | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
+| R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
+| R20 | ⬜ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 0 / 20 resolved · P1: 0/1 · P2: 0/7 · P3: 0/12
+**Progress:** 1 / 20 resolved · P1: 0/1 · P2: 1/7 · P3: 0/12
 
 ---
 
