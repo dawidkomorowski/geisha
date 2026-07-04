@@ -72,15 +72,15 @@ public class PhysicsSceneQueryBenchmarks
     }
 
     [Benchmark]
-    public int QueryOverlap_AxisAlignedRectangle_Span()
+    public int QueryOverlap_AABB2D_Span()
     {
-        return _physicsSystem.QueryOverlap(_aabbToQuery.ToAxisAlignedRectangle(), _collidersArray);
+        return _physicsSystem.QueryOverlap(_aabbToQuery, _collidersArray);
     }
 
     [Benchmark]
-    public int QueryOverlap_AxisAlignedRectangle_List()
+    public int QueryOverlap_AABB2D_List()
     {
-        return _physicsSystem.QueryOverlap(_aabbToQuery.ToAxisAlignedRectangle(), _collidersList);
+        return _physicsSystem.QueryOverlap(_aabbToQuery, _collidersList);
     }
 
     private void ConfigureStaticScene(SizeD bounds, int staticBodies)

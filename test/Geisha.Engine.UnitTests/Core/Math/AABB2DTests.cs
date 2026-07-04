@@ -337,5 +337,20 @@ public class AABB2DTests
         Assert.That(rectangle.Dimensions, Is.EqualTo(aabb.Size));
     }
 
+    [Test]
+    public void ToRectangle_ShouldReturnRectangleWithSameCenterAndSize()
+    {
+        // Arrange
+        var aabb = new AABB2D(0, 0, 10, 6);
+
+        // Act
+        var rectangle = aabb.ToRectangle();
+
+        // Assert
+        Assert.That(rectangle.Center, Is.EqualTo(aabb.Center));
+        Assert.That(rectangle.Width, Is.EqualTo(aabb.Width));
+        Assert.That(rectangle.Height, Is.EqualTo(aabb.Height));
+    }
+
     #endregion
 }

@@ -202,15 +202,15 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return queryHandler.Count;
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
-        var written = QueryOverlap(axisAlignedRectangle, colliders);
+        var written = QueryOverlap(aabb, colliders);
         return colliders.Slice(0, written);
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
-        var written = QueryOverlap(axisAlignedRectangle, colliders);
+        var written = QueryOverlap(aabb, colliders);
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 

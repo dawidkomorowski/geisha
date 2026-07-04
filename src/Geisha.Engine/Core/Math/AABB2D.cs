@@ -108,7 +108,5 @@ public readonly record struct AABB2D
     public bool Overlaps(in AABB2D other) => Max.X >= other.Min.X && Min.X <= other.Max.X && Max.Y >= other.Min.Y && Min.Y <= other.Max.Y;
 
     public AxisAlignedRectangle ToAxisAlignedRectangle() => new(Center, Size);
-
-    // TODO: Add test.
     public Rectangle ToRectangle() => new(Center, Size);
 }

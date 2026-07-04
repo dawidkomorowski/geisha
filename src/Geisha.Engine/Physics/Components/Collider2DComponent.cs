@@ -456,11 +456,11 @@ public abstract class Collider2DComponent : Component
     public bool ContainsPoint(in Vector2 point) => PhysicsBodyProxy?.ContainsPoint(point) ?? false;
 
     /// <summary>
-    ///     Determines whether this collider overlaps with the specified axis-aligned rectangle.
+    ///     Determines whether this collider overlaps with the specified axis-aligned bounding box.
     /// </summary>
-    /// <param name="axisAlignedRectangle">The axis-aligned rectangle to test for overlap.</param>
+    /// <param name="aabb">The axis-aligned bounding box (AABB) to test for overlap.</param>
     /// <returns>
-    ///     <see langword="true" /> if this collider overlaps with the rectangle; otherwise, <see langword="false" />.
+    ///     <see langword="true" /> if this collider overlaps with the AABB; otherwise, <see langword="false" />.
     /// </returns>
     /// <remarks>
     ///     <para>
@@ -493,7 +493,7 @@ public abstract class Collider2DComponent : Component
     ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="Overlaps(in AxisAlignedRectangle)" />
+    /// <seealso cref="Overlaps(in AABB2D)" />
     /// <seealso cref="Overlaps(in Rectangle)" />
     public bool Overlaps(in Circle circle) => PhysicsBodyProxy?.Overlaps(circle) ?? false;
 
@@ -514,7 +514,7 @@ public abstract class Collider2DComponent : Component
     ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="Overlaps(in AxisAlignedRectangle)" />
+    /// <seealso cref="Overlaps(in AABB2D)" />
     /// <seealso cref="Overlaps(in Circle)" />
     public bool Overlaps(in Rectangle rectangle) => PhysicsBodyProxy?.Overlaps(rectangle) ?? false;
 
