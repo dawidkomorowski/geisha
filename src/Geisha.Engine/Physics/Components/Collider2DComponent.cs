@@ -474,7 +474,7 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     /// <seealso cref="Overlaps(in Circle)" />
     /// <seealso cref="Overlaps(in Rectangle)" />
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => PhysicsBodyProxy?.Overlaps(axisAlignedRectangle) ?? false;
+    public bool Overlaps(in AABB2D aabb) => PhysicsBodyProxy?.Overlaps(aabb) ?? false;
 
     /// <summary>
     ///     Determines whether this collider overlaps with the specified circle.

@@ -144,11 +144,11 @@ internal static class Physics2D
             SceneQuery.QueryBounds(in scene, in aabb, ref handler);
         }
 
-        public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+        public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in AABB2D aabb, ref TQueryHandler handler)
             where TQueryHandler : struct, IRigidBodyIdQueryHandler
         {
             ref var scene = ref PhysicsSceneData.Get(id);
-            SceneQuery.QueryOverlap(in scene, in axisAlignedRectangle, ref handler);
+            SceneQuery.QueryOverlap(in scene, in aabb, ref handler);
         }
 
         public static void QueryOverlap<TQueryHandler>(PhysicsSceneId id, in Circle circle, ref TQueryHandler handler)
@@ -496,10 +496,10 @@ internal static class Physics2D
             return body.ContainsPoint(point);
         }
 
-        public static bool Overlaps(RigidBodyId id, in AxisAlignedRectangle axisAlignedRectangle)
+        public static bool Overlaps(RigidBodyId id, in AABB2D aabb)
         {
             ref var body = ref GetBodyData(id);
-            return body.Overlaps(axisAlignedRectangle);
+            return body.Overlaps(aabb);
         }
 
         public static bool Overlaps(RigidBodyId id, in Circle circle)

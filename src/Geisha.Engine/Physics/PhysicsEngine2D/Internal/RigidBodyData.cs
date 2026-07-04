@@ -50,13 +50,12 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) =>
+    public bool Overlaps(in AABB2D aabb) =>
         ColliderType switch
         {
-            ColliderType.Circle => BoundingRectangle.Overlaps(axisAlignedRectangle) && TransformedCircleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
-            ColliderType.Rectangle => BoundingRectangle.Overlaps(axisAlignedRectangle) &&
-                                      TransformedRectangleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
-            ColliderType.Tile => BoundingRectangle.Overlaps(axisAlignedRectangle),
+            ColliderType.Circle => AABB.Overlaps(aabb) && TransformedCircleCollider.Overlaps(aabb.ToRectangle()),
+            ColliderType.Rectangle => AABB.Overlaps(aabb) && TransformedRectangleCollider.Overlaps(aabb.ToRectangle()),
+            ColliderType.Tile => AABB.Overlaps(aabb),
             _ => throw new ArgumentOutOfRangeException()
         };
 

@@ -178,11 +178,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
-    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public int QueryOverlap(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
         var queryHandler = new ColliderArrayQueryHandler(_physicsSystemState, collidersArray, colliders.Length);
-        _physicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+        _physicsScene2D.QueryOverlap(aabb, ref queryHandler);
 
         for (var i = 0; i < queryHandler.Count; i++)
         {
@@ -194,11 +194,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return queryHandler.Count;
     }
 
-    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public int QueryOverlap(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
         colliders.Clear();
         var queryHandler = new ColliderListQueryHandler(_physicsSystemState, colliders);
-        _physicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+        _physicsScene2D.QueryOverlap(aabb, ref queryHandler);
         return queryHandler.Count;
     }
 

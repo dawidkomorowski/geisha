@@ -102,8 +102,8 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
     public void QueryBounds<TQueryHandler>(in AABB2D aabb, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryBounds(Id, in aabb, ref handler);
 
-    public void QueryOverlap<TQueryHandler>(in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
-        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in axisAlignedRectangle, ref handler);
+    public void QueryOverlap<TQueryHandler>(in AABB2D aabb, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in aabb, ref handler);
 
     public void QueryOverlap<TQueryHandler>(in Circle circle, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler => Physics2D.Scene.QueryOverlap(Id, in circle, ref handler);

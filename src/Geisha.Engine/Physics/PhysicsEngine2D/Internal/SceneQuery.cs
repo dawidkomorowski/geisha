@@ -34,12 +34,12 @@ internal static class SceneQuery
         }
     }
 
-    public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in AxisAlignedRectangle axisAlignedRectangle, ref TQueryHandler handler)
+    public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in AABB2D aabb, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
         foreach (ref var body in scene.GetBodiesSpan())
         {
-            if (body.Overlaps(axisAlignedRectangle))
+            if (body.Overlaps(aabb))
             {
                 if (!handler.Handle(body.Id))
                 {
