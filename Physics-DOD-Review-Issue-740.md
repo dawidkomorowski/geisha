@@ -63,7 +63,7 @@ detailed finding by section.
 | R4 | ⬜ | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
 | R8 | ⬜ | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
 | R9 | ⬜ | P3 | Perf | Skip second `RecomputeCollider` when position solver made no correction | §4.5 |
-| R10 | ⬜ | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
+| R10 | ✅ | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
 | R11 | ⬜ | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
 | R12 | ⬜ | P3 | Test | Assert `Allocated == 0` in simulation benchmarks | §7 |
 | R15 | ⏸️ | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
@@ -73,7 +73,7 @@ detailed finding by section.
 | R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
 | R20 | ✅ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 5 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 3/12
+**Progress:** 6 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 4/12
 
 ---
 

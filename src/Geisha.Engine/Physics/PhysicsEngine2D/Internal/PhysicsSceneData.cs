@@ -57,10 +57,10 @@ internal struct PhysicsSceneData
             scene.TileSize = sceneDefinition.TileSize;
             scene.TileMap = new TileMap(sceneDefinition.TileSize);
             scene._firstFreeBodyIndex = NoFreeIndex;
-            scene._bodyIndices = new List<BodyIndex>();
+            scene._bodyIndices = new List<BodyIndex>(256);
             scene._staticBodyCount = 0;
             scene._kinematicBodyCount = 0;
-            scene._bodies = new List<RigidBodyData>();
+            scene._bodies = new List<RigidBodyData>(256);
             scene.Contacts = new List<ContactData>(256);
             scene.SensorOverlapCache = new SensorOverlapCache(256);
             scene.SensorOverlapEvents = new List<SensorOverlapEvent>(256);
