@@ -57,7 +57,7 @@ detailed finding by section.
 | R2 | ⬜ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
 | R3 | ⬜ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
 | R6 | ⬜ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
-| R7 | ⬜ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
+| R7 | ⏸️ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
 | R13 | ✅ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose | §6 |
 | R14 | ⬜ | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
 | R4 | ⬜ | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
@@ -66,14 +66,14 @@ detailed finding by section.
 | R10 | ⬜ | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
 | R11 | ⬜ | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
 | R12 | ⬜ | P3 | Test | Assert `Allocated == 0` in simulation benchmarks | §7 |
-| R15 | ⬜ | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
+| R15 | ⏸️ | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
 | R16 | ✅ | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
-| R17 | ⬜ | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
-| R18 | ⬜ | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
+| R17 | ✅ | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
+| R18 | ⏸️ | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
 | R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
 | R20 | ⬜ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 3 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 1/12
+**Progress:** 4 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 2/12
 
 ---
 

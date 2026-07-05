@@ -120,6 +120,9 @@ internal static class CollisionDetection
         return body1.AABB.Overlaps(body2.AABB);
     }
 
+    // TODO: Once broad phase is implemented in scope of https://github.com/dawidkomorowski/geisha/issues/608 the collider type switch logic could be investigated
+    //       for deduplication - it will no longer be so hot path. Maybe there is some way to group all switch/case logic in single place for these type of operations.
+    //       It could also benefit ContactManager as it also tests for combinations of colliding pairs.
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static bool TestOverlap(ref RigidBodyData body1, ref RigidBodyData body2)
     {
