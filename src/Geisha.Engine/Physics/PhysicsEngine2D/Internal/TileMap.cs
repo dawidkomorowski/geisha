@@ -5,6 +5,9 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
+// TODO: TileMap allocates separate list per tile. It is extremely inefficient for big tilemaps as it produces a lot of GC tracked objects.
+//       As tiles are static geometry it does not hurt much the steady simulation performance but any modification to tiles (even enabling/disabling)
+//       may produce a lot of unnecessary garbage. Better approach would be to keep initially preallocated and reusable list that holds all chunks of tilemap.
 internal sealed class TileMap
 {
     private readonly SizeD _tileSize;
