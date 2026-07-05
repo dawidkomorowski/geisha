@@ -71,9 +71,9 @@ detailed finding by section.
 | R17 | ✅ | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
 | R18 | ⏸️ | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
 | R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
-| R20 | ⬜ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
+| R20 | ✅ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 4 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 2/12
+**Progress:** 5 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 3/12
 
 ---
 
