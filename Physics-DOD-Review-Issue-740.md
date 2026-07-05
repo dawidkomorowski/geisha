@@ -25,7 +25,8 @@ The new architecture moves the 2D physics runtime to a genuinely data-oriented l
 
 The acceptance criteria are essentially met. The remaining gaps are (a) a couple of real but
 low-severity defects, (b) a hot-path handle-resolution cost that partially offsets the cache-locality
-win, and (c) documentation debt (`IUnmanaged`, `AABB2D`, allocation rules). None of these block the
+win, and (c) documentation debt (`IUnmanaged`, `AABB2D`) plus allocation-documentation follow-ups
+tracked separately. None of these block the
 refactor; they are the natural next iteration.
 
 ### Acceptance-criteria checklist
@@ -38,7 +39,7 @@ refactor; they are the natural next iteration.
 | API-boundary wrappers = unmanaged handle structs | ✅ | `RigidBody2D`, `PhysicsScene2D` |
 | No allocation on normal simulate/update | ✅ | verify with `MemoryDiagnoser` benchmarks |
 | No allocation when creating bodies in steady state | ⚠️ | amortized (List growth); tile creation allocates |
-| Storage & allocation rules documented | ⚠️ | partial — thread-safety doc present, alloc rules not |
+| Storage & allocation rules documented | ⚠️ | partial — thread-safety doc present; allocation behavior documentation tracked in R10/R11 |
 | Existing behavior remains correct | ✅ | extensive test migration + new lifetime/validity tests |
 
 ---
@@ -57,7 +58,7 @@ detailed finding by section.
 | R3 | ⬜ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
 | R6 | ⬜ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
 | R7 | ⬜ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
-| R13 | ⬜ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose + allocation rules | §5, §6 |
+| R13 | ✅ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose | §6 |
 | R14 | ⬜ | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
 | R4 | ⬜ | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
 | R8 | ⬜ | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
@@ -72,7 +73,7 @@ detailed finding by section.
 | R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
 | R20 | ⬜ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 1 / 20 resolved · P1: 0/1 · P2: 1/7 · P3: 0/12
+**Progress:** 2 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 0/12
 
 ---
 
@@ -226,7 +227,7 @@ existing TODOs about early-out on solved constraints would enable this).
   pre-sizing like `Contacts` (256) to avoid churn during scene load. ⚠️
 - **Tile creation:** `R11` `TileMap` uses `Dictionary<TilePosition, List<RigidBodyId>>` and allocates a new
   `List` per newly occupied tile. Documented conceptually as an "explicit event", but tile-heavy level
-  loading will allocate; worth noting in the allocation-rules doc. ⚠️
+  loading will allocate; document this behavior under `R11`. ⚠️
 
 ---
 
