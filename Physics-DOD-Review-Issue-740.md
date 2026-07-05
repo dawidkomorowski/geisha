@@ -54,7 +54,7 @@ detailed finding by section.
 |----|--------|------|------|------|-----|
 | R5 | ⏸️ | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
 | R1 | ✅ | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
-| R2 | ⬜ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
+| R2 | ✅ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
 | R3 | ✅ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
 | R6 | ⏸️ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
 | R7 | ⏸️ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
@@ -70,10 +70,10 @@ detailed finding by section.
 | R16 | ✅ | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
 | R17 | ✅ | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
 | R18 | ⏸️ | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
-| R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
+| R19 | ✅ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
 | R20 | ✅ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 9 / 20 resolved · P1: 0/1 · P2: 3/7 · P3: 6/12
+**Progress:** 11 / 20 resolved · P1: 0/1 · P2: 4/7 · P3: 7/12
 
 ---
 
@@ -119,18 +119,14 @@ body.AngularVelocity = value;   // <-- duplicated
 Harmless functionally, but it is a copy-paste defect and should be removed. Its presence suggests the
 setters were written quickly; worth a quick scan of the sibling setters for similar slips.
 
-### 3.2 · `R2` **[Bug][P2]** `SensorOverlapCache.CacheKey` ignores handle version (and scene)
+### 3.2 · `R2` **[Bug][P2]** `SensorOverlapCache.CacheKey` previously ignored handle version (and scene)
 `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SensorOverlapCache.cs`
 
-`CacheKey` is built from `RigidBodyId.Index` only. Because sparse indices are recycled via the free
-list, a destroyed sensor body and a newly created body can share the same index. If that reuse happens
-in the same frame while overlapping the same partner, the stale entry is matched as `Updated`, which
-can **suppress the destroyed body's `End` event and the new body's `Begin` event**. Cross-scene safety
-happens to hold only because each scene owns its own cache instance.
+`CacheKey` now stores full `RigidBodyId` values, which include `PhysicsSceneId`, `Index`, and `Version`.
+This removes aliasing for same-index body reuse and avoids stale-overlap collisions between old and new
+bodies.
 
-This is an edge case (requires same-frame index reuse with an overlapping partner), but it is a real
-correctness hole in the event stream. Recommend incorporating `Version` (and optionally the scene) into
-the key, or asserting that recycled indices cannot alias a live overlap within a frame.
+Status: resolved by keying with full IDs.
 
 ### 3.3 · `R3` **[Arch][P2]** Thread-safety relies on an undocumented-at-call-site invariant
 `PhysicsSceneData` exposes a shared `static PhysicsSceneData[] Scenes`. `Create`/`Destroy` take a lock,
@@ -272,9 +268,11 @@ existing TODOs about early-out on solved constraints would enable this).
 Suggested additional tests:
 - `R12` Assert `Allocated == 0` in the simulation `[MemoryDiagnoser]` benchmarks to lock in the
   no-allocation guarantee automatically.
-- `R19` Same-frame body destroy + create that reuses an index while a sensor overlap is active (guards §3.2).
 - `R20` Destroy a body that is party to multiple contacts, asserting all peer link indices remain consistent
   (targets `DestroyContactsForBody`).
+
+Recently added coverage:
+- `R19` Dedicated sensor test for same-frame body destroy + create with sparse-index reuse while overlap is active.
 
 ---
 
@@ -285,9 +283,9 @@ Suggested additional tests:
 > the recommended ordering for a focused iteration.
 
 1. **P1** — `R5` Reduce hot-path handle resolution in the solvers.
-2. **P2** — `R1` duplicated `SetAngularVelocity` · `R2` `CacheKey` version · `R3` thread-affinity guard ·
+2. **P2** — `R1` duplicated `SetAngularVelocity` · `R3` thread-affinity guard ·
    `R6` `RigidBodyData` layout · `R7` broadphase · `R13` docs · `R14` `DestroyContactsForBody` refactor+tests.
-3. **P3** — `R4` `R8` `R9` `R10` `R11` `R12` `R15` `R16` `R17` `R18` `R19` `R20` (nits, micro-opts, extra tests).
+3. **P3** — `R4` `R8` `R9` `R10` `R11` `R12` `R15` `R16` `R17` `R18` `R20` (nits, micro-opts, extra tests).
 
 ---
 

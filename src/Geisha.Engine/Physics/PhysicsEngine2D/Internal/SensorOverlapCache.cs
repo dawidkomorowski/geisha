@@ -104,20 +104,20 @@ internal sealed class SensorOverlapCache
 
     private readonly record struct CacheKey : IUnmanaged<CacheKey>
     {
-        public readonly int Body1Id;
-        public readonly int Body2Id;
+        public readonly RigidBodyId Body1Id;
+        public readonly RigidBodyId Body2Id;
 
         public CacheKey(RigidBodyId body1Id, RigidBodyId body2Id)
         {
             if (body1Id.Index < body2Id.Index)
             {
-                Body1Id = body1Id.Index;
-                Body2Id = body2Id.Index;
+                Body1Id = body1Id;
+                Body2Id = body2Id;
             }
             else
             {
-                Body1Id = body2Id.Index;
-                Body2Id = body1Id.Index;
+                Body1Id = body2Id;
+                Body2Id = body1Id;
             }
         }
     }
