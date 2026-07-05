@@ -67,13 +67,13 @@ detailed finding by section.
 | R11 | ⬜ | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
 | R12 | ⬜ | P3 | Test | Assert `Allocated == 0` in simulation benchmarks | §7 |
 | R15 | ⬜ | P3 | Nit | Remove dead `ColliderSpanQueryHandler` or link its TODO to an issue | §6 |
-| R16 | ⬜ | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
+| R16 | ✅ | P3 | Nit | Consider constructing `BodiesView` on the fly instead of storing | §6 |
 | R17 | ⬜ | P3 | Nit | Note maintenance cost of duplicated collider-type dispatch chains | §6 |
 | R18 | ⬜ | P3 | Nit | Link remaining `// TODO` markers to tracking issues | §6 |
 | R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
 | R20 | ⬜ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 2 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 0/12
+**Progress:** 3 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 1/12
 
 ---
 
