@@ -1,5 +1,17 @@
 ﻿namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
+// TODO: Solver resolves bodies per contact, per iteration, per substep with GetBodyData.
+//       --------------------------------
+//       GetBodyData performs, every call:
+//       - IsValidBodyId → CollectionsMarshal.AsSpan(_bodyIndices) + version compare (with a throw path),
+//       - a second span materialization for _bodies,
+//       - sparse→dense indirection.
+//       Total cost scales as Substeps × (VelocityIterations + PositionIterations) × contactCount × 2. This repeated validation + double indirection partially cancels the cache-locality benefit.
+//       --------------------------------
+//       Suggestions:
+//       - Store the dense body index (not just the RigidBodyId) in ContactData.Link, refreshed when bodies are swapped (the swap bookkeeping already touches these). Solver then indexes bodiesSpan directly.
+//       - Provide an internal GetBodyDataUnchecked (no validity/throw) for trusted internal loops; keep the validated GetBodyData for the API boundary.
+//       - Hoist GetBodiesSpan() once per solver pass instead of per contact.
 internal static class ContactSolver
 {
     public static void SolveVelocityConstraints(ref PhysicsSceneData scene)

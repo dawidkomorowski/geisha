@@ -52,7 +52,7 @@ detailed finding by section.
 
 | ID | Status | Prio | Type | Item | Ref |
 |----|--------|------|------|------|-----|
-| R5 | ⬜ | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
+| R5 | ⏸️ | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
 | R1 | ✅ | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
 | R2 | ⬜ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
 | R3 | ✅ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
@@ -61,7 +61,7 @@ detailed finding by section.
 | R13 | ✅ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose | §6 |
 | R14 | ⬜ | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
 | R4 | ✅ | P3 | Test | Test destroyed-sensor `End` event via removed-collider cache | §3.4 |
-| R8 | ⬜ | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
+| R8 | ⏸️ | P3 | Perf | Hoist repeated `AsSpan` materialization out of inner loops | §4.4 |
 | R9 | ⏸️ | P3 | Perf | Skip second `RecomputeCollider` when position solver made no correction | §4.5 |
 | R10 | ✅ | P3 | Alloc | Pre-size `_bodies` / `_bodyIndices` lists to avoid load-time churn | §5 |
 | R11 | ✅ | P3 | Docs | Document `TileMap` per-tile `List` allocation behavior | §5 |
