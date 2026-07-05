@@ -63,8 +63,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
             collider1.SynchronizePhysicsState();
             entity2.GetComponent<RectangleColliderComponent>().SynchronizePhysicsState();
 
-            var body1 = GetBodyForEntity(physicsSystem, entity1);
-            var body2 = GetBodyForEntity(physicsSystem, entity2);
+            var body1 = physicsSystem.FindInternalBody(entity1);
+            var body2 = physicsSystem.FindInternalBody(entity2);
 
             Assert.That(body1.Position, Is.EqualTo(new Vector2(0, 0)));
             Assert.That(body2.Position, Is.EqualTo(new Vector2(0, 0)));
@@ -111,7 +111,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 10)));
+        Assert.That(rectangleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 20, 10)));
 
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
@@ -140,8 +140,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
         Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
-        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 35.980762, 32.320508))
-            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+        Assert.That(rectangleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(10, 5, 35.980762, 32.320508))
+            .Using<AABB2D>(AABB2DEquality));
     }
 
     [Test]
@@ -173,8 +173,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 20)));
-
+        Assert.That(circleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 20, 20)));
 
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
@@ -203,7 +202,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
         Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
-        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 40, 40)));
+        Assert.That(circleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(10, 5, 40, 40)));
     }
 
     [TestCase(1, 1, 0, 0, 0, 0)]
@@ -261,7 +260,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(tileColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, tw, th)));
+        Assert.That(tileColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, tw, th)));
 
         // Act
         transform2DComponent.Translation = new Vector2(x, y);
@@ -292,7 +291,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(transform2DComponent.Rotation, Is.Zero);
         Assert.That(transform2DComponent.Scale, Is.EqualTo(Vector2.One));
 
-        Assert.That(tileColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(ex, ey, tw, th)));
+        Assert.That(tileColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(ex, ey, tw, th)));
     }
 
     [Test]
@@ -318,9 +317,9 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         // Assume
         PerformSynchronization(physicsSystem);
 
-        var body1 = GetBodyForEntity(physicsSystem, entity1);
-        var body2 = GetBodyForEntity(physicsSystem, entity2);
-        var body3 = GetBodyForEntity(physicsSystem, entity3);
+        var body1 = physicsSystem.FindInternalBody(entity1);
+        var body2 = physicsSystem.FindInternalBody(entity2);
+        var body3 = physicsSystem.FindInternalBody(entity3);
 
         Assert.That(body1.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body1.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -334,7 +333,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body1.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body1.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(rectangleColliderComponent1.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 10, 20)));
+        Assert.That(rectangleColliderComponent1.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 10, 20)));
 
         Assert.That(body2.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body2.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -348,7 +347,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body2.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body2.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(rectangleColliderComponent2.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 30, 40)));
+        Assert.That(rectangleColliderComponent2.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 30, 40)));
 
         Assert.That(body3.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body3.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -362,7 +361,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body3.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(rectangleColliderComponent3.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 50, 60)));
+        Assert.That(rectangleColliderComponent3.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 50, 60)));
 
         // Act
         // Body 1
@@ -410,8 +409,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body1.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
         Assert.That(body1.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
-        Assert.That(rectangleColliderComponent1.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(1, 2, 14.653145, 23.575900))
-            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+        Assert.That(rectangleColliderComponent1.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(1, 2, 14.653145, 23.575900))
+            .Using<AABB2D>(AABB2DEquality));
 
         Assert.That(body2.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body2.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -426,8 +425,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body2.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(1, 4).Value));
         Assert.That(body2.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(0, 3).Value));
 
-        Assert.That(rectangleColliderComponent2.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(expectedPosition2, new Vector2(50.578838, 54.605117)))
-            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+        Assert.That(rectangleColliderComponent2.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(expectedPosition2, new Vector2(50.578838, 54.605117)))
+            .Using<AABB2D>(AABB2DEquality));
 
         Assert.That(body3.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body3.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -442,8 +441,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body3.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(2, 5).Value));
         Assert.That(body3.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 4).Value));
 
-        Assert.That(rectangleColliderComponent3.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(expectedPosition3, new Vector2(84.657676, 80.631397)))
-            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+        Assert.That(rectangleColliderComponent3.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(expectedPosition3, new Vector2(84.657676, 80.631397)))
+            .Using<AABB2D>(AABB2DEquality));
     }
 
     [Test]
@@ -476,7 +475,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 10)));
+        Assert.That(rectangleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 20, 10)));
 
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
@@ -509,8 +508,8 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
         Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
-        Assert.That(rectangleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 35.980762, 32.320508))
-            .Using<AxisAlignedRectangle>(AxisAlignedRectangleEquality));
+        Assert.That(rectangleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(10, 5, 35.980762, 32.320508))
+            .Using<AABB2D>(AABB2DEquality));
     }
 
     [Test]
@@ -543,7 +542,7 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(uint.MaxValue));
         Assert.That(body.CollisionMask, Is.EqualTo(uint.MaxValue));
 
-        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(0, 0, 20, 20)));
+        Assert.That(circleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(0, 0, 20, 20)));
 
         // Act
         transform2DComponent.Translation = new Vector2(10, 5);
@@ -576,6 +575,6 @@ internal abstract class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionLayer, Is.EqualTo(CollisionBitmask.FromBits(0, 2).Value));
         Assert.That(body.CollisionMask, Is.EqualTo(CollisionBitmask.FromBits(1, 3).Value));
 
-        Assert.That(circleColliderComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 5, 40, 40)));
+        Assert.That(circleColliderComponent.BoundingBox, Is.EqualTo(AABB2D.FromCenterAndSize(10, 5, 40, 40)));
     }
 }

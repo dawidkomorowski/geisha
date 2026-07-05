@@ -23,7 +23,7 @@ public class PhysicsSceneQueryBenchmarks
     private PhysicsSystem _physicsSystem = null!;
     private IDebugRendererForTests _debugRenderer = null!;
 
-    private readonly AxisAlignedRectangle _queryRectangle = new(0, 0, 700, 500);
+    private readonly AABB2D _aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 700, 500);
     private readonly Collider2DComponent[] _collidersArray = new Collider2DComponent[2048];
     private readonly List<Collider2DComponent> _collidersList = new(2048);
 
@@ -53,6 +53,7 @@ public class PhysicsSceneQueryBenchmarks
         SaveVisualOutput("PhysicsSceneQueryBenchmarks[1]");
 
         _scene.RemoveObserver(_physicsSystem);
+        _physicsSystem.Dispose();
         _physicsSystem = null!;
         _scene = null!;
         _debugRenderer.Dispose();
@@ -61,26 +62,26 @@ public class PhysicsSceneQueryBenchmarks
     [Benchmark]
     public int QueryBounds_Span()
     {
-        return _physicsSystem.QueryBounds(_queryRectangle, _collidersArray);
+        return _physicsSystem.QueryBounds(_aabbToQuery, _collidersArray);
     }
-
-[Benchmark]
-public int QueryBounds_List()
-{
-    return _physicsSystem.QueryBounds(_queryRectangle, _collidersList);
-}
 
     [Benchmark]
-    public int QueryOverlap_AxisAlignedRectangle_Span()
+    public int QueryBounds_List()
     {
-        return _physicsSystem.QueryOverlap(_queryRectangle, _collidersArray);
+        return _physicsSystem.QueryBounds(_aabbToQuery, _collidersList);
     }
 
-[Benchmark]
-public int QueryOverlap_AxisAlignedRectangle_List()
-{
-    return _physicsSystem.QueryOverlap(_queryRectangle, _collidersList);
-}
+    [Benchmark]
+    public int QueryOverlap_AABB2D_Span()
+    {
+        return _physicsSystem.QueryOverlap(_aabbToQuery, _collidersArray);
+    }
+
+    [Benchmark]
+    public int QueryOverlap_AABB2D_List()
+    {
+        return _physicsSystem.QueryOverlap(_aabbToQuery, _collidersList);
+    }
 
     private void ConfigureStaticScene(SizeD bounds, int staticBodies)
     {
@@ -126,7 +127,7 @@ public int QueryOverlap_AxisAlignedRectangle_List()
         _debugRenderer.BeginDraw(QueryVisualScale);
         _physicsSystem.SynchronizePhysicsState();
         _physicsSystem.PreparePhysicsDebugInformation();
-        _debugRenderer.DrawRectangle(_queryRectangle, Color.Red, Matrix3x3.Identity);
+        _debugRenderer.DrawRectangle(_aabbToQuery.ToAxisAlignedRectangle(), Color.Red, Matrix3x3.Identity);
 
         var outputPath = Path.Combine("..", "..", "..", "..");
         _debugRenderer.EndDraw(outputPath, fileName);

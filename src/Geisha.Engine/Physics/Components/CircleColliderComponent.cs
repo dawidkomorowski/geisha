@@ -24,6 +24,8 @@ namespace Geisha.Engine.Physics.Components;
 [ComponentId("Geisha.Engine.Physics.CircleColliderComponent")]
 public sealed class CircleColliderComponent : Collider2DComponent
 {
+    private double _radius;
+
     internal CircleColliderComponent(Entity entity) : base(entity)
     {
     }
@@ -36,7 +38,15 @@ public sealed class CircleColliderComponent : Collider2DComponent
     ///     It determines the area used for collision detection and physics interactions.
     ///     A larger radius results in a bigger collision area for the associated entity.
     /// </remarks>
-    public double Radius { get; set; }
+    public double Radius
+    {
+        get => _radius;
+        set
+        {
+            _radius = value;
+            IsDirty = true;
+        }
+    }
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)

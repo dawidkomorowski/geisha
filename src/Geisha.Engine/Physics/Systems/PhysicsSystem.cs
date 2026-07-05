@@ -14,10 +14,11 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
-internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISceneObserver
+internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISceneObserver, IDisposable
 {
     private readonly ITimeSystem _timeSystem;
     private readonly IDebugRenderer _debugRenderer;
+    private readonly PhysicsScene2D _physicsScene2D;
     private readonly PhysicsSystemState _physicsSystemState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, ITimeSystem timeSystem, IDebugRenderer debugRenderer)
@@ -56,18 +57,43 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         _timeSystem = timeSystem;
         _debugRenderer = debugRenderer;
 
-        PhysicsScene2D = new PhysicsScene2D(physicsConfiguration.TileSize)
+        var sceneDefinition = new PhysicsScene2DDefinition
         {
+            TileSize = physicsConfiguration.TileSize,
             Substeps = physicsConfiguration.Substeps,
             VelocityIterations = physicsConfiguration.VelocityIterations,
             PositionIterations = physicsConfiguration.PositionIterations,
             PenetrationTolerance = physicsConfiguration.PenetrationTolerance
         };
 
-        _physicsSystemState = new PhysicsSystemState(PhysicsScene2D);
+        _physicsScene2D = PhysicsScene2D.Create(sceneDefinition);
+
+        _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
     }
 
-    public PhysicsScene2D PhysicsScene2D { get; }
+    public void Dispose()
+    {
+        if (_physicsScene2D.IsValid)
+        {
+            PhysicsScene2D.Destroy(_physicsScene2D);
+        }
+    }
+
+    public PhysicsScene2D PhysicsScene2D => _physicsScene2D;
+
+    internal RigidBody2D FindInternalBody(Entity entity)
+    {
+        var proxies = _physicsSystemState.GetPhysicsBodyProxies();
+        foreach (var proxy in proxies)
+        {
+            if (proxy.Entity == entity)
+            {
+                return proxy.RigidBody;
+            }
+        }
+
+        throw new ArgumentException("Internal body not found for specified entity.");
+    }
 
     #region Implementation of IPhysicsSystem
 
@@ -86,8 +112,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     public int QueryPoint(in Vector2 point, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
-        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
-        PhysicsScene2D.QueryPoint(point, ref queryHandler);
+        var queryHandler = new ColliderArrayQueryHandler(_physicsSystemState, collidersArray, colliders.Length);
+        _physicsScene2D.QueryPoint(point, ref queryHandler);
 
         for (var i = 0; i < queryHandler.Count; i++)
         {
@@ -102,8 +128,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     public int QueryPoint(in Vector2 point, List<Collider2DComponent> colliders)
     {
         colliders.Clear();
-        var queryHandler = new ColliderListQueryHandler(colliders);
-        PhysicsScene2D.QueryPoint(point, ref queryHandler);
+        var queryHandler = new ColliderListQueryHandler(_physicsSystemState, colliders);
+        _physicsScene2D.QueryPoint(point, ref queryHandler);
         return queryHandler.Count;
     }
 
@@ -119,11 +145,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
-    public int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public int QueryBounds(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
-        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
-        PhysicsScene2D.QueryBounds(axisAlignedRectangle, ref queryHandler);
+        var queryHandler = new ColliderArrayQueryHandler(_physicsSystemState, collidersArray, colliders.Length);
+        _physicsScene2D.QueryBounds(aabb, ref queryHandler);
 
         for (var i = 0; i < queryHandler.Count; i++)
         {
@@ -135,31 +161,31 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return queryHandler.Count;
     }
 
-    public int QueryBounds(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public int QueryBounds(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
         colliders.Clear();
-        var queryHandler = new ColliderListQueryHandler(colliders);
-        PhysicsScene2D.QueryBounds(axisAlignedRectangle, ref queryHandler);
+        var queryHandler = new ColliderListQueryHandler(_physicsSystemState, colliders);
+        _physicsScene2D.QueryBounds(aabb, ref queryHandler);
         return queryHandler.Count;
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
-        var written = QueryBounds(axisAlignedRectangle, colliders);
+        var written = QueryBounds(aabb, colliders);
         return colliders.Slice(0, written);
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryBoundsAsSpan(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
-        var written = QueryBounds(axisAlignedRectangle, colliders);
+        var written = QueryBounds(aabb, colliders);
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
-    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public int QueryOverlap(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
-        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
-        PhysicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+        var queryHandler = new ColliderArrayQueryHandler(_physicsSystemState, collidersArray, colliders.Length);
+        _physicsScene2D.QueryOverlap(aabb, ref queryHandler);
 
         for (var i = 0; i < queryHandler.Count; i++)
         {
@@ -171,31 +197,31 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         return queryHandler.Count;
     }
 
-    public int QueryOverlap(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public int QueryOverlap(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
         colliders.Clear();
-        var queryHandler = new ColliderListQueryHandler(colliders);
-        PhysicsScene2D.QueryOverlap(axisAlignedRectangle, ref queryHandler);
+        var queryHandler = new ColliderListQueryHandler(_physicsSystemState, colliders);
+        _physicsScene2D.QueryOverlap(aabb, ref queryHandler);
         return queryHandler.Count;
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, Span<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AABB2D aabb, Span<Collider2DComponent> colliders)
     {
-        var written = QueryOverlap(axisAlignedRectangle, colliders);
+        var written = QueryOverlap(aabb, colliders);
         return colliders.Slice(0, written);
     }
 
-    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AxisAlignedRectangle axisAlignedRectangle, List<Collider2DComponent> colliders)
+    public ReadOnlySpan<Collider2DComponent> QueryOverlapAsSpan(in AABB2D aabb, List<Collider2DComponent> colliders)
     {
-        var written = QueryOverlap(axisAlignedRectangle, colliders);
+        var written = QueryOverlap(aabb, colliders);
         return CollectionsMarshal.AsSpan(colliders).Slice(0, written);
     }
 
     public int QueryOverlap(in Circle circle, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
-        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
-        PhysicsScene2D.QueryOverlap(circle, ref queryHandler);
+        var queryHandler = new ColliderArrayQueryHandler(_physicsSystemState, collidersArray, colliders.Length);
+        _physicsScene2D.QueryOverlap(circle, ref queryHandler);
 
         for (var i = 0; i < queryHandler.Count; i++)
         {
@@ -210,8 +236,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     public int QueryOverlap(in Circle circle, List<Collider2DComponent> colliders)
     {
         colliders.Clear();
-        var queryHandler = new ColliderListQueryHandler(colliders);
-        PhysicsScene2D.QueryOverlap(circle, ref queryHandler);
+        var queryHandler = new ColliderListQueryHandler(_physicsSystemState, colliders);
+        _physicsScene2D.QueryOverlap(circle, ref queryHandler);
         return queryHandler.Count;
     }
 
@@ -230,8 +256,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     public int QueryOverlap(in Rectangle rectangle, Span<Collider2DComponent> colliders)
     {
         var collidersArray = ArrayPool<Collider2DComponent>.Shared.Rent(colliders.Length);
-        var queryHandler = new ColliderArrayQueryHandler(collidersArray, colliders.Length);
-        PhysicsScene2D.QueryOverlap(rectangle, ref queryHandler);
+        var queryHandler = new ColliderArrayQueryHandler(_physicsSystemState, collidersArray, colliders.Length);
+        _physicsScene2D.QueryOverlap(rectangle, ref queryHandler);
 
         for (var i = 0; i < queryHandler.Count; i++)
         {
@@ -246,8 +272,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     public int QueryOverlap(in Rectangle rectangle, List<Collider2DComponent> colliders)
     {
         colliders.Clear();
-        var queryHandler = new ColliderListQueryHandler(colliders);
-        PhysicsScene2D.QueryOverlap(rectangle, ref queryHandler);
+        var queryHandler = new ColliderListQueryHandler(_physicsSystemState, colliders);
+        _physicsScene2D.QueryOverlap(rectangle, ref queryHandler);
         return queryHandler.Count;
     }
 
@@ -276,7 +302,7 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             proxy.SynchronizeBody();
         }
 
-        PhysicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
+        _physicsScene2D.Simulate(_timeSystem.FixedDeltaTime);
 
         foreach (var proxy in physicsBodyProxies)
         {
@@ -284,10 +310,15 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
         }
 
         InvokeEventCallbacks();
+
+        _physicsSystemState.ClearRemovedCollidersCache();
     }
 
     public void PreparePhysicsDebugInformation()
     {
+        // TODO: Redesign debug drawing so the internal physics engine does the drawing.
+        //       That should be better as it has access to internal data structures and more information. 
+
         if (!EnableDebugRendering) return;
 
         var staticBodyColor = Color.Green;
@@ -298,8 +329,10 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         Span<Vector2> points = stackalloc Vector2[2];
 
-        foreach (var body in PhysicsScene2D.Bodies)
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
         {
+            var body = _physicsScene2D.Bodies[i];
+
             var color = body.Type switch
             {
                 BodyType.Static => staticBodyColor,
@@ -316,10 +349,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             {
                 case ColliderType.Circle:
                 {
-                    _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
+                    var circle = new Circle(body.Position, body.CircleColliderRadius);
+                    _debugRenderer.DrawCircle(circle, color);
 
                     points[0] = Vector2.Zero;
-                    points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
+                    points[1] = points[0] + Vector2.UnitX * body.CircleColliderRadius;
                     var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
                     _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
 
@@ -346,26 +380,39 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             }
         }
 
-        foreach (var body in PhysicsScene2D.Bodies)
+        Span<Contact> contacts = stackalloc Contact[32];
+
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
         {
+            var body = _physicsScene2D.Bodies[i];
             if (body.Type is not BodyType.Kinematic) continue;
 
-            foreach (var contact in body.Contacts)
+            if (body.ContactCount > contacts.Length)
             {
-                for (var j = 0; j < contact.ContactPoints.Count; j++)
+                // TODO: Temporary workaround. The drawing should be moved into internal Physics engine.
+                contacts = stackalloc Contact[body.ContactCount];
+            }
+
+            var contactCount = body.GetContacts(contacts);
+
+            for (var ci = 0; ci < contactCount; ci++)
+            {
+                ref var contact = ref contacts[ci];
+                var contactManifold = contact.ContactManifold;
+                for (var j = 0; j < contactManifold.ContactPoints.Count; j++)
                 {
                     // Drawing contacts based on body dimensions to make it scale between different sizes.
                     // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
-                    // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
-                    _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
+                    // TODO: It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
+                    _debugRenderer.DrawCircle(new Circle(contactManifold.ContactPoints[j].WorldPosition, body.BoundingBox.Width / 20d),
                         contactPointColor);
 
-                    var normalLen = body.BoundingRectangle.Width / 2d;
+                    var normalLen = body.BoundingBox.Width / 2d;
                     var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
-                    var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
-                    var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
+                    var sign = Math.Sign(-contactManifold.CollisionNormal.Cross(Vector2.UnitX));
+                    var normalRot = contactManifold.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
                     _debugRenderer.DrawRectangle(normalRect, contactNormalColor,
-                        Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
+                        Matrix3x3.CreateTRS(contactManifold.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
                 }
             }
         }
@@ -424,16 +471,16 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     private void InvokeEventCallbacks()
     {
-        foreach (var sensorOverlapEvent in PhysicsScene2D.GetSensorOverlapEvents())
+        foreach (var sensorOverlapEvent in _physicsScene2D.GetSensorOverlapEvents())
         {
-            var proxy1 = sensorOverlapEvent.Sensor.Proxy;
-            var proxy2 = sensorOverlapEvent.Visitor.Proxy;
+            var proxy1 = _physicsSystemState.GetProxyByIdOrNull(sensorOverlapEvent.Body1Id);
+            var proxy2 = _physicsSystemState.GetProxyByIdOrNull(sensorOverlapEvent.Body2Id);
 
-            Debug.Assert(proxy1 is not null);
-            Debug.Assert(proxy2 is not null);
+            var collider1 = proxy1?.Collider ?? _physicsSystemState.GetRemovedColliderByIdOrNull(sensorOverlapEvent.Body1Id);
+            var collider2 = proxy2?.Collider ?? _physicsSystemState.GetRemovedColliderByIdOrNull(sensorOverlapEvent.Body2Id);
 
-            var collider1 = proxy1.Collider;
-            var collider2 = proxy2.Collider;
+            Debug.Assert(collider1 is not null, "Collider1 is null. Physics state may be corrupted.");
+            Debug.Assert(collider2 is not null, "Collider2 is null. Physics state may be corrupted.");
 
             switch (sensorOverlapEvent.Type)
             {
@@ -454,13 +501,17 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     // TODO: Use ColliderSpanQueryHandler instead when migrated to .NET 9 (C# 13) -> it allows ref structs to implement interfaces.
     //       Then the span based query handler can implement IRigidBodyQueryHandler.
     //       It will allow more memory friendly implementation of span based queries without accidental allocations and data copying.
-    private struct ColliderArrayQueryHandler : IRigidBodyQueryHandler
+    // TODO: When available, feature "ref fields" could be used to create query handler translating from RigidBodyId -> RigidBody
+    //       so the public PhysicsEngine2D API would not need to operate on raw ID.
+    private struct ColliderArrayQueryHandler : IRigidBodyIdQueryHandler
     {
+        private readonly PhysicsSystemState _physicsSystemState;
         private readonly Collider2DComponent[] _colliders;
         private readonly int _maxCount;
 
-        public ColliderArrayQueryHandler(Collider2DComponent[] colliders, int maxCount)
+        public ColliderArrayQueryHandler(PhysicsSystemState physicsSystemState, Collider2DComponent[] colliders, int maxCount)
         {
+            _physicsSystemState = physicsSystemState;
             _colliders = colliders;
             _maxCount = maxCount;
             Count = 0;
@@ -468,15 +519,14 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
         public int Count { get; private set; }
 
-        public bool Handle(RigidBody2D body)
+        public bool Handle(RigidBodyId id)
         {
             if (Count >= _maxCount)
             {
                 return false;
             }
 
-            var proxy = body.Proxy;
-            Debug.Assert(proxy is not null);
+            var proxy = _physicsSystemState.GetProxyById(id);
             _colliders[Count++] = proxy.Collider;
 
             return true;
@@ -510,22 +560,23 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
     //    }
     //}
 
-    private struct ColliderListQueryHandler : IRigidBodyQueryHandler
+    private struct ColliderListQueryHandler : IRigidBodyIdQueryHandler
     {
+        private readonly PhysicsSystemState _physicsSystemState;
         private readonly List<Collider2DComponent> _colliders;
 
-        public ColliderListQueryHandler(List<Collider2DComponent> colliders)
+        public ColliderListQueryHandler(PhysicsSystemState physicsSystemState, List<Collider2DComponent> colliders)
         {
+            _physicsSystemState = physicsSystemState;
             _colliders = colliders;
             Count = 0;
         }
 
         public int Count { get; private set; }
 
-        public bool Handle(RigidBody2D body)
+        public bool Handle(RigidBodyId id)
         {
-            var proxy = body.Proxy;
-            Debug.Assert(proxy is not null);
+            var proxy = _physicsSystemState.GetProxyById(id);
             _colliders.Add(proxy.Collider);
 
             Count++;

@@ -13,16 +13,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class Collider2DComponentTests : PhysicsSystemTestsBase
 {
-    #region BoundingRectangle
+    #region BoundingBox
 
     [TestCase(0, 0, 10, 0, 0, 20, 20)] // Circle at origin
     [TestCase(0, 0, 5, 0, 0, 10, 10)] // Smaller radius
     [TestCase(5, 3, 10, 5, 3, 20, 20)] // Circle offset from origin
-    public void BoundingRectangle_CircleCollider_ShouldReturnCorrectAxisAlignedRectangle(
+    public void BoundingBox_CircleCollider_ShouldReturnCorrectAABB2D(
         double cx, double cy, double cr, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+        var expectedBoundingBox = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsSystem = GetPhysicsSystem();
         var circle = CreateCircleStaticBody(cx, cy, cr);
@@ -31,21 +31,21 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = circleCollider.BoundingRectangle;
+        var boundingBox = circleCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));
+        Assert.That(boundingBox, Is.EqualTo(expectedBoundingBox));
     }
 
     [TestCase(0, 0, 20, 10, 0, 0, 0, 20, 10)] // Rectangle at origin
     [TestCase(0, 0, 10, 5, 0, 0, 0, 10, 5)] // Smaller dimensions
     [TestCase(5, 3, 20, 10, 0, 5, 3, 20, 10)] // Rectangle offset from origin
     [TestCase(0, 0, 20, 10, Math.PI / 6, 0, 0, 22.320508075688775, 18.660254037844386)] // Rotated 30°
-    public void BoundingRectangle_RectangleCollider_ShouldReturnCorrectAxisAlignedRectangle(
+    public void BoundingBox_RectangleCollider_ShouldReturnCorrectAABB2D(
         double rx, double ry, double rw, double rh, double rr, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+        var expectedBoundingBox = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsSystem = GetPhysicsSystem();
         var rectangle = CreateRectangleStaticBody(rx, ry, rw, rh, rr);
@@ -54,20 +54,20 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = rectangleCollider.BoundingRectangle;
+        var boundingBox = rectangleCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle).Using<AxisAlignedRectangle>(ToleranceEquality.ForAxisAlignedRectangle(1e-9)));
+        Assert.That(boundingBox, Is.EqualTo(expectedBoundingBox).Using<AABB2D>(ToleranceEquality.ForAABB2D(1e-9)));
     }
 
     [TestCase(0, 0, 1, 1, 0, 0, 1, 1)] // Tile at origin, default size
     [TestCase(5, 3, 1, 1, 5, 3, 1, 1)] // Tile offset from origin, default size
     [TestCase(0, 0, 2, 3, 0, 0, 2, 3)] // Tile at origin, custom size
-    public void BoundingRectangle_TileCollider_ShouldReturnCorrectAxisAlignedRectangle(
+    public void BoundingBox_TileCollider_ShouldReturnCorrectAABB2D(
         double tx, double ty, double tw, double th, double brX, double brY, double brW, double brH)
     {
         // Arrange
-        var expectedBoundingRectangle = new AxisAlignedRectangle(brX, brY, brW, brH);
+        var expectedBoundingBox = AABB2D.FromCenterAndSize(brX, brY, brW, brH);
 
         var physicsConfiguration = new PhysicsConfiguration { TileSize = new SizeD(tw, th) };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
@@ -77,10 +77,10 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Act
-        var boundingRectangle = tileCollider.BoundingRectangle;
+        var boundingBox = tileCollider.BoundingBox;
 
         // Assert
-        Assert.That(boundingRectangle, Is.EqualTo(expectedBoundingRectangle));
+        Assert.That(boundingBox, Is.EqualTo(expectedBoundingBox));
     }
 
     #endregion
@@ -308,7 +308,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
 
     #endregion
 
-    #region Overlaps AxisAlignedRectangle
+    #region Overlaps AABB
 
     [TestCase(0, 0, 10, 0, 0, 2, 2, true)] // AABB fully inside circle
     [TestCase(0, 0, 10, 11, 0, 2, 2, true)] // AABB touching circle edge
@@ -316,7 +316,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     [TestCase(0, 0, 10, 9, 9, 1, 1, false)] // AABB inside circle bounding box but outside actual circle
     [TestCase(5, -3, 10, 15, -3, 2, 2, true)] // Shifted circle overlap
     [TestCase(5, -3, 10, 16.0001, -3, 2, 2, false)] // Shifted circle no overlap
-    public void Overlaps_AxisAlignedRectangle_CircleCollider_Test(double cx, double cy, double cr, double aabbX, double aabbY, double aabbW, double aabbH,
+    public void Overlaps_AABB_CircleCollider_Test(double cx, double cy, double cr, double aabbX, double aabbY, double aabbW, double aabbH,
         bool expected)
     {
         // Arrange
@@ -325,9 +325,9 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         var circleCollider = circle.GetComponent<CircleColliderComponent>();
         physicsSystem.SynchronizePhysicsState();
 
-        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+        var aabbToTest = AABB2D.FromCenterAndSize(aabbX, aabbY, aabbW, aabbH);
 
-        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest.ToAxisAlignedRectangle(), Color.Red, Matrix3x3.Identity));
 
         // Act
         var actual = circleCollider.Overlaps(aabbToTest);
@@ -342,7 +342,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     [TestCase(0, 0, 20, 10, Math.PI / 6, 11, 0, 1, 1, true)] // Rotated rectangle: AABB touches shape
     [TestCase(0, 0, 20, 10, Math.PI / 6, 11, -2, 1, 1, false)] // Rotated rectangle: AABB inside bounding AABB but outside shape
     [TestCase(5, -3, 20, 10, 0, 15, -3, 2, 2, true)] // Shifted rectangle overlap
-    public void Overlaps_AxisAlignedRectangle_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double aabbX, double aabbY,
+    public void Overlaps_AABB_RectangleCollider_Test(double rx, double ry, double rw, double rh, double rr, double aabbX, double aabbY,
         double aabbW, double aabbH, bool expected)
     {
         // Arrange
@@ -351,9 +351,9 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         var rectangleCollider = rectangle.GetComponent<RectangleColliderComponent>();
         physicsSystem.SynchronizePhysicsState();
 
-        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+        var aabbToTest = AABB2D.FromCenterAndSize(aabbX, aabbY, aabbW, aabbH);
 
-        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+        SaveVisualOutput(physicsSystem, scale: 10, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest.ToAxisAlignedRectangle(), Color.Red, Matrix3x3.Identity));
 
         // Act
         var actual = rectangleCollider.Overlaps(aabbToTest);
@@ -367,7 +367,7 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
     [TestCase(0, 0, 1, 1, 1.0001, 0, 1, 1, false)] // AABB outside tile at grid origin
     [TestCase(4, 6, 2, 3, 5, 7, 0.2, 0.2, true)] // AABB inside custom-size tile aligned to grid
     [TestCase(4, 6, 2, 3, 5.1001, 7, 0.2, 0.2, false)] // AABB outside custom-size tile aligned to grid
-    public void Overlaps_AxisAlignedRectangle_TileCollider_Test(double tx, double ty, double tw, double th, double aabbX, double aabbY, double aabbW,
+    public void Overlaps_AABB_TileCollider_Test(double tx, double ty, double tw, double th, double aabbX, double aabbY, double aabbW,
         double aabbH, bool expected)
     {
         // Arrange
@@ -381,9 +381,9 @@ public class Collider2DComponentTests : PhysicsSystemTestsBase
         var tileCollider = tile.GetComponent<TileColliderComponent>();
         physicsSystem.SynchronizePhysicsState();
 
-        var aabbToTest = new AxisAlignedRectangle(aabbX, aabbY, aabbW, aabbH);
+        var aabbToTest = AABB2D.FromCenterAndSize(aabbX, aabbY, aabbW, aabbH);
 
-        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest, Color.Red, Matrix3x3.Identity));
+        SaveVisualOutput(physicsSystem, scale: 40, postDrawAction: renderer => renderer.DrawRectangle(aabbToTest.ToAxisAlignedRectangle(), Color.Red, Matrix3x3.Identity));
 
         // Assume
         Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");

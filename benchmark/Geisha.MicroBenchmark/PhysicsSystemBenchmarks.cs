@@ -44,6 +44,7 @@ public class PhysicsSystemBenchmarks
         _kinematicComponents.Clear();
         _colliderComponents.Clear();
         _scene.RemoveObserver(_physicsSystem);
+        _physicsSystem.Dispose();
         _physicsSystem = null!;
         _scene = null!;
         _debugRenderer.Dispose();

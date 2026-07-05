@@ -117,6 +117,20 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(31.254, 31.254)));
         }
 
+        [Test]
+        public void ComputeAABB_ShouldReturnMinimalAABBContainingThisCircle()
+        {
+            // Arrange
+            var circle = new Circle(new Vector2(47.196, 75.639), 15.627);
+
+            // Act
+            var aabb = circle.ComputeAABB();
+
+            // Assert
+            Assert.That(aabb.Min, Is.EqualTo(new Vector2(31.569, 60.012)).Using<Vector2>(Vector2Equality));
+            Assert.That(aabb.Max, Is.EqualTo(new Vector2(62.823, 91.266)).Using<Vector2>(Vector2Equality));
+        }
+
         [TestCase(0, 0, 0, "Center: X: 0, Y: 0, Radius: 0")]
         [TestCase(74.025, -27.169, 15.627, "Center: X: 74.025, Y: -27.169, Radius: 15.627")]
         [SetCulture("")]

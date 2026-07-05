@@ -1,248 +1,87 @@
 ﻿using System;
-using System.Collections.Generic;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Physics.Systems;
+using Geisha.Engine.Core.Memory;
+using Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-// BUG:  It seems that position and bounding rectangle might not be correct for kinematic bodies just after solving position constraints.
-//       This might be related to the fact that position constraints are solved per body and not per contact (look at comments in ContactSolver),
-//       and after each body the position and bounding rectangle are updated, but the next body might still have contacts with the previous body that are not solved yet.
-//       This is just a theory, but it should be investigated and if confirmed, it should be fixed.
-internal sealed class RigidBody2D
+internal readonly record struct RigidBody2D(RigidBodyId Id) : IUnmanaged<RigidBody2D>
 {
-    // TODO: This could be replaced with field keyword in .NET 10 (C# 14).
-    // TODO: When field keyword is used, consider searching for other places in the codebase where it could be used as well.
-    private Vector2 _position;
-    private double _rotation;
-    private Vector2 _linearVelocity;
-    private double _angularVelocity;
-    private bool _enableCollisionDetection = true;
+    public static RigidBody2D GetById(RigidBodyId id) => new(id);
 
-    public RigidBody2D(PhysicsScene2D scene)
-    {
-        Scene = scene;
-        Type = BodyType.Static;
-        SetTileCollider();
-    }
+    public bool IsValid => Physics2D.Body.IsValid(Id);
 
-    public RigidBody2D(PhysicsScene2D scene, BodyType type, double circleColliderRadius)
-    {
-        Scene = scene;
-        Type = type;
-        SetCircleCollider(circleColliderRadius);
-    }
-
-    public RigidBody2D(PhysicsScene2D scene, BodyType type, in SizeD rectangleColliderSize)
-    {
-        Scene = scene;
-        Type = type;
-        SetRectangleCollider(rectangleColliderSize);
-    }
-
-    public RuntimeId Id { get; } = RuntimeId.Next();
-    public BodyType Type { get; }
-    public ColliderType ColliderType { get; private set; }
-    public CollisionNormalFilter CollisionNormalFilter { get; internal set; } = CollisionNormalFilter.None;
-
-    public PhysicsScene2D Scene { get; }
+    public BodyType Type => Physics2D.Body.GetType(Id);
+    public ColliderType ColliderType => Physics2D.Body.GetColliderType(Id);
+    public CollisionNormalFilter CollisionNormalFilter => Physics2D.Body.GetCollisionNormalFilter(Id);
 
     public Vector2 Position
     {
-        get => _position;
-        set
-        {
-            if (ColliderType is ColliderType.Tile)
-            {
-                _position = EnableCollisionDetection
-                    ? Scene.TileMap.UpdateTile(this, _position, value)
-                    : Scene.TileMap.AlignPosition(value);
-            }
-            else
-            {
-                _position = value;
-            }
-        }
+        get => Physics2D.Body.GetPosition(Id);
+        set => Physics2D.Body.SetPosition(Id, value);
     }
 
     public double Rotation
     {
-        get => _rotation;
-        set => _rotation = ColliderType is ColliderType.Tile ? 0 : value;
+        get => Physics2D.Body.GetRotation(Id);
+        set => Physics2D.Body.SetRotation(Id, value);
     }
 
     public Vector2 LinearVelocity
     {
-        get => _linearVelocity;
-        set
-        {
-            if (Type == BodyType.Static)
-            {
-                return;
-            }
-
-            _linearVelocity = value;
-        }
+        get => Physics2D.Body.GetLinearVelocity(Id);
+        set => Physics2D.Body.SetLinearVelocity(Id, value);
     }
 
     public double AngularVelocity
     {
-        get => _angularVelocity;
-        set
-        {
-            if (Type == BodyType.Static)
-            {
-                return;
-            }
-
-            _angularVelocity = value;
-        }
+        get => Physics2D.Body.GetAngularVelocity(Id);
+        set => Physics2D.Body.SetAngularVelocity(Id, value);
     }
 
     public bool EnableCollisionDetection
     {
-        get => _enableCollisionDetection;
-        set
-        {
-            if (_enableCollisionDetection != value && ColliderType is ColliderType.Tile)
-            {
-                if (value)
-                {
-                    Scene.TileMap.CreateTile(this);
-                }
-                else
-                {
-                    Scene.TileMap.RemoveTile(this);
-                }
-            }
-
-            _enableCollisionDetection = value;
-        }
+        get => Physics2D.Body.GetEnableCollisionDetection(Id);
+        set => Physics2D.Body.SetEnableCollisionDetection(Id, value);
     }
 
-    public bool EnableCollisionResponse { get; set; }
-
-    public bool IsSensor { get; set; }
-
-    public uint CollisionLayer { get; set; } = uint.MaxValue;
-    public uint CollisionMask { get; set; } = uint.MaxValue;
-
-    public double CircleColliderRadius { get; private set; }
-    public Circle TransformedCircleCollider { get; private set; }
-
-    public SizeD RectangleColliderSize { get; private set; }
-    public Rectangle TransformedRectangleCollider { get; private set; }
-
-    public AxisAlignedRectangle BoundingRectangle { get; private set; }
-
-    public List<Contact> Contacts { get; } = new();
-
-    public PhysicsBodyProxy? Proxy { get; set; }
-
-    public void SetCircleCollider(double radius)
+    public bool EnableCollisionResponse
     {
-        if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
-        {
-            Scene.TileMap.RemoveTile(this);
-        }
-
-        ColliderType = ColliderType.Circle;
-        CircleColliderRadius = radius;
-        RectangleColliderSize = default;
-        RecomputeCollider();
+        get => Physics2D.Body.GetEnableCollisionResponse(Id);
+        set => Physics2D.Body.SetEnableCollisionResponse(Id, value);
     }
 
-    public void SetRectangleCollider(in SizeD size)
+    public bool IsSensor
     {
-        if (ColliderType is ColliderType.Tile && EnableCollisionDetection)
-        {
-            Scene.TileMap.RemoveTile(this);
-        }
-
-        ColliderType = ColliderType.Rectangle;
-        CircleColliderRadius = 0;
-        RectangleColliderSize = size;
-        RecomputeCollider();
+        get => Physics2D.Body.GetIsSensor(Id);
+        set => Physics2D.Body.SetIsSensor(Id, value);
     }
 
-    public void SetTileCollider()
+    public uint CollisionLayer
     {
-        if (Type is BodyType.Kinematic)
-        {
-            throw new InvalidOperationException("Kinematic body cannot be Tile collider.");
-        }
-
-        if (ColliderType is not ColliderType.Tile)
-        {
-            ColliderType = ColliderType.Tile;
-            _position = Scene.TileMap.AlignPosition(_position);
-
-            if (EnableCollisionDetection)
-            {
-                Scene.TileMap.CreateTile(this);
-            }
-        }
-
-        CircleColliderRadius = 0;
-        RectangleColliderSize = Scene.TileSize;
-        RecomputeCollider();
+        get => Physics2D.Body.GetCollisionLayer(Id);
+        set => Physics2D.Body.SetCollisionLayer(Id, value);
     }
 
-    public bool ContainsPoint(in Vector2 point) =>
-        ColliderType switch
-        {
-            ColliderType.Circle => TransformedCircleCollider.Contains(point),
-            ColliderType.Rectangle => BoundingRectangle.Contains(point) && TransformedRectangleCollider.Contains(point),
-            ColliderType.Tile => BoundingRectangle.Contains(point),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) =>
-        ColliderType switch
-        {
-            ColliderType.Circle => BoundingRectangle.Overlaps(axisAlignedRectangle) && TransformedCircleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
-            ColliderType.Rectangle => BoundingRectangle.Overlaps(axisAlignedRectangle) &&
-                                      TransformedRectangleCollider.Overlaps(axisAlignedRectangle.ToRectangle()),
-            ColliderType.Tile => BoundingRectangle.Overlaps(axisAlignedRectangle),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    public bool Overlaps(in Circle circle) =>
-        ColliderType switch
-        {
-            ColliderType.Circle => TransformedCircleCollider.Overlaps(circle),
-            ColliderType.Rectangle => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
-            ColliderType.Tile => BoundingRectangle.Overlaps(circle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(circle),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    public bool Overlaps(in Rectangle rectangle) =>
-        ColliderType switch
-        {
-            ColliderType.Circle => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedCircleCollider.Overlaps(rectangle),
-            ColliderType.Rectangle => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(rectangle),
-            ColliderType.Tile => BoundingRectangle.Overlaps(rectangle.GetBoundingRectangle()) && TransformedRectangleCollider.Overlaps(rectangle),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    internal void RecomputeCollider()
+    public uint CollisionMask
     {
-        var transform = new Transform2D(Position, Rotation, Vector2.One);
-
-        switch (ColliderType)
-        {
-            case ColliderType.Circle:
-                TransformedCircleCollider = new Circle(CircleColliderRadius).Transform(transform.ToMatrix());
-                BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
-                break;
-            case ColliderType.Rectangle:
-            case ColliderType.Tile:
-                TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform.ToMatrix());
-                BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        get => Physics2D.Body.GetCollisionMask(Id);
+        set => Physics2D.Body.SetCollisionMask(Id, value);
     }
+
+    public SizeD RectangleColliderSize => Physics2D.Body.GetRectangleColliderSize(Id);
+    public double CircleColliderRadius => Physics2D.Body.GetCircleColliderRadius(Id);
+    public AABB2D BoundingBox => Physics2D.Body.GetBoundingBox(Id);
+
+    public int ContactCount => Physics2D.Body.GetContactCount(Id);
+    public int GetContacts(Span<Contact> contacts) => Physics2D.Body.GetContacts(Id, contacts);
+
+    public void SetCircleCollider(double radius) => Physics2D.Body.SetCircleCollider(Id, radius);
+    public void SetRectangleCollider(in SizeD size) => Physics2D.Body.SetRectangleCollider(Id, size);
+    public void SetTileCollider() => Physics2D.Body.SetTileCollider(Id);
+
+    public bool ContainsPoint(in Vector2 point) => Physics2D.Body.ContainsPoint(Id, point);
+    public bool Overlaps(in AABB2D aabb) => Physics2D.Body.Overlaps(Id, aabb);
+    public bool Overlaps(in Circle circle) => Physics2D.Body.Overlaps(Id, circle);
+    public bool Overlaps(in Rectangle rectangle) => Physics2D.Body.Overlaps(Id, rectangle);
 }

@@ -11,11 +11,17 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsBodyProxy : IDisposable
 {
+    private readonly PhysicsSystemState _physicsSystemState;
+    private readonly PhysicsScene2D _physicsScene;
     private readonly RigidBody2D _body;
+    private TransformCache _transformCache;
 
-    private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider,
-        KinematicRigidBody2DComponent? kinematicBodyComponent)
+    private PhysicsBodyProxy(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
+        Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
+        _physicsSystemState = physicsSystemState;
+        _physicsScene = physicsScene2D;
+
         Transform = transform;
         Collider = collider;
         KinematicBodyComponent = kinematicBodyComponent;
@@ -32,20 +38,19 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
-        _body.Proxy = this;
-
         SynchronizeBody();
     }
 
-    public static PhysicsBodyProxy CreateStatic(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider)
+    public static PhysicsBodyProxy CreateStatic(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
+        Transform2DComponent transform, Collider2DComponent collider)
     {
-        return new PhysicsBodyProxy(physicsScene2D, transform, collider, null);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, transform, collider, null);
     }
 
-    public static PhysicsBodyProxy CreateKinematic(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider,
-        KinematicRigidBody2DComponent? kinematicBodyComponent)
+    public static PhysicsBodyProxy CreateKinematic(PhysicsSystemState physicsSystemState, in PhysicsScene2D physicsScene2D,
+        Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
-        return new PhysicsBodyProxy(physicsScene2D, transform, collider, kinematicBodyComponent);
+        return new PhysicsBodyProxy(physicsSystemState, physicsScene2D, transform, collider, kinematicBodyComponent);
     }
 
     public Entity Entity => Transform.Entity;
@@ -53,24 +58,35 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public Collider2DComponent Collider { get; }
     public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
 
-    public AxisAlignedRectangle BoundingRectangle => _body.BoundingRectangle;
-    public int ContactCount => _body.Contacts.Count;
+    public RigidBodyId RigidBodyId => _body.Id;
+    public RigidBody2D RigidBody => _body;
+
+    public AABB2D BoundingBox => _body.BoundingBox;
+    public int ContactCount => _body.ContactCount;
 
     public int GetContacts(Span<Contact2D> contacts)
     {
-        var writeCount = Math.Min(_body.Contacts.Count, contacts.Length);
+        var writeCount = Math.Min(_body.ContactCount, contacts.Length);
+
+        // TODO: For big number of contacts this can cause stack overflow.
+        Span<Contact> bodyContacts = stackalloc Contact[writeCount];
+        var internalWriteCount = _body.GetContacts(bodyContacts);
+
+        Debug.Assert(writeCount == internalWriteCount, "Unexpected number of internal contacts.");
 
         for (var i = 0; i < writeCount; i++)
         {
-            var contact = _body.Contacts[i];
-            var thisIsBody1 = _body == contact.Body1;
-            var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
-            Debug.Assert(otherBody.Proxy != null, "otherBody.Proxy != null");
+            var contact = bodyContacts[i];
+            var contactManifold = contact.ContactManifold;
+
+            var thisIsBody1 = _body.Id == contact.Body1Id;
+            var otherBody = thisIsBody1 ? RigidBody2D.GetById(contact.Body2Id) : RigidBody2D.GetById(contact.Body1Id);
+            var otherProxy = _physicsSystemState.GetProxyById(otherBody.Id);
 
             FixedList2<ContactPoint2D> contactPoints2D = default;
-            for (var j = 0; j < contact.ContactPoints.Count; j++)
+            for (var j = 0; j < contactManifold.ContactPoints.Count; j++)
             {
-                var cp = contact.ContactPoints[j];
+                var cp = contactManifold.ContactPoints[j];
                 var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
                 var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
 
@@ -81,49 +97,56 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
             }
 
-            var collisionNormal = thisIsBody1 ? contact.CollisionNormal : -contact.CollisionNormal;
+            var collisionNormal = thisIsBody1 ? contactManifold.CollisionNormal : -contactManifold.CollisionNormal;
 
-            contacts[i] = new Contact2D(Collider, otherBody.Proxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
+            contacts[i] = new Contact2D(Collider, otherProxy.Collider, collisionNormal, contactManifold.PenetrationDepth, contactPoints2D.ToReadOnly());
         }
 
         return writeCount;
     }
 
     public bool ContainsPoint(in Vector2 point) => _body.ContainsPoint(point);
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => _body.Overlaps(axisAlignedRectangle);
+    public bool Overlaps(in AABB2D aabb) => _body.Overlaps(aabb);
     public bool Overlaps(in Circle circle) => _body.Overlaps(circle);
     public bool Overlaps(in Rectangle rectangle) => _body.Overlaps(rectangle);
 
     public void Dispose()
     {
         Collider.PhysicsBodyProxy = null;
-        _body.Scene.RemoveBody(_body);
+
+        if (_body.IsValid)
+        {
+            _physicsScene.DestroyBody(_body);
+        }
     }
 
     internal void SynchronizeBody()
     {
-        if (KinematicBodyComponent is not null)
+        // Synchronize transform component.
+        Vector2 position;
+        double rotation;
+
+        if (Entity.IsRoot)
         {
-            _body.Position = Transform.Translation;
-            _body.Rotation = Transform.Rotation;
-            _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
-            _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
-            _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
+            position = Transform.Translation;
+            rotation = Transform.Rotation;
         }
         else
         {
-            if (Entity.IsRoot)
-            {
-                _body.Position = Transform.Translation;
-                _body.Rotation = Transform.Rotation;
-            }
-            else
-            {
-                var finalMatrix = Transform.ComputeWorldTransformMatrix();
-                var finalTransform = finalMatrix.ToTransform();
-                _body.Position = finalTransform.Translation;
-                _body.Rotation = finalTransform.Rotation;
-            }
+            var finalMatrix = Transform.ComputeWorldTransformMatrix();
+            var finalTransform = finalMatrix.ToTransform();
+            position = finalTransform.Translation;
+            rotation = finalTransform.Rotation;
+        }
+
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (_transformCache.Position != position || _transformCache.Rotation != rotation)
+        {
+            _transformCache.Position = position;
+            _transformCache.Rotation = rotation;
+
+            _body.Position = position;
+            _body.Rotation = rotation;
 
             if (_body.ColliderType is ColliderType.Tile)
             {
@@ -133,24 +156,38 @@ internal sealed class PhysicsBodyProxy : IDisposable
             }
         }
 
-        _body.EnableCollisionDetection = Collider.Enabled;
-        _body.IsSensor = Collider.IsSensor;
-        _body.CollisionLayer = Collider.CollisionLayer.Value;
-        _body.CollisionMask = Collider.CollisionMask.Value;
-
-        switch (Collider)
+        // Synchronize collider component.
+        if (Collider.IsDirty)
         {
-            case CircleColliderComponent circleColliderComponent:
-                _body.SetCircleCollider(circleColliderComponent.Radius);
-                break;
-            case RectangleColliderComponent rectangleColliderComponent:
-                _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
-                break;
-            case TileColliderComponent:
-                _body.SetTileCollider();
-                break;
-            default:
-                throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
+            _body.EnableCollisionDetection = Collider.Enabled;
+            _body.IsSensor = Collider.IsSensor;
+            _body.CollisionLayer = Collider.CollisionLayer.Value;
+            _body.CollisionMask = Collider.CollisionMask.Value;
+
+            switch (Collider)
+            {
+                case CircleColliderComponent circleColliderComponent:
+                    _body.SetCircleCollider(circleColliderComponent.Radius);
+                    break;
+                case RectangleColliderComponent rectangleColliderComponent:
+                    _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
+                    break;
+                case TileColliderComponent:
+                    _body.SetTileCollider();
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
+            }
+        }
+
+        Collider.IsDirty = false;
+
+        // Synchronize kinematic component.
+        if (KinematicBodyComponent is not null)
+        {
+            _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
+            _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+            _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
         }
     }
 
@@ -162,5 +199,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
         Transform.Rotation = _body.Rotation;
         KinematicBodyComponent.LinearVelocity = _body.LinearVelocity;
         KinematicBodyComponent.AngularVelocity = _body.AngularVelocity;
+    }
+
+    private struct TransformCache
+    {
+        public Vector2 Position;
+        public double Rotation;
     }
 }

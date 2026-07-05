@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
@@ -20,13 +22,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         var entity = Scene.CreateEntity();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<Transform2DComponent>();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<RectangleColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -40,13 +42,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         var entity = Scene.CreateEntity();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<Transform2DComponent>();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<CircleColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
@@ -60,13 +62,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         var entity = Scene.CreateEntity();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<Transform2DComponent>();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<TileColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
@@ -80,13 +82,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         var entity = Scene.CreateEntity().CreateChildEntity();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<Transform2DComponent>();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<RectangleColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -100,13 +102,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         var entity = Scene.CreateEntity().CreateChildEntity();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<Transform2DComponent>();
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
         entity.CreateComponent<CircleColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
@@ -119,7 +121,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         var parent = Scene.CreateEntity();
@@ -129,7 +131,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<RectangleColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -139,7 +141,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         var parent = Scene.CreateEntity();
@@ -148,7 +150,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<TileColliderComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -159,7 +161,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleStaticBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -168,7 +170,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -179,7 +181,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleStaticBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -188,7 +190,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<RectangleColliderComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -199,7 +201,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateCircleStaticBody(0, 0, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
@@ -208,7 +210,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<CircleColliderComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -221,7 +223,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<TileColliderComponent>();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
@@ -230,7 +232,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<TileColliderComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -241,7 +243,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleStaticBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -252,7 +254,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -266,13 +268,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         entity.Parent = null;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -288,7 +290,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -299,7 +301,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         parent.Parent = root;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -315,13 +317,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         parent.Parent = root;
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         parent.Parent = null;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -337,7 +339,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -346,7 +348,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         parent.CreateComponent<KinematicRigidBody2DComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -360,13 +362,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         parent.RemoveComponent(parent.GetComponent<KinematicRigidBody2DComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -380,7 +382,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateTileStaticBody(0, 0);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
@@ -390,7 +392,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -403,13 +405,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         entity.Parent = null;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
@@ -459,7 +461,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         var entity = Scene.CreateEntity();
@@ -468,7 +470,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<KinematicRigidBody2DComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -481,7 +483,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         var entity = Scene.CreateEntity();
@@ -490,7 +492,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<KinematicRigidBody2DComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
@@ -503,7 +505,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         var entity = Scene.CreateEntity();
@@ -512,7 +514,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<KinematicRigidBody2DComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -522,7 +524,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         var entity = Scene.CreateEntity().CreateChildEntity();
@@ -531,7 +533,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.CreateComponent<KinematicRigidBody2DComponent>();
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -542,7 +544,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleKinematicBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -551,7 +553,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -562,7 +564,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleKinematicBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -571,7 +573,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<RectangleColliderComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -582,7 +584,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateCircleKinematicBody(0, 0, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
@@ -591,7 +593,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<CircleColliderComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -602,7 +604,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleKinematicBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -612,7 +614,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.Parent = parent;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
     }
 
     [Test]
@@ -623,7 +625,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleKinematicBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var bodyBefore = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyBefore.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(bodyBefore.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -631,13 +633,13 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var parent = Scene.CreateEntity();
         entity.Parent = parent;
 
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.Zero);
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.Zero);
 
         // Act
         entity.Parent = null;
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var bodyAfter = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyAfter.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(bodyAfter.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -651,7 +653,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var entity = CreateRectangleKinematicBody(0, 0, 10, 5);
 
         // Assume
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var bodyBefore = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyBefore.Type, Is.EqualTo(BodyType.Kinematic));
         Assert.That(bodyBefore.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -660,7 +662,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         entity.RemoveComponent(entity.GetComponent<KinematicRigidBody2DComponent>());
 
         // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Length, Is.EqualTo(1));
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(1));
         var bodyAfter = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyAfter.Type, Is.EqualTo(BodyType.Static));
         Assert.That(bodyAfter.ColliderType, Is.EqualTo(ColliderType.Rectangle));
@@ -699,5 +701,352 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(rectangleContacts2, Has.Count.Zero);
     }
 
+    [Test]
+    [Description(
+        "Regression test for incorrect contacts removal when removed body has multiple (>=3) contacts and those are the only contacts in physics scene.")]
+    public void KinematicBody_ShouldClearContactsWithMultipleBodies_WhenKinematicBodyIsRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateRectangleKinematicBody(0, 0, 100, 50);
+        var staticBody1 = CreateRectangleStaticBody(-75, 0, 100, 50);
+        var staticBody2 = CreateRectangleStaticBody(75, 0, 100, 50);
+        var staticBody3 = CreateRectangleStaticBody(0, 60, 50, 100);
+
+        var kinematicCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticCollider1 = staticBody1.GetComponent<RectangleColliderComponent>();
+        var staticCollider2 = staticBody2.GetComponent<RectangleColliderComponent>();
+        var staticCollider3 = staticBody3.GetComponent<RectangleColliderComponent>();
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0);
+
+        // Assume
+        Assert.That(kinematicCollider.IsColliding, Is.True);
+        Assert.That(staticCollider1.IsColliding, Is.True);
+        Assert.That(staticCollider2.IsColliding, Is.True);
+        Assert.That(staticCollider3.IsColliding, Is.True);
+
+        // Act
+        kinematicBody.RemoveComponent(kinematicBody.GetComponent<Transform2DComponent>());
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1);
+
+        // Assert
+        var kinematicContacts = new List<Contact2D>();
+        Assert.That(kinematicCollider.IsColliding, Is.False);
+        Assert.That(kinematicCollider.GetContacts(kinematicContacts), Is.Zero);
+        Assert.That(kinematicContacts, Has.Count.Zero);
+
+        var staticContacts1 = new List<Contact2D>();
+        Assert.That(staticCollider1.IsColliding, Is.False);
+        Assert.That(staticCollider1.GetContacts(staticContacts1), Is.Zero);
+        Assert.That(staticContacts1, Has.Count.Zero);
+
+        var staticContacts2 = new List<Contact2D>();
+        Assert.That(staticCollider2.IsColliding, Is.False);
+        Assert.That(staticCollider2.GetContacts(staticContacts2), Is.Zero);
+        Assert.That(staticContacts2, Has.Count.Zero);
+
+        var staticContacts3 = new List<Contact2D>();
+        Assert.That(staticCollider3.IsColliding, Is.False);
+        Assert.That(staticCollider3.GetContacts(staticContacts3), Is.Zero);
+        Assert.That(staticContacts3, Has.Count.Zero);
+    }
+
     #endregion
+
+    [Test]
+    [Description("This test stresses body removal that forces updates to existing contacts.")]
+    public void IntegrityTest_WhenMultipleCollidingBodiesAreCreatedAndDestroyed()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+
+        var kinematicBody1 = CreateRectangleKinematicBody(-75, 0, 100, 100, 0.1);
+        var kinematicBody2 = CreateRectangleKinematicBody(0, 75, 100, 100, 0.2);
+        var kinematicBody3 = CreateRectangleKinematicBody(75, 0, 100, 100, 0.3);
+        var kinematicBody4 = CreateRectangleKinematicBody(0, -75, 100, 100, 0.4);
+
+        var collider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
+        var collider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
+        var collider3 = kinematicBody3.GetComponent<RectangleColliderComponent>();
+        var collider4 = kinematicBody4.GetComponent<RectangleColliderComponent>();
+
+        // Act 0
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 0);
+
+        // Assert 0
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(4));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 1.1
+        kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<Transform2DComponent>());
+
+        // Assert 1.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(0));
+        Assert.That(collider2.ContactCount, Is.EqualTo(1));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(1));
+
+        AssertContacts(collider2, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider3);
+
+        // Act 1.2
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1);
+
+        // Assert 1.2
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(0));
+        Assert.That(collider2.ContactCount, Is.EqualTo(1));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(1));
+
+        AssertContacts(collider2, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider3);
+
+        // Act 2
+        var transform1 = kinematicBody1.CreateComponent<Transform2DComponent>();
+        transform1.Translation = new Vector2(-75, 0);
+        transform1.Rotation = 0.1;
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2);
+
+        // Assert 2
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(4));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 3.1
+        kinematicBody2.RemoveComponent(kinematicBody2.GetComponent<Transform2DComponent>());
+
+        // Assert 3.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(1));
+        Assert.That(collider2.ContactCount, Is.EqualTo(0));
+        Assert.That(collider3.ContactCount, Is.EqualTo(1));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider4);
+        AssertContacts(collider3, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 3.2
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 3);
+
+        // Assert 3.2
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(1));
+        Assert.That(collider2.ContactCount, Is.EqualTo(0));
+        Assert.That(collider3.ContactCount, Is.EqualTo(1));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider4);
+        AssertContacts(collider3, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 4
+        var transform2 = kinematicBody2.CreateComponent<Transform2DComponent>();
+        transform2.Translation = new Vector2(0, 75);
+        transform2.Rotation = 0.2;
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 4);
+
+        // Assert 4
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(4));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 5.1
+        kinematicBody3.RemoveComponent(kinematicBody3.GetComponent<Transform2DComponent>());
+
+        // Assert 5.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(1));
+        Assert.That(collider3.ContactCount, Is.EqualTo(0));
+        Assert.That(collider4.ContactCount, Is.EqualTo(1));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1);
+        AssertContacts(collider4, collider1);
+
+        // Act 5.2
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 5);
+
+        // Assert 5.2
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(1));
+        Assert.That(collider3.ContactCount, Is.EqualTo(0));
+        Assert.That(collider4.ContactCount, Is.EqualTo(1));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1);
+        AssertContacts(collider4, collider1);
+
+        // Act 6
+        var transform3 = kinematicBody3.CreateComponent<Transform2DComponent>();
+        transform3.Translation = new Vector2(75, 0);
+        transform3.Rotation = 0.3;
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 6);
+
+        // Assert 6
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(4));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        // Act 7.1
+        kinematicBody4.RemoveComponent(kinematicBody4.GetComponent<Transform2DComponent>());
+
+        // Assert 7.1
+        Assert.That(collider1.ContactCount, Is.EqualTo(1));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(1));
+        Assert.That(collider4.ContactCount, Is.EqualTo(0));
+
+        AssertContacts(collider1, collider2);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2);
+
+        // Act 7.2
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 7);
+
+        // Assert 7.2
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(3));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(1));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(1));
+        Assert.That(collider4.ContactCount, Is.EqualTo(0));
+
+        AssertContacts(collider1, collider2);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2);
+
+        // Act 8
+        var transform4 = kinematicBody4.CreateComponent<Transform2DComponent>();
+        transform4.Translation = new Vector2(0, -75);
+        transform4.Rotation = 0.4;
+
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 8);
+
+        // Assert 8
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(4));
+
+        // Check that components are correctly linked to internal rigid bodies.
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+
+        Assert.That(collider1.ContactCount, Is.EqualTo(2));
+        Assert.That(collider2.ContactCount, Is.EqualTo(2));
+        Assert.That(collider3.ContactCount, Is.EqualTo(2));
+        Assert.That(collider4.ContactCount, Is.EqualTo(2));
+
+        AssertContacts(collider1, collider2, collider4);
+        AssertContacts(collider2, collider1, collider3);
+        AssertContacts(collider3, collider2, collider4);
+        AssertContacts(collider4, collider1, collider3);
+
+        return;
+
+        static void AssertContacts(Collider2DComponent collider, params Collider2DComponent[] collidersInContact)
+        {
+            var contacts = new List<Contact2D>();
+            collider.GetContacts(contacts);
+            Assert.That(contacts.Select(c => c.OtherCollider), Is.EquivalentTo(collidersInContact));
+        }
+    }
 }

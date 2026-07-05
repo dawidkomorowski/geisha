@@ -1,14 +1,17 @@
-﻿using Geisha.Engine.Core.Math;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Geisha.Engine.Core.Math;
 
-namespace Geisha.Engine.Physics.PhysicsEngine2D;
+namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
+// TODO: TileMap allocates separate list per tile. It is extremely inefficient for big tilemaps as it produces a lot of GC tracked objects.
+//       As tiles are static geometry it does not hurt much the steady simulation performance but any modification to tiles (even enabling/disabling)
+//       may produce a lot of unnecessary garbage. Better approach would be to keep initially preallocated and reusable list that holds all chunks of tilemap.
 internal sealed class TileMap
 {
     private readonly SizeD _tileSize;
-    private readonly Dictionary<TilePosition, List<RigidBody2D>> _tiles = new();
+    private readonly Dictionary<TilePosition, List<RigidBodyId>> _tiles = new();
 
     public TileMap(SizeD tileSize)
     {
@@ -17,28 +20,28 @@ internal sealed class TileMap
 
     public Vector2 AlignPosition(in Vector2 position) => GetTileWorldPosition(GetTilePosition(position));
 
-    public void CreateTile(RigidBody2D body)
+    public void CreateTile(ref RigidBodyData body)
     {
-        Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
-        Debug.Assert(!BodyIsPresentInTileMap(body), "!BodyIsPresentInTileMap(body)");
+        Debug.Assert(body.ColliderType is ColliderType.Tile, "Body ColliderType is not Tile.");
+        Debug.Assert(!BodyIsPresentInTileMap(ref body), "Body is already in tile map.");
 
         var tilePosition = GetTilePosition(body.Position);
         if (!_tiles.TryGetValue(tilePosition, out var bodiesInTile))
         {
-            bodiesInTile = new List<RigidBody2D>();
+            bodiesInTile = new List<RigidBodyId>();
             _tiles[tilePosition] = bodiesInTile;
         }
 
-        bodiesInTile.Add(body);
+        bodiesInTile.Add(body.Id);
 
         UpdateTileCluster(tilePosition);
     }
 
-    public Vector2 UpdateTile(RigidBody2D body, in Vector2 oldPosition, in Vector2 newPosition)
+    public Vector2 UpdateTile(ref RigidBodyData body, in Vector2 oldPosition, in Vector2 newPosition)
     {
-        Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
+        Debug.Assert(body.ColliderType is ColliderType.Tile, "Body ColliderType is not Tile.");
         Debug.Assert(body.EnableCollisionDetection, "body.EnableCollisionDetection");
-        Debug.Assert(BodyIsPresentInTileMap(body), "BodyIsPresentInTileMap(body)");
+        Debug.Assert(BodyIsPresentInTileMap(ref body), "Body is not in tile map.");
 
         var oldTilePosition = GetTilePosition(oldPosition);
         var newTilePosition = GetTilePosition(newPosition);
@@ -47,7 +50,7 @@ internal sealed class TileMap
         {
             if (_tiles.TryGetValue(oldTilePosition, out var bodiesInOldTile))
             {
-                bodiesInOldTile.Remove(body);
+                bodiesInOldTile.Remove(body.Id);
                 if (bodiesInOldTile.Count == 0)
                 {
                     _tiles.Remove(oldTilePosition);
@@ -57,11 +60,11 @@ internal sealed class TileMap
 
             if (!_tiles.TryGetValue(newTilePosition, out var bodiesInNewTile))
             {
-                bodiesInNewTile = new List<RigidBody2D>();
+                bodiesInNewTile = new List<RigidBodyId>();
                 _tiles[newTilePosition] = bodiesInNewTile;
             }
 
-            bodiesInNewTile.Add(body);
+            bodiesInNewTile.Add(body.Id);
 
             UpdateTileCluster(newTilePosition);
         }
@@ -70,15 +73,15 @@ internal sealed class TileMap
         return GetTileWorldPosition(newTilePosition);
     }
 
-    public void RemoveTile(RigidBody2D body)
+    public void RemoveTile(ref RigidBodyData body)
     {
-        Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
-        Debug.Assert(BodyIsPresentInTileMap(body), "BodyIsPresentInTileMap(body)");
+        Debug.Assert(body.ColliderType is ColliderType.Tile, "Body ColliderType is not Tile.");
+        Debug.Assert(BodyIsPresentInTileMap(ref body), "Body is not in tile map.");
 
         var tilePosition = GetTilePosition(body.Position);
         if (!_tiles.TryGetValue(tilePosition, out var bodiesInTile)) return;
 
-        bodiesInTile.Remove(body);
+        bodiesInTile.Remove(body.Id);
         if (bodiesInTile.Count != 0) return;
 
         _tiles.Remove(tilePosition);
@@ -101,39 +104,44 @@ internal sealed class TileMap
             return;
         }
 
-        foreach (var body in bodiesInThisTile)
+        foreach (var bodyId in bodiesInThisTile)
         {
+            ref var body = ref Physics2D.Body.GetBodyData(bodyId);
             body.CollisionNormalFilter = CollisionNormalFilter.All;
         }
 
         if (_tiles.TryGetValue(tilePosition with { X = tilePosition.X - 1 }, out var bodiesInTile) && bodiesInTile.Count > 0)
         {
-            foreach (var body in bodiesInThisTile)
+            foreach (var bodyId in bodiesInThisTile)
             {
+                ref var body = ref Physics2D.Body.GetBodyData(bodyId);
                 body.CollisionNormalFilter &= ~CollisionNormalFilter.NegativeHorizontal;
             }
         }
 
         if (_tiles.TryGetValue(tilePosition with { X = tilePosition.X + 1 }, out bodiesInTile) && bodiesInTile.Count > 0)
         {
-            foreach (var body in bodiesInThisTile)
+            foreach (var bodyId in bodiesInThisTile)
             {
+                ref var body = ref Physics2D.Body.GetBodyData(bodyId);
                 body.CollisionNormalFilter &= ~CollisionNormalFilter.PositiveHorizontal;
             }
         }
 
         if (_tiles.TryGetValue(tilePosition with { Y = tilePosition.Y - 1 }, out bodiesInTile) && bodiesInTile.Count > 0)
         {
-            foreach (var body in bodiesInThisTile)
+            foreach (var bodyId in bodiesInThisTile)
             {
+                ref var body = ref Physics2D.Body.GetBodyData(bodyId);
                 body.CollisionNormalFilter &= ~CollisionNormalFilter.NegativeVertical;
             }
         }
 
         if (_tiles.TryGetValue(tilePosition with { Y = tilePosition.Y + 1 }, out bodiesInTile) && bodiesInTile.Count > 0)
         {
-            foreach (var body in bodiesInThisTile)
+            foreach (var bodyId in bodiesInThisTile)
             {
+                ref var body = ref Physics2D.Body.GetBodyData(bodyId);
                 body.CollisionNormalFilter &= ~CollisionNormalFilter.PositiveVertical;
             }
         }
@@ -151,10 +159,10 @@ internal sealed class TileMap
         return new Vector2(tilePosition.X * _tileSize.Width, tilePosition.Y * _tileSize.Height);
     }
 
-    private bool BodyIsPresentInTileMap(RigidBody2D body)
+    private bool BodyIsPresentInTileMap(ref RigidBodyData body)
     {
         var tilePosition = GetTilePosition(body.Position);
-        return _tiles.TryGetValue(tilePosition, out var bodiesInTile) && bodiesInTile.Contains(body);
+        return _tiles.TryGetValue(tilePosition, out var bodiesInTile) && bodiesInTile.Contains(body.Id);
     }
 
     private readonly record struct TilePosition(int X, int Y);

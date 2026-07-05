@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Geisha.Engine.Core;
+using Geisha.Engine.Core.Memory;
 
-namespace Geisha.Engine.Physics.PhysicsEngine2D;
+namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal enum CacheStatus
 {
@@ -13,17 +13,17 @@ internal enum CacheStatus
     Stale
 }
 
-internal struct SensorOverlap
+internal struct SensorOverlap : IUnmanaged<SensorOverlap>
 {
-    public SensorOverlap(RigidBody2D body1, RigidBody2D body2)
+    public SensorOverlap(RigidBodyId body1Id, RigidBodyId body2Id)
     {
-        Body1 = body1;
-        Body2 = body2;
+        Body1Id = body1Id;
+        Body2Id = body2Id;
         CacheStatus = CacheStatus.New;
     }
 
-    public RigidBody2D Body1 { get; }
-    public RigidBody2D Body2 { get; }
+    public RigidBodyId Body1Id { get; }
+    public RigidBodyId Body2Id { get; }
 
     public CacheStatus CacheStatus { get; set; }
 }
@@ -39,11 +39,11 @@ internal sealed class SensorOverlapCache
         _index = new Dictionary<CacheKey, int>(capacity);
     }
 
-    public void AddPair(RigidBody2D body1, RigidBody2D body2)
+    public void AddPair(RigidBodyId body1Id, RigidBodyId body2Id)
     {
-        Debug.Assert(body1 != body2, "Overlap pair is invalid: body1 == body2");
+        Debug.Assert(body1Id != body2Id, "Overlap pair is invalid: body1Id == body2Id");
 
-        var cacheKey = new CacheKey(body1, body2);
+        var cacheKey = new CacheKey(body1Id, body2Id);
 
         if (_index.TryGetValue(cacheKey, out var i))
         {
@@ -51,7 +51,7 @@ internal sealed class SensorOverlapCache
         }
         else
         {
-            _overlaps.Add(new SensorOverlap(body1, body2));
+            _overlaps.Add(new SensorOverlap(body1Id, body2Id));
             _index.Add(cacheKey, _overlaps.Count - 1);
         }
     }
@@ -74,7 +74,7 @@ internal sealed class SensorOverlapCache
             }
 
             var overlap = _overlaps[i];
-            var cacheKey = new CacheKey(overlap.Body1, overlap.Body2);
+            var cacheKey = new CacheKey(overlap.Body1Id, overlap.Body2Id);
             _index.Remove(cacheKey);
 
             if (i == _overlaps.Count - 1)
@@ -90,7 +90,7 @@ internal sealed class SensorOverlapCache
 
                 // Update index pointer.
                 overlap = _overlaps[i];
-                cacheKey = new CacheKey(overlap.Body1, overlap.Body2);
+                cacheKey = new CacheKey(overlap.Body1Id, overlap.Body2Id);
                 _index[cacheKey] = i;
 
                 // Decrement i to inspect swapped element in next iteration.
@@ -102,23 +102,23 @@ internal sealed class SensorOverlapCache
     private Span<SensorOverlap> GetOverlapsAsSpan() => CollectionsMarshal.AsSpan(_overlaps);
     public ReadOnlySpan<SensorOverlap> GetOverlaps() => GetOverlapsAsSpan();
 
-    private readonly record struct CacheKey
+    private readonly record struct CacheKey : IUnmanaged<CacheKey>
     {
-        public CacheKey(RigidBody2D body1, RigidBody2D body2)
+        public readonly RigidBodyId Body1Id;
+        public readonly RigidBodyId Body2Id;
+
+        public CacheKey(RigidBodyId body1Id, RigidBodyId body2Id)
         {
-            if (body1.Id.CompareTo(body2.Id) < 0)
+            if (body1Id.Index < body2Id.Index)
             {
-                Body1Id = body1.Id;
-                Body2Id = body2.Id;
+                Body1Id = body1Id;
+                Body2Id = body2Id;
             }
             else
             {
-                Body1Id = body2.Id;
-                Body2Id = body1.Id;
+                Body1Id = body2Id;
+                Body2Id = body1Id;
             }
         }
-
-        public RuntimeId Body1Id { get; }
-        public RuntimeId Body2Id { get; }
     }
 }

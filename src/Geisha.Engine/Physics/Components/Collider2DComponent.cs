@@ -25,7 +25,15 @@ namespace Geisha.Engine.Physics.Components;
 /// </remarks>
 public abstract class Collider2DComponent : Component
 {
+    // TODO: This could be replaced with field keyword in .NET 10 (C# 14).
+    // TODO: When field keyword is used, consider searching for other places in the codebase where it could be used as well.
+    private bool _enabled = true;
+    private bool _isSensor = false;
+    private CollisionBitmask _collisionLayer = CollisionBitmask.All;
+    private CollisionBitmask _collisionMask = CollisionBitmask.All;
+
     internal PhysicsBodyProxy? PhysicsBodyProxy { get; set; }
+    internal bool IsDirty { get; set; } = true;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Collider2DComponent" /> class attached to the specified entity.
@@ -58,7 +66,15 @@ public abstract class Collider2DComponent : Component
     ///         The default value is <see langword="true"/>.
     ///     </para>
     /// </remarks>
-    public bool Enabled { get; set; } = true;
+    public bool Enabled
+    {
+        get => _enabled;
+        set
+        {
+            _enabled = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets or sets a value indicating whether this collider behaves as a sensor.
@@ -81,7 +97,15 @@ public abstract class Collider2DComponent : Component
     ///         The default value is <see langword="false"/>.
     ///     </para>
     /// </remarks>
-    public bool IsSensor { get; set; } = false;
+    public bool IsSensor
+    {
+        get => _isSensor;
+        set
+        {
+            _isSensor = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets or sets a callback invoked when this collider begins an overlap that involves at least one sensor collider.
@@ -154,7 +178,15 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     /// <seealso cref="CollisionMask" />
     /// <seealso cref="CollisionBitmask" />
-    public CollisionBitmask CollisionLayer { get; set; } = CollisionBitmask.All;
+    public CollisionBitmask CollisionLayer
+    {
+        get => _collisionLayer;
+        set
+        {
+            _collisionLayer = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     ///     Gets or sets the collision mask bitmask that defines which layers this collider can collide with.
@@ -176,14 +208,22 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     /// <seealso cref="CollisionLayer" />
     /// <seealso cref="CollisionBitmask" />
-    public CollisionBitmask CollisionMask { get; set; } = CollisionBitmask.All;
+    public CollisionBitmask CollisionMask
+    {
+        get => _collisionMask;
+        set
+        {
+            _collisionMask = value;
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
-    ///     Gets the axis-aligned bounding rectangle of this collider as computed at the last physics simulation step.
+    ///     Gets the axis-aligned bounding box of this collider as computed at the last physics simulation step.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         The bounding rectangle is an <see cref="AxisAlignedRectangle" /> that fully encloses the collider geometry
+    ///         The bounding box is an <see cref="AABB2D" /> that fully encloses the collider geometry
     ///         in world space, taking into account the collider's shape, position, and rotation.
     ///     </para>
     ///     <para>
@@ -192,7 +232,7 @@ public abstract class Collider2DComponent : Component
     ///         to the collider's shape properties (such as <see cref="CircleColliderComponent.Radius" /> or
     ///         <see cref="RectangleColliderComponent.Dimensions" />) after the last simulation step will not be reflected
     ///         until the next physics simulation step completes. This means that within a single game loop iteration, if
-    ///         game code modifies the transform or collider and then immediately reads <see cref="BoundingRectangle" />,
+    ///         game code modifies the transform or collider and then immediately reads <see cref="BoundingBox" />,
     ///         the returned value will still correspond to the state before the modification.
     ///     </para>
     ///     <para>
@@ -202,17 +242,17 @@ public abstract class Collider2DComponent : Component
     ///         the order in which components are created and configured: properties set before the physics body is
     ///         registered are reflected immediately, while properties set after are not visible until the first
     ///         simulation step completes. If <see cref="Core.Components.Transform2DComponent" /> is not yet present on
-    ///         the entity, this property returns a <see langword="default" /> <see cref="AxisAlignedRectangle" />.
+    ///         the entity, this property returns a <see langword="default" /> <see cref="AABB2D" />.
     ///     </para>
     ///     <para>
     ///         <b>Consistency across entities:</b> Because all values are taken from the same completed simulation step,
-    ///         reading <see cref="BoundingRectangle" /> from multiple colliders within the same game loop iteration
+    ///         reading <see cref="BoundingBox" /> from multiple colliders within the same game loop iteration
     ///         provides a globally consistent snapshot of the physics state, unaffected by the order in which individual
     ///         entities are updated during that iteration.
     ///     </para>
     /// </remarks>
     /// <seealso cref="SynchronizePhysicsState" />
-    public AxisAlignedRectangle BoundingRectangle => PhysicsBodyProxy?.BoundingRectangle ?? default;
+    public AABB2D BoundingBox => PhysicsBodyProxy?.BoundingBox ?? default;
 
     /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
@@ -402,7 +442,7 @@ public abstract class Collider2DComponent : Component
     /// <remarks>
     ///     <para>
     ///         This method performs a geometric containment test against the actual collider shape, not just
-    ///         <see cref="BoundingRectangle" /> containment.
+    ///         <see cref="BoundingBox" /> containment.
     ///     </para>
     ///     <para>
     ///         This query observes collider state from the most recently synchronized physics data. If transform or
@@ -416,11 +456,11 @@ public abstract class Collider2DComponent : Component
     public bool ContainsPoint(in Vector2 point) => PhysicsBodyProxy?.ContainsPoint(point) ?? false;
 
     /// <summary>
-    ///     Determines whether this collider overlaps with the specified axis-aligned rectangle.
+    ///     Determines whether this collider overlaps with the specified axis-aligned bounding box.
     /// </summary>
-    /// <param name="axisAlignedRectangle">The axis-aligned rectangle to test for overlap.</param>
+    /// <param name="aabb">The axis-aligned bounding box (AABB) to test for overlap.</param>
     /// <returns>
-    ///     <see langword="true" /> if this collider overlaps with the rectangle; otherwise, <see langword="false" />.
+    ///     <see langword="true" /> if this collider overlaps with the AABB; otherwise, <see langword="false" />.
     /// </returns>
     /// <remarks>
     ///     <para>
@@ -434,7 +474,7 @@ public abstract class Collider2DComponent : Component
     /// </remarks>
     /// <seealso cref="Overlaps(in Circle)" />
     /// <seealso cref="Overlaps(in Rectangle)" />
-    public bool Overlaps(in AxisAlignedRectangle axisAlignedRectangle) => PhysicsBodyProxy?.Overlaps(axisAlignedRectangle) ?? false;
+    public bool Overlaps(in AABB2D aabb) => PhysicsBodyProxy?.Overlaps(aabb) ?? false;
 
     /// <summary>
     ///     Determines whether this collider overlaps with the specified circle.
@@ -453,7 +493,7 @@ public abstract class Collider2DComponent : Component
     ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="Overlaps(in AxisAlignedRectangle)" />
+    /// <seealso cref="Overlaps(in AABB2D)" />
     /// <seealso cref="Overlaps(in Rectangle)" />
     public bool Overlaps(in Circle circle) => PhysicsBodyProxy?.Overlaps(circle) ?? false;
 
@@ -474,7 +514,7 @@ public abstract class Collider2DComponent : Component
     ///         If this collider is not yet managed by the physics system, this method returns <see langword="false" />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="Overlaps(in AxisAlignedRectangle)" />
+    /// <seealso cref="Overlaps(in AABB2D)" />
     /// <seealso cref="Overlaps(in Circle)" />
     public bool Overlaps(in Rectangle rectangle) => PhysicsBodyProxy?.Overlaps(rectangle) ?? false;
 
@@ -486,13 +526,13 @@ public abstract class Collider2DComponent : Component
     ///         Calling this method pushes the current state of the entity's physics components —
     ///         <see cref="Core.Components.Transform2DComponent" />, this collider's properties, and
     ///         <see cref="KinematicRigidBody2DComponent" /> if present — into the underlying physics body, making those
-    ///         values visible to physics-related APIs such as <see cref="BoundingRectangle" /> before the next physics
+    ///         values visible to physics-related APIs such as <see cref="BoundingBox" /> before the next physics
     ///         simulation step runs.
     ///     </para>
     ///     <para>
     ///         <b>Typical use case:</b> When an entity's transform or collider properties are modified and the updated
     ///         physics state must be observed in the same game loop iteration — for example, reading
-    ///         <see cref="BoundingRectangle" /> immediately after repositioning an entity — call this method after the
+    ///         <see cref="BoundingBox" /> immediately after repositioning an entity — call this method after the
     ///         modification to ensure the physics body reflects the new state.
     ///     </para>
     ///     <para>

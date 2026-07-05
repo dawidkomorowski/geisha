@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -7,7 +6,6 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Physics.PhysicsEngine2D;
 using Geisha.Engine.Physics.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
@@ -15,13 +13,46 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+public sealed class EnableVisualOutputAttribute : PropertyAttribute
+{
+    public EnableVisualOutputAttribute() : base(true)
+    {
+    }
+
+    public static bool IsSetForCurrentTest()
+    {
+        var propertyName = nameof(EnableVisualOutputAttribute).Replace("Attribute", "");
+        var hasProperty = TestContext.CurrentContext.Test.Properties.ContainsKey(propertyName);
+
+        if (hasProperty)
+        {
+            return true;
+        }
+
+        var testClassName = TestContext.CurrentContext.Test.ClassName ?? throw new InvalidOperationException("Test.ClassName is null.");
+        var testMethodName = TestContext.CurrentContext.Test.MethodName ?? throw new InvalidOperationException("Test.MethodName is null.");
+
+        var testClass = Type.GetType(testClassName) ?? throw new InvalidOperationException("Test class not found.");
+        var testMethod = testClass.GetMethod(testMethodName) ?? throw new InvalidOperationException("Test method not found.");
+
+        var testClassHasAttribute = testClass.GetCustomAttributes(typeof(EnableVisualOutputAttribute), true).Length > 0;
+        var testMethodHasAttribute = testMethod.GetCustomAttributes(typeof(EnableVisualOutputAttribute), true).Length > 0;
+
+        return testClassHasAttribute || testMethodHasAttribute;
+    }
+}
+
 public abstract class PhysicsSystemTestsBase
 {
-    private const bool EnableVisualOutput = false;
+    private const bool GlobalEnableVisualOutput = false;
+    private static bool EffectiveEnableVisualOutput => EnableVisualOutputAttribute.IsSetForCurrentTest() || GlobalEnableVisualOutput;
+
     private IDebugRendererForTests _debugRendererForTests = null!;
     private protected Scene Scene = null!;
     private protected ITimeSystem TimeSystem = null!;
     private protected IDebugRenderer DebugRenderer = null!;
+    private PhysicsSystem? _physicsSystem;
 
     private protected const double Epsilon = 1e-6;
     private protected static Func<Vector2, Vector2, bool> Vector2Equality => ToleranceEquality.ForVector2(Epsilon);
@@ -29,8 +60,8 @@ public abstract class PhysicsSystemTestsBase
     // ReSharper disable once InconsistentNaming
     private protected static Func<Matrix3x3, Matrix3x3, bool> Matrix3x3Equality => ToleranceEquality.ForMatrix3x3(Epsilon);
 
-    private protected static Func<AxisAlignedRectangle, AxisAlignedRectangle, bool> AxisAlignedRectangleEquality =>
-        ToleranceEquality.ForAxisAlignedRectangle(Epsilon);
+    // ReSharper disable once InconsistentNaming
+    private protected static Func<AABB2D, AABB2D, bool> AABB2DEquality => ToleranceEquality.ForAABB2D(Epsilon);
 
     [SetUp]
     public void SetUp()
@@ -39,13 +70,20 @@ public abstract class PhysicsSystemTestsBase
         TimeSystem = Substitute.For<ITimeSystem>();
         TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(1.0 / 60.0));
         DebugRenderer = Substitute.For<IDebugRenderer>();
-        _debugRendererForTests = TestKit.CreateDebugRenderer(DebugRenderer, EnableVisualOutput);
+        _debugRendererForTests = TestKit.CreateDebugRenderer(DebugRenderer, EffectiveEnableVisualOutput);
     }
 
     [TearDown]
     public void TearDown()
     {
         _debugRendererForTests.Dispose();
+
+        if (_physicsSystem is not null)
+        {
+            Scene.RemoveObserver(_physicsSystem);
+            _physicsSystem.Dispose();
+            _physicsSystem = null;
+        }
     }
 
     private protected PhysicsSystem GetPhysicsSystem()
@@ -53,7 +91,7 @@ public abstract class PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             PenetrationTolerance = 0d,
-            EnableDebugRendering = EnableVisualOutput
+            EnableDebugRendering = EffectiveEnableVisualOutput
         };
         return GetPhysicsSystem(physicsConfiguration);
     }
@@ -61,6 +99,8 @@ public abstract class PhysicsSystemTestsBase
     private protected PhysicsSystem GetPhysicsSystem(PhysicsConfiguration configuration)
     {
         var physicsSystem = new PhysicsSystem(configuration, TimeSystem, _debugRendererForTests);
+        _physicsSystem = physicsSystem;
+
         Scene.AddObserver(physicsSystem);
         return physicsSystem;
     }
@@ -82,9 +122,6 @@ public abstract class PhysicsSystemTestsBase
                Vector2Equality(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
                Vector2Equality(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
-
-    private protected static RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
-        physicsSystem.PhysicsScene2D.Bodies.ToArray().Single(b => b.Proxy is not null && b.Proxy.Entity == entity);
 
     private protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
         CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);

@@ -197,6 +197,19 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
+        ///     Computes the axis-aligned bounding box that encloses this <see cref="Rectangle" />.
+        /// </summary>
+        /// <returns>
+        ///     The smallest axis-aligned bounding box that encloses this <see cref="Rectangle" />.
+        /// </returns>
+        public AABB2D ComputeAABB()
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            WriteVertices(vertices);
+            return AABB2D.FromPoints(vertices);
+        }
+
+        /// <summary>
         ///     Writes vertices of <see cref="Rectangle" /> into span in counterclockwise orientation.
         /// </summary>
         /// <param name="vertices">Target span for writing vertices. It must be of size 4.</param>

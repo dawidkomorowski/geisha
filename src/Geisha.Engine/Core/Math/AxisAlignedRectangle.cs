@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math;
 
+// TODO: It is going to be deprecated and new AABB2D should be used for fast AABB.
+//       However, this is also used for representing rects and that is to be figured out how to approach that.
 /// <summary>
 ///     Represents 2D axis aligned rectangle.
 /// </summary>

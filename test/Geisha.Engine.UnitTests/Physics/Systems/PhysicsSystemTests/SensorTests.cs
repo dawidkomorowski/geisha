@@ -242,8 +242,8 @@ public class SensorTests : PhysicsSystemTestsBase
         context.PhysicsSystem.ProcessPhysics();
         SaveVisualOutput(context.PhysicsSystem, 0, postDrawAction: debugRenderer =>
         {
-            debugRenderer.DrawRectangle(context.SensorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
-            debugRenderer.DrawRectangle(context.VisitorCollider.BoundingRectangle, Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(context.SensorCollider.BoundingBox.ToAxisAlignedRectangle(), Color.Gray, Matrix3x3.Identity);
+            debugRenderer.DrawRectangle(context.VisitorCollider.BoundingBox.ToAxisAlignedRectangle(), Color.Gray, Matrix3x3.Identity);
         });
 
         // Assert
@@ -367,6 +367,68 @@ public class SensorTests : PhysicsSystemTestsBase
         Assert.That(context.VisitorBeginEvents, Has.Count.EqualTo(1));
         Assert.That(context.SensorEndEvents, Has.Count.EqualTo(1));
         Assert.That(context.VisitorEndEvents, Has.Count.EqualTo(1));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    [Description("Regression test for sensor overlap cache key aliasing when body sparse index is reused in the same frame.")]
+    public void Sensor_ShouldInvoke_OnOverlapEnd_And_OnOverlapBegin_WhenOverlappingBodyIsRecreatedWithSameSparseIndexInSingleFrame(bool visitorIsKinematic)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+
+        var sensorBody = CreateCircleKinematicBody(0, 0, 100);
+        var oldVisitorBody = CreateBody(visitorIsKinematic, 150, 0, 100);
+
+        var sensorCollider = sensorBody.GetComponent<CircleColliderComponent>();
+        var oldVisitorCollider = oldVisitorBody.GetComponent<CircleColliderComponent>();
+
+        sensorCollider.IsSensor = true;
+
+        var sensorBeginEvents = new List<Collider2DComponent>();
+        var sensorEndEvents = new List<Collider2DComponent>();
+        sensorCollider.OnOverlapBegin = sensorBeginEvents.Add;
+        sensorCollider.OnOverlapEnd = sensorEndEvents.Add;
+
+        // Act 0
+        physicsSystem.ProcessPhysics(); // Initial overlap -> begin callback for old visitor.
+        SaveVisualOutput(physicsSystem, 0);
+
+        // Assert 0
+        Assert.That(sensorBeginEvents, Has.Count.EqualTo(1));
+        Assert.That(sensorBeginEvents[0], Is.EqualTo(oldVisitorCollider));
+        Assert.That(sensorEndEvents, Is.Empty);
+
+        var oldVisitorBodyId = physicsSystem.FindInternalBody(oldVisitorBody).Id;
+
+        // Act 1
+        oldVisitorCollider.Entity.RemoveComponent(oldVisitorCollider); // Destroy old physics body.
+
+        var newVisitorBody = CreateBody(visitorIsKinematic, 150, 0, 100); // Recreate overlapping body in the same frame.
+        var newVisitorCollider = newVisitorBody.GetComponent<CircleColliderComponent>();
+        var newVisitorBodyId = physicsSystem.FindInternalBody(newVisitorBody).Id;
+
+        // Assert 1
+        Assert.That(newVisitorBodyId.Index, Is.EqualTo(oldVisitorBodyId.Index), "Expected sparse index reuse to exercise cache-key aliasing path.");
+        Assert.That(newVisitorBodyId.Version, Is.Not.EqualTo(oldVisitorBodyId.Version));
+
+        // Act 2
+        physicsSystem.ProcessPhysics(); // Old pair should end and new pair should begin.
+        SaveVisualOutput(physicsSystem, 1);
+
+        // Assert 2
+        Assert.That(sensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(sensorBeginEvents[1], Is.EqualTo(newVisitorCollider));
+        Assert.That(sensorEndEvents, Has.Count.EqualTo(1));
+        Assert.That(sensorEndEvents[0], Is.EqualTo(oldVisitorCollider));
+
+        // Act 3
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2);
+
+        // Assert 3
+        Assert.That(sensorBeginEvents, Has.Count.EqualTo(2));
+        Assert.That(sensorEndEvents, Has.Count.EqualTo(1));
     }
 
     [TestCase(false, true)]
