@@ -52,6 +52,10 @@ C# / XML documentation guidance:
 - Keep <summary> focused on the API contract.
 - Use <remarks> for lifecycle notes, threading expectations, ownership, performance caveats, or usage constraints when these are supported by the code or tests.
 - When <remarks> contains multiple caveats or guidance points, format each logical section as its own paragraph for readability and consistency.
+- Do not rely on blank lines inside XML comments for visual separation; rendered docs usually collapse them.
+- Use explicit <para> blocks when separation must be preserved in rendered documentation.
+- If a note is short and directly defines the member, prefer a single concise <summary> sentence over splitting into <summary> and <remarks>.
+- If <remarks> contains one continuous thought, keep it as one paragraph; split into multiple paragraphs only for distinct guidance points.
 - Add examples only when requested or when examples are necessary for clarity.
 - Cross references: use <see> for inline references and <seealso> for related overloads or sibling APIs. Avoid prose "See also" lines in remarks.
 
