@@ -73,7 +73,10 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
 
     public void Dispose()
     {
-        PhysicsScene2D.Destroy(_physicsScene2D);
+        if (_physicsScene2D.IsValid)
+        {
+            PhysicsScene2D.Destroy(_physicsScene2D);
+        }
     }
 
     public PhysicsScene2D PhysicsScene2D => _physicsScene2D;

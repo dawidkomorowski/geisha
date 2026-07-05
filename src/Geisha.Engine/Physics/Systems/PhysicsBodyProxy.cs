@@ -68,6 +68,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         var writeCount = Math.Min(_body.ContactCount, contacts.Length);
 
+        // TODO: For big number of contacts this can cause stack overflow.
         Span<Contact> bodyContacts = stackalloc Contact[writeCount];
         var internalWriteCount = _body.GetContacts(bodyContacts);
 
@@ -112,7 +113,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public void Dispose()
     {
         Collider.PhysicsBodyProxy = null;
-        _physicsScene.DestroyBody(_body);
+
+        if (_body.IsValid)
+        {
+            _physicsScene.DestroyBody(_body);
+        }
     }
 
     internal void SynchronizeBody()

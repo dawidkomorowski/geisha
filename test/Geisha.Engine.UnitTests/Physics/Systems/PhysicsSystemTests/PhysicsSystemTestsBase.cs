@@ -77,8 +77,13 @@ public abstract class PhysicsSystemTestsBase
     public void TearDown()
     {
         _debugRendererForTests.Dispose();
-        _physicsSystem?.Dispose();
-        _physicsSystem = null;
+
+        if (_physicsSystem is not null)
+        {
+            Scene.RemoveObserver(_physicsSystem);
+            _physicsSystem.Dispose();
+            _physicsSystem = null;
+        }
     }
 
     private protected PhysicsSystem GetPhysicsSystem()
