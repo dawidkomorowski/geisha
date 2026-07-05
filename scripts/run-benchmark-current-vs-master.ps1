@@ -4,6 +4,10 @@ $ErrorActionPreference = "Stop"
 Import-Module -Name .\modules\Benchmarks.psm1 -Force
 Import-Module -Name .\modules\Windows.psm1 -Force
 
+if (-not (Test-Path -PathType Container -Path "bin")) {
+    New-Item -ItemType Directory -Path "bin" | Out-Null
+}
+
 $binPath = Resolve-Path -Path "bin"
 $benchmarkAppPackageName = "benchmark-app.zip"
 $currentBenchmarkProjectPath = Resolve-Path -Path "..\benchmark\Geisha.Benchmark\Geisha.Benchmark.csproj"
