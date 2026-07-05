@@ -131,7 +131,12 @@ namespace Geisha.Engine.Core.Math
         /// <returns><see cref="AxisAlignedRectangle" /> that encloses this <see cref="Circle" />.</returns>
         public AxisAlignedRectangle GetBoundingRectangle() => new(Center, new Vector2(2 * Radius, 2 * Radius));
 
-        // TODO: Add documentation.
+        /// <summary>
+        ///     Computes the axis-aligned bounding box that encloses this <see cref="Circle" />.
+        /// </summary>
+        /// <returns>
+        ///     The smallest axis-aligned bounding box that encloses this <see cref="Circle" />.
+        /// </returns>
         public AABB2D ComputeAABB() => AABB2D.FromCenterAndSize(Center, new Vector2(2 * Radius, 2 * Radius));
 
         /// <summary>

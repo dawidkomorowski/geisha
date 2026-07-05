@@ -196,7 +196,12 @@ namespace Geisha.Engine.Core.Math
             return new AxisAlignedRectangle(vertices);
         }
 
-        // TODO: Add documentation.
+        /// <summary>
+        ///     Computes the axis-aligned bounding box that encloses this <see cref="Rectangle" />.
+        /// </summary>
+        /// <returns>
+        ///     The smallest axis-aligned bounding box that encloses this <see cref="Rectangle" />.
+        /// </returns>
         public AABB2D ComputeAABB()
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
