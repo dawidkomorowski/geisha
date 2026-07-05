@@ -77,17 +77,17 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
 
     internal void RecomputeCollider()
     {
-        var transform = new Transform2D(Position, Rotation, Vector2.One);
+        var transform = Matrix3x3.CreateTRS(Position, Rotation, Vector2.One);
 
         switch (ColliderType)
         {
             case ColliderType.Circle:
-                TransformedCircleCollider = new Circle(CircleColliderRadius).Transform(transform.ToMatrix());
+                TransformedCircleCollider = new Circle(CircleColliderRadius).Transform(transform);
                 AABB = TransformedCircleCollider.ComputeAABB();
                 break;
             case ColliderType.Rectangle:
             case ColliderType.Tile:
-                TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform.ToMatrix());
+                TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform);
                 AABB = TransformedRectangleCollider.ComputeAABB();
                 break;
             default:

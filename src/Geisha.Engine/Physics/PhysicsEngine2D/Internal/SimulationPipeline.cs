@@ -13,8 +13,8 @@ internal static class SimulationPipeline
 
         for (var substep = 0; substep < simulationParameters.Substeps; substep++)
         {
-            // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
-            // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
+            // TODO: Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
+            // TODO: SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < simulationParameters.VelocityIterations; i++)
             {
                 ContactSolver.SolveVelocityConstraints(ref scene);
@@ -29,12 +29,13 @@ internal static class SimulationPipeline
 
             CollisionDetection.DetectCollisions(ref scene);
 
-            // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
+            // TODO: SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < simulationParameters.PositionIterations; i++)
             {
                 ContactSolver.SolvePositionConstraints(ref scene);
             }
 
+            // TODO: Recomputation is only needed for bodies fixed by position constraints solver. If the touched bodies would be tracked only those could be recomputed.
             foreach (ref var body in scene.GetKinematicBodiesSpan())
             {
                 body.RecomputeCollider();
