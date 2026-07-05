@@ -30,8 +30,6 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
     private PhysicsScene2D(PhysicsSceneId id)
     {
         Id = id;
-        // TODO: Construct it on the fly to avoid storing?
-        Bodies = new BodiesView(id);
     }
 
     public PhysicsSceneId Id { get; }
@@ -64,7 +62,7 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
 
     public SizeD TileSize => Physics2D.Scene.GetTileSize(Id);
 
-    public BodiesView Bodies { get; }
+    public BodiesView Bodies => new(Id);
 
     public RigidBody2D CreateBody(BodyType bodyType, double circleColliderRadius)
     {
