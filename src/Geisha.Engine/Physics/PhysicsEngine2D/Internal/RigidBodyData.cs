@@ -4,6 +4,8 @@ using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
+// TODO: This is a big struct. It could be separated into hot/cold structs that are optimized for specific stages in physics pipeline.
+//       For example, solver does not need many of those fields so it could utilize smaller part of the body optimized for solver.
 internal struct RigidBodyData : IUnmanaged<RigidBodyData>
 {
     public RigidBodyId Id;
@@ -25,6 +27,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public uint CollisionLayer;
     public uint CollisionMask;
 
+    // TODO: Dual collision shape representation grows the struct. It may be beneficial to collapse storage for shape and reuse the same memory depending on collider shape.
     public double CircleColliderRadius;
     public Circle TransformedCircleCollider;
 

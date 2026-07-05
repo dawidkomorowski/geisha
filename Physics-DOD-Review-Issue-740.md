@@ -56,7 +56,7 @@ detailed finding by section.
 | R1 | ✅ | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
 | R2 | ⬜ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
 | R3 | ✅ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
-| R6 | ⬜ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
+| R6 | ⏸️ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
 | R7 | ⏸️ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
 | R13 | ✅ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose | §6 |
 | R14 | ⬜ | P2 | Arch | Extract helpers + targeted tests for `DestroyContactsForBody` | §6 |
