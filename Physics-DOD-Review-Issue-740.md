@@ -55,7 +55,7 @@ detailed finding by section.
 | R5 | ⬜ | P1 | Perf | Reduce hot-path handle resolution in solvers (store dense index in `ContactData`, add unchecked accessor, hoist spans) | §4.1 |
 | R1 | ✅ | P2 | Bug | Remove duplicated `SetAngularVelocity` assignment | §3.1 |
 | R2 | ⬜ | P2 | Bug | Include `Version` (and scene) in `SensorOverlapCache.CacheKey` | §3.2 |
-| R3 | ⬜ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
+| R3 | ✅ | P2 | Arch | Document/guard `PhysicsSceneData` thread-affinity invariant | §3.3 |
 | R6 | ⬜ | P2 | Perf | Revisit `RigidBodyData` layout: collapse dual transformed colliders / hot-cold split | §4.2 |
 | R7 | ⏸️ | P2 | Perf | Spatial broadphase to replace O(n²) (likely separate issue) | §4.3 |
 | R13 | ✅ | P2 | Docs | XML docs for public `AABB2D`; document `IUnmanaged<T>` purpose | §6 |
@@ -73,7 +73,7 @@ detailed finding by section.
 | R19 | ⬜ | P3 | Test | Same-frame index reuse during active sensor overlap | §7 |
 | R20 | ✅ | P3 | Test | Destroy body with multiple contacts; assert link consistency | §7 |
 
-**Progress:** 7 / 20 resolved · P1: 0/1 · P2: 2/7 · P3: 5/12
+**Progress:** 8 / 20 resolved · P1: 0/1 · P2: 3/7 · P3: 5/12
 
 ---
 

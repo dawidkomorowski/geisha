@@ -7,13 +7,43 @@ using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-/// <summary>
-///     Thread safety: <see cref="Create" /> and <see cref="Destroy" /> are locked to allow concurrent usage under
-///     the "one scene per thread" model - multiple threads each owning and exclusively operating on their own scene.
-///     Per-scene operations (<see cref="CreateBody" />, <see cref="DestroyBody" />, Simulate, etc.) do
-///     not require locking because a scene slot is exclusively owned by a single thread after <see cref="Create" />
-///     returns.
-/// </summary>
+// TODO: Implement a "Phase Guard" to prevent lock-step multithreading violations. 
+//       Add an interlocked state flag to track when the scene is actively simulating, 
+//       and use Debug.Assert in structural methods (CreateBody/DestroyBody) to catch 
+//       concurrent cross-thread modifications during the simulation phase.
+/// <remarks>
+///     <para>
+///         <b>Threading Model: Phase-Exclusive Thread Safety</b>
+///     </para>
+///     <list type="bullet">
+///         <item>
+///             <description>
+///                 <b>Global Operations:</b> <see cref="Create" /> and <see cref="Destroy" /> are internally locked
+///                 to safely allow concurrent scene allocation.
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <b>Per-Scene Operations:</b> <see cref="Get" />, <see cref="IsValid" />, <see cref="CreateBody" />,
+///                 <see cref="DestroyBody" />, <see cref="GetBodyData" />, and Simulate do <b>not</b> require locking.
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <b>Exclusive Ownership:</b> A scene slot must be exclusively owned and operated on by exactly
+///                 ONE thread at any given moment.
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <b>Thread Handoff:</b> Passing a scene between threads (e.g., from the Main Thread modifying it
+///                 to a worker thread simulating it) is safe <b>only</b> across sequential execution phases separated
+///                 by a synchronization barrier (e.g., <c>Task.Run</c>, <c>Task.Wait</c>, <c>Thread.Join</c>, or Event
+///                 signaling).
+///             </description>
+///         </item>
+///     </list>
+/// </remarks>
 internal struct PhysicsSceneData
 {
     // TODO: Migrate to System.Threading.Lock once the project targets .NET 9+ / C# 13+.
