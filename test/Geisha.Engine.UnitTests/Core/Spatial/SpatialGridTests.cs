@@ -7,11 +7,25 @@ namespace Geisha.Engine.UnitTests.Core.Spatial;
 [TestFixture]
 internal class SpatialGridTests
 {
-    [Test]
-    public void Constructor_ShouldCreateGridWithSpecifiedSize()
+    [TestCase(20)]
+    [TestCase(50)]
+    public void Constructor_ShouldCreateGridWithSpecifiedSizeD(double cellSize)
     {
         // Arrange
-        var size = new SizeD(20, 10);
+        // Act
+        var grid = new SpatialGrid(cellSize);
+
+        // Assert
+        Assert.That(grid.CellSize.Width, Is.EqualTo(cellSize));
+        Assert.That(grid.CellSize.Height, Is.EqualTo(cellSize));
+    }
+
+    [TestCase(20, 10)]
+    [TestCase(50, 50)]
+    public void Constructor_ShouldCreateGridWithSpecifiedSizeD(double width, double height)
+    {
+        // Arrange
+        var size = new SizeD(width, height);
 
         // Act
         var grid = new SpatialGrid(size);
