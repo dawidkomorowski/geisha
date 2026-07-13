@@ -13,7 +13,7 @@ internal class SpatialGridTests
     {
         // Arrange
         // Act
-        var grid = new SpatialGrid(cellSize);
+        var grid = new SpatialGrid<int>(cellSize);
 
         // Assert
         Assert.That(grid.CellSize.Width, Is.EqualTo(cellSize));
@@ -28,7 +28,7 @@ internal class SpatialGridTests
         var size = new SizeD(width, height);
 
         // Act
-        var grid = new SpatialGrid(size);
+        var grid = new SpatialGrid<int>(size);
 
         // Assert
         Assert.That(grid.CellSize, Is.EqualTo(size));
