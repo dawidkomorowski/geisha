@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -25,65 +23,111 @@ public readonly record struct SpatialGridProxyId
     public bool IsNotNull => _value > 0;
 }
 
-// TODO: Scaffolding for spatial grid prototyping.
 public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
     private const int Null = -1;
-    private readonly List<GridObject<TPayload>> _gridObjects;
-    private int _objectsFreeListHead;
 
-    public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
-    {
-    }
-
-    public SpatialGrid(SizeD cellSize)
-    {
-        CellSize = cellSize;
-
-        _gridObjects = new List<GridObject<TPayload>>();
-        _objectsFreeListHead = Null;
-    }
-
-    public SizeD CellSize { get; }
-
-    public bool IsValidProxy(SpatialGridProxyId id) => id.IsNotNull && _gridObjects[id.Index].Version == id.Version;
-
-    public SpatialGridProxyId CreateProxy(in AABB2D bounds, TPayload payload)
-    {
-        SpatialGridProxyId proxyId;
-
-        if (_objectsFreeListHead == Null)
-        {
-            _gridObjects.Add(default);
-            proxyId = new SpatialGridProxyId(_gridObjects.Capacity - 1, 1);
-        }
-        else
-        {
-            // TODO.
-            proxyId = new SpatialGridProxyId(_gridObjects.Capacity - 1, 1);
-        }
-
-        return default;
-    }
-
-    public void MoveProxy(SpatialGridProxyId id, in AABB2D newBounds)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DestroyProxy(SpatialGridProxyId id)
-    {
-        throw new NotImplementedException();
-    }
-
-    private Span<GridObject<TPayload>> GetObjectsAsSpan() => CollectionsMarshal.AsSpan(_gridObjects);
-
-    private struct GridObject<T> : IUnmanaged<GridObject<T>> where T : unmanaged
+    // Proxy
+    private struct Proxy<T> : IUnmanaged<Proxy<T>> where T : unmanaged
     {
         public int Version;
         public int NextFreeIndex;
 
         public AABB2D Bounds;
         public T Payload;
+    }
+
+    private Proxy<TPayload>[] _proxies;
+    private int _proxyFreeListHead;
+
+    public readonly record struct ProxyData<T>
+    {
+        public AABB2D Bounds { get; init; }
+        public T Payload { get; init; }
+    }
+
+    public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
+    {
+    }
+
+    public SpatialGrid(SizeD cellSize) : this(cellSize, 4)
+    {
+    }
+
+    public SpatialGrid(SizeD cellSize, int capacity)
+    {
+        CellSize = cellSize;
+
+        _proxies = new Proxy<TPayload>[capacity];
+        _proxyFreeListHead = Null;
+
+        for (var i = 0; i < _proxies.Length; i++)
+        {
+            _proxies[i].NextFreeIndex = i + 1;
+        }
+
+        if (_proxies.Length > 0)
+        {
+            _proxies[^1].NextFreeIndex = Null;
+            _proxyFreeListHead = 0;
+        }
+    }
+
+    public SizeD CellSize { get; }
+
+    public bool IsValidProxy(SpatialGridProxyId id) => id.IsNotNull && _proxies[id.Index].Version == id.Version;
+
+    public SpatialGridProxyId CreateProxy(in AABB2D bounds, TPayload payload)
+    {
+        if (_proxyFreeListHead == Null)
+        {
+            throw new NotImplementedException("Proxy array reallocation is not yet supported.");
+        }
+
+        var index = _proxyFreeListHead;
+
+        ref var proxy = ref _proxies[index];
+        proxy.Version++;
+        proxy.Bounds = bounds;
+        proxy.Payload = payload;
+
+        _proxyFreeListHead = proxy.NextFreeIndex;
+
+        return new SpatialGridProxyId(index, proxy.Version);
+    }
+
+    public void DestroyProxy(SpatialGridProxyId id)
+    {
+        ThrowIfInvalidId(id);
+
+        throw new NotImplementedException();
+    }
+
+    public ProxyData<TPayload> GetProxyData(SpatialGridProxyId id)
+    {
+        ThrowIfInvalidId(id);
+
+        ref var proxy = ref _proxies[id.Index];
+
+        return new ProxyData<TPayload>
+        {
+            Bounds = proxy.Bounds,
+            Payload = proxy.Payload
+        };
+    }
+
+    public void MoveProxy(SpatialGridProxyId id, in AABB2D newBounds)
+    {
+        ThrowIfInvalidId(id);
+
+        throw new NotImplementedException();
+    }
+
+    private void ThrowIfInvalidId(SpatialGridProxyId id)
+    {
+        if (!IsValidProxy(id))
+        {
+            throw new InvalidOperationException("Invalid proxy id.");
+        }
     }
 }
