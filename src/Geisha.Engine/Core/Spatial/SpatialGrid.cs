@@ -100,7 +100,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         ThrowIfInvalidId(id);
 
-        throw new NotImplementedException();
+        ref var proxy = ref _proxies[id.Index];
+        proxy.Version++;
+        proxy.Bounds = default;
+        proxy.Payload = default;
+        proxy.NextFreeIndex = _proxyFreeListHead;
+
+        _proxyFreeListHead = id.Index;
     }
 
     public ProxyData<TPayload> GetProxyData(SpatialGridProxyId id)
@@ -120,7 +126,8 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         ThrowIfInvalidId(id);
 
-        throw new NotImplementedException();
+        ref var proxy = ref _proxies[id.Index];
+        proxy.Bounds = newBounds;
     }
 
     private void ThrowIfInvalidId(SpatialGridProxyId id)
