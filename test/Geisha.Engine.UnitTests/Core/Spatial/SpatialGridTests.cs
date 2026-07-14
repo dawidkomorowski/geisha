@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Spatial;
 using NUnit.Framework;
@@ -337,32 +338,246 @@ internal class SpatialGridTests
     }
 
     [Test]
-    public void QueryOverlappingPairs_HappyPath()
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenGridIsEmpty()
     {
         // Arrange
         var grid = new SpatialGrid<int>(10);
-        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = new List<PairQueryResult>();
-        var queryHandler = new PairListQueryHandler(queryResults);
-        grid.QueryOverlappingPairs(ref queryHandler);
+        var queryResults = QueryOverlappingPairs(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
     }
 
-    private readonly record struct PairQueryResult
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenGridHasOnlySingleProxy()
     {
-        public PairQueryResult(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
-        {
-            ProxyId1 = proxyId1;
-            ProxyId2 = proxyId2;
-        }
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
-        private SpatialGridProxyId ProxyId1 { get; init; }
-        private SpatialGridProxyId ProxyId2 { get; init; }
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
     }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenProxiesDoNotOverlapAndAreInSameCell()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        grid.CreateProxy(new AABB2D(0, 0, 5, 5), 1);
+        grid.CreateProxy(new AABB2D(10, 10, 15, 15), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenProxiesDoNotOverlapAndAreInDifferentCells()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        grid.CreateProxy(new AABB2D(0, 0, 5, 5), 1);
+        grid.CreateProxy(new AABB2D(100, 100, 105, 105), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenTwoProxiesOverlapWithinSingleCell()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesOnlyTouchAtEdge()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(10, 0, 20, 10), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenProxiesAreInAdjacentCellsButDoNotOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 9, 9), 1);
+        var id2 = grid.CreateProxy(new AABB2D(11, 0, 20, 9), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+        Assert.That(grid.IsValidProxy(id1), Is.True);
+        Assert.That(grid.IsValidProxy(id2), Is.True);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesOverlapAcrossMultipleCells()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        // Proxy 1 spans multiple cells (bigger than a single cell).
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
+        // Proxy 2 is located in one of the cells spanned by proxy 1, far from its origin cell.
+        var id2 = grid.CreateProxy(new AABB2D(20, 20, 30, 30), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnUniquePair_WhenBothProxiesSpanMultipleSharedCells()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        // Both proxies span multiple cells and share several of them, which could cause the pair
+        // to be reported multiple times if duplicates are not filtered out.
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 30, 30), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnAllPairs_WhenMultipleProxiesOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+        var id3 = grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2), (id1, id3), (id2, id3));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnOnlyOverlappingPairs_WhenSomeProxiesDoNotOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+        var id3 = grid.CreateProxy(new AABB2D(50, 50, 60, 60), 3);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReflectUpdatedOverlaps_WhenProxyIsMovedIntoOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(50, 50, 60, 60), 2);
+
+        // Act
+        grid.MoveProxy(id2, new AABB2D(5, 5, 15, 15));
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReflectUpdatedOverlaps_WhenProxyIsMovedOutOfOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+
+        // Act
+        grid.MoveProxy(id2, new AABB2D(50, 50, 60, 60));
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldNotIncludeDestroyedProxy_WhenItPreviouslyOverlapped()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+
+        // Act
+        grid.DestroyProxy(id2);
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    private static List<PairQueryResult> QueryOverlappingPairs(SpatialGrid<int> grid)
+    {
+        var queryResults = new List<PairQueryResult>();
+        var queryHandler = new PairListQueryHandler(queryResults);
+        grid.QueryOverlappingPairs(ref queryHandler);
+        return queryResults;
+    }
+
+    private static void AssertPairsEquivalent(IReadOnlyList<PairQueryResult> actual,
+        params (SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2)[] expectedPairs)
+    {
+        var actualNormalized = actual.Select(p => NormalizePair(p.ProxyId1, p.ProxyId2));
+        var expectedNormalized = expectedPairs.Select(p => NormalizePair(p.ProxyId1, p.ProxyId2));
+
+        Assert.That(actualNormalized, Is.EquivalentTo(expectedNormalized));
+    }
+
+    private static (SpatialGridProxyId, SpatialGridProxyId) NormalizePair(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
+    {
+        return proxyId1.Index <= proxyId2.Index ? (proxyId1, proxyId2) : (proxyId2, proxyId1);
+    }
+
+    private readonly record struct PairQueryResult(SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2);
 
     private readonly struct PairListQueryHandler : IPairsQueryHandler
     {
