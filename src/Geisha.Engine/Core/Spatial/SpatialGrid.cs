@@ -50,12 +50,21 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
     }
 
+    public SpatialGrid(double cellSize, int capacity) : this(new SizeD(cellSize, cellSize), capacity)
+    {
+    }
+
     public SpatialGrid(SizeD cellSize) : this(cellSize, 4)
     {
     }
 
     public SpatialGrid(SizeD cellSize, int capacity)
     {
+        if (capacity < 0)
+        {
+            throw new ArgumentException("Capacity cannot be negative.");
+        }
+
         CellSize = cellSize;
 
         _proxies = new Proxy<TPayload>[capacity];
