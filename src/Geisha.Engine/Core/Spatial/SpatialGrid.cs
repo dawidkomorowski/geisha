@@ -23,6 +23,11 @@ public readonly record struct SpatialGridProxyId
     public bool IsNotNull => _value > 0;
 }
 
+public interface IPairsQueryHandler
+{
+    bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2);
+}
+
 public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
     private const int Null = -1;
@@ -137,6 +142,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         ref var proxy = ref _proxies[id.Index];
         proxy.Bounds = newBounds;
+    }
+
+    public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
+    {
+        // TODO: To be implemented.
     }
 
     private void ThrowIfInvalidId(SpatialGridProxyId id)

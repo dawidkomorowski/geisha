@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Spatial;
 using NUnit.Framework;
@@ -333,5 +334,49 @@ internal class SpatialGridTests
         // Act
         // Assert
         Assert.That(() => grid.MoveProxy(id, in bounds), Throws.InvalidOperationException);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_HappyPath()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = new List<PairQueryResult>();
+        var queryHandler = new PairListQueryHandler(queryResults);
+        grid.QueryOverlappingPairs(ref queryHandler);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    private readonly record struct PairQueryResult
+    {
+        public PairQueryResult(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
+        {
+            ProxyId1 = proxyId1;
+            ProxyId2 = proxyId2;
+        }
+
+        private SpatialGridProxyId ProxyId1 { get; init; }
+        private SpatialGridProxyId ProxyId2 { get; init; }
+    }
+
+    private readonly struct PairListQueryHandler : IPairsQueryHandler
+    {
+        private readonly List<PairQueryResult> _pairs;
+
+        public PairListQueryHandler(List<PairQueryResult> pairs)
+        {
+            _pairs = pairs;
+        }
+
+        public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
+        {
+            _pairs.Add(new PairQueryResult(proxyId1, proxyId2));
+            return true;
+        }
     }
 }
