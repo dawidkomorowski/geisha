@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -32,7 +33,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
     private const int Null = -1;
 
-    // Proxy
+    // Proxies
     private struct Proxy<T> : IUnmanaged<Proxy<T>> where T : unmanaged
     {
         public int Version;
@@ -50,6 +51,18 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         public AABB2D Bounds { get; init; }
         public T Payload { get; init; }
     }
+
+    // Cells
+    private struct CellNode : IUnmanaged<CellNode>
+    {
+        public int NextFreeIndex;
+    }
+
+    private CellNode[] _nodes;
+    private int _nodeFreeListHead;
+
+    // TODO: Describe how the cells are modelled.
+    private Dictionary<long, int> _cells;
 
     public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
     {
@@ -72,6 +85,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         CellSize = cellSize;
 
+        // Proxies
         _proxies = new Proxy<TPayload>[capacity];
         _proxyFreeListHead = Null;
 
@@ -85,6 +99,23 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             _proxies[^1].NextFreeIndex = Null;
             _proxyFreeListHead = 0;
         }
+
+        // Cells
+        _nodes = new CellNode[capacity];
+        _nodeFreeListHead = Null;
+
+        for (var i = 0; i < _nodes.Length; i++)
+        {
+            _nodes[i].NextFreeIndex = i + 1;
+        }
+
+        if (_nodes.Length > 0)
+        {
+            _nodes[^1].NextFreeIndex = Null;
+            _nodeFreeListHead = 0;
+        }
+
+        _cells = new Dictionary<long, int>(capacity);
     }
 
     public SizeD CellSize { get; }
