@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
@@ -188,5 +189,34 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
     }
 
-    private long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
+    private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
+
+    private readonly record struct Cell(int X, int Y, long Key);
+
+    private readonly record struct Cells(int MinX, int MinY, int MaxX, int MaxY) : IEnumerable<Cell>
+    {
+        public IEnumerator<Cell> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    // TODO: Temporary allocating implementation. Once logic is working it should be non allocating.
+    //       Possible approaches:
+    //          - use struct enumerator pattern
+    //          - return cell bounds that allow iteration
+    private Cells FindCells(AABB2D bounds)
+    {
+        var cellMinX = (int)System.Math.Floor(bounds.Min.X / CellSize.Width);
+        var cellMinY = (int)System.Math.Floor(bounds.Min.Y / CellSize.Height);
+        var cellMaxX = (int)System.Math.Ceiling(bounds.Max.X / CellSize.Width);
+        var cellMaxY = (int)System.Math.Ceiling(bounds.Max.Y / CellSize.Height);
+
+        return new Cells(cellMinX, cellMinY, cellMaxX, cellMaxY);
+    }
 }
