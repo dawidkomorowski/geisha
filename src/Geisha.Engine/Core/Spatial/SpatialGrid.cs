@@ -232,8 +232,8 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         var cellMinX = (int)System.Math.Floor(bounds.Min.X / CellSize.Width);
         var cellMinY = (int)System.Math.Floor(bounds.Min.Y / CellSize.Height);
-        var cellMaxX = (int)System.Math.Ceiling(bounds.Max.X / CellSize.Width);
-        var cellMaxY = (int)System.Math.Ceiling(bounds.Max.Y / CellSize.Height);
+        var cellMaxX = (int)System.Math.Floor(bounds.Max.X / CellSize.Width);
+        var cellMaxY = (int)System.Math.Floor(bounds.Max.Y / CellSize.Height);
 
         return new CellRange(cellMinX, cellMinY, cellMaxX, cellMaxY);
     }
