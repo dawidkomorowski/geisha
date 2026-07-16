@@ -187,4 +187,6 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             throw new InvalidOperationException("Invalid proxy id.");
         }
     }
+
+    private long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
 }
