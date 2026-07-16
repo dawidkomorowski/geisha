@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
@@ -57,6 +56,12 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private struct CellNode : IUnmanaged<CellNode>
     {
         public int NextFreeIndex;
+
+        public int NextInCellIndex;
+        public int PrevInCellIndex;
+
+        public int NextOfProxyIndex;
+        public int PrevOfProxyIndex;
     }
 
     private CellNode[] _nodes;
@@ -64,6 +69,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
     // TODO: Describe how the cells are modelled.
     private Dictionary<long, int> _cells;
+    private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
 
     public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
     {
@@ -143,6 +149,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         foreach (var cell in cellRange)
         {
+            CreateNode(cell, ref proxy);
         }
 
         return new SpatialGridProxyId(index, proxy.Version);
@@ -195,9 +202,15 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
     }
 
-    private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
+    private void CreateNode(Cell cell, ref Proxy<TPayload> proxy)
+    {
+        // TODO: To be implemented.
+    }
 
-    private readonly record struct Cell(int X, int Y, long Key);
+    private readonly record struct Cell(int X, int Y)
+    {
+        public long Key { get; } = BuildCellKey(X, Y);
+    }
 
     private readonly record struct CellRange(int MinX, int MinY, int MaxX, int MaxY)
     {
@@ -211,23 +224,30 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             public Enumerator(CellRange cellRange)
             {
                 _cellRange = cellRange;
-                Current = default;
+                Current = new Cell(cellRange.MinX - 1, cellRange.MinY);
             }
 
             // MoveNext is called before first get of Current.
             public bool MoveNext()
             {
-                return false;
+                var x = Current.X + 1;
+                var y = Current.Y;
+
+                if (x > _cellRange.MaxX)
+                {
+                    x = _cellRange.MinX;
+                    y++;
+                }
+
+                Current = new Cell(x, y);
+
+                return y <= _cellRange.MaxX;
             }
 
-            public Cell Current { get; }
+            public Cell Current { get; private set; }
         }
     }
 
-    // TODO: Temporary allocating implementation. Once logic is working it should be non allocating.
-    //       Possible approaches:
-    //          - use struct enumerator pattern
-    //          - return cell bounds that allow iteration
     private CellRange FindCells(AABB2D bounds)
     {
         var cellMinX = (int)System.Math.Floor(bounds.Min.X / CellSize.Width);
