@@ -139,6 +139,12 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         _proxyFreeListHead = proxy.NextFreeIndex;
 
+        var cellRange = FindCells(bounds);
+
+        foreach (var cell in cellRange)
+        {
+        }
+
         return new SpatialGridProxyId(index, proxy.Version);
     }
 
@@ -193,16 +199,28 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
     private readonly record struct Cell(int X, int Y, long Key);
 
-    private readonly record struct Cells(int MinX, int MinY, int MaxX, int MaxY) : IEnumerable<Cell>
+    private readonly record struct CellRange(int MinX, int MinY, int MaxX, int MaxY)
     {
-        public IEnumerator<Cell> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        // Minimal foreach support - simpler than full IEnumerable implementation.
+        public Enumerator GetEnumerator() => new(this);
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public struct Enumerator
         {
-            return GetEnumerator();
+            private readonly CellRange _cellRange;
+
+            public Enumerator(CellRange cellRange)
+            {
+                _cellRange = cellRange;
+                Current = default;
+            }
+
+            // MoveNext is called before first get of Current.
+            public bool MoveNext()
+            {
+                return false;
+            }
+
+            public Cell Current { get; }
         }
     }
 
@@ -210,13 +228,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     //       Possible approaches:
     //          - use struct enumerator pattern
     //          - return cell bounds that allow iteration
-    private Cells FindCells(AABB2D bounds)
+    private CellRange FindCells(AABB2D bounds)
     {
         var cellMinX = (int)System.Math.Floor(bounds.Min.X / CellSize.Width);
         var cellMinY = (int)System.Math.Floor(bounds.Min.Y / CellSize.Height);
         var cellMaxX = (int)System.Math.Ceiling(bounds.Max.X / CellSize.Width);
         var cellMaxY = (int)System.Math.Ceiling(bounds.Max.Y / CellSize.Height);
 
-        return new Cells(cellMinX, cellMinY, cellMaxX, cellMaxY);
+        return new CellRange(cellMinX, cellMinY, cellMaxX, cellMaxY);
     }
 }
