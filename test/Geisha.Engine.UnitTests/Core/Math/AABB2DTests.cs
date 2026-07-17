@@ -341,6 +341,48 @@ public class AABB2DTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 0, 10, 6, /*E*/ 0, 0, 10, 6)]   // identical boxes
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 5, 3, 15, 9, /*E*/ 5, 3, 10, 6)]  // partial overlap top-right
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -5, -3, 5, 3, /*E*/ 0, 0, 5, 3)]  // partial overlap bottom-left
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 2, 1, 8, 5, /*E*/ 2, 1, 8, 5)]    // A1 fully contains A2
+    [TestCase( /*A1*/ 2, 1, 8, 5, /*A2*/ 0, 0, 10, 6, /*E*/ 2, 1, 8, 5)]    // A2 fully contains A1
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 10, 0, 16, 6, /*E*/ 10, 0, 10, 6)] // touching right edge (degenerate vertical line)
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 6, 10, 12, /*E*/ 0, 6, 10, 6)] // touching top edge (degenerate horizontal line)
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 10, 6, 16, 12, /*E*/ 10, 6, 10, 6)] // touching corner (degenerate point)
+    public void Intersect_ShouldReturnIntersectionAABB(double minX1, double minY1, double maxX1, double maxY1,
+        double minX2, double minY2, double maxX2, double maxY2,
+        double eMinX, double eMinY, double eMaxX, double eMaxY)
+    {
+        // Arrange
+        var aabb1 = new AABB2D(minX1, minY1, maxX1, maxY1);
+        var aabb2 = new AABB2D(minX2, minY2, maxX2, maxY2);
+        var expected = new AABB2D(eMinX, eMinY, eMaxX, eMaxY);
+
+        // Act
+        var actual = aabb1.Intersect(aabb2);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 11, 0, 17, 6)]  // separated right
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ -7, 0, -1, 6)]  // separated left
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 7, 10, 13)]  // separated above
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, -7, 10, -1)] // separated below
+    public void Intersect_ShouldReturnInvalidAABB_WhenBoxesDoNotOverlap(double minX1, double minY1, double maxX1, double maxY1,
+        double minX2, double minY2, double maxX2, double maxY2)
+    {
+        // Arrange
+        var aabb1 = new AABB2D(minX1, minY1, maxX1, maxY1);
+        var aabb2 = new AABB2D(minX2, minY2, maxX2, maxY2);
+
+        // Act
+        var actual = aabb1.Intersect(aabb2);
+
+        // Assert
+        Assert.That(actual.IsValid, Is.False);
+    }
+
     [Test]
     public void ToAxisAlignedRectangle_ShouldReturnAxisAlignedRectangleWithSameCenterAndSize()
     {

@@ -233,7 +233,6 @@ public readonly record struct AABB2D
     public bool Overlaps(in AABB2D other) => Max.X >= other.Min.X && Min.X <= other.Max.X && Max.Y >= other.Min.Y && Min.Y <= other.Max.Y;
 
     // TODO: Add documentation.
-    // TODO: Add tests.
     public AABB2D Intersect(in AABB2D other) => new(Vector2.Max(Min, other.Min), Vector2.Min(Max, other.Max));
 
     /// <summary>
