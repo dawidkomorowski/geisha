@@ -214,31 +214,44 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
     {
+        var shouldContinue = true;
+
         foreach (var cell in _cells)
         {
+            if (!shouldContinue)
+            {
+                break;
+            }
+
             var node1Index = cell.Value;
-            while (node1Index != Null)
+            while (node1Index != Null && shouldContinue)
             {
                 ref var node1 = ref _nodes[node1Index];
 
-                var node2Index = cell.Value;
-                while (node2Index != Null)
+                var node2Index = node1.NextInCellIndex;
+                while (node2Index != Null && shouldContinue)
                 {
                     ref var node2 = ref _nodes[node2Index];
-                    node2Index = node2.NextInCellIndex;
-
-                    if (node1Index == node2Index)
-                    {
-                        continue;
-                    }
 
                     ref var proxy1 = ref _proxies[node1.ProxyIndex];
                     ref var proxy2 = ref _proxies[node2.ProxyIndex];
 
-                    if (proxy1.Bounds.Overlaps(proxy2.Bounds))
+                    var intersection = proxy1.Bounds.Intersect(proxy2.Bounds);
+                    if (intersection.IsValid)
                     {
-                        // TODO: To be implemented.
+                        var canonicalCell = FindCell(intersection.Min);
+
+                        // Pair must be handled only in single canonical cell to avoid duplicates.
+                        if (cell.Key == canonicalCell.Key)
+                        {
+                            var proxyId1 = new SpatialGridProxyId(node1.ProxyIndex, proxy1.Version);
+                            var proxyId2 = new SpatialGridProxyId(node2.ProxyIndex, proxy2.Version);
+
+                            shouldContinue = handler.Handle(proxyId1, proxyId2);
+                        }
                     }
+
+                    node2Index = node2.NextInCellIndex;
                 }
 
                 node1Index = node1.NextInCellIndex;
@@ -375,5 +388,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         var cellMaxY = (int)System.Math.Floor(bounds.Max.Y / CellSize.Height);
 
         return new CellRange(cellMinX, cellMinY, cellMaxX, cellMaxY);
+    }
+
+    private Cell FindCell(Vector2 point)
+    {
+        var x = (int)System.Math.Floor(point.X / CellSize.Width);
+        var y = (int)System.Math.Floor(point.Y / CellSize.Height);
+
+        return new Cell(x, y);
     }
 }

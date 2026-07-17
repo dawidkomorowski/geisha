@@ -507,6 +507,7 @@ internal class SpatialGridTests
         AssertPairsEquivalent(queryResults, (id1, id2));
     }
 
+    // TODO: Test inter-cell movement as it is not yet implemented.
     [Test]
     public void QueryOverlappingPairs_ShouldReflectUpdatedOverlaps_WhenProxyIsMovedIntoOverlap()
     {
