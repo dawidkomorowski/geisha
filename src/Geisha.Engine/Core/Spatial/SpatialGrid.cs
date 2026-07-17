@@ -53,7 +53,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     // Cells
-    private struct CellNode : IUnmanaged<CellNode>
+    private struct Node : IUnmanaged<Node>
     {
         public int NextFreeIndex;
 
@@ -62,9 +62,21 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         public int NextOfProxyIndex;
         public int PrevOfProxyIndex;
+
+        public int ProxyIndex;
+
+        public void Clear()
+        {
+            NextFreeIndex = Null;
+            NextInCellIndex = Null;
+            PrevInCellIndex = Null;
+            NextOfProxyIndex = Null;
+            PrevOfProxyIndex = Null;
+            ProxyIndex = Null;
+        }
     }
 
-    private CellNode[] _nodes;
+    private Node[] _nodes;
     private int _nodeFreeListHead;
 
     // TODO: Describe how the cells are modelled.
@@ -108,12 +120,14 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
 
         // Cells
-        _nodes = new CellNode[capacity];
+        _nodes = new Node[capacity];
         _nodeFreeListHead = Null;
 
         for (var i = 0; i < _nodes.Length; i++)
         {
-            _nodes[i].NextFreeIndex = i + 1;
+            ref var node = ref _nodes[i];
+            node.Clear();
+            node.NextFreeIndex = i + 1;
         }
 
         if (_nodes.Length > 0)
@@ -139,17 +153,17 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         var index = _proxyFreeListHead;
 
         ref var proxy = ref _proxies[index];
+        _proxyFreeListHead = proxy.NextFreeIndex;
+
         proxy.Version++;
         proxy.Bounds = bounds;
         proxy.Payload = payload;
-
-        _proxyFreeListHead = proxy.NextFreeIndex;
 
         var cellRange = FindCells(bounds);
 
         foreach (var cell in cellRange)
         {
-            CreateNode(cell, ref proxy);
+            CreateNode(cell, ref proxy, index);
         }
 
         return new SpatialGridProxyId(index, proxy.Version);
@@ -202,9 +216,23 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
     }
 
-    private void CreateNode(Cell cell, ref Proxy<TPayload> proxy)
+    private void CreateNode(Cell cell, ref Proxy<TPayload> proxy, int proxyIndex)
     {
-        // TODO: To be implemented.
+        if (_nodeFreeListHead == Null)
+        {
+            throw new NotImplementedException("Node array reallocation is not yet supported.");
+        }
+
+        var index = _nodeFreeListHead;
+        var cellListHead = _cells.GetValueOrDefault(cell.Key, Null);
+        _cells[cell.Key] = index;
+
+        ref var node = ref _nodes[index];
+        _nodeFreeListHead = node.NextFreeIndex;
+
+        node.NextInCellIndex = cellListHead;
+        node.PrevInCellIndex = Null;
+        node.ProxyIndex = proxyIndex;
     }
 
     private readonly record struct Cell(int X, int Y)
