@@ -507,9 +507,8 @@ internal class SpatialGridTests
         AssertPairsEquivalent(queryResults, (id1, id2));
     }
 
-    // TODO: Test inter-cell movement as it is not yet implemented.
     [Test]
-    public void QueryOverlappingPairs_ShouldReflectUpdatedOverlaps_WhenProxyIsMovedIntoOverlap()
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxyIsMovedIntoOverlap()
     {
         // Arrange
         var grid = new SpatialGrid<int>(100);
@@ -525,7 +524,7 @@ internal class SpatialGridTests
     }
 
     [Test]
-    public void QueryOverlappingPairs_ShouldReflectUpdatedOverlaps_WhenProxyIsMovedOutOfOverlap()
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenProxyIsMovedOutOfOverlap()
     {
         // Arrange
         var grid = new SpatialGrid<int>(100);
@@ -534,6 +533,42 @@ internal class SpatialGridTests
 
         // Act
         grid.MoveProxy(id2, new AABB2D(50, 50, 60, 60));
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxyIsMovedIntoOverlapAcrossCellBoundary()
+    {
+        // Arrange
+        // Cell size 10: id1 is in cell (0,0), id2 starts in cell (10,10) — no overlap.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 9, 9), 1);
+        var id2 = grid.CreateProxy(new AABB2D(100, 100, 109, 109), 2);
+
+        // Act
+        // Move id2 across a cell boundary into the cell of id1, overlapping it.
+        grid.MoveProxy(id2, new AABB2D(5, 5, 14, 14));
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenProxyIsMovedOutOfOverlapAcrossCellBoundary()
+    {
+        // Arrange
+        // Cell size 10: both proxies start in the same cell and overlap.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 9, 9), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 14, 14), 2);
+
+        // Act
+        // Move id2 across a cell boundary far away so it no longer overlaps id1.
+        grid.MoveProxy(id2, new AABB2D(100, 100, 109, 109));
         var queryResults = QueryOverlappingPairs(grid);
 
         // Assert
