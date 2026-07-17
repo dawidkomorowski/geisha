@@ -38,6 +38,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         public int Version;
         public int NextFreeIndex;
+        public int NodeListHead;
 
         public AABB2D Bounds;
         public T Payload;
@@ -64,6 +65,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         public int PrevOfProxyIndex;
 
         public int ProxyIndex;
+        public long CellKey;
 
         public void Clear()
         {
@@ -73,6 +75,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             NextOfProxyIndex = Null;
             PrevOfProxyIndex = Null;
             ProxyIndex = Null;
+            CellKey = 0;
         }
     }
 
@@ -80,7 +83,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private int _nodeFreeListHead;
 
     // TODO: Describe how the cells are modelled.
-    private Dictionary<long, int> _cells;
+    private readonly Dictionary<long, int> _cells;
     private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
 
     public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
@@ -111,6 +114,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         for (var i = 0; i < _proxies.Length; i++)
         {
             _proxies[i].NextFreeIndex = i + 1;
+            _proxies[i].NodeListHead = Null;
         }
 
         if (_proxies.Length > 0)
@@ -179,6 +183,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         proxy.Payload = default;
         proxy.NextFreeIndex = _proxyFreeListHead;
 
+        while (proxy.NodeListHead != Null)
+        {
+            DestroyNode(proxy.NodeListHead);
+        }
+
         _proxyFreeListHead = id.Index;
     }
 
@@ -223,16 +232,62 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             throw new NotImplementedException("Node array reallocation is not yet supported.");
         }
 
-        var index = _nodeFreeListHead;
+        var nodeIndex = _nodeFreeListHead;
         var cellListHead = _cells.GetValueOrDefault(cell.Key, Null);
-        _cells[cell.Key] = index;
+        _cells[cell.Key] = nodeIndex;
 
-        ref var node = ref _nodes[index];
+        ref var node = ref _nodes[nodeIndex];
         _nodeFreeListHead = node.NextFreeIndex;
 
         node.NextInCellIndex = cellListHead;
         node.PrevInCellIndex = Null;
+
+        node.NextOfProxyIndex = proxy.NodeListHead;
+        node.PrevOfProxyIndex = Null;
+        proxy.NodeListHead = nodeIndex;
+
         node.ProxyIndex = proxyIndex;
+        node.CellKey = cell.Key;
+    }
+
+    private void DestroyNode(int nodeIndex)
+    {
+        ref var node = ref _nodes[nodeIndex];
+
+        if (node.NextInCellIndex != Null)
+        {
+            _nodes[node.NextInCellIndex].PrevInCellIndex = node.PrevInCellIndex;
+        }
+
+        if (node.PrevInCellIndex != Null)
+        {
+            _nodes[node.PrevInCellIndex].NextInCellIndex = node.NextInCellIndex;
+        }
+
+        if (_cells[node.CellKey] == nodeIndex)
+        {
+            _cells[node.CellKey] = node.NextInCellIndex;
+        }
+
+        if (node.NextOfProxyIndex != Null)
+        {
+            _nodes[node.NextOfProxyIndex].PrevOfProxyIndex = node.PrevOfProxyIndex;
+        }
+
+        if (node.PrevOfProxyIndex != Null)
+        {
+            _nodes[node.PrevOfProxyIndex].NextOfProxyIndex = node.NextOfProxyIndex;
+        }
+
+        ref var proxy = ref _proxies[node.ProxyIndex];
+        if (proxy.NodeListHead == nodeIndex)
+        {
+            proxy.NodeListHead = node.NextOfProxyIndex;
+        }
+
+        node.Clear();
+        node.NextFreeIndex = _nodeFreeListHead;
+        _nodeFreeListHead = nodeIndex;
     }
 
     private readonly record struct Cell(int X, int Y)
