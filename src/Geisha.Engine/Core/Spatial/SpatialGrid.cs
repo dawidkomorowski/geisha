@@ -214,7 +214,36 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
     {
-        // TODO: To be implemented.
+        foreach (var cell in _cells)
+        {
+            var node1Index = cell.Value;
+            while (node1Index != Null)
+            {
+                ref var node1 = ref _nodes[node1Index];
+
+                var node2Index = cell.Value;
+                while (node2Index != Null)
+                {
+                    ref var node2 = ref _nodes[node2Index];
+                    node2Index = node2.NextInCellIndex;
+
+                    if (node1Index == node2Index)
+                    {
+                        continue;
+                    }
+
+                    ref var proxy1 = ref _proxies[node1.ProxyIndex];
+                    ref var proxy2 = ref _proxies[node2.ProxyIndex];
+
+                    if (proxy1.Bounds.Overlaps(proxy2.Bounds))
+                    {
+                        // TODO: To be implemented.
+                    }
+                }
+
+                node1Index = node1.NextInCellIndex;
+            }
+        }
     }
 
     private void ThrowIfInvalidId(SpatialGridProxyId id)
@@ -266,7 +295,14 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         if (_cells[node.CellKey] == nodeIndex)
         {
-            _cells[node.CellKey] = node.NextInCellIndex;
+            if (node.NextInCellIndex == Null)
+            {
+                _cells.Remove(node.CellKey);
+            }
+            else
+            {
+                _cells[node.CellKey] = node.NextInCellIndex;
+            }
         }
 
         if (node.NextOfProxyIndex != Null)
