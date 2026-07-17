@@ -24,9 +24,6 @@ public readonly record struct AABB2D
     /// <param name="max">The maximum corner.</param>
     public AABB2D(in Vector2 min, in Vector2 max)
     {
-        Debug.Assert(min.X <= max.X, "Min.X must be less than or equal to Max.X.");
-        Debug.Assert(min.Y <= max.Y, "Min.Y must be less than or equal to Max.Y.");
-
         Min = min;
         Max = max;
     }
@@ -206,6 +203,9 @@ public readonly record struct AABB2D
     ///     Gets the height of the bounding box.
     /// </summary>
     public double Height => Max.Y - Min.Y;
+
+    // TODO: Add documentation.
+    public bool IsValid => Min.X <= Max.X && Min.Y <= Max.Y;
 
     /// <summary>
     ///     Determines whether the specified point is inside this bounding box.

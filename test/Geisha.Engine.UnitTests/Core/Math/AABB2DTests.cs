@@ -239,6 +239,24 @@ public class AABB2DTests
         Assert.That(aabb.Height, Is.EqualTo(height));
     }
 
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 6, /*E*/ true)]
+    [TestCase( /*Min*/ -5, -3, /*Max*/ 5, 3, /*E*/ true)]
+    [TestCase( /*Min*/ 5, 5, /*Max*/ 5, 5, /*E*/ true)]  // degenerate (point)
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, 0, /*E*/ true)]  // degenerate (horizontal line)
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 0, 6, /*E*/ true)]  // degenerate (vertical line)
+    [TestCase( /*Min*/ 0, 0, /*Max*/ -1, 6, /*E*/ false)] // inverted X
+    [TestCase( /*Min*/ 0, 0, /*Max*/ 10, -1, /*E*/ false)] // inverted Y
+    [TestCase( /*Min*/ 0, 0, /*Max*/ -1, -1, /*E*/ false)] // both inverted
+    public void IsValid_Test(double minX, double minY, double maxX, double maxY, bool expected)
+    {
+        // Arrange
+        var aabb = new AABB2D(minX, minY, maxX, maxY);
+
+        // Act
+        // Assert
+        Assert.That(aabb.IsValid, Is.EqualTo(expected));
+    }
+
     #endregion
 
     #region Methods
