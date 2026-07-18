@@ -205,6 +205,18 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         ref var proxy = ref _proxies[id.Index];
         proxy.Bounds = newBounds;
+
+        while (proxy.NodeListHead != Null)
+        {
+            DestroyNode(proxy.NodeListHead);
+        }
+
+        var cellRange = FindCells(newBounds);
+
+        foreach (var cell in cellRange)
+        {
+            CreateNode(cell, ref proxy, id.Index);
+        }
     }
 
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
