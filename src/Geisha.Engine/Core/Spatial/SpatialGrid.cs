@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -32,6 +33,7 @@ public interface IPairsQueryHandler
 public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
     private const int Null = -1;
+    private const int DefaultCapacity = 4;
 
     // Proxies
     private struct Proxy<T> : IUnmanaged<Proxy<T>> where T : unmanaged
@@ -94,7 +96,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
     }
 
-    public SpatialGrid(SizeD cellSize) : this(cellSize, 4)
+    public SpatialGrid(SizeD cellSize) : this(cellSize, DefaultCapacity)
     {
     }
 
@@ -124,20 +126,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
 
         // Cells
-        _nodes = new Node[capacity];
+        _nodes = Array.Empty<Node>();
         _nodeFreeListHead = Null;
 
-        for (var i = 0; i < _nodes.Length; i++)
+        if (capacity > 0)
         {
-            ref var node = ref _nodes[i];
-            node.Clear();
-            node.NextFreeIndex = i + 1;
-        }
-
-        if (_nodes.Length > 0)
-        {
-            _nodes[^1].NextFreeIndex = Null;
-            _nodeFreeListHead = 0;
+            // TODO: This may overgrow - is that ok?
+            GrowNodePool(capacity);
         }
 
         _cells = new Dictionary<long, int>(capacity);
@@ -271,7 +266,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         if (_nodeFreeListHead == Null)
         {
-            throw new NotImplementedException("Node array reallocation is not yet supported.");
+            GrowNodePool(_nodes.Length + 1);
         }
 
         var nodeIndex = _nodeFreeListHead;
@@ -339,6 +334,24 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         _nodeFreeListHead = nodeIndex;
     }
 
+    private void GrowNodePool(int capacity)
+    {
+        var oldCapacity = _nodes.Length;
+        Debug.Assert(capacity > oldCapacity);
+
+        GrowArray(ref _nodes, capacity, DefaultCapacity);
+
+        for (var i = oldCapacity; i < _nodes.Length; i++)
+        {
+            ref var node = ref _nodes[i];
+            node.Clear();
+            node.NextFreeIndex = i + 1;
+        }
+
+        _nodes[^1].NextFreeIndex = _nodeFreeListHead;
+        _nodeFreeListHead = oldCapacity;
+    }
+
     private readonly record struct Cell(int X, int Y)
     {
         public long Key { get; } = BuildCellKey(X, Y);
@@ -396,5 +409,24 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         var y = (int)System.Math.Floor(point.Y / CellSize.Height);
 
         return new Cell(x, y);
+    }
+
+    // TODO: This might be useful helper in other places. If so, move to ArrayEx?
+    // TODO: Should the name make it explicit that it does exponential growth? Like GrowExp?
+    private static void GrowArray<T>(ref T[] array, int minimumLength, int defaultLength)
+    {
+        Debug.Assert(minimumLength > array.Length);
+
+        var newLength = array.Length == 0 ? defaultLength : 2 * array.Length;
+
+        // Allow the array to grow to maximum possible length (~2G elements) before encountering overflow.
+        // Note that this check works even when `array.Length` overflowed thanks to the (uint) cast.
+        if ((uint)newLength > Array.MaxLength) newLength = Array.MaxLength;
+
+        // If the computed length is still less than specified, set to the original argument.
+        // Lengths exceeding Array.MaxLength will be surfaced as OutOfMemoryException by Array.Resize.
+        if (newLength < minimumLength) newLength = minimumLength;
+
+        Array.Resize(ref array, newLength);
     }
 }
