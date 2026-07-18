@@ -35,6 +35,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private const int Null = -1;
     private const int DefaultCapacity = 4;
 
+    private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
+
+    // TODO: Describe how the cells are modelled.
+    private readonly Dictionary<long, int> _cells;
+
     // Proxies
     private struct Proxy<T> : IUnmanaged<Proxy<T>> where T : unmanaged
     {
@@ -55,7 +60,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         public T Payload { get; init; }
     }
 
-    // Cells
+    // Nodes
     private struct Node : IUnmanaged<Node>
     {
         public int NextFreeIndex;
@@ -84,10 +89,6 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private Node[] _nodes;
     private int _nodeFreeListHead;
 
-    // TODO: Describe how the cells are modelled.
-    private readonly Dictionary<long, int> _cells;
-    private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
-
     public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
     {
     }
@@ -108,34 +109,20 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
 
         CellSize = cellSize;
+        _cells = new Dictionary<long, int>(capacity);
 
-        // Proxies
-        _proxies = new Proxy<TPayload>[capacity];
+        _proxies = Array.Empty<Proxy<TPayload>>();
         _proxyFreeListHead = Null;
 
-        for (var i = 0; i < _proxies.Length; i++)
-        {
-            _proxies[i].NextFreeIndex = i + 1;
-            _proxies[i].NodeListHead = Null;
-        }
-
-        if (_proxies.Length > 0)
-        {
-            _proxies[^1].NextFreeIndex = Null;
-            _proxyFreeListHead = 0;
-        }
-
-        // Cells
         _nodes = Array.Empty<Node>();
         _nodeFreeListHead = Null;
 
         if (capacity > 0)
         {
             // TODO: This may overgrow - is that ok?
+            GrowProxyPool(capacity);
             GrowNodePool(capacity);
         }
-
-        _cells = new Dictionary<long, int>(capacity);
     }
 
     public SizeD CellSize { get; }
@@ -146,7 +133,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         if (_proxyFreeListHead == Null)
         {
-            throw new NotImplementedException("Proxy array reallocation is not yet supported.");
+            GrowProxyPool(_proxies.Length + 1);
         }
 
         var index = _proxyFreeListHead;
@@ -344,6 +331,23 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         node.Clear();
         node.NextFreeIndex = _nodeFreeListHead;
         _nodeFreeListHead = nodeIndex;
+    }
+
+    private void GrowProxyPool(int capacity)
+    {
+        var oldCapacity = _proxies.Length;
+        Debug.Assert(capacity > oldCapacity);
+
+        GrowArray(ref _proxies, capacity, DefaultCapacity);
+
+        for (var i = oldCapacity; i < _proxies.Length; i++)
+        {
+            _proxies[i].NextFreeIndex = i + 1;
+            _proxies[i].NodeListHead = Null;
+        }
+
+        _proxies[^1].NextFreeIndex = _proxyFreeListHead;
+        _proxyFreeListHead = oldCapacity;
     }
 
     private void GrowNodePool(int capacity)

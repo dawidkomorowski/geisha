@@ -169,7 +169,7 @@ internal class SpatialGridTests
     }
 
     [Test]
-    public void CreateProxy_ShouldThrowNotImplementedException_WhenCapacityIsExceeded()
+    public void CreateProxy_ShouldSucceed_WhenCapacityIsExceeded()
     {
         // Arrange
         var grid = new SpatialGrid<int>(20, 1);
@@ -177,20 +177,66 @@ internal class SpatialGridTests
         grid.CreateProxy(in bounds, 1);
 
         // Act
+        var id2 = grid.CreateProxy(in bounds, 2);
+
         // Assert
-        Assert.That(() => grid.CreateProxy(in bounds, 2), Throws.TypeOf<NotImplementedException>());
+        Assert.That(grid.IsValidProxy(id2), Is.True);
+        Assert.That(grid.GetProxyData(id2).Payload, Is.EqualTo(2));
     }
 
     [Test]
-    public void CreateProxy_ShouldThrowNotImplementedException_WhenCapacityIsZero()
+    public void CreateProxy_ShouldSucceed_WhenCapacityIsZero()
     {
         // Arrange
         var grid = new SpatialGrid<int>(20, 0);
         var bounds = new AABB2D(0, 0, 10, 10);
 
         // Act
+        var id = grid.CreateProxy(in bounds, 1);
+
         // Assert
-        Assert.That(() => grid.CreateProxy(in bounds, 1), Throws.TypeOf<NotImplementedException>());
+        Assert.That(grid.IsValidProxy(id), Is.True);
+        Assert.That(grid.GetProxyData(id).Payload, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void CreateProxy_ShouldKeepExistingProxiesValid_WhenReallocationOccurs()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20, 1);
+        var bounds = new AABB2D(0, 0, 10, 10);
+        var id1 = grid.CreateProxy(in bounds, 1);
+
+        // Act
+        var id2 = grid.CreateProxy(in bounds, 2);
+
+        // Assert
+        Assert.That(grid.IsValidProxy(id1), Is.True);
+        Assert.That(grid.GetProxyData(id1).Payload, Is.EqualTo(1));
+        Assert.That(grid.IsValidProxy(id2), Is.True);
+        Assert.That(grid.GetProxyData(id2).Payload, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void CreateProxy_ShouldSupportMultipleReallocations()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20, 1);
+        var bounds = new AABB2D(0, 0, 10, 10);
+
+        // Act — fill well beyond the initial capacity to force multiple reallocations
+        var ids = new SpatialGridProxyId[10];
+        for (var i = 0; i < ids.Length; i++)
+        {
+            ids[i] = grid.CreateProxy(in bounds, i);
+        }
+
+        // Assert
+        for (var i = 0; i < ids.Length; i++)
+        {
+            Assert.That(grid.IsValidProxy(ids[i]), Is.True);
+            Assert.That(grid.GetProxyData(ids[i]).Payload, Is.EqualTo(i));
+        }
     }
 
     [Test]
