@@ -60,11 +60,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         public int NextFreeIndex;
 
-        public int NextInCellIndex;
-        public int PrevInCellIndex;
+        public int NextCellNodeIndex;
+        public int PrevCellNodeIndex;
 
-        public int NextOfProxyIndex;
-        public int PrevOfProxyIndex;
+        public int NextProxyNodeIndex;
+        public int PrevProxyNodeIndex;
 
         public int ProxyIndex;
         public long CellKey;
@@ -72,10 +72,10 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         public void Clear()
         {
             NextFreeIndex = Null;
-            NextInCellIndex = Null;
-            PrevInCellIndex = Null;
-            NextOfProxyIndex = Null;
-            PrevOfProxyIndex = Null;
+            NextCellNodeIndex = Null;
+            PrevCellNodeIndex = Null;
+            NextProxyNodeIndex = Null;
+            PrevProxyNodeIndex = Null;
             ProxyIndex = Null;
             CellKey = 0;
         }
@@ -235,7 +235,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             {
                 ref var node1 = ref _nodes[node1Index];
 
-                var node2Index = node1.NextInCellIndex;
+                var node2Index = node1.NextCellNodeIndex;
                 while (node2Index != Null && shouldContinue)
                 {
                     ref var node2 = ref _nodes[node2Index];
@@ -258,10 +258,10 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
                         }
                     }
 
-                    node2Index = node2.NextInCellIndex;
+                    node2Index = node2.NextCellNodeIndex;
                 }
 
-                node1Index = node1.NextInCellIndex;
+                node1Index = node1.NextCellNodeIndex;
             }
         }
     }
@@ -288,11 +288,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         ref var node = ref _nodes[nodeIndex];
         _nodeFreeListHead = node.NextFreeIndex;
 
-        node.NextInCellIndex = cellListHead;
-        node.PrevInCellIndex = Null;
+        node.NextCellNodeIndex = cellListHead;
+        node.PrevCellNodeIndex = Null;
 
-        node.NextOfProxyIndex = proxy.NodeListHead;
-        node.PrevOfProxyIndex = Null;
+        node.NextProxyNodeIndex = proxy.NodeListHead;
+        node.PrevProxyNodeIndex = Null;
         proxy.NodeListHead = nodeIndex;
 
         node.ProxyIndex = proxyIndex;
@@ -303,42 +303,42 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     {
         ref var node = ref _nodes[nodeIndex];
 
-        if (node.NextInCellIndex != Null)
+        if (node.NextCellNodeIndex != Null)
         {
-            _nodes[node.NextInCellIndex].PrevInCellIndex = node.PrevInCellIndex;
+            _nodes[node.NextCellNodeIndex].PrevCellNodeIndex = node.PrevCellNodeIndex;
         }
 
-        if (node.PrevInCellIndex != Null)
+        if (node.PrevCellNodeIndex != Null)
         {
-            _nodes[node.PrevInCellIndex].NextInCellIndex = node.NextInCellIndex;
+            _nodes[node.PrevCellNodeIndex].NextCellNodeIndex = node.NextCellNodeIndex;
         }
 
         if (_cells[node.CellKey] == nodeIndex)
         {
-            if (node.NextInCellIndex == Null)
+            if (node.NextCellNodeIndex == Null)
             {
                 _cells.Remove(node.CellKey);
             }
             else
             {
-                _cells[node.CellKey] = node.NextInCellIndex;
+                _cells[node.CellKey] = node.NextCellNodeIndex;
             }
         }
 
-        if (node.NextOfProxyIndex != Null)
+        if (node.NextProxyNodeIndex != Null)
         {
-            _nodes[node.NextOfProxyIndex].PrevOfProxyIndex = node.PrevOfProxyIndex;
+            _nodes[node.NextProxyNodeIndex].PrevProxyNodeIndex = node.PrevProxyNodeIndex;
         }
 
-        if (node.PrevOfProxyIndex != Null)
+        if (node.PrevProxyNodeIndex != Null)
         {
-            _nodes[node.PrevOfProxyIndex].NextOfProxyIndex = node.NextOfProxyIndex;
+            _nodes[node.PrevProxyNodeIndex].NextProxyNodeIndex = node.NextProxyNodeIndex;
         }
 
         ref var proxy = ref _proxies[node.ProxyIndex];
         if (proxy.NodeListHead == nodeIndex)
         {
-            proxy.NodeListHead = node.NextOfProxyIndex;
+            proxy.NodeListHead = node.NextProxyNodeIndex;
         }
 
         node.Clear();
