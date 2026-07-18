@@ -629,7 +629,7 @@ internal class SpatialGridTests
     // --- QueryOverlappingPairs: cell boundary placement ---
 
     [Test]
-    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxyBoundsMaxIsExactlyOnCellBoundary()
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxyMaxCoordinateLandsOnCellBoundary()
     {
         // Arrange
         // Cell size 10. Proxy max at x=10 maps to cell x=1 via Floor(10/10)=1, so the proxy
@@ -646,7 +646,7 @@ internal class SpatialGridTests
     }
 
     [Test]
-    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesTouchAtCellBoundaryEdge()
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesTouchAtCellBoundaryProducingDegenerateIntersection()
     {
         // Arrange
         // Cell size 10. Proxies are in adjacent cells and touch exactly at x=10 (a cell boundary).
@@ -661,6 +661,8 @@ internal class SpatialGridTests
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
     }
+
+    // --- QueryOverlappingPairs: negative coordinates ---
 
     [Test]
     public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesAreAtNegativeCoordinates()
