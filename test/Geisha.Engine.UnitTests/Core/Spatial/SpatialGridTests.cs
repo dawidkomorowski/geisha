@@ -172,16 +172,19 @@ internal class SpatialGridTests
     public void CreateProxy_ShouldSucceed_WhenCapacityIsExceeded()
     {
         // Arrange
-        var grid = new SpatialGrid<int>(20, 1);
+        // Capacity 4 matches the internal DefaultCapacity so the proxy pool is fully consumed
+        // after 4 creates, and the 5th genuinely triggers reallocation.
+        const int capacity = 4;
+        var grid = new SpatialGrid<int>(20, capacity);
         var bounds = new AABB2D(0, 0, 10, 10);
-        grid.CreateProxy(in bounds, 1);
+        for (var i = 0; i < capacity; i++) grid.CreateProxy(in bounds, i);
 
         // Act
-        var id2 = grid.CreateProxy(in bounds, 2);
+        var id = grid.CreateProxy(in bounds, 99);
 
         // Assert
-        Assert.That(grid.IsValidProxy(id2), Is.True);
-        Assert.That(grid.GetProxyData(id2).Payload, Is.EqualTo(2));
+        Assert.That(grid.IsValidProxy(id), Is.True);
+        Assert.That(grid.GetProxyData(id).Payload, Is.EqualTo(99));
     }
 
     [Test]
@@ -203,18 +206,25 @@ internal class SpatialGridTests
     public void CreateProxy_ShouldKeepExistingProxiesValid_WhenReallocationOccurs()
     {
         // Arrange
-        var grid = new SpatialGrid<int>(20, 1);
+        // Capacity 4 matches the internal DefaultCapacity so the proxy pool is fully consumed
+        // after 4 creates, and the 5th genuinely triggers reallocation.
+        const int capacity = 4;
+        var grid = new SpatialGrid<int>(20, capacity);
         var bounds = new AABB2D(0, 0, 10, 10);
-        var id1 = grid.CreateProxy(in bounds, 1);
+        var existingIds = new SpatialGridProxyId[capacity];
+        for (var i = 0; i < capacity; i++) existingIds[i] = grid.CreateProxy(in bounds, i);
 
-        // Act
-        var id2 = grid.CreateProxy(in bounds, 2);
+        // Act — triggers reallocation
+        var newId = grid.CreateProxy(in bounds, 99);
 
         // Assert
-        Assert.That(grid.IsValidProxy(id1), Is.True);
-        Assert.That(grid.GetProxyData(id1).Payload, Is.EqualTo(1));
-        Assert.That(grid.IsValidProxy(id2), Is.True);
-        Assert.That(grid.GetProxyData(id2).Payload, Is.EqualTo(2));
+        for (var i = 0; i < capacity; i++)
+        {
+            Assert.That(grid.IsValidProxy(existingIds[i]), Is.True);
+            Assert.That(grid.GetProxyData(existingIds[i]).Payload, Is.EqualTo(i));
+        }
+        Assert.That(grid.IsValidProxy(newId), Is.True);
+        Assert.That(grid.GetProxyData(newId).Payload, Is.EqualTo(99));
     }
 
     [Test]
