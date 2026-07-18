@@ -662,6 +662,24 @@ internal class SpatialGridTests
         AssertPairsEquivalent(queryResults, (id1, id2));
     }
 
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesTouchAtGridCrossingProducingDegeneratePointIntersection()
+    {
+        // Arrange
+        // Cell size 10. Proxies touch at exactly (10, 10) — a grid crossing point.
+        // Intersection is a degenerate point AABB with min=max=(10,10).
+        // FindCell(10,10) = cell (1,1); both proxies span cell (1,1) so the pair must be reported once.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);   // spans cells x=[0..1], y=[0..1]
+        var id2 = grid.CreateProxy(new AABB2D(10, 10, 20, 20), 2); // spans cells x=[1..2], y=[1..2]
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
     // --- QueryOverlappingPairs: negative coordinates ---
 
     [Test]
