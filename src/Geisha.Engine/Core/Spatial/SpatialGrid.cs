@@ -119,7 +119,6 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
         if (capacity > 0)
         {
-            // TODO: This may overgrow - is that ok?
             GrowProxyPool(capacity);
             GrowNodePool(capacity);
         }
@@ -402,7 +401,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
                 Current = new Cell(x, y);
 
-                return y <= _cellRange.MaxX;
+                return y <= _cellRange.MaxY;
             }
 
             public Cell Current { get; private set; }

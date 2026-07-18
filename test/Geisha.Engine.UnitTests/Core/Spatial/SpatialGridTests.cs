@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Spatial;
@@ -7,7 +6,6 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Spatial;
 
-// TODO: Some test cases duplicate each other - figure out how to improve that.
 [TestFixture]
 internal class SpatialGridTests
 {
@@ -133,6 +131,28 @@ internal class SpatialGridTests
     }
 
     [Test]
+    public void IsValidProxy_ShouldReturnFalse_ForOldId_AfterSlotIsReusedByNewProxy()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var bounds = new AABB2D(0, 0, 10, 10);
+        var oldId = grid.CreateProxy(in bounds, 1);
+        grid.DestroyProxy(oldId);
+
+        // Reuse the same slot
+        var newId = grid.CreateProxy(in bounds, 2);
+
+        // Act
+        var oldIsValid = grid.IsValidProxy(oldId);
+        var newIsValid = grid.IsValidProxy(newId);
+
+        // Assert
+        Assert.That(oldId.Index, Is.EqualTo(newId.Index)); // same slot
+        Assert.That(oldIsValid, Is.False);
+        Assert.That(newIsValid, Is.True);
+    }
+
+    [Test]
     public void CreateProxy_ShouldCreateProxyWithSpecifiedBoundsAndPayload()
     {
         // Arrange
@@ -223,6 +243,7 @@ internal class SpatialGridTests
             Assert.That(grid.IsValidProxy(existingIds[i]), Is.True);
             Assert.That(grid.GetProxyData(existingIds[i]).Payload, Is.EqualTo(i));
         }
+
         Assert.That(grid.IsValidProxy(newId), Is.True);
         Assert.That(grid.GetProxyData(newId).Payload, Is.EqualTo(99));
     }
@@ -554,7 +575,7 @@ internal class SpatialGridTests
         var grid = new SpatialGrid<int>(100);
         var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
         var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
-        var id3 = grid.CreateProxy(new AABB2D(50, 50, 60, 60), 3);
+        _ = grid.CreateProxy(new AABB2D(50, 50, 60, 60), 3);
 
         // Act
         var queryResults = QueryOverlappingPairs(grid);
@@ -584,7 +605,7 @@ internal class SpatialGridTests
     {
         // Arrange
         var grid = new SpatialGrid<int>(100);
-        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        _ = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
         var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
 
         // Act
@@ -619,7 +640,7 @@ internal class SpatialGridTests
         // Arrange
         // Cell size 10: both proxies start in the same cell and overlap.
         var grid = new SpatialGrid<int>(10);
-        var id1 = grid.CreateProxy(new AABB2D(0, 0, 9, 9), 1);
+        _ = grid.CreateProxy(new AABB2D(0, 0, 9, 9), 1);
         var id2 = grid.CreateProxy(new AABB2D(5, 5, 14, 14), 2);
 
         // Act
@@ -636,7 +657,7 @@ internal class SpatialGridTests
     {
         // Arrange
         var grid = new SpatialGrid<int>(100);
-        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        _ = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
         var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
 
         // Act
@@ -645,6 +666,209 @@ internal class SpatialGridTests
 
         // Assert
         Assert.That(queryResults, Is.Empty);
+    }
+
+    // Reproduction of bug: CellRange.Enumerator uses MaxX instead of MaxY for Y-axis termination.
+    // A proxy that spans more rows than columns (taller than wide in cell-space) exercises this.
+    [Test]
+    [Description("Reproduction of bug: CellRange.Enumerator uses MaxX instead of MaxY for Y-axis termination.")]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxySpansMoreRowsThanColumns()
+    {
+        // Arrange
+        // Cell size 10x10. Proxy 1 spans cells x=[0..0], y=[0..2] (1 column, 3 rows).
+        // Proxy 2 sits in cell y=2 — only reachable if the enumerator terminates on MaxY, not MaxX.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 9, 29), 1); // 1 col wide, 3 rows tall
+        var id2 = grid.CreateProxy(new AABB2D(0, 25, 9, 34), 2); // overlaps id1 in row y=2
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesTouchAtCellBoundaryEdge()
+    {
+        // Arrange
+        // Cell size 10. Proxies are in adjacent cells and touch exactly at x=10 (a cell boundary).
+        // The intersection is a degenerate vertical line; canonical cell must be one both share.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 9), 1); // in cells x=0 and x=1
+        var id2 = grid.CreateProxy(new AABB2D(10, 0, 20, 9), 2); // in cells x=1 and x=2
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldStopReporting_WhenHandlerReturnsFalse()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+        grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
+
+        // Act
+        var queryResults = new List<PairQueryResult>();
+        var queryHandler = new LimitedPairListQueryHandler(queryResults, maxPairs: 1);
+        grid.QueryOverlappingPairs(ref queryHandler);
+
+        // Assert
+        Assert.That(queryResults, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesTouchAtCorner()
+    {
+        // Arrange
+        // Both proxies share only a single corner point at (10, 10).
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(10, 10, 20, 20), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReportNewProxy_WhenSlotIsReusedAfterDestroy()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+        grid.DestroyProxy(id2);
+
+        // Reuse the slot — new proxy overlaps id1, old id2 must not appear.
+        var id3 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 3);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(grid.IsValidProxy(id2), Is.False);
+        AssertPairsEquivalent(queryResults, (id1, id3));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxyIsMovedToSameBounds()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+
+        // Act — no-op move: same bounds
+        grid.MoveProxy(id2, new AABB2D(5, 5, 15, 15));
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenMultiCellProxyIsMovedIntoOverlap()
+    {
+        // Arrange
+        // Cell size 10. Proxy 1 spans multiple cells; proxy 2 starts far away and is moved
+        // to a multi-cell region that overlaps proxy 1.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1); // spans cells (0,0)-(2,2)
+        var id2 = grid.CreateProxy(new AABB2D(100, 100, 125, 125), 2);
+
+        // Act
+        grid.MoveProxy(id2, new AABB2D(20, 20, 45, 45)); // spans cells (2,2)-(4,4), overlaps id1 at (2,2)
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenMultiCellProxyIsMovedOutOfOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        _ = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
+        var id2 = grid.CreateProxy(new AABB2D(20, 20, 45, 45), 2);
+
+        // Act
+        grid.MoveProxy(id2, new AABB2D(100, 100, 125, 125));
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesAreAtNegativeCoordinates()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(-20, -20, -10, -10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(-15, -15, -5, -5), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnNoPairs_WhenProxiesAreAtNegativeCoordinatesAndDoNotOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        grid.CreateProxy(new AABB2D(-30, -30, -21, -21), 1);
+        grid.CreateProxy(new AABB2D(-10, -10, -1, -1), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenProxiesSpanNegativeAndPositiveCoordinates()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(-5, -5, 5, 5), 1);
+        var id2 = grid.CreateProxy(new AABB2D(-3, -3, 3, 3), 2);
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void CreateProxy_ShouldRegisterInCorrectCells_WhenBoundsMaxIsExactlyOnCellBoundary()
+    {
+        // Arrange
+        // Cell size 10. Proxy max at x=10 maps to cell x=1 via Floor(10/10)=1, so the proxy
+        // spans cells x=0 and x=1. A second proxy in cell x=1 should be reported as overlapping.
+        var grid = new SpatialGrid<int>(10);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 9), 1); // spans cells x=0 and x=1
+        var id2 = grid.CreateProxy(new AABB2D(10, 0, 19, 9), 2); // in cell x=1
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
     }
 
     private static List<PairQueryResult> QueryOverlappingPairs(SpatialGrid<int> grid)
@@ -684,6 +908,24 @@ internal class SpatialGridTests
         {
             _pairs.Add(new PairQueryResult(proxyId1, proxyId2));
             return true;
+        }
+    }
+
+    private readonly struct LimitedPairListQueryHandler : IPairsQueryHandler
+    {
+        private readonly List<PairQueryResult> _pairs;
+        private readonly int _maxPairs;
+
+        public LimitedPairListQueryHandler(List<PairQueryResult> pairs, int maxPairs)
+        {
+            _pairs = pairs;
+            _maxPairs = maxPairs;
+        }
+
+        public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
+        {
+            _pairs.Add(new PairQueryResult(proxyId1, proxyId2));
+            return _pairs.Count < _maxPairs;
         }
     }
 }
