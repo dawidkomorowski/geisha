@@ -74,6 +74,12 @@ internal static class Physics2D
             return scene.TileSize;
         }
 
+        public static SizeD GetBroadPhaseGridCellSize(PhysicsSceneId id)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.CellSize;
+        }
+
         public static int GetBodyCount(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);

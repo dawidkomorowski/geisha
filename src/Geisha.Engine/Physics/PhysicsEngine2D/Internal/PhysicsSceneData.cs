@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
+using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -76,6 +77,8 @@ internal struct PhysicsSceneData
 
             Debug.Assert(scene._index == _firstFreeIndex, "Corrupted scene index.");
 
+            const int defaultCapacity = 256;
+
             scene._version++;
             scene.SimulationParameters = new SimulationParameters
             {
@@ -87,13 +90,22 @@ internal struct PhysicsSceneData
             scene.TileSize = sceneDefinition.TileSize;
             scene.TileMap = new TileMap(sceneDefinition.TileSize);
             scene._firstFreeBodyIndex = NoFreeIndex;
-            scene._bodyIndices = new List<BodyIndex>(256);
+            scene._bodyIndices = new List<BodyIndex>(defaultCapacity);
             scene._staticBodyCount = 0;
             scene._kinematicBodyCount = 0;
-            scene._bodies = new List<RigidBodyData>(256);
-            scene.Contacts = new List<ContactData>(256);
-            scene.SensorOverlapCache = new SensorOverlapCache(256);
-            scene.SensorOverlapEvents = new List<SensorOverlapEvent>(256);
+            scene._bodies = new List<RigidBodyData>(defaultCapacity);
+            scene.Contacts = new List<ContactData>(defaultCapacity);
+            scene.SensorOverlapCache = new SensorOverlapCache(defaultCapacity);
+            scene.SensorOverlapEvents = new List<SensorOverlapEvent>(defaultCapacity);
+
+            scene.CellSize = sceneDefinition.BroadPhaseGridCellSize;
+            if (scene.CellSize.Width < 0 || scene.CellSize.Height < 0)
+            {
+                scene.CellSize = new SizeD(256, 256);
+            }
+
+            scene.StaticGrid = new SpatialGrid<RigidBodyId>(scene.CellSize, defaultCapacity);
+            scene.DynamicGrid = new SpatialGrid<RigidBodyId>(scene.CellSize, defaultCapacity);
 
             _firstFreeIndex = scene._nextFreeIndex;
 
@@ -173,6 +185,11 @@ internal struct PhysicsSceneData
     // Sensors
     public SensorOverlapCache SensorOverlapCache;
     public List<SensorOverlapEvent> SensorOverlapEvents;
+
+    // Broad-phase
+    public SizeD CellSize;
+    public SpatialGrid<RigidBodyId> StaticGrid;
+    public SpatialGrid<RigidBodyId> DynamicGrid;
 
     public ref RigidBodyData CreateBody(BodyType bodyType)
     {

@@ -52,6 +52,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                 nameof(physicsConfiguration));
         }
 
+        // TODO: Add tests and validation for BroadPhaseGridCellSize.
+
         EnableDebugRendering = physicsConfiguration.EnableDebugRendering;
 
         _timeSystem = timeSystem;
@@ -63,7 +65,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             Substeps = physicsConfiguration.Substeps,
             VelocityIterations = physicsConfiguration.VelocityIterations,
             PositionIterations = physicsConfiguration.PositionIterations,
-            PenetrationTolerance = physicsConfiguration.PenetrationTolerance
+            PenetrationTolerance = physicsConfiguration.PenetrationTolerance,
+            BroadPhaseGridCellSize = physicsConfiguration.BroadPhaseGridCellSize
         };
 
         _physicsScene2D = PhysicsScene2D.Create(sceneDefinition);

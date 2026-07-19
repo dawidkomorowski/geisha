@@ -12,6 +12,7 @@ internal readonly record struct PhysicsScene2DDefinition
     public int VelocityIterations { get; init; }
     public int PositionIterations { get; init; }
     public double PenetrationTolerance { get; init; }
+    public SizeD BroadPhaseGridCellSize { get; init; }
 }
 
 internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
@@ -61,6 +62,7 @@ internal readonly record struct PhysicsScene2D : IUnmanaged<PhysicsScene2D>
     }
 
     public SizeD TileSize => Physics2D.Scene.GetTileSize(Id);
+    public SizeD BroadPhaseGridCellSize => Physics2D.Scene.GetBroadPhaseGridCellSize(Id);
 
     public BodiesView Bodies => new(Id);
 
