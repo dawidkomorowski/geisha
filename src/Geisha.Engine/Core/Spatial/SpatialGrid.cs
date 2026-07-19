@@ -40,6 +40,9 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private const int Null = -1;
     private const int DefaultCapacity = 4;
 
+    // TODO: Describe what it is and why it is used.
+    private int _queryId;
+
     private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
 
     // TODO: Describe how the cells are modelled.
@@ -51,6 +54,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         public int Version;
         public int NextFreeIndex;
         public int NodeListHead;
+        public int LastQueryId;
 
         public AABB2D Bounds;
         public T Payload;
@@ -149,9 +153,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         proxy.Bounds = bounds;
         proxy.Payload = payload;
 
-        var cellRange = FindCells(bounds);
-
-        foreach (var cell in cellRange)
+        foreach (var cell in FindCells(bounds))
         {
             CreateNode(cell, ref proxy, index);
         }
@@ -202,9 +204,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
             DestroyNode(proxy.NodeListHead);
         }
 
-        var cellRange = FindCells(newBounds);
-
-        foreach (var cell in cellRange)
+        foreach (var cell in FindCells(newBounds))
         {
             CreateNode(cell, ref proxy, id.Index);
         }
@@ -233,7 +233,37 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
     public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
     {
-        // TODO: To be implemented.
+        _queryId++;
+
+        var shouldContinue = true;
+
+        foreach (var cell in FindCells(bounds))
+        {
+            if (!shouldContinue)
+            {
+                break;
+            }
+
+            var nodeIndex = _cells.GetValueOrDefault(cell.Key, Null);
+            while (nodeIndex != Null && shouldContinue)
+            {
+                ref var node = ref _nodes[nodeIndex];
+                ref var proxy = ref _proxies[node.ProxyIndex];
+
+                if (proxy.LastQueryId != _queryId)
+                {
+                    proxy.LastQueryId = _queryId;
+
+                    if (proxy.Bounds.Overlaps(bounds))
+                    {
+                        var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
+                        shouldContinue = handler.Handle(proxyId);
+                    }
+                }
+
+                nodeIndex = node.NextCellNodeIndex;
+            }
+        }
     }
 
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
