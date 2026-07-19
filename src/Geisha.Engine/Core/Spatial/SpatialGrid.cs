@@ -25,6 +25,11 @@ public readonly record struct SpatialGridProxyId
     public bool IsNotNull => _value > 0;
 }
 
+public interface IProxyQueryHandler
+{
+    bool Handle(SpatialGridProxyId proxyId);
+}
+
 public interface IPairsQueryHandler
 {
     bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2);
@@ -203,6 +208,16 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         {
             CreateNode(cell, ref proxy, id.Index);
         }
+    }
+
+    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
+    {
+        // TODO: To be implemented.
+    }
+
+    public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
+    {
+        // TODO: To be implemented.
     }
 
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
@@ -408,7 +423,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
     }
 
-    private CellRange FindCells(AABB2D bounds)
+    private CellRange FindCells(in AABB2D bounds)
     {
         var cellMinX = (int)System.Math.Floor(bounds.Min.X / CellSize.Width);
         var cellMinY = (int)System.Math.Floor(bounds.Min.Y / CellSize.Height);
@@ -418,7 +433,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         return new CellRange(cellMinX, cellMinY, cellMaxX, cellMaxY);
     }
 
-    private Cell FindCell(Vector2 point)
+    private Cell FindCell(in Vector2 point)
     {
         var x = (int)System.Math.Floor(point.X / CellSize.Width);
         var y = (int)System.Math.Floor(point.Y / CellSize.Height);
