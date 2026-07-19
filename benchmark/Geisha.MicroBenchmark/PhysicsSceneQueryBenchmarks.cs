@@ -17,6 +17,7 @@ namespace Geisha.MicroBenchmark;
 public class PhysicsSceneQueryBenchmarks
 {
     private const int StaticBodiesCount = 10000;
+    private const int KinematicBodiesCount = 10000;
     private const double QueryVisualScale = 0.5;
 
     private Scene _scene = null!;
@@ -41,7 +42,7 @@ public class PhysicsSceneQueryBenchmarks
         _physicsSystem = new PhysicsSystem(physicsConfiguration, timeSystem, _debugRenderer);
         _scene.AddObserver(_physicsSystem);
 
-        ConfigureStaticScene(new SizeD(6000, 6000), StaticBodiesCount);
+        ConfigureStaticScene(new SizeD(6000, 6000), StaticBodiesCount, KinematicBodiesCount);
         _physicsSystem.SynchronizePhysicsState();
 
         SaveVisualOutput("PhysicsSceneQueryBenchmarks[0]");
@@ -83,9 +84,9 @@ public class PhysicsSceneQueryBenchmarks
         return _physicsSystem.QueryOverlap(_aabbToQuery, _collidersList);
     }
 
-    private void ConfigureStaticScene(SizeD bounds, int staticBodies)
+    private void ConfigureStaticScene(SizeD bounds, int staticBodies, int kinematicBodies)
     {
-        var random = new Random(560);
+        var random = new Random(0);
 
         for (var i = 0; i < staticBodies; i++)
         {
@@ -98,6 +99,31 @@ public class PhysicsSceneQueryBenchmarks
             else
             {
                 CreateCircleStaticBody(position, random.Next(5, 25));
+            }
+        }
+
+        for (var i = 0; i < kinematicBodies; i++)
+        {
+            var position = RandomPositionInBounds(random, bounds);
+
+            if (random.Next(0, 2) == 0)
+            {
+                CreateRectangleKinematicBody(
+                    position,
+                    width: random.Next(5, 50),
+                    height: random.Next(5, 50),
+                    linearVelocity: Vector2.Zero,
+                    angularVelocity: 0
+                );
+            }
+            else
+            {
+                CreateCircleKinematicBody(
+                    position,
+                    radius: random.Next(5, 25),
+                    linearVelocity: Vector2.Zero,
+                    angularVelocity: 0
+                );
             }
         }
     }
@@ -120,6 +146,34 @@ public class PhysicsSceneQueryBenchmarks
 
         var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
         circleColliderComponent.Radius = radius;
+    }
+
+    private void CreateRectangleKinematicBody(Vector2 position, double width, double height, Vector2 linearVelocity, double angularVelocity)
+    {
+        var entity = _scene.CreateEntity();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = position;
+
+        var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+        rectangleColliderComponent.Dimensions = new Vector2(width, height);
+
+        var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+        kinematicRigidBody2DComponent.LinearVelocity = linearVelocity;
+        kinematicRigidBody2DComponent.AngularVelocity = angularVelocity;
+    }
+
+    private void CreateCircleKinematicBody(Vector2 position, double radius, Vector2 linearVelocity, double angularVelocity)
+    {
+        var entity = _scene.CreateEntity();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = position;
+
+        var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+        circleColliderComponent.Radius = radius;
+
+        var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+        kinematicRigidBody2DComponent.LinearVelocity = linearVelocity;
+        kinematicRigidBody2DComponent.AngularVelocity = angularVelocity;
     }
 
     private void SaveVisualOutput(string fileName)
