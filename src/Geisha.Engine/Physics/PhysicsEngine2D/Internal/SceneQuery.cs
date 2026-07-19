@@ -7,6 +7,8 @@ using Geisha.Engine.Core.Spatial;
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 // TODO: Implement remaining queries using spatial grid.
+// TODO: Review and possibly update related tests to cover new implementation.
+//       Now queries rely on spatial grid so bugs in updates of spatial grid should be captured in query tests.
 internal static class SceneQuery
 {
     public static void QueryPoint<TQueryHandler>(in PhysicsSceneData scene, in Vector2 point, ref TQueryHandler handler)

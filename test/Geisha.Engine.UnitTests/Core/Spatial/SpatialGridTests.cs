@@ -416,6 +416,36 @@ internal class SpatialGridTests
         Assert.That(() => grid.MoveProxy(id, in bounds), Throws.InvalidOperationException);
     }
 
+    [Test]
+    public void DestroyProxy_ShouldNotOrphanOtherProxiesInSameCell_WhenMiddleProxyOfThreeIsDestroyed()
+    {
+        // This test reproduces a bug where creating a new node in a cell that already contains nodes
+        // did not update the "previous" links of the existing list (cell list and proxy list).
+        // As a result, destroying a node that was not the list head left stale "next" links pointing
+        // at a freed/cleared node, which caused other proxies sharing the same cell to be silently
+        // dropped from subsequent queries (or, in general, could corrupt the list traversal).
+
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var point = new Vector2(5, 5);
+        var bounds = new AABB2D(0, 0, 10, 10);
+
+        // Created in order so that, internally, the cell's node list head is: idC -> idB -> idA.
+        var idA = grid.CreateProxy(in bounds, 1);
+        var idB = grid.CreateProxy(in bounds, 2);
+        var idC = grid.CreateProxy(in bounds, 3);
+
+        // Act
+        // Destroy the middle-created proxy. Without the fix, the previously-created idA proxy
+        // becomes orphaned because idC's "next" link is not corrected.
+        grid.DestroyProxy(idB);
+
+        var queryResults = QueryPoint(grid, point);
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { idA, idC }));
+    }
+
     #endregion
 
     #region QueryPoint
