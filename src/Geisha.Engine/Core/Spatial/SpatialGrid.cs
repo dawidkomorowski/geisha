@@ -338,9 +338,21 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         node.NextCellNodeIndex = cellListHead;
         node.PrevCellNodeIndex = Null;
 
+        // TODO: This fixes infinite loop in query bug. How to create regression test for that?
+        if (node.NextCellNodeIndex != Null)
+        {
+            _nodes[node.NextCellNodeIndex].PrevCellNodeIndex = nodeIndex;
+        }
+
         node.NextProxyNodeIndex = proxy.NodeListHead;
         node.PrevProxyNodeIndex = Null;
         proxy.NodeListHead = nodeIndex;
+
+        // TODO: This also was missing, but it seems that nothing yet relies on prev proxy node index. 
+        if (node.NextProxyNodeIndex != Null)
+        {
+            _nodes[node.NextProxyNodeIndex].PrevProxyNodeIndex = nodeIndex;
+        }
 
         node.ProxyIndex = proxyIndex;
         node.CellKey = cell.Key;

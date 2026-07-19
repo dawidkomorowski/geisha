@@ -230,6 +230,7 @@ internal struct PhysicsSceneData
 
         _bodies.Add(body);
 
+        // Update dense body array layout.
         switch (bodyType)
         {
             case BodyType.Static:
@@ -251,7 +252,16 @@ internal struct PhysicsSceneData
         Debug.Assert(BodiesLayoutIsValid(), "Invalid bodies layout.");
 
         var bodiesSpan = GetBodiesSpan();
-        return ref bodiesSpan[bodyIndex.DenseIndex];
+        ref var bodyRef = ref bodiesSpan[bodyIndex.DenseIndex];
+
+        bodyRef.SpatialProxyId = bodyType switch
+        {
+            BodyType.Static => StaticGrid.CreateProxy(bodyRef.AABB, bodyRef.Id),
+            BodyType.Kinematic => DynamicGrid.CreateProxy(bodyRef.AABB, bodyRef.Id),
+            _ => throw new ArgumentOutOfRangeException(nameof(bodyType), bodyType, null)
+        };
+
+        return ref bodyRef;
     }
 
     public void DestroyBody(RigidBodyId id)
@@ -270,6 +280,7 @@ internal struct PhysicsSceneData
 
         var denseIndex = bodyIndicesSpan[id.Index].DenseIndex;
 
+        // TODO: How to test that proxy is destroyed when body is destroyed?
         switch (body.Type)
         {
             case BodyType.Static:
@@ -282,9 +293,13 @@ internal struct PhysicsSceneData
                     body = ref bodiesSpan[denseIndex];
                 }
 
+                StaticGrid.DestroyProxy(body.SpatialProxyId);
+
                 break;
             case BodyType.Kinematic:
                 _kinematicBodyCount--;
+
+                DynamicGrid.DestroyProxy(body.SpatialProxyId);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

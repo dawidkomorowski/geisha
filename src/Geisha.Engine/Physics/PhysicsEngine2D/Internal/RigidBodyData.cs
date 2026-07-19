@@ -1,6 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
+using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -42,6 +43,10 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public int FirstContactIndex;
     public int LastContactIndex;
 
+    // Broad phase
+    public SpatialGridProxyId SpatialProxyId;
+    public AABB2D BroadPhaseAABB;
+
     public bool ContainsPoint(in Vector2 point) =>
         ColliderType switch
         {
@@ -78,7 +83,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    internal void RecomputeCollider()
+    internal void RecomputeCollider(ref PhysicsSceneData scene)
     {
         var transform = Matrix3x3.CreateTRS(Position, Rotation, Vector2.One);
 
@@ -92,6 +97,26 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             case ColliderType.Tile:
                 TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform);
                 AABB = TransformedRectangleCollider.ComputeAABB();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        // Update broad phase proxy.
+        switch (Type)
+        {
+            case BodyType.Static:
+                BroadPhaseAABB = AABB;
+                scene.StaticGrid.MoveProxy(SpatialProxyId, BroadPhaseAABB);
+                break;
+            case BodyType.Kinematic:
+                if (!BroadPhaseAABB.Contains(AABB))
+                {
+                    // Use twice as big AABB for broad phase to update it less often for moving bodies.
+                    BroadPhaseAABB = AABB2D.FromCenterAndSize(AABB.Center, AABB.Size * 2);
+                    scene.DynamicGrid.MoveProxy(SpatialProxyId, BroadPhaseAABB);
+                }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
