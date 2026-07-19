@@ -905,6 +905,424 @@ internal class SpatialGridTests
         AssertPairsEquivalent(queryResults, (id1, id3));
     }
 
+    // --- QueryPoint ---
+
+    [Test]
+    public void QueryPoint_ShouldReturnNoProxies_WhenGridIsEmpty()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(5, 5));
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnProxy_WhenPointIsInsideProxyBounds()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(5, 5));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnNoProxies_WhenPointIsOutsideAllProxyBounds()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(50, 50));
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnProxy_WhenPointIsOnMinBoundary()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(0, 0));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnProxy_WhenPointIsOnMaxBoundary()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(10, 10));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnMultipleProxies_WhenPointIsInsideOverlappingProxies()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+        grid.CreateProxy(new AABB2D(50, 50, 60, 60), 3);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(7, 7));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id1, id2 }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnProxy_WhenProxySpansMultipleCellsAndPointIsInNonOriginCell()
+    {
+        // Arrange
+        // Cell size 10. Proxy spans cells (0,0)-(2,2). Point is inside proxy bounds but in a
+        // different cell than the one containing the proxy's minimum corner.
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(22, 22));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnProxyOnlyOnce_WhenProxySpansMultipleCellsContainingPoint()
+    {
+        // Arrange
+        // Cell size 10. Point (10,10) lands exactly on a grid crossing shared by four cells,
+        // all of which are spanned by the proxy. The proxy must be reported only once.
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 20, 20), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(10, 10));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldNotIncludeDestroyedProxy()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.DestroyProxy(id);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(5, 5));
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReflectMovedProxyBounds()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.MoveProxy(id, new AABB2D(50, 50, 60, 60));
+
+        // Act
+        var queryAtOldLocation = QueryPoint(grid, new Vector2(5, 5));
+        var queryAtNewLocation = QueryPoint(grid, new Vector2(55, 55));
+
+        // Assert
+        Assert.That(queryAtOldLocation, Is.Empty);
+        Assert.That(queryAtNewLocation, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldStopReporting_WhenHandlerReturnsFalse()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 2);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 3);
+
+        // Act
+        var queryResults = new List<SpatialGridProxyId>();
+        var queryHandler = new LimitedProxyListQueryHandler(queryResults, maxProxies: 1);
+        var point = new Vector2(5, 5);
+        grid.QueryPoint(in point, ref queryHandler);
+
+        // Assert
+        Assert.That(queryResults, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnProxy_WhenPointIsAtNegativeCoordinates()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(-20, -20, -10, -10), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(-15, -15));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    // --- QueryBounds ---
+
+    [Test]
+    public void QueryBounds_ShouldReturnNoProxies_WhenGridIsEmpty()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 10, 10));
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxy_WhenQueryBoundsOverlapProxyBounds()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(5, 5, 15, 15));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnNoProxies_WhenQueryBoundsDoNotOverlapAnyProxy()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(50, 50, 60, 60));
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxy_WhenQueryBoundsOnlyTouchAtEdge()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(10, 0, 20, 10));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxy_WhenQueryBoundsOnlyTouchAtCorner()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(10, 10, 20, 20));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnMultipleProxies_WhenQueryBoundsOverlapMultipleProxies()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        var id1 = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        var id2 = grid.CreateProxy(new AABB2D(15, 15, 25, 25), 2);
+        grid.CreateProxy(new AABB2D(80, 80, 90, 90), 3);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(5, 5, 20, 20));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id1, id2 }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxyOnlyOnce_WhenQueryBoundsSpanMultipleCellsOverlappingSameProxy()
+    {
+        // Arrange
+        // Cell size 10. Query bounds span multiple cells (0,0)-(2,2), all of which are spanned
+        // by the same proxy. The proxy must be reported only once.
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 25, 25));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxy_WhenProxySpansMultipleCellsAndOnlyOneCellOverlapsQueryBounds()
+    {
+        // Arrange
+        // Cell size 10. Proxy spans cells (0,0)-(2,2) but query bounds only overlap the proxy
+        // in the cell farthest from its minimum corner.
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(21, 21, 24, 24));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldNotIncludeDestroyedProxy()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.DestroyProxy(id);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 10, 10));
+
+        // Assert
+        Assert.That(queryResults, Is.Empty);
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReflectMovedProxyBounds()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(20);
+        var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.MoveProxy(id, new AABB2D(50, 50, 60, 60));
+
+        // Act
+        var queryAtOldLocation = QueryBounds(grid, new AABB2D(0, 0, 10, 10));
+        var queryAtNewLocation = QueryBounds(grid, new AABB2D(50, 50, 60, 60));
+
+        // Assert
+        Assert.That(queryAtOldLocation, Is.Empty);
+        Assert.That(queryAtNewLocation, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldStopReporting_WhenHandlerReturnsFalse()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(100);
+        grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
+        grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
+        grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
+
+        // Act
+        var queryResults = new List<SpatialGridProxyId>();
+        var queryHandler = new LimitedProxyListQueryHandler(queryResults, maxProxies: 1);
+        var bounds = new AABB2D(0, 0, 20, 20);
+        grid.QueryBounds(in bounds, ref queryHandler);
+
+        // Assert
+        Assert.That(queryResults, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxy_WhenBothAreAtNegativeCoordinatesAndOverlap()
+    {
+        // Arrange
+        var grid = new SpatialGrid<int>(10);
+        var id = grid.CreateProxy(new AABB2D(-20, -20, -10, -10), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(-15, -15, -5, -5));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    private static List<SpatialGridProxyId> QueryPoint(SpatialGrid<int> grid, Vector2 point)
+    {
+        var queryResults = new List<SpatialGridProxyId>();
+        var queryHandler = new ProxyListQueryHandler(queryResults);
+        grid.QueryPoint(in point, ref queryHandler);
+        return queryResults;
+    }
+
+    private static List<SpatialGridProxyId> QueryBounds(SpatialGrid<int> grid, AABB2D bounds)
+    {
+        var queryResults = new List<SpatialGridProxyId>();
+        var queryHandler = new ProxyListQueryHandler(queryResults);
+        grid.QueryBounds(in bounds, ref queryHandler);
+        return queryResults;
+    }
+
+    private readonly struct ProxyListQueryHandler : IProxyQueryHandler
+    {
+        private readonly List<SpatialGridProxyId> _proxies;
+
+        public ProxyListQueryHandler(List<SpatialGridProxyId> proxies)
+        {
+            _proxies = proxies;
+        }
+
+        public bool Handle(SpatialGridProxyId proxyId)
+        {
+            _proxies.Add(proxyId);
+            return true;
+        }
+    }
+
+    private readonly struct LimitedProxyListQueryHandler : IProxyQueryHandler
+    {
+        private readonly List<SpatialGridProxyId> _proxies;
+        private readonly int _maxProxies;
+
+        public LimitedProxyListQueryHandler(List<SpatialGridProxyId> proxies, int maxProxies)
+        {
+            _proxies = proxies;
+            _maxProxies = maxProxies;
+        }
+
+        public bool Handle(SpatialGridProxyId proxyId)
+        {
+            _proxies.Add(proxyId);
+            return _proxies.Count < _maxProxies;
+        }
+    }
+
     private static List<PairQueryResult> QueryOverlappingPairs(SpatialGrid<int> grid)
     {
         var queryResults = new List<PairQueryResult>();
