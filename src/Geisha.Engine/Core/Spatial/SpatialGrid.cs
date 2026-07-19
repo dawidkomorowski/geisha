@@ -212,7 +212,23 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 
     public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
     {
-        // TODO: To be implemented.
+        var cell = FindCell(point);
+        var nodeIndex = _cells.GetValueOrDefault(cell.Key, Null);
+
+        var shouldContinue = true;
+        while (nodeIndex != Null && shouldContinue)
+        {
+            ref var node = ref _nodes[nodeIndex];
+            ref var proxy = ref _proxies[node.ProxyIndex];
+
+            if (proxy.Bounds.Contains(point))
+            {
+                var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
+                shouldContinue = handler.Handle(proxyId);
+            }
+
+            nodeIndex = node.NextCellNodeIndex;
+        }
     }
 
     public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
@@ -352,7 +368,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         var oldCapacity = _proxies.Length;
         Debug.Assert(capacity > oldCapacity);
 
-        GrowArray(ref _proxies, capacity, DefaultCapacity);
+        GrowArrayExp(ref _proxies, capacity, DefaultCapacity);
 
         for (var i = oldCapacity; i < _proxies.Length; i++)
         {
@@ -369,7 +385,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         var oldCapacity = _nodes.Length;
         Debug.Assert(capacity > oldCapacity);
 
-        GrowArray(ref _nodes, capacity, DefaultCapacity);
+        GrowArrayExp(ref _nodes, capacity, DefaultCapacity);
 
         for (var i = oldCapacity; i < _nodes.Length; i++)
         {
@@ -442,8 +458,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     // TODO: This might be useful helper in other places. If so, move to ArrayEx?
-    // TODO: Should the name make it explicit that it does exponential growth? Like GrowExp?
-    private static void GrowArray<T>(ref T[] array, int minimumLength, int defaultLength)
+    private static void GrowArrayExp<T>(ref T[] array, int minimumLength, int defaultLength)
     {
         Debug.Assert(minimumLength > array.Length);
 
