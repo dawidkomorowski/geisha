@@ -6,7 +6,6 @@ using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-// TODO: Implement remaining queries using spatial grid.
 // TODO: Review and possibly update related tests to cover new implementation.
 //       Now queries rely on spatial grid so bugs in updates of spatial grid should be captured in query tests.
 internal static class SceneQuery
@@ -14,58 +13,72 @@ internal static class SceneQuery
     public static void QueryPoint<TQueryHandler>(in PhysicsSceneData scene, in Vector2 point, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        foreach (ref var body in scene.GetBodiesSpan())
+        // 1. Init
+        var proxyIds = InitScratchBuffer();
+        var proxyHandler = new ProxyQueryHandler(proxyIds);
+
+        try
         {
-            if (body.ContainsPoint(point))
+            // 2. Gather
+            scene.StaticGrid.QueryPoint(point, ref proxyHandler);
+            scene.DynamicGrid.QueryPoint(point, ref proxyHandler);
+
+            // 3. Process
+            foreach (var proxyId in proxyIds)
             {
-                if (!handler.Handle(body.Id))
+                var bodyId = scene.StaticGrid.IsValidProxy(proxyId)
+                    ? scene.StaticGrid.GetProxyData(proxyId).Payload
+                    : scene.DynamicGrid.GetProxyData(proxyId).Payload;
+
+                ref var body = ref scene.GetBodyData(bodyId);
+                if (body.ContainsPoint(point))
                 {
-                    return;
+                    if (!handler.Handle(body.Id))
+                    {
+                        return;
+                    }
                 }
             }
+        }
+        finally
+        {
+            // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
+            ClearScratchBuffer(proxyIds);
         }
     }
 
     public static void QueryBounds<TQueryHandler>(in PhysicsSceneData scene, in AABB2D aabb, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        // 1. Init
-        var proxyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyQueryHandler(proxyIds);
-
-        try
-        {
-            // 2. Gather
-            scene.StaticGrid.QueryBounds(aabb, ref proxyHandler);
-            scene.DynamicGrid.QueryBounds(aabb, ref proxyHandler);
-
-            // 3. Process
-            foreach (var proxyId in proxyIds)
-            {
-                var bodyId = scene.StaticGrid.IsValidProxy(proxyId)
-                    ? scene.StaticGrid.GetProxyData(proxyId).Payload
-                    : scene.DynamicGrid.GetProxyData(proxyId).Payload;
-
-                ref var body = ref scene.GetBodyData(bodyId);
-                if (body.AABB.Overlaps(aabb))
-                {
-                    if (!handler.Handle(body.Id))
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-        finally
-        {
-            // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
-            ClearScratchBuffer(proxyIds);
-        }
+        QueryByBounds(scene, aabb, ref handler, aabb, static (in RigidBodyData body, in AABB2D queryArg) => body.AABB.Overlaps(queryArg));
     }
 
     public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in AABB2D aabb, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
+        QueryByBounds(scene, aabb, ref handler, aabb, static (in RigidBodyData body, in AABB2D queryArg) => body.Overlaps(queryArg));
+    }
+
+    public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in Circle circle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler
+    {
+        QueryByBounds(scene, circle.ComputeAABB(), ref handler, circle, static (in RigidBodyData body, in Circle queryArg) => body.Overlaps(queryArg));
+    }
+
+    public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in Rectangle rectangle, ref TQueryHandler handler)
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler
+    {
+        QueryByBounds(scene, rectangle.ComputeAABB(), ref handler, rectangle, static (in RigidBodyData body, in Rectangle queryArg) => body.Overlaps(queryArg));
+    }
+
+    private delegate bool QueryFunc<TQueryArg>(in RigidBodyData body, in TQueryArg queryArg);
+
+    private static void QueryByBounds<TQueryHandler, TQueryArg>(in PhysicsSceneData scene, in AABB2D bounds, ref TQueryHandler handler,
+        in TQueryArg queryArg, QueryFunc<TQueryArg> queryFunc
+    )
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler
+        where TQueryArg : struct
+    {
         // 1. Init
         var proxyIds = InitScratchBuffer();
         var proxyHandler = new ProxyQueryHandler(proxyIds);
@@ -73,8 +86,8 @@ internal static class SceneQuery
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryBounds(aabb, ref proxyHandler);
-            scene.DynamicGrid.QueryBounds(aabb, ref proxyHandler);
+            scene.StaticGrid.QueryBounds(bounds, ref proxyHandler);
+            scene.DynamicGrid.QueryBounds(bounds, ref proxyHandler);
 
             // 3. Process
             foreach (var proxyId in proxyIds)
@@ -84,7 +97,7 @@ internal static class SceneQuery
                     : scene.DynamicGrid.GetProxyData(proxyId).Payload;
 
                 ref var body = ref scene.GetBodyData(bodyId);
-                if (body.Overlaps(aabb))
+                if (queryFunc(body, in queryArg))
                 {
                     if (!handler.Handle(body.Id))
                     {
@@ -97,36 +110,6 @@ internal static class SceneQuery
         {
             // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
             ClearScratchBuffer(proxyIds);
-        }
-    }
-
-    public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in Circle circle, ref TQueryHandler handler)
-        where TQueryHandler : struct, IRigidBodyIdQueryHandler
-    {
-        foreach (ref var body in scene.GetBodiesSpan())
-        {
-            if (body.Overlaps(circle))
-            {
-                if (!handler.Handle(body.Id))
-                {
-                    return;
-                }
-            }
-        }
-    }
-
-    public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in Rectangle rectangle, ref TQueryHandler handler)
-        where TQueryHandler : struct, IRigidBodyIdQueryHandler
-    {
-        foreach (ref var body in scene.GetBodiesSpan())
-        {
-            if (body.Overlaps(rectangle))
-            {
-                if (!handler.Handle(body.Id))
-                {
-                    return;
-                }
-            }
         }
     }
 

@@ -47,7 +47,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public SpatialGridProxyId SpatialProxyId;
     public AABB2D BroadPhaseAABB;
 
-    public bool ContainsPoint(in Vector2 point) =>
+    public readonly bool ContainsPoint(in Vector2 point) =>
         ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Contains(point),
@@ -56,7 +56,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in AABB2D aabb) =>
+    public readonly bool Overlaps(in AABB2D aabb) =>
         ColliderType switch
         {
             ColliderType.Circle => AABB.Overlaps(aabb) && TransformedCircleCollider.Overlaps(aabb.ToRectangle()),
@@ -65,7 +65,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in Circle circle) =>
+    public readonly bool Overlaps(in Circle circle) =>
         ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Overlaps(circle),
@@ -74,7 +74,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in Rectangle rectangle) =>
+    public readonly bool Overlaps(in Rectangle rectangle) =>
         ColliderType switch
         {
             ColliderType.Circle => AABB.Overlaps(rectangle.ComputeAABB()) && TransformedCircleCollider.Overlaps(rectangle),
