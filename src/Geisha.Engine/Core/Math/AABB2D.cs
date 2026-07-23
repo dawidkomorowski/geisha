@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math;
@@ -205,7 +204,11 @@ public readonly record struct AABB2D
     public double Height => Max.Y - Min.Y;
 
     // TODO: Add documentation.
-    public bool IsValid => Min.X <= Max.X && Min.Y <= Max.Y;
+    public bool IsValid
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Min.X <= Max.X && Min.Y <= Max.Y;
+    }
 
     /// <summary>
     ///     Determines whether the specified point is inside this bounding box.
@@ -233,6 +236,7 @@ public readonly record struct AABB2D
     public bool Overlaps(in AABB2D other) => Max.X >= other.Min.X && Min.X <= other.Max.X && Max.Y >= other.Min.Y && Min.Y <= other.Max.Y;
 
     // TODO: Add documentation.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public AABB2D Intersect(in AABB2D other) => new(Vector2.Max(Min, other.Min), Vector2.Min(Max, other.Max));
 
     /// <summary>

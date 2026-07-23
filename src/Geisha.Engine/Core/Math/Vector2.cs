@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math;
 
@@ -169,6 +170,7 @@ public readonly struct Vector2 : IEquatable<Vector2>
     ///     <paramref name="v1" /> and <paramref name="v2" />.
     /// </returns>
     /// <remarks>For vector (10, 5) and vector (8, 6) the maximum is vector (10, 6).</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Max(in Vector2 v1, in Vector2 v2) => new(System.Math.Max(v1.X, v2.X), System.Math.Max(v1.Y, v2.Y));
 
     /// <summary>
@@ -182,6 +184,7 @@ public readonly struct Vector2 : IEquatable<Vector2>
     ///     <paramref name="v1" /> and <paramref name="v2" />.
     /// </returns>
     /// <remarks>For vector (10, 5) and vector (8, 6) the minimum is vector (8, 5).</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Min(in Vector2 v1, in Vector2 v2) => new(System.Math.Min(v1.X, v2.X), System.Math.Min(v1.Y, v2.Y));
 
     #endregion

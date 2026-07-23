@@ -99,7 +99,7 @@ internal struct PhysicsSceneData
             scene.SensorOverlapEvents = new List<SensorOverlapEvent>(defaultCapacity);
 
             scene.CellSize = sceneDefinition.BroadPhaseGridCellSize;
-            if (scene.CellSize.Width < 0 || scene.CellSize.Height < 0)
+            if (scene.CellSize.Width <= 0 || scene.CellSize.Height <= 0)
             {
                 scene.CellSize = new SizeD(256, 256);
             }

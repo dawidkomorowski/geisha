@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
@@ -27,7 +26,7 @@ internal static class BroadPhase
     private static void DetectCollisions_Kinematic_Vs_Static(ref PhysicsSceneData scene)
     {
         // 1. Init
-        var proxyIds = InitScratchBuffer();
+        var proxyIds = InitProxyScratchBuffer();
         var proxyHandler = new ProxyQueryHandler(proxyIds);
 
         try
@@ -52,134 +51,39 @@ internal static class BroadPhase
         finally
         {
             // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
-            ClearScratchBuffer(proxyIds);
+            ClearProxyScratchBuffer(proxyIds);
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void DetectCollisions_Kinematic_Vs_Kinematic(ref PhysicsSceneData scene)
     {
-        var kinematicBodiesSpan = scene.GetKinematicBodiesSpan();
+        // 1. Init
+        var pairs = InitPairScratchBuffer();
+        var pairHandler = new PairsQueryHandler(pairs);
 
-        for (var i = 0; i < kinematicBodiesSpan.Length; i++)
+        try
         {
-            ref var kinematicBody1 = ref kinematicBodiesSpan[i];
+            // 2. Gather
+            scene.DynamicGrid.QueryOverlappingPairs(ref pairHandler);
 
-            for (var j = i + 1; j < kinematicBodiesSpan.Length; j++)
+            // 3. Process
+            foreach (var pair in pairs)
             {
-                ref var kinematicBody2 = ref kinematicBodiesSpan[j];
+                var bodyId1 = scene.DynamicGrid.GetProxyData(pair.ProxyId1).Payload;
+                var bodyId2 = scene.DynamicGrid.GetProxyData(pair.ProxyId2).Payload;
 
-                if (kinematicBody1.EnableCollisionDetection is false || kinematicBody2.EnableCollisionDetection is false)
-                {
-                    continue;
-                }
+                ref var kinematicBody1 = ref scene.GetBodyData(bodyId1);
+                ref var kinematicBody2 = ref scene.GetBodyData(bodyId2);
 
-                if ((kinematicBody1.CollisionLayer & kinematicBody2.CollisionMask) == 0 || (kinematicBody1.CollisionMask & kinematicBody2.CollisionLayer) == 0)
-                {
-                    continue;
-                }
-
-                if (!TestAABB(ref kinematicBody1, ref kinematicBody2))
-                {
-                    continue;
-                }
-
-                if (kinematicBody1.IsSensor || kinematicBody2.IsSensor)
-                {
-                    if (TestOverlap(ref kinematicBody1, ref kinematicBody2))
-                    {
-                        scene.SensorOverlapCache.AddPair(kinematicBody1.Id, kinematicBody2.Id);
-                    }
-                }
-                else
-                {
-                    var (overlap, mtv) = TestOverlapWithMtv(ref kinematicBody1, ref kinematicBody2);
-
-                    if (overlap)
-                    {
-                        ContactManager.CreateContact(ref scene, ref kinematicBody1, ref kinematicBody2, mtv);
-                    }
-                }
+                NarrowPhase.DetectCollision(ref scene, ref kinematicBody1, ref kinematicBody2);
             }
         }
-    }
-
-    // This method is not part of TestOverlap because doing so breaks inlining and optimization of the method.
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    // ReSharper disable once InconsistentNaming
-    private static bool TestAABB(ref RigidBodyData body1, ref RigidBodyData body2)
-    {
-        return body1.AABB.Overlaps(body2.AABB);
-    }
-
-    // TODO: Once broad phase is implemented in scope of https://github.com/dawidkomorowski/geisha/issues/608 the collider type switch logic could be investigated
-    //       for deduplication - it will no longer be so hot path. Maybe there is some way to group all switch/case logic in single place for these type of operations.
-    //       It could also benefit ContactManager as it also tests for combinations of colliding pairs.
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static bool TestOverlap(ref RigidBodyData body1, ref RigidBodyData body2)
-    {
-        var overlap = false;
-
-        if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
+        finally
         {
-            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedCircleCollider);
+            // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
+            ClearPairScratchBuffer(pairs);
         }
-        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Rectangle)
-        {
-            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider);
-        }
-        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Tile)
-        {
-            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider);
-        }
-        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Circle)
-        {
-            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedCircleCollider);
-        }
-        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Rectangle)
-        {
-            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider);
-        }
-        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
-        {
-            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider);
-        }
-
-        return overlap;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static (bool overlap, MinimumTranslationVector mtv) TestOverlapWithMtv(ref RigidBodyData body1, ref RigidBodyData body2)
-    {
-        var overlap = false;
-        var mtv = new MinimumTranslationVector();
-
-        if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
-        {
-            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedCircleCollider, out mtv);
-        }
-        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Rectangle)
-        {
-            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
-        }
-        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Tile)
-        {
-            overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
-        }
-        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Circle)
-        {
-            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedCircleCollider, out mtv);
-        }
-        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Rectangle)
-        {
-            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
-        }
-        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
-        {
-            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
-        }
-
-        return (overlap, mtv);
     }
 
     // TODO: To implement ProxyQueryHandler properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13).
@@ -188,20 +92,20 @@ internal static class BroadPhase
     //       As a workaround, a static scratch buffer is used to do double-pass gather-then-process query logic.
     //       [ThreadStatic] ensures every thread gets its own isolated buffer. This prevents thread collisions if queries run in parallel.
     //       However, this implementation does not support reentrancy.
-    [ThreadStatic] private static List<SpatialGridProxyId>? _scratchBuffer;
+    [ThreadStatic] private static List<SpatialGridProxyId>? _proxyScratchBuffer;
 
-    private static List<SpatialGridProxyId> InitScratchBuffer()
+    private static List<SpatialGridProxyId> InitProxyScratchBuffer()
     {
-        _scratchBuffer ??= new List<SpatialGridProxyId>(2048);
+        _proxyScratchBuffer ??= new List<SpatialGridProxyId>(2048);
 
-        Debug.Assert(_scratchBuffer.Count == 0, "Reentrancy is not yet supported.");
+        Debug.Assert(_proxyScratchBuffer.Count == 0, "Reentrancy is not yet supported.");
 
-        return _scratchBuffer;
+        return _proxyScratchBuffer;
     }
 
-    private static void ClearScratchBuffer(List<SpatialGridProxyId> buffer)
+    private static void ClearProxyScratchBuffer(List<SpatialGridProxyId> buffer)
     {
-        Debug.Assert(_scratchBuffer == buffer, "Invalid buffer.");
+        Debug.Assert(_proxyScratchBuffer == buffer, "Invalid buffer.");
         buffer.Clear();
     }
 
@@ -217,6 +121,47 @@ internal static class BroadPhase
         public bool Handle(SpatialGridProxyId proxyId)
         {
             _proxies.Add(proxyId);
+            return true;
+        }
+    }
+
+    // TODO: To implement ProxyQueryHandler properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13).
+    //       Once upgraded to .NET 9, refactor it to use ref fields and ref struct interfaces and implement single pass query logic.
+    //       -----------------------------------------------------------------------------------------------------------------------------
+    //       As a workaround, a static scratch buffer is used to do double-pass gather-then-process query logic.
+    //       [ThreadStatic] ensures every thread gets its own isolated buffer. This prevents thread collisions if queries run in parallel.
+    //       However, this implementation does not support reentrancy.
+    [ThreadStatic] private static List<Pair>? _pairScratchBuffer;
+
+    private static List<Pair> InitPairScratchBuffer()
+    {
+        _pairScratchBuffer ??= new List<Pair>(2048);
+
+        Debug.Assert(_pairScratchBuffer.Count == 0, "Reentrancy is not yet supported.");
+
+        return _pairScratchBuffer;
+    }
+
+    private static void ClearPairScratchBuffer(List<Pair> buffer)
+    {
+        Debug.Assert(_pairScratchBuffer == buffer, "Invalid buffer.");
+        buffer.Clear();
+    }
+
+    private readonly record struct Pair(SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2);
+
+    private readonly struct PairsQueryHandler : IPairsQueryHandler
+    {
+        private readonly List<Pair> _pairs;
+
+        public PairsQueryHandler(List<Pair> pairs)
+        {
+            _pairs = pairs;
+        }
+
+        public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
+        {
+            _pairs.Add(new Pair(proxyId1, proxyId2));
             return true;
         }
     }

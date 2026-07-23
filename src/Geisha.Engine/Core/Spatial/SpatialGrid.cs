@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -266,6 +268,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
     {
         var shouldContinue = true;
@@ -489,6 +492,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         return new CellRange(cellMinX, cellMinY, cellMaxX, cellMaxY);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Cell FindCell(in Vector2 point)
     {
         var x = (int)System.Math.Floor(point.X / CellSize.Width);
