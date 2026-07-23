@@ -1,11 +1,15 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-// Watch out with refactoring this class! It is performance critical and should be kept as fast as possible.
-// Trivial refactorings like combining methods or extracting methods can have a significant impact on performance.
-internal static class CollisionDetection
+// TODO: Review and possibly update related tests to cover new implementation.
+//       Now collision detection rely on spatial grid so bugs in updates of spatial grid should be captured in collision detection tests?
+internal static class BroadPhase
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public static void DetectCollisions(ref PhysicsSceneData scene)
@@ -15,8 +19,41 @@ internal static class CollisionDetection
 
         ContactManager.ClearContacts(ref scene);
 
-        DetectCollisions_Kinematic_Vs_Kinematic(ref scene);
         DetectCollisions_Kinematic_Vs_Static(ref scene);
+        DetectCollisions_Kinematic_Vs_Kinematic(ref scene);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static void DetectCollisions_Kinematic_Vs_Static(ref PhysicsSceneData scene)
+    {
+        // 1. Init
+        var proxyIds = InitScratchBuffer();
+        var proxyHandler = new ProxyQueryHandler(proxyIds);
+
+        try
+        {
+            var kinematicBodiesSpan = scene.GetKinematicBodiesSpan();
+            foreach (ref var kinematicBody in kinematicBodiesSpan)
+            {
+                // 2. Gather
+                proxyIds.Clear();
+                scene.StaticGrid.QueryBounds(kinematicBody.AABB, ref proxyHandler);
+
+                // 3. Process
+                foreach (var proxyId in proxyIds)
+                {
+                    var bodyId = scene.StaticGrid.GetProxyData(proxyId).Payload;
+                    ref var staticBody = ref scene.GetBodyData(bodyId);
+
+                    NarrowPhase.DetectCollision(ref scene, ref kinematicBody, ref staticBody);
+                }
+            }
+        }
+        finally
+        {
+            // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
+            ClearScratchBuffer(proxyIds);
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -61,51 +98,6 @@ internal static class CollisionDetection
                     if (overlap)
                     {
                         ContactManager.CreateContact(ref scene, ref kinematicBody1, ref kinematicBody2, mtv);
-                    }
-                }
-            }
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void DetectCollisions_Kinematic_Vs_Static(ref PhysicsSceneData scene)
-    {
-        var staticBodiesSpan = scene.GetStaticBodiesSpan();
-        var kinematicBodiesSpan = scene.GetKinematicBodiesSpan();
-
-        foreach (ref var kinematicBody in kinematicBodiesSpan)
-        {
-            foreach (ref var staticBody in staticBodiesSpan)
-            {
-                if (kinematicBody.EnableCollisionDetection is false || staticBody.EnableCollisionDetection is false)
-                {
-                    continue;
-                }
-
-                if ((kinematicBody.CollisionLayer & staticBody.CollisionMask) == 0 || (kinematicBody.CollisionMask & staticBody.CollisionLayer) == 0)
-                {
-                    continue;
-                }
-
-                if (!TestAABB(ref kinematicBody, ref staticBody))
-                {
-                    continue;
-                }
-
-                if (kinematicBody.IsSensor || staticBody.IsSensor)
-                {
-                    if (TestOverlap(ref kinematicBody, ref staticBody))
-                    {
-                        scene.SensorOverlapCache.AddPair(kinematicBody.Id, staticBody.Id);
-                    }
-                }
-                else
-                {
-                    var (overlap, mtv) = TestOverlapWithMtv(ref kinematicBody, ref staticBody);
-
-                    if (overlap)
-                    {
-                        ContactManager.CreateContact(ref scene, ref kinematicBody, ref staticBody, mtv);
                     }
                 }
             }
@@ -188,5 +180,44 @@ internal static class CollisionDetection
         }
 
         return (overlap, mtv);
+    }
+
+    // TODO: To implement ProxyQueryHandler properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13).
+    //       Once upgraded to .NET 9, refactor it to use ref fields and ref struct interfaces and implement single pass query logic.
+    //       -----------------------------------------------------------------------------------------------------------------------------
+    //       As a workaround, a static scratch buffer is used to do double-pass gather-then-process query logic.
+    //       [ThreadStatic] ensures every thread gets its own isolated buffer. This prevents thread collisions if queries run in parallel.
+    //       However, this implementation does not support reentrancy.
+    [ThreadStatic] private static List<SpatialGridProxyId>? _scratchBuffer;
+
+    private static List<SpatialGridProxyId> InitScratchBuffer()
+    {
+        _scratchBuffer ??= new List<SpatialGridProxyId>(2048);
+
+        Debug.Assert(_scratchBuffer.Count == 0, "Reentrancy is not yet supported.");
+
+        return _scratchBuffer;
+    }
+
+    private static void ClearScratchBuffer(List<SpatialGridProxyId> buffer)
+    {
+        Debug.Assert(_scratchBuffer == buffer, "Invalid buffer.");
+        buffer.Clear();
+    }
+
+    private readonly struct ProxyQueryHandler : IProxyQueryHandler
+    {
+        private readonly List<SpatialGridProxyId> _proxies;
+
+        public ProxyQueryHandler(List<SpatialGridProxyId> proxies)
+        {
+            _proxies = proxies;
+        }
+
+        public bool Handle(SpatialGridProxyId proxyId)
+        {
+            _proxies.Add(proxyId);
+            return true;
+        }
     }
 }

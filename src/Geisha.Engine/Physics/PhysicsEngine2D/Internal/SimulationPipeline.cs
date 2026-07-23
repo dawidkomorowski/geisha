@@ -28,7 +28,7 @@ internal static class SimulationPipeline
                 body.RecomputeCollider(ref scene);
             }
 
-            CollisionDetection.DetectCollisions(ref scene);
+            BroadPhase.DetectCollisions(ref scene);
 
             // TODO: SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < simulationParameters.PositionIterations; i++)

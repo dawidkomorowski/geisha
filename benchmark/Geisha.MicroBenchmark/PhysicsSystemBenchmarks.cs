@@ -33,6 +33,7 @@ public class PhysicsSystemBenchmarks
         _debugRenderer = TestKit.CreateDebugRenderer();
         var physicsConfiguration = new PhysicsConfiguration
         {
+            BroadPhaseGridCellSize = new SizeD(250, 250),
             EnableDebugRendering = true
         };
         _physicsSystem = new PhysicsSystem(physicsConfiguration, _timeSystem, _debugRenderer);
