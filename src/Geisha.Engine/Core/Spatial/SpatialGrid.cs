@@ -327,6 +327,8 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
                     if (proxy1.Bounds.Overlaps(proxy2.Bounds))
                     {
                         var intersection = proxy1.Bounds.Intersect(proxy2.Bounds);
+                        Debug.Assert(intersection.IsValid);
+
                         var canonicalCell = FindCell(intersection.Min);
 
                         // Pair must be handled only in single canonical cell to avoid duplicates.
