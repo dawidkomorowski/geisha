@@ -188,6 +188,84 @@ public class PhysicsSystemBenchmarks
         }
     }
 
+    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled))]
+    public void IterationSetup_SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled()
+    {
+        InitializePhysicsSystem();
+
+        CreateRectangleStaticBody(new Vector2(0, 0), 2400, 50);
+        CreateRectangleStaticBody(new Vector2(0, -300), 2400, 50);
+        CreateRectangleStaticBody(new Vector2(-1200, 0), 50, 600);
+        CreateRectangleStaticBody(new Vector2(-600, 0), 50, 600);
+        CreateRectangleStaticBody(new Vector2(0, 0), 50, 600);
+        CreateRectangleStaticBody(new Vector2(600, 0), 50, 600);
+        CreateRectangleStaticBody(new Vector2(1200, 0), 50, 600);
+
+        CreateStack(60 - 1200, 60);
+        CreateStack(60 - 600, 60);
+        CreateStack(60, 60);
+        CreateStack(60 + 600, 60);
+
+        CreateStack(60 - 1200, 60 - 300);
+        CreateStack(60 - 600, 60 - 300);
+        CreateStack(60, 60 - 300);
+        CreateStack(60 + 600, 60 - 300);
+
+        foreach (var kinematicRigidBody2DComponent in _kinematicComponents)
+        {
+            kinematicRigidBody2DComponent.EnableCollisionResponse = true;
+        }
+
+        //Console.WriteLine($"Kinematic bodies: {_kinematicComponents.Count}");
+
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled)}[0]", 0.5);
+        return;
+
+        void CreateStack(double offsetX, double offsetY)
+        {
+            for (var iy = 0; iy < 7; iy++)
+            {
+                for (var ix = 0; ix < 20; ix++)
+                {
+                    if (ix == 0 && iy % 2 == 1)
+                    {
+                        continue;
+                    }
+
+                    var x = offsetX + ix * 25 - (25d / 2d * (iy % 2));
+                    var y = offsetY + iy * 30;
+
+                    CreateRectangleKinematicBody(new Vector2(x, y), 20, 20, Vector2.Zero, 0);
+                }
+            }
+        }
+    }
+
+    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled))]
+    public void IterationCleanup_SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled()
+    {
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled)}[1]", 0.5);
+        CleanupPhysicsSystem();
+    }
+
+    [Benchmark]
+    public void SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled()
+    {
+        var gravity = new Vector2(0, -981.0);
+        var dt = _timeSystem.FixedDeltaTime.TotalSeconds;
+
+        // Assuming 60FPS it simulates 10s.
+        for (var i = 0; i < 600; i++)
+        {
+            foreach (var kinematicRigidBody2DComponent in _kinematicComponents)
+            {
+                kinematicRigidBody2DComponent.LinearVelocity += gravity * dt;
+            }
+
+            _physicsSystem.ProcessPhysics();
+        }
+    }
+
     [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors))]
     public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
     {
