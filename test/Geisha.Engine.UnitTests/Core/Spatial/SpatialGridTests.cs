@@ -610,7 +610,7 @@ internal class SpatialGridTests
 
         // Act
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new LimitedProxyListQueryHandler(queryResults, maxProxies: 1);
+        var queryHandler = new ProxyIdQueryHandler(queryResults, maxProxies: 1);
         var point = new Vector2(5, 5);
         grid.QueryPointAsId(in point, ref queryHandler);
 
@@ -796,7 +796,7 @@ internal class SpatialGridTests
 
         // Act
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new LimitedProxyListQueryHandler(queryResults, maxProxies: 1);
+        var queryHandler = new ProxyIdQueryHandler(queryResults, maxProxies: 1);
         var bounds = new AABB2D(0, 0, 20, 20);
         grid.QueryBoundsAsId(in bounds, ref queryHandler);
 
@@ -1147,8 +1147,8 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
 
         // Act
-        var queryResults = new List<PairQueryResult>();
-        var queryHandler = new LimitedPairListQueryHandler(queryResults, maxPairs: 1);
+        var queryResults = new List<ProxyIdPair>();
+        var queryHandler = new ProxyIdPairQueryHandler(queryResults, maxPairs: 1);
         grid.QueryOverlappingPairsAsId(ref queryHandler);
 
         // Assert
@@ -1320,7 +1320,7 @@ internal class SpatialGridTests
     private static List<SpatialGridProxyId> QueryPointAsId(SpatialGrid<int> grid, Vector2 point)
     {
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyListQueryHandler(queryResults);
+        var queryHandler = new ProxyIdQueryHandler(queryResults);
         grid.QueryPointAsId(in point, ref queryHandler);
         return queryResults;
     }
@@ -1328,33 +1328,23 @@ internal class SpatialGridTests
     private static List<SpatialGridProxyId> QueryBoundsAsId(SpatialGrid<int> grid, AABB2D bounds)
     {
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyListQueryHandler(queryResults);
+        var queryHandler = new ProxyIdQueryHandler(queryResults);
         grid.QueryBoundsAsId(in bounds, ref queryHandler);
         return queryResults;
     }
 
-    private readonly struct ProxyListQueryHandler : IProxyIdQueryHandler
-    {
-        private readonly List<SpatialGridProxyId> _proxies;
-
-        public ProxyListQueryHandler(List<SpatialGridProxyId> proxies)
-        {
-            _proxies = proxies;
-        }
-
-        public bool Handle(SpatialGridProxyId proxyId)
-        {
-            _proxies.Add(proxyId);
-            return true;
-        }
-    }
-
-    private readonly struct LimitedProxyListQueryHandler : IProxyIdQueryHandler
+    private readonly struct ProxyIdQueryHandler : IProxyIdQueryHandler
     {
         private readonly List<SpatialGridProxyId> _proxies;
         private readonly int _maxProxies;
 
-        public LimitedProxyListQueryHandler(List<SpatialGridProxyId> proxies, int maxProxies)
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies)
+        {
+            _proxies = proxies;
+            _maxProxies = int.MaxValue;
+        }
+
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies, int maxProxies)
         {
             _proxies = proxies;
             _maxProxies = maxProxies;
@@ -1367,15 +1357,15 @@ internal class SpatialGridTests
         }
     }
 
-    private static List<PairQueryResult> QueryOverlappingPairsAsId(SpatialGrid<int> grid)
+    private static List<ProxyIdPair> QueryOverlappingPairsAsId(SpatialGrid<int> grid)
     {
-        var queryResults = new List<PairQueryResult>();
-        var queryHandler = new PairListQueryHandler(queryResults);
+        var queryResults = new List<ProxyIdPair>();
+        var queryHandler = new ProxyIdPairQueryHandler(queryResults);
         grid.QueryOverlappingPairsAsId(ref queryHandler);
         return queryResults;
     }
 
-    private static void AssertPairsEquivalent(IReadOnlyList<PairQueryResult> actual,
+    private static void AssertPairsEquivalent(IReadOnlyList<ProxyIdPair> actual,
         params (SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2)[] expectedPairs)
     {
         var actualNormalized = actual.Select(p => NormalizePair(p.ProxyId1, p.ProxyId2));
@@ -1389,30 +1379,20 @@ internal class SpatialGridTests
         return proxyId1.Index <= proxyId2.Index ? (proxyId1, proxyId2) : (proxyId2, proxyId1);
     }
 
-    private readonly record struct PairQueryResult(SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2);
+    private readonly record struct ProxyIdPair(SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2);
 
-    private readonly struct PairListQueryHandler : IProxyIdPairQueryHandler
+    private readonly struct ProxyIdPairQueryHandler : IProxyIdPairQueryHandler
     {
-        private readonly List<PairQueryResult> _pairs;
-
-        public PairListQueryHandler(List<PairQueryResult> pairs)
-        {
-            _pairs = pairs;
-        }
-
-        public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
-        {
-            _pairs.Add(new PairQueryResult(proxyId1, proxyId2));
-            return true;
-        }
-    }
-
-    private readonly struct LimitedPairListQueryHandler : IProxyIdPairQueryHandler
-    {
-        private readonly List<PairQueryResult> _pairs;
+        private readonly List<ProxyIdPair> _pairs;
         private readonly int _maxPairs;
 
-        public LimitedPairListQueryHandler(List<PairQueryResult> pairs, int maxPairs)
+        public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs)
+        {
+            _pairs = pairs;
+            _maxPairs = int.MaxValue;
+        }
+
+        public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs, int maxPairs)
         {
             _pairs = pairs;
             _maxPairs = maxPairs;
@@ -1420,7 +1400,7 @@ internal class SpatialGridTests
 
         public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
         {
-            _pairs.Add(new PairQueryResult(proxyId1, proxyId2));
+            _pairs.Add(new ProxyIdPair(proxyId1, proxyId2));
             return _pairs.Count < _maxPairs;
         }
     }
