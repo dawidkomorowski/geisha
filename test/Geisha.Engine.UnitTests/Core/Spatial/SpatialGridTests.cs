@@ -440,7 +440,7 @@ internal class SpatialGridTests
         // becomes orphaned because idC's "next" link is not corrected.
         grid.DestroyProxy(idB);
 
-        var queryResults = QueryPoint(grid, point);
+        var queryResults = QueryPointAsId(grid, point);
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { idA, idC }));
@@ -457,7 +457,7 @@ internal class SpatialGridTests
         var grid = new SpatialGrid<int>(20);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(5, 5));
+        var queryResults = QueryPointAsId(grid, new Vector2(5, 5));
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -471,7 +471,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(5, 5));
+        var queryResults = QueryPointAsId(grid, new Vector2(5, 5));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -485,7 +485,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(50, 50));
+        var queryResults = QueryPointAsId(grid, new Vector2(50, 50));
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -499,7 +499,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(0, 0));
+        var queryResults = QueryPointAsId(grid, new Vector2(0, 0));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -513,7 +513,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(10, 10));
+        var queryResults = QueryPointAsId(grid, new Vector2(10, 10));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -529,7 +529,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(50, 50, 60, 60), 3);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(7, 7));
+        var queryResults = QueryPointAsId(grid, new Vector2(7, 7));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id1, id2 }));
@@ -545,7 +545,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(22, 22));
+        var queryResults = QueryPointAsId(grid, new Vector2(22, 22));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -561,7 +561,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 20, 20), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(10, 10));
+        var queryResults = QueryPointAsId(grid, new Vector2(10, 10));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -576,7 +576,7 @@ internal class SpatialGridTests
         grid.DestroyProxy(id);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(5, 5));
+        var queryResults = QueryPointAsId(grid, new Vector2(5, 5));
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -591,8 +591,8 @@ internal class SpatialGridTests
         grid.MoveProxy(id, new AABB2D(50, 50, 60, 60));
 
         // Act
-        var queryAtOldLocation = QueryPoint(grid, new Vector2(5, 5));
-        var queryAtNewLocation = QueryPoint(grid, new Vector2(55, 55));
+        var queryAtOldLocation = QueryPointAsId(grid, new Vector2(5, 5));
+        var queryAtNewLocation = QueryPointAsId(grid, new Vector2(55, 55));
 
         // Assert
         Assert.That(queryAtOldLocation, Is.Empty);
@@ -626,7 +626,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(-20, -20, -10, -10), 1);
 
         // Act
-        var queryResults = QueryPoint(grid, new Vector2(-15, -15));
+        var queryResults = QueryPointAsId(grid, new Vector2(-15, -15));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -643,7 +643,7 @@ internal class SpatialGridTests
         var grid = new SpatialGrid<int>(20);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 10, 10));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(0, 0, 10, 10));
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -657,7 +657,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(5, 5, 15, 15));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(5, 5, 15, 15));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -671,7 +671,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(50, 50, 60, 60));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(50, 50, 60, 60));
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -685,7 +685,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(10, 0, 20, 10));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(10, 0, 20, 10));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -699,7 +699,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(10, 10, 20, 20));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(10, 10, 20, 20));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -715,7 +715,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(80, 80, 90, 90), 3);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(5, 5, 20, 20));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(5, 5, 20, 20));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id1, id2 }));
@@ -731,7 +731,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 25, 25));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(0, 0, 25, 25));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -747,7 +747,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(0, 0, 25, 25), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(21, 21, 24, 24));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(21, 21, 24, 24));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -762,7 +762,7 @@ internal class SpatialGridTests
         grid.DestroyProxy(id);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 10, 10));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(0, 0, 10, 10));
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -777,8 +777,8 @@ internal class SpatialGridTests
         grid.MoveProxy(id, new AABB2D(50, 50, 60, 60));
 
         // Act
-        var queryAtOldLocation = QueryBounds(grid, new AABB2D(0, 0, 10, 10));
-        var queryAtNewLocation = QueryBounds(grid, new AABB2D(50, 50, 60, 60));
+        var queryAtOldLocation = QueryBoundsAsId(grid, new AABB2D(0, 0, 10, 10));
+        var queryAtNewLocation = QueryBoundsAsId(grid, new AABB2D(50, 50, 60, 60));
 
         // Assert
         Assert.That(queryAtOldLocation, Is.Empty);
@@ -812,7 +812,7 @@ internal class SpatialGridTests
         var id = grid.CreateProxy(new AABB2D(-20, -20, -10, -10), 1);
 
         // Act
-        var queryResults = QueryBounds(grid, new AABB2D(-15, -15, -5, -5));
+        var queryResults = QueryBoundsAsId(grid, new AABB2D(-15, -15, -5, -5));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -831,7 +831,7 @@ internal class SpatialGridTests
         var grid = new SpatialGrid<int>(10);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -845,7 +845,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(0, 0, 10, 10), 1);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -862,7 +862,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(10, 10, 15, 15), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -877,7 +877,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -892,7 +892,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(10, 0, 20, 10), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -908,7 +908,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(10, 10, 20, 20), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -924,7 +924,7 @@ internal class SpatialGridTests
         var id3 = grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2), (id1, id3), (id2, id3));
@@ -940,7 +940,7 @@ internal class SpatialGridTests
         _ = grid.CreateProxy(new AABB2D(50, 50, 60, 60), 3);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -957,7 +957,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(100, 100, 105, 105), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -972,7 +972,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(11, 0, 20, 9), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -991,7 +991,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(20, 20, 30, 30), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1008,7 +1008,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(5, 5, 30, 30), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1028,7 +1028,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(0, 25, 9, 34), 2); // overlaps id1 in row y=2
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1047,7 +1047,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(10, 0, 19, 9), 2); // in cell x=1
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1064,7 +1064,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(10, 0, 20, 9), 2); // in cells x=1 and x=2
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1082,7 +1082,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(10, 10, 20, 20), 2); // spans cells x=[1..2], y=[1..2]
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1099,7 +1099,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(-15, -15, -5, -5), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1114,7 +1114,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(-10, -10, -1, -1), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -1129,7 +1129,7 @@ internal class SpatialGridTests
         var id2 = grid.CreateProxy(new AABB2D(-3, -3, 3, 3), 2);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1167,7 +1167,7 @@ internal class SpatialGridTests
 
         // Act
         grid.MoveProxy(id2, new AABB2D(5, 5, 15, 15));
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1183,7 +1183,7 @@ internal class SpatialGridTests
 
         // Act
         grid.MoveProxy(id2, new AABB2D(50, 50, 60, 60));
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -1199,7 +1199,7 @@ internal class SpatialGridTests
 
         // Act — no-op move: same bounds
         grid.MoveProxy(id2, new AABB2D(5, 5, 15, 15));
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1217,7 +1217,7 @@ internal class SpatialGridTests
         // Act
         // Move id2 across a cell boundary into the cell of id1, overlapping it.
         grid.MoveProxy(id2, new AABB2D(5, 5, 14, 14));
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1235,7 +1235,7 @@ internal class SpatialGridTests
         // Act
         // Move id2 across a cell boundary far away so it no longer overlaps id1.
         grid.MoveProxy(id2, new AABB2D(100, 100, 109, 109));
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -1253,7 +1253,7 @@ internal class SpatialGridTests
 
         // Act
         grid.MoveProxy(id2, new AABB2D(20, 20, 45, 45)); // spans cells (2,2)-(4,4), overlaps id1 at (2,2)
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         AssertPairsEquivalent(queryResults, (id1, id2));
@@ -1269,7 +1269,7 @@ internal class SpatialGridTests
 
         // Act
         grid.MoveProxy(id2, new AABB2D(100, 100, 125, 125));
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -1287,7 +1287,7 @@ internal class SpatialGridTests
 
         // Act
         grid.DestroyProxy(id2);
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(queryResults, Is.Empty);
@@ -1306,7 +1306,7 @@ internal class SpatialGridTests
         var id3 = grid.CreateProxy(new AABB2D(5, 5, 15, 15), 3);
 
         // Act
-        var queryResults = QueryOverlappingPairs(grid);
+        var queryResults = QueryOverlappingPairsAsId(grid);
 
         // Assert
         Assert.That(grid.IsValidProxy(id2), Is.False);
@@ -1317,7 +1317,7 @@ internal class SpatialGridTests
 
     #region Helpers
 
-    private static List<SpatialGridProxyId> QueryPoint(SpatialGrid<int> grid, Vector2 point)
+    private static List<SpatialGridProxyId> QueryPointAsId(SpatialGrid<int> grid, Vector2 point)
     {
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new ProxyListQueryHandler(queryResults);
@@ -1325,7 +1325,7 @@ internal class SpatialGridTests
         return queryResults;
     }
 
-    private static List<SpatialGridProxyId> QueryBounds(SpatialGrid<int> grid, AABB2D bounds)
+    private static List<SpatialGridProxyId> QueryBoundsAsId(SpatialGrid<int> grid, AABB2D bounds)
     {
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new ProxyListQueryHandler(queryResults);
@@ -1367,7 +1367,7 @@ internal class SpatialGridTests
         }
     }
 
-    private static List<PairQueryResult> QueryOverlappingPairs(SpatialGrid<int> grid)
+    private static List<PairQueryResult> QueryOverlappingPairsAsId(SpatialGrid<int> grid)
     {
         var queryResults = new List<PairQueryResult>();
         var queryHandler = new PairListQueryHandler(queryResults);
