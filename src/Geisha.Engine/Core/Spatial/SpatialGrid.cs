@@ -38,12 +38,12 @@ public interface IProxyPayloadQueryHandler<TPayload> where TPayload : unmanaged
     bool Handle(in TPayload payload);
 }
 
-public interface IPairsQueryHandler
+public interface IProxyIdPairQueryHandler
 {
     bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2);
 }
 
-public interface IPairsQueryHandler2<TPayload> where TPayload : unmanaged
+public interface IProxyPayloadPairQueryHandler<TPayload> where TPayload : unmanaged
 {
     bool Handle(in TPayload payload1, in TPayload payload2);
 }
@@ -256,7 +256,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
+    public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdPairQueryHandler
     {
         QueryOverlappingPairsCommon(ref handler,
             static (ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
@@ -270,7 +270,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryOverlappingPairs2<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler2<TPayload>
+    public void QueryOverlappingPairs2<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadPairQueryHandler<TPayload>
     {
         QueryOverlappingPairsCommon(ref handler,
             static (ref TQueryHandler handler, in Node _, in Node _, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>

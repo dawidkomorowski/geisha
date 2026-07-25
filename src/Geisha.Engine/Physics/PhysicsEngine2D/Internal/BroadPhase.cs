@@ -60,7 +60,7 @@ internal static class BroadPhase
     {
         // 1. Init
         var pairs = InitPairScratchBuffer();
-        var pairHandler = new PairsQueryHandler(pairs);
+        var pairHandler = new ProxyPayloadPairQueryHandler(pairs);
 
         try
         {
@@ -147,11 +147,11 @@ internal static class BroadPhase
 
     private readonly record struct Pair(RigidBodyId BodyId1, RigidBodyId BodyId2);
 
-    private readonly struct PairsQueryHandler : IPairsQueryHandler2<RigidBodyId>
+    private readonly struct ProxyPayloadPairQueryHandler : IProxyPayloadPairQueryHandler<RigidBodyId>
     {
         private readonly List<Pair> _pairs;
 
-        public PairsQueryHandler(List<Pair> pairs)
+        public ProxyPayloadPairQueryHandler(List<Pair> pairs)
         {
             _pairs = pairs;
         }

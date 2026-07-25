@@ -1391,7 +1391,7 @@ internal class SpatialGridTests
 
     private readonly record struct PairQueryResult(SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2);
 
-    private readonly struct PairListQueryHandler : IPairsQueryHandler
+    private readonly struct PairListQueryHandler : IProxyIdPairQueryHandler
     {
         private readonly List<PairQueryResult> _pairs;
 
@@ -1407,7 +1407,7 @@ internal class SpatialGridTests
         }
     }
 
-    private readonly struct LimitedPairListQueryHandler : IPairsQueryHandler
+    private readonly struct LimitedPairListQueryHandler : IProxyIdPairQueryHandler
     {
         private readonly List<PairQueryResult> _pairs;
         private readonly int _maxPairs;
