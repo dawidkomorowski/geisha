@@ -23,7 +23,7 @@ public class PhysicsSystemBenchmarks
     private readonly List<KinematicRigidBody2DComponent> _kinematicComponents = new();
     private readonly List<Collider2DComponent> _colliderComponents = new();
 
-    private void InitializePhysicsSystem()
+    private void InitializePhysicsSystem(SizeD? broadPhaseGridCellSize = null)
     {
         _kinematicComponents.Clear();
         _colliderComponents.Clear();
@@ -33,7 +33,7 @@ public class PhysicsSystemBenchmarks
         _debugRenderer = TestKit.CreateDebugRenderer();
         var physicsConfiguration = new PhysicsConfiguration
         {
-            BroadPhaseGridCellSize = new SizeD(250, 250),
+            BroadPhaseGridCellSize = broadPhaseGridCellSize ?? new SizeD(250, 250),
             EnableDebugRendering = true
         };
         _physicsSystem = new PhysicsSystem(physicsConfiguration, _timeSystem, _debugRenderer);
@@ -131,7 +131,7 @@ public class PhysicsSystemBenchmarks
     [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_638K_Fall_CR_Enabled))]
     public void IterationSetup_SimulatePhysics_10Seconds_638K_Fall_CR_Enabled()
     {
-        InitializePhysicsSystem();
+        InitializePhysicsSystem(new SizeD(100, 100));
 
         CreateRectangleStaticBody(new Vector2(0, -300), 1200, 50);
         CreateRectangleStaticBody(new Vector2(-600, 0), 50, 600);
@@ -191,7 +191,7 @@ public class PhysicsSystemBenchmarks
     [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled))]
     public void IterationSetup_SimulatePhysics_10Seconds_8x137K_Fall_CR_Enabled()
     {
-        InitializePhysicsSystem();
+        InitializePhysicsSystem(new SizeD(100, 100));
 
         CreateRectangleStaticBody(new Vector2(0, 0), 2400, 50);
         CreateRectangleStaticBody(new Vector2(0, -300), 2400, 50);
