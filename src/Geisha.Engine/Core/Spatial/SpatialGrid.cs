@@ -290,7 +290,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     public void QueryOverlappingPairs2<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler2<TPayload>
     {
         QueryOverlappingPairsCommon(ref handler,
-            static (ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
+            static (ref TQueryHandler handler, in Node _, in Node _, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
                 handler.Handle(proxy1.Payload, proxy2.Payload)
         );
     }
