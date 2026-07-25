@@ -26,8 +26,8 @@ internal static class BroadPhase
     private static void DetectCollisions_Kinematic_Vs_Static(ref PhysicsSceneData scene)
     {
         // 1. Init
-        var proxyIds = InitProxyScratchBuffer();
-        var proxyHandler = new ProxyIdQueryHandler(proxyIds);
+        var bodyIds = InitProxyScratchBuffer();
+        var queryHandler = new ProxyPayloadQueryHandler(bodyIds);
 
         try
         {
@@ -35,15 +35,13 @@ internal static class BroadPhase
             foreach (ref var kinematicBody in kinematicBodiesSpan)
             {
                 // 2. Gather
-                proxyIds.Clear();
-                scene.StaticGrid.QueryBoundsAsId(kinematicBody.AABB, ref proxyHandler);
+                bodyIds.Clear();
+                scene.StaticGrid.QueryBoundsAsPayload(kinematicBody.AABB, ref queryHandler);
 
                 // 3. Process
-                foreach (var proxyId in proxyIds)
+                foreach (var bodyId in bodyIds)
                 {
-                    var bodyId = scene.StaticGrid.GetProxyData(proxyId).Payload;
                     ref var staticBody = ref scene.GetBodyData(bodyId);
-
                     NarrowPhase.DetectCollision(ref scene, ref kinematicBody, ref staticBody);
                 }
             }
@@ -51,7 +49,7 @@ internal static class BroadPhase
         finally
         {
             // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
-            ClearProxyScratchBuffer(proxyIds);
+            ClearProxyScratchBuffer(bodyIds);
         }
     }
 
@@ -60,12 +58,12 @@ internal static class BroadPhase
     {
         // 1. Init
         var pairs = InitPairScratchBuffer();
-        var pairHandler = new ProxyPayloadPairQueryHandler(pairs);
+        var queryHandler = new ProxyPayloadPairQueryHandler(pairs);
 
         try
         {
             // 2. Gather
-            scene.DynamicGrid.QueryOverlappingPairsAsPayload(ref pairHandler);
+            scene.DynamicGrid.QueryOverlappingPairsAsPayload(ref queryHandler);
 
             // 3. Process
             foreach (var pair in pairs)
@@ -89,35 +87,35 @@ internal static class BroadPhase
     //       As a workaround, a static scratch buffer is used to do double-pass gather-then-process query logic.
     //       [ThreadStatic] ensures every thread gets its own isolated buffer. This prevents thread collisions if queries run in parallel.
     //       However, this implementation does not support reentrancy.
-    [ThreadStatic] private static List<SpatialGridProxyId>? _proxyScratchBuffer;
+    [ThreadStatic] private static List<RigidBodyId>? _proxyScratchBuffer;
 
-    private static List<SpatialGridProxyId> InitProxyScratchBuffer()
+    private static List<RigidBodyId> InitProxyScratchBuffer()
     {
-        _proxyScratchBuffer ??= new List<SpatialGridProxyId>(2048);
+        _proxyScratchBuffer ??= new List<RigidBodyId>(2048);
 
         Debug.Assert(_proxyScratchBuffer.Count == 0, "Reentrancy is not yet supported.");
 
         return _proxyScratchBuffer;
     }
 
-    private static void ClearProxyScratchBuffer(List<SpatialGridProxyId> buffer)
+    private static void ClearProxyScratchBuffer(List<RigidBodyId> buffer)
     {
         Debug.Assert(_proxyScratchBuffer == buffer, "Invalid buffer.");
         buffer.Clear();
     }
 
-    private readonly struct ProxyIdQueryHandler : IProxyIdQueryHandler
+    private readonly struct ProxyPayloadQueryHandler : IProxyPayloadQueryHandler<RigidBodyId>
     {
-        private readonly List<SpatialGridProxyId> _proxies;
+        private readonly List<RigidBodyId> _bodyIds;
 
-        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies)
+        public ProxyPayloadQueryHandler(List<RigidBodyId> bodyIds)
         {
-            _proxies = proxies;
+            _bodyIds = bodyIds;
         }
 
-        public bool Handle(SpatialGridProxyId proxyId)
+        public bool Handle(in RigidBodyId bodyId)
         {
-            _proxies.Add(proxyId);
+            _bodyIds.Add(bodyId);
             return true;
         }
     }

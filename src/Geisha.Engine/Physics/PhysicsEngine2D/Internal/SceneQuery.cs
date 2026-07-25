@@ -17,13 +17,13 @@ internal static class SceneQuery
     {
         // 1. Init
         var bodyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyPayloadQueryHandler(bodyIds);
+        var queryHandler = new ProxyPayloadQueryHandler(bodyIds);
 
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryPointAsPayload(point, ref proxyHandler);
-            scene.DynamicGrid.QueryPointAsPayload(point, ref proxyHandler);
+            scene.StaticGrid.QueryPointAsPayload(point, ref queryHandler);
+            scene.DynamicGrid.QueryPointAsPayload(point, ref queryHandler);
 
             // 3. Process
             foreach (var bodyId in bodyIds)
@@ -80,13 +80,13 @@ internal static class SceneQuery
     {
         // 1. Init
         var bodyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyPayloadQueryHandler(bodyIds);
+        var queryHandler = new ProxyPayloadQueryHandler(bodyIds);
 
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryBoundsAsPayload(bounds, ref proxyHandler);
-            scene.DynamicGrid.QueryBoundsAsPayload(bounds, ref proxyHandler);
+            scene.StaticGrid.QueryBoundsAsPayload(bounds, ref queryHandler);
+            scene.DynamicGrid.QueryBoundsAsPayload(bounds, ref queryHandler);
 
             // 3. Process
             foreach (var bodyId in bodyIds)
