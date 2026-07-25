@@ -612,7 +612,7 @@ internal class SpatialGridTests
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new LimitedProxyListQueryHandler(queryResults, maxProxies: 1);
         var point = new Vector2(5, 5);
-        grid.QueryPoint(in point, ref queryHandler);
+        grid.QueryPointAsId(in point, ref queryHandler);
 
         // Assert
         Assert.That(queryResults, Has.Count.EqualTo(1));
@@ -798,7 +798,7 @@ internal class SpatialGridTests
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new LimitedProxyListQueryHandler(queryResults, maxProxies: 1);
         var bounds = new AABB2D(0, 0, 20, 20);
-        grid.QueryBounds(in bounds, ref queryHandler);
+        grid.QueryBoundsAsId(in bounds, ref queryHandler);
 
         // Assert
         Assert.That(queryResults, Has.Count.EqualTo(1));
@@ -1149,7 +1149,7 @@ internal class SpatialGridTests
         // Act
         var queryResults = new List<PairQueryResult>();
         var queryHandler = new LimitedPairListQueryHandler(queryResults, maxPairs: 1);
-        grid.QueryOverlappingPairs(ref queryHandler);
+        grid.QueryOverlappingPairsAsId(ref queryHandler);
 
         // Assert
         Assert.That(queryResults, Has.Count.EqualTo(1));
@@ -1321,7 +1321,7 @@ internal class SpatialGridTests
     {
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new ProxyListQueryHandler(queryResults);
-        grid.QueryPoint(in point, ref queryHandler);
+        grid.QueryPointAsId(in point, ref queryHandler);
         return queryResults;
     }
 
@@ -1329,7 +1329,7 @@ internal class SpatialGridTests
     {
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new ProxyListQueryHandler(queryResults);
-        grid.QueryBounds(in bounds, ref queryHandler);
+        grid.QueryBoundsAsId(in bounds, ref queryHandler);
         return queryResults;
     }
 
@@ -1371,7 +1371,7 @@ internal class SpatialGridTests
     {
         var queryResults = new List<PairQueryResult>();
         var queryHandler = new PairListQueryHandler(queryResults);
-        grid.QueryOverlappingPairs(ref queryHandler);
+        grid.QueryOverlappingPairsAsId(ref queryHandler);
         return queryResults;
     }
 

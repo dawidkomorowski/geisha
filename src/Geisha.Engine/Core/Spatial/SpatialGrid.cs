@@ -224,7 +224,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
+    public void QueryPointAsId<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
     {
         QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
@@ -234,13 +234,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryPoint2<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
+    public void QueryPointAsPayload<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
     {
         QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
+    public void QueryBoundsAsId<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
     {
         QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
@@ -250,13 +250,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryBounds2<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
+    public void QueryBoundsAsPayload<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
     {
         QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdPairQueryHandler
+    public void QueryOverlappingPairsAsId<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdPairQueryHandler
     {
         QueryOverlappingPairsCommon(ref handler,
             static (ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
@@ -270,7 +270,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryOverlappingPairs2<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadPairQueryHandler<TPayload>
+    public void QueryOverlappingPairsAsPayload<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadPairQueryHandler<TPayload>
     {
         QueryOverlappingPairsCommon(ref handler,
             static (ref TQueryHandler handler, in Node _, in Node _, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>

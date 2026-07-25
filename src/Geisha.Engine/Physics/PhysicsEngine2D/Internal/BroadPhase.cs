@@ -36,7 +36,7 @@ internal static class BroadPhase
             {
                 // 2. Gather
                 proxyIds.Clear();
-                scene.StaticGrid.QueryBounds(kinematicBody.AABB, ref proxyHandler);
+                scene.StaticGrid.QueryBoundsAsId(kinematicBody.AABB, ref proxyHandler);
 
                 // 3. Process
                 foreach (var proxyId in proxyIds)
@@ -65,7 +65,7 @@ internal static class BroadPhase
         try
         {
             // 2. Gather
-            scene.DynamicGrid.QueryOverlappingPairs2(ref pairHandler);
+            scene.DynamicGrid.QueryOverlappingPairsAsPayload(ref pairHandler);
 
             // 3. Process
             foreach (var pair in pairs)

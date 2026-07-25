@@ -22,8 +22,8 @@ internal static class SceneQuery
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryPoint2(point, ref proxyHandler);
-            scene.DynamicGrid.QueryPoint2(point, ref proxyHandler);
+            scene.StaticGrid.QueryPointAsPayload(point, ref proxyHandler);
+            scene.DynamicGrid.QueryPointAsPayload(point, ref proxyHandler);
 
             // 3. Process
             foreach (var bodyId in bodyIds)
@@ -85,8 +85,8 @@ internal static class SceneQuery
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryBounds2(bounds, ref proxyHandler);
-            scene.DynamicGrid.QueryBounds2(bounds, ref proxyHandler);
+            scene.StaticGrid.QueryBoundsAsPayload(bounds, ref proxyHandler);
+            scene.DynamicGrid.QueryBoundsAsPayload(bounds, ref proxyHandler);
 
             // 3. Process
             foreach (var bodyId in bodyIds)
