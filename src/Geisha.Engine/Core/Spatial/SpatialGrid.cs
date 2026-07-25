@@ -7,6 +7,8 @@ using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Core.Spatial;
 
+// TODO: How to name handlers and methods based on handler variant?
+// TODO: Unit tests for both handler variants?
 public readonly record struct SpatialGridProxyId
 {
     private readonly int _value;
