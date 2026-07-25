@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Spatial;
 
@@ -10,26 +11,23 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 //       Now queries rely on spatial grid so bugs in updates of spatial grid should be captured in query tests?
 internal static class SceneQuery
 {
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public static void QueryPoint<TQueryHandler>(in PhysicsSceneData scene, in Vector2 point, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
         // 1. Init
-        var proxyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyQueryHandler(proxyIds);
+        var bodyIds = InitScratchBuffer();
+        var proxyHandler = new ProxyQueryHandler(bodyIds);
 
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryPoint(point, ref proxyHandler);
-            scene.DynamicGrid.QueryPoint(point, ref proxyHandler);
+            scene.StaticGrid.QueryPoint2(point, ref proxyHandler);
+            scene.DynamicGrid.QueryPoint2(point, ref proxyHandler);
 
             // 3. Process
-            foreach (var proxyId in proxyIds)
+            foreach (var bodyId in bodyIds)
             {
-                var bodyId = scene.StaticGrid.IsValidProxy(proxyId)
-                    ? scene.StaticGrid.GetProxyData(proxyId).Payload
-                    : scene.DynamicGrid.GetProxyData(proxyId).Payload;
-
                 ref var body = ref scene.GetBodyData(bodyId);
                 if (body.ContainsPoint(point))
                 {
@@ -43,7 +41,7 @@ internal static class SceneQuery
         finally
         {
             // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
-            ClearScratchBuffer(proxyIds);
+            ClearScratchBuffer(bodyIds);
         }
     }
 
@@ -73,6 +71,7 @@ internal static class SceneQuery
 
     private delegate bool QueryFunc<TQueryArg>(in RigidBodyData body, in TQueryArg queryArg);
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void QueryByBounds<TQueryHandler, TQueryArg>(in PhysicsSceneData scene, in AABB2D bounds, ref TQueryHandler handler,
         in TQueryArg queryArg, QueryFunc<TQueryArg> queryFunc
     )
@@ -80,22 +79,18 @@ internal static class SceneQuery
         where TQueryArg : struct
     {
         // 1. Init
-        var proxyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyQueryHandler(proxyIds);
+        var bodyIds = InitScratchBuffer();
+        var proxyHandler = new ProxyQueryHandler(bodyIds);
 
         try
         {
             // 2. Gather
-            scene.StaticGrid.QueryBounds(bounds, ref proxyHandler);
-            scene.DynamicGrid.QueryBounds(bounds, ref proxyHandler);
+            scene.StaticGrid.QueryBounds2(bounds, ref proxyHandler);
+            scene.DynamicGrid.QueryBounds2(bounds, ref proxyHandler);
 
             // 3. Process
-            foreach (var proxyId in proxyIds)
+            foreach (var bodyId in bodyIds)
             {
-                var bodyId = scene.StaticGrid.IsValidProxy(proxyId)
-                    ? scene.StaticGrid.GetProxyData(proxyId).Payload
-                    : scene.DynamicGrid.GetProxyData(proxyId).Payload;
-
                 ref var body = ref scene.GetBodyData(bodyId);
                 if (queryFunc(body, in queryArg))
                 {
@@ -109,7 +104,7 @@ internal static class SceneQuery
         finally
         {
             // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
-            ClearScratchBuffer(proxyIds);
+            ClearScratchBuffer(bodyIds);
         }
     }
 
@@ -119,35 +114,35 @@ internal static class SceneQuery
     //       As a workaround, a static scratch buffer is used to do double-pass gather-then-process query logic.
     //       [ThreadStatic] ensures every thread gets its own isolated buffer. This prevents thread collisions if queries run in parallel.
     //       However, this implementation does not support reentrancy.
-    [ThreadStatic] private static List<SpatialGridProxyId>? _scratchBuffer;
+    [ThreadStatic] private static List<RigidBodyId>? _scratchBuffer;
 
-    private static List<SpatialGridProxyId> InitScratchBuffer()
+    private static List<RigidBodyId> InitScratchBuffer()
     {
-        _scratchBuffer ??= new List<SpatialGridProxyId>(2048);
+        _scratchBuffer ??= new List<RigidBodyId>(2048);
 
         Debug.Assert(_scratchBuffer.Count == 0, "Reentrancy is not yet supported.");
 
         return _scratchBuffer;
     }
 
-    private static void ClearScratchBuffer(List<SpatialGridProxyId> buffer)
+    private static void ClearScratchBuffer(List<RigidBodyId> buffer)
     {
         Debug.Assert(_scratchBuffer == buffer, "Invalid buffer.");
         buffer.Clear();
     }
 
-    private readonly struct ProxyQueryHandler : IProxyQueryHandler
+    private readonly struct ProxyQueryHandler : IProxyQueryHandler2<RigidBodyId>
     {
-        private readonly List<SpatialGridProxyId> _proxies;
+        private readonly List<RigidBodyId> _bodyIds;
 
-        public ProxyQueryHandler(List<SpatialGridProxyId> proxies)
+        public ProxyQueryHandler(List<RigidBodyId> bodyIds)
         {
-            _proxies = proxies;
+            _bodyIds = bodyIds;
         }
 
-        public bool Handle(SpatialGridProxyId proxyId)
+        public bool Handle(in RigidBodyId bodyId)
         {
-            _proxies.Add(proxyId);
+            _bodyIds.Add(bodyId);
             return true;
         }
     }

@@ -31,6 +31,11 @@ public interface IProxyQueryHandler
     bool Handle(SpatialGridProxyId proxyId);
 }
 
+public interface IProxyQueryHandler2<TPayload> where TPayload : unmanaged
+{
+    bool Handle(in TPayload payload);
+}
+
 public interface IPairsQueryHandler
 {
     bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2);
@@ -216,60 +221,36 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
     {
-        var cell = FindCell(point);
-        var nodeIndex = _cells.GetValueOrDefault(cell.Key, Null);
-
-        var shouldContinue = true;
-        while (nodeIndex != Null && shouldContinue)
+        QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
-            ref var node = ref _nodes[nodeIndex];
-            ref var proxy = ref _proxies[node.ProxyIndex];
-
-            if (proxy.Bounds.Contains(point))
-            {
-                var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
-                shouldContinue = handler.Handle(proxyId);
-            }
-
-            nodeIndex = node.NextCellNodeIndex;
-        }
+            var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
+            return handler.Handle(proxyId);
+        });
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    public void QueryPoint2<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler2<TPayload>
+    {
+        QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
     {
-        _queryId++;
-
-        var shouldContinue = true;
-
-        foreach (var cell in FindCells(bounds))
+        QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
-            if (!shouldContinue)
-            {
-                break;
-            }
+            var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
+            return handler.Handle(proxyId);
+        });
+    }
 
-            var nodeIndex = _cells.GetValueOrDefault(cell.Key, Null);
-            while (nodeIndex != Null && shouldContinue)
-            {
-                ref var node = ref _nodes[nodeIndex];
-                ref var proxy = ref _proxies[node.ProxyIndex];
-
-                if (proxy.LastQueryId != _queryId)
-                {
-                    proxy.LastQueryId = _queryId;
-
-                    if (proxy.Bounds.Overlaps(bounds))
-                    {
-                        var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
-                        shouldContinue = handler.Handle(proxyId);
-                    }
-                }
-
-                nodeIndex = node.NextCellNodeIndex;
-            }
-        }
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    public void QueryBounds2<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler2<TPayload>
+    {
+        QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -295,11 +276,71 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         );
     }
 
-    private delegate bool HandleFunc<TQueryHandler>(ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1,
+    private delegate bool HandleProxyFunc<TQueryHandler>(ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) where TQueryHandler : struct;
+
+    private delegate bool HandlePairFunc<TQueryHandler>(ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1,
         in Proxy<TPayload> proxy2) where TQueryHandler : struct;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private void QueryOverlappingPairsCommon<TQueryHandler>(ref TQueryHandler handler, HandleFunc<TQueryHandler> handleFunc)
+    private void QueryPointCommon<TQueryHandler>(in Vector2 point, ref TQueryHandler handler, HandleProxyFunc<TQueryHandler> handleProxyFunc)
+        where TQueryHandler : struct
+    {
+        var cell = FindCell(point);
+        var nodeIndex = _cells.GetValueOrDefault(cell.Key, Null);
+
+        var shouldContinue = true;
+        while (nodeIndex != Null && shouldContinue)
+        {
+            ref var node = ref _nodes[nodeIndex];
+            ref var proxy = ref _proxies[node.ProxyIndex];
+
+            if (proxy.Bounds.Contains(point))
+            {
+                shouldContinue = handleProxyFunc(ref handler, node, proxy);
+            }
+
+            nodeIndex = node.NextCellNodeIndex;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private void QueryBoundsCommon<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler, HandleProxyFunc<TQueryHandler> handleProxyFunc)
+        where TQueryHandler : struct
+    {
+        _queryId++;
+
+        var shouldContinue = true;
+
+        foreach (var cell in FindCells(bounds))
+        {
+            if (!shouldContinue)
+            {
+                break;
+            }
+
+            var nodeIndex = _cells.GetValueOrDefault(cell.Key, Null);
+            while (nodeIndex != Null && shouldContinue)
+            {
+                ref var node = ref _nodes[nodeIndex];
+                ref var proxy = ref _proxies[node.ProxyIndex];
+
+                if (proxy.LastQueryId != _queryId)
+                {
+                    proxy.LastQueryId = _queryId;
+
+                    if (proxy.Bounds.Overlaps(bounds))
+                    {
+                        shouldContinue = handleProxyFunc(ref handler, node, proxy);
+                    }
+                }
+
+                nodeIndex = node.NextCellNodeIndex;
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private void QueryOverlappingPairsCommon<TQueryHandler>(ref TQueryHandler handler, HandlePairFunc<TQueryHandler> handlePairFunc)
         where TQueryHandler : struct
     {
         var shouldContinue = true;
@@ -334,7 +375,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
                         // Pair must be handled only in single canonical cell to avoid duplicates.
                         if (cell.Key == canonicalCell.Key)
                         {
-                            shouldContinue = handleFunc(ref handler, node1, node2, proxy1, proxy2);
+                            shouldContinue = handlePairFunc(ref handler, node1, node2, proxy1, proxy2);
                         }
                     }
 
