@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
 
@@ -293,9 +292,9 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
                     ref var proxy1 = ref _proxies[node1.ProxyIndex];
                     ref var proxy2 = ref _proxies[node2.ProxyIndex];
 
-                    var intersection = proxy1.Bounds.Intersect(proxy2.Bounds);
-                    if (intersection.IsValid)
+                    if (proxy1.Bounds.Overlaps(proxy2.Bounds))
                     {
+                        var intersection = proxy1.Bounds.Intersect(proxy2.Bounds);
                         var canonicalCell = FindCell(intersection.Min);
 
                         // Pair must be handled only in single canonical cell to avoid duplicates.
