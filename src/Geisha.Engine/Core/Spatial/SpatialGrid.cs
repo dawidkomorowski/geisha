@@ -7,7 +7,6 @@ using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Core.Spatial;
 
-// TODO: How to name handlers and methods based on handler variant?
 // TODO: Unit tests for both handler variants?
 public readonly record struct SpatialGridProxyId
 {
@@ -226,7 +225,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryPointAsId<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
     {
-        QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
+        QueryPoint(point, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
             var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
             return handler.Handle(proxyId);
@@ -234,15 +233,16 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryPointAsPayload<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
+    public void QueryPointAsPayload<TQueryHandler>(in Vector2 point, ref TQueryHandler handler)
+        where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
     {
-        QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
+        QueryPoint(point, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryBoundsAsId<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
     {
-        QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
+        QueryBounds(bounds, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
             var proxyId = new SpatialGridProxyId(node.ProxyIndex, proxy.Version);
             return handler.Handle(proxyId);
@@ -250,15 +250,16 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryBoundsAsPayload<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
+    public void QueryBoundsAsPayload<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler)
+        where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
     {
-        QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
+        QueryBounds(bounds, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryOverlappingPairsAsId<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdPairQueryHandler
     {
-        QueryOverlappingPairsCommon(ref handler,
+        QueryOverlappingPairs(ref handler,
             static (ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
             {
                 var proxyId1 = new SpatialGridProxyId(node1.ProxyIndex, proxy1.Version);
@@ -272,7 +273,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryOverlappingPairsAsPayload<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadPairQueryHandler<TPayload>
     {
-        QueryOverlappingPairsCommon(ref handler,
+        QueryOverlappingPairs(ref handler,
             static (ref TQueryHandler handler, in Node _, in Node _, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
                 handler.Handle(proxy1.Payload, proxy2.Payload)
         );
@@ -284,7 +285,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         in Proxy<TPayload> proxy2) where TQueryHandler : struct;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private void QueryPointCommon<TQueryHandler>(in Vector2 point, ref TQueryHandler handler, HandleProxyFunc<TQueryHandler> handleProxyFunc)
+    private void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler, HandleProxyFunc<TQueryHandler> handleProxyFunc)
         where TQueryHandler : struct
     {
         var cell = FindCell(point);
@@ -306,7 +307,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private void QueryBoundsCommon<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler, HandleProxyFunc<TQueryHandler> handleProxyFunc)
+    private void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler, HandleProxyFunc<TQueryHandler> handleProxyFunc)
         where TQueryHandler : struct
     {
         _queryId++;
@@ -342,7 +343,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private void QueryOverlappingPairsCommon<TQueryHandler>(ref TQueryHandler handler, HandlePairFunc<TQueryHandler> handlePairFunc)
+    private void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler, HandlePairFunc<TQueryHandler> handlePairFunc)
         where TQueryHandler : struct
     {
         var shouldContinue = true;
