@@ -27,7 +27,7 @@ internal static class BroadPhase
     {
         // 1. Init
         var proxyIds = InitProxyScratchBuffer();
-        var proxyHandler = new ProxyQueryHandler(proxyIds);
+        var proxyHandler = new ProxyIdQueryHandler(proxyIds);
 
         try
         {
@@ -106,11 +106,11 @@ internal static class BroadPhase
         buffer.Clear();
     }
 
-    private readonly struct ProxyQueryHandler : IProxyQueryHandler
+    private readonly struct ProxyIdQueryHandler : IProxyIdQueryHandler
     {
         private readonly List<SpatialGridProxyId> _proxies;
 
-        public ProxyQueryHandler(List<SpatialGridProxyId> proxies)
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies)
         {
             _proxies = proxies;
         }

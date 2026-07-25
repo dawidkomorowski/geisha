@@ -28,12 +28,12 @@ public readonly record struct SpatialGridProxyId
     public bool IsNotNull => _value > 0;
 }
 
-public interface IProxyQueryHandler
+public interface IProxyIdQueryHandler
 {
     bool Handle(SpatialGridProxyId proxyId);
 }
 
-public interface IProxyQueryHandler2<TPayload> where TPayload : unmanaged
+public interface IProxyPayloadQueryHandler<TPayload> where TPayload : unmanaged
 {
     bool Handle(in TPayload payload);
 }
@@ -224,7 +224,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
+    public void QueryPoint<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
     {
         QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
@@ -234,13 +234,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryPoint2<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler2<TPayload>
+    public void QueryPoint2<TQueryHandler>(in Vector2 point, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
     {
         QueryPointCommon(point, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler
+    public void QueryBounds<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyIdQueryHandler
     {
         QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node node, in Proxy<TPayload> proxy) =>
         {
@@ -250,7 +250,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    public void QueryBounds2<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyQueryHandler2<TPayload>
+    public void QueryBounds2<TQueryHandler>(in AABB2D bounds, ref TQueryHandler handler) where TQueryHandler : struct, IProxyPayloadQueryHandler<TPayload>
     {
         QueryBoundsCommon(bounds, ref handler, static (ref TQueryHandler handler, in Node _, in Proxy<TPayload> proxy) => handler.Handle(proxy.Payload));
     }

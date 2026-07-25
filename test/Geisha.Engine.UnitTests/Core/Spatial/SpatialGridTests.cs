@@ -1333,7 +1333,7 @@ internal class SpatialGridTests
         return queryResults;
     }
 
-    private readonly struct ProxyListQueryHandler : IProxyQueryHandler
+    private readonly struct ProxyListQueryHandler : IProxyIdQueryHandler
     {
         private readonly List<SpatialGridProxyId> _proxies;
 
@@ -1349,7 +1349,7 @@ internal class SpatialGridTests
         }
     }
 
-    private readonly struct LimitedProxyListQueryHandler : IProxyQueryHandler
+    private readonly struct LimitedProxyListQueryHandler : IProxyIdQueryHandler
     {
         private readonly List<SpatialGridProxyId> _proxies;
         private readonly int _maxProxies;

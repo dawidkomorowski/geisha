@@ -17,7 +17,7 @@ internal static class SceneQuery
     {
         // 1. Init
         var bodyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyQueryHandler(bodyIds);
+        var proxyHandler = new ProxyPayloadQueryHandler(bodyIds);
 
         try
         {
@@ -80,7 +80,7 @@ internal static class SceneQuery
     {
         // 1. Init
         var bodyIds = InitScratchBuffer();
-        var proxyHandler = new ProxyQueryHandler(bodyIds);
+        var proxyHandler = new ProxyPayloadQueryHandler(bodyIds);
 
         try
         {
@@ -131,11 +131,11 @@ internal static class SceneQuery
         buffer.Clear();
     }
 
-    private readonly struct ProxyQueryHandler : IProxyQueryHandler2<RigidBodyId>
+    private readonly struct ProxyPayloadQueryHandler : IProxyPayloadQueryHandler<RigidBodyId>
     {
         private readonly List<RigidBodyId> _bodyIds;
 
-        public ProxyQueryHandler(List<RigidBodyId> bodyIds)
+        public ProxyPayloadQueryHandler(List<RigidBodyId> bodyIds)
         {
             _bodyIds = bodyIds;
         }
