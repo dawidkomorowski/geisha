@@ -36,6 +36,11 @@ public interface IPairsQueryHandler
     bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2);
 }
 
+public interface IPairsQueryHandler2<TPayload> where TPayload : unmanaged
+{
+    bool Handle(in TPayload payload1, in TPayload payload2);
+}
+
 public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
     private const int Null = -1;
@@ -304,6 +309,51 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
                             var proxyId2 = new SpatialGridProxyId(node2.ProxyIndex, proxy2.Version);
 
                             shouldContinue = handler.Handle(proxyId1, proxyId2);
+                        }
+                    }
+
+                    node2Index = node2.NextCellNodeIndex;
+                }
+
+                node1Index = node1.NextCellNodeIndex;
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    public void QueryOverlappingPairs2<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler2<TPayload>
+    {
+        var shouldContinue = true;
+
+        foreach (var cell in _cells)
+        {
+            if (!shouldContinue)
+            {
+                break;
+            }
+
+            var node1Index = cell.Value;
+            while (node1Index != Null && shouldContinue)
+            {
+                ref var node1 = ref _nodes[node1Index];
+
+                var node2Index = node1.NextCellNodeIndex;
+                while (node2Index != Null && shouldContinue)
+                {
+                    ref var node2 = ref _nodes[node2Index];
+
+                    ref var proxy1 = ref _proxies[node1.ProxyIndex];
+                    ref var proxy2 = ref _proxies[node2.ProxyIndex];
+
+                    if (proxy1.Bounds.Overlaps(proxy2.Bounds))
+                    {
+                        var intersection = proxy1.Bounds.Intersect(proxy2.Bounds);
+                        var canonicalCell = FindCell(intersection.Min);
+
+                        // Pair must be handled only in single canonical cell to avoid duplicates.
+                        if (cell.Key == canonicalCell.Key)
+                        {
+                            shouldContinue = handler.Handle(proxy1.Payload, proxy2.Payload);
                         }
                     }
 

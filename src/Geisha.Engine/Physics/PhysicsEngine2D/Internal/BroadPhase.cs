@@ -65,16 +65,13 @@ internal static class BroadPhase
         try
         {
             // 2. Gather
-            scene.DynamicGrid.QueryOverlappingPairs(ref pairHandler);
+            scene.DynamicGrid.QueryOverlappingPairs2(ref pairHandler);
 
             // 3. Process
             foreach (var pair in pairs)
             {
-                var bodyId1 = scene.DynamicGrid.GetProxyData(pair.ProxyId1).Payload;
-                var bodyId2 = scene.DynamicGrid.GetProxyData(pair.ProxyId2).Payload;
-
-                ref var kinematicBody1 = ref scene.GetBodyData(bodyId1);
-                ref var kinematicBody2 = ref scene.GetBodyData(bodyId2);
+                ref var kinematicBody1 = ref scene.GetBodyData(pair.BodyId1);
+                ref var kinematicBody2 = ref scene.GetBodyData(pair.BodyId2);
 
                 NarrowPhase.DetectCollision(ref scene, ref kinematicBody1, ref kinematicBody2);
             }
@@ -148,9 +145,9 @@ internal static class BroadPhase
         buffer.Clear();
     }
 
-    private readonly record struct Pair(SpatialGridProxyId ProxyId1, SpatialGridProxyId ProxyId2);
+    private readonly record struct Pair(RigidBodyId BodyId1, RigidBodyId BodyId2);
 
-    private readonly struct PairsQueryHandler : IPairsQueryHandler
+    private readonly struct PairsQueryHandler : IPairsQueryHandler2<RigidBodyId>
     {
         private readonly List<Pair> _pairs;
 
@@ -159,9 +156,9 @@ internal static class BroadPhase
             _pairs = pairs;
         }
 
-        public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
+        public bool Handle(in RigidBodyId bodyId1, in RigidBodyId bodyId2)
         {
-            _pairs.Add(new Pair(proxyId1, proxyId2));
+            _pairs.Add(new Pair(bodyId1, bodyId2));
             return true;
         }
     }
