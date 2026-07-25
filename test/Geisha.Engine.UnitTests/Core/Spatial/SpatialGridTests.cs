@@ -1335,25 +1335,25 @@ internal class SpatialGridTests
 
     private readonly struct ProxyIdQueryHandler : IProxyIdQueryHandler
     {
-        private readonly List<SpatialGridProxyId> _proxies;
+        private readonly List<SpatialGridProxyId> _results;
         private readonly int _maxResults;
 
-        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies)
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> results)
         {
-            _proxies = proxies;
+            _results = results;
             _maxResults = int.MaxValue;
         }
 
-        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies, int maxResults)
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> results, int maxResults)
         {
-            _proxies = proxies;
+            _results = results;
             _maxResults = maxResults;
         }
 
         public bool Handle(SpatialGridProxyId proxyId)
         {
-            _proxies.Add(proxyId);
-            return _proxies.Count < _maxResults;
+            _results.Add(proxyId);
+            return _results.Count < _maxResults;
         }
     }
 
@@ -1383,25 +1383,25 @@ internal class SpatialGridTests
 
     private readonly struct ProxyIdPairQueryHandler : IProxyIdPairQueryHandler
     {
-        private readonly List<ProxyIdPair> _pairs;
+        private readonly List<ProxyIdPair> _results;
         private readonly int _maxResults;
 
-        public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs)
+        public ProxyIdPairQueryHandler(List<ProxyIdPair> results)
         {
-            _pairs = pairs;
+            _results = results;
             _maxResults = int.MaxValue;
         }
 
-        public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs, int maxResults)
+        public ProxyIdPairQueryHandler(List<ProxyIdPair> results, int maxResults)
         {
-            _pairs = pairs;
+            _results = results;
             _maxResults = maxResults;
         }
 
         public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
         {
-            _pairs.Add(new ProxyIdPair(proxyId1, proxyId2));
-            return _pairs.Count < _maxResults;
+            _results.Add(new ProxyIdPair(proxyId1, proxyId2));
+            return _results.Count < _maxResults;
         }
     }
 
