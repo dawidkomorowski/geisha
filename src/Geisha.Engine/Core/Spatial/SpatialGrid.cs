@@ -275,53 +275,32 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryOverlappingPairs<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler
     {
-        var shouldContinue = true;
-
-        foreach (var cell in _cells)
-        {
-            if (!shouldContinue)
+        QueryOverlappingPairsCommon(ref handler,
+            static (ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
             {
-                break;
+                var proxyId1 = new SpatialGridProxyId(node1.ProxyIndex, proxy1.Version);
+                var proxyId2 = new SpatialGridProxyId(node2.ProxyIndex, proxy2.Version);
+
+                return handler.Handle(proxyId1, proxyId2);
             }
-
-            var node1Index = cell.Value;
-            while (node1Index != Null && shouldContinue)
-            {
-                ref var node1 = ref _nodes[node1Index];
-
-                var node2Index = node1.NextCellNodeIndex;
-                while (node2Index != Null && shouldContinue)
-                {
-                    ref var node2 = ref _nodes[node2Index];
-
-                    ref var proxy1 = ref _proxies[node1.ProxyIndex];
-                    ref var proxy2 = ref _proxies[node2.ProxyIndex];
-
-                    if (proxy1.Bounds.Overlaps(proxy2.Bounds))
-                    {
-                        var intersection = proxy1.Bounds.Intersect(proxy2.Bounds);
-                        var canonicalCell = FindCell(intersection.Min);
-
-                        // Pair must be handled only in single canonical cell to avoid duplicates.
-                        if (cell.Key == canonicalCell.Key)
-                        {
-                            var proxyId1 = new SpatialGridProxyId(node1.ProxyIndex, proxy1.Version);
-                            var proxyId2 = new SpatialGridProxyId(node2.ProxyIndex, proxy2.Version);
-
-                            shouldContinue = handler.Handle(proxyId1, proxyId2);
-                        }
-                    }
-
-                    node2Index = node2.NextCellNodeIndex;
-                }
-
-                node1Index = node1.NextCellNodeIndex;
-            }
-        }
+        );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public void QueryOverlappingPairs2<TQueryHandler>(ref TQueryHandler handler) where TQueryHandler : struct, IPairsQueryHandler2<TPayload>
+    {
+        QueryOverlappingPairsCommon(ref handler,
+            static (ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1, in Proxy<TPayload> proxy2) =>
+                handler.Handle(proxy1.Payload, proxy2.Payload)
+        );
+    }
+
+    private delegate bool HandleFunc<TQueryHandler>(ref TQueryHandler handler, in Node node1, in Node node2, in Proxy<TPayload> proxy1,
+        in Proxy<TPayload> proxy2) where TQueryHandler : struct;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private void QueryOverlappingPairsCommon<TQueryHandler>(ref TQueryHandler handler, HandleFunc<TQueryHandler> handleFunc)
+        where TQueryHandler : struct
     {
         var shouldContinue = true;
 
@@ -353,7 +332,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
                         // Pair must be handled only in single canonical cell to avoid duplicates.
                         if (cell.Key == canonicalCell.Key)
                         {
-                            shouldContinue = handler.Handle(proxy1.Payload, proxy2.Payload);
+                            shouldContinue = handleFunc(ref handler, node1, node2, proxy1, proxy2);
                         }
                     }
 
