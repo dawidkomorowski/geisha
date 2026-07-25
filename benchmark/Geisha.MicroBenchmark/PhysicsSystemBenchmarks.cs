@@ -77,23 +77,23 @@ public class PhysicsSystemBenchmarks
         }
     }
 
-    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled))]
-    public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled()
+    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled))]
+    public void IterationSetup_SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled()
     {
         InitializePhysicsSystem();
-        ConfigureUniformRandomScene(new SizeD(10000, 10000), 200, 1000, 100);
-        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled)}[0]", 0.5);
+        ConfigureUniformRandomScene(new SizeD(10000, 10000), 300, 1000, 100);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled)}[0]", 0.5);
     }
 
-    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled))]
-    public void IterationCleanup_SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled()
+    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled))]
+    public void IterationCleanup_SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled()
     {
-        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled)}[1]", 0.5);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled)}[1]", 0.5);
         CleanupPhysicsSystem();
     }
 
     [Benchmark]
-    public void SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled()
+    public void SimulatePhysics_10Seconds_300K_1000S_Sparse_CR_Disabled()
     {
         // Assuming 60FPS it simulates 10s.
         for (var i = 0; i < 600; i++)
@@ -102,24 +102,24 @@ public class PhysicsSystemBenchmarks
         }
     }
 
-    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled))]
-    public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled()
+    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled))]
+    public void IterationSetup_SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled()
     {
         InitializePhysicsSystem();
-        ConfigureUniformRandomScene(new SizeD(1000, 1000), 200, 1000, 50);
+        ConfigureUniformRandomScene(new SizeD(1000, 1000), 300, 1000, 50);
 
-        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled)}[0]", 0.5);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled)}[0]", 0.5);
     }
 
-    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled))]
-    public void IterationCleanup_SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled()
+    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled))]
+    public void IterationCleanup_SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled()
     {
-        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled)}[1]", 0.5);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled)}[1]", 0.5);
         CleanupPhysicsSystem();
     }
 
     [Benchmark]
-    public void SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled()
+    public void SimulatePhysics_10Seconds_300K_1000S_Dense_CR_Disabled()
     {
         // Assuming 60FPS it simulates 10s.
         for (var i = 0; i < 600; i++)
@@ -266,11 +266,11 @@ public class PhysicsSystemBenchmarks
         }
     }
 
-    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors))]
-    public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
+    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors))]
+    public void IterationSetup_SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors()
     {
         InitializePhysicsSystem();
-        ConfigureUniformRandomScene(new SizeD(1000, 1000), 200, 1000, 50);
+        ConfigureUniformRandomScene(new SizeD(1000, 1000), 300, 1000, 50);
 
         foreach (var collider in _colliderComponents)
         {
@@ -280,18 +280,18 @@ public class PhysicsSystemBenchmarks
             }
         }
 
-        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors)}[0]", 0.5);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors)}[0]", 0.5);
     }
 
-    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors))]
-    public void IterationCleanup_SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
+    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors))]
+    public void IterationCleanup_SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors()
     {
-        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors)}[1]", 0.5);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors)}[1]", 0.5);
         CleanupPhysicsSystem();
     }
 
     [Benchmark]
-    public void SimulatePhysics_10Seconds_200K_1000S_Dense_KinematicSensors()
+    public void SimulatePhysics_10Seconds_300K_1000S_Dense_KinematicSensors()
     {
         // Assuming 60FPS it simulates 10s.
         for (var i = 0; i < 600; i++)
