@@ -610,7 +610,7 @@ internal class SpatialGridTests
 
         // Act
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyIdQueryHandler(queryResults, maxProxies: 1);
+        var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults: 1);
         var point = new Vector2(5, 5);
         grid.QueryPointAsId(in point, ref queryHandler);
 
@@ -796,7 +796,7 @@ internal class SpatialGridTests
 
         // Act
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyIdQueryHandler(queryResults, maxProxies: 1);
+        var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults: 1);
         var bounds = new AABB2D(0, 0, 20, 20);
         grid.QueryBoundsAsId(in bounds, ref queryHandler);
 
@@ -1148,7 +1148,7 @@ internal class SpatialGridTests
 
         // Act
         var queryResults = new List<ProxyIdPair>();
-        var queryHandler = new ProxyIdPairQueryHandler(queryResults, maxPairs: 1);
+        var queryHandler = new ProxyIdPairQueryHandler(queryResults, maxResults: 1);
         grid.QueryOverlappingPairsAsId(ref queryHandler);
 
         // Assert
@@ -1336,24 +1336,24 @@ internal class SpatialGridTests
     private readonly struct ProxyIdQueryHandler : IProxyIdQueryHandler
     {
         private readonly List<SpatialGridProxyId> _proxies;
-        private readonly int _maxProxies;
+        private readonly int _maxResults;
 
         public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies)
         {
             _proxies = proxies;
-            _maxProxies = int.MaxValue;
+            _maxResults = int.MaxValue;
         }
 
-        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies, int maxProxies)
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> proxies, int maxResults)
         {
             _proxies = proxies;
-            _maxProxies = maxProxies;
+            _maxResults = maxResults;
         }
 
         public bool Handle(SpatialGridProxyId proxyId)
         {
             _proxies.Add(proxyId);
-            return _proxies.Count < _maxProxies;
+            return _proxies.Count < _maxResults;
         }
     }
 
@@ -1384,24 +1384,24 @@ internal class SpatialGridTests
     private readonly struct ProxyIdPairQueryHandler : IProxyIdPairQueryHandler
     {
         private readonly List<ProxyIdPair> _pairs;
-        private readonly int _maxPairs;
+        private readonly int _maxResults;
 
         public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs)
         {
             _pairs = pairs;
-            _maxPairs = int.MaxValue;
+            _maxResults = int.MaxValue;
         }
 
-        public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs, int maxPairs)
+        public ProxyIdPairQueryHandler(List<ProxyIdPair> pairs, int maxResults)
         {
             _pairs = pairs;
-            _maxPairs = maxPairs;
+            _maxResults = maxResults;
         }
 
         public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
         {
             _pairs.Add(new ProxyIdPair(proxyId1, proxyId2));
-            return _pairs.Count < _maxPairs;
+            return _pairs.Count < _maxResults;
         }
     }
 
