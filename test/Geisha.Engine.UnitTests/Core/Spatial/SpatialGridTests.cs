@@ -1382,6 +1382,14 @@ internal class SpatialGridTests
         var queryResults = new List<ProxyIdPair>();
         var queryHandler = new ProxyIdPairQueryHandler(queryResults, maxResults);
         grid.QueryOverlappingPairsAsId(ref queryHandler);
+
+        var payloadResults = new List<ProxyPayloadPair>();
+        var payloadQueryHandler = new ProxyPayloadPairQueryHandler(payloadResults, maxResults);
+        grid.QueryOverlappingPairsAsPayload(ref payloadQueryHandler);
+
+        Assert.That(payloadResults, Is.EqualTo(queryResults.Select(p =>
+            new ProxyPayloadPair(grid.GetProxyData(p.ProxyId1).Payload, grid.GetProxyData(p.ProxyId2).Payload))));
+
         return queryResults;
     }
 
@@ -1415,6 +1423,26 @@ internal class SpatialGridTests
         public bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2)
         {
             _results.Add(new ProxyIdPair(proxyId1, proxyId2));
+            return _results.Count < _maxResults;
+        }
+    }
+
+    private readonly record struct ProxyPayloadPair(int Payload1, int Payload2);
+
+    private readonly struct ProxyPayloadPairQueryHandler : IProxyPayloadPairQueryHandler<int>
+    {
+        private readonly List<ProxyPayloadPair> _results;
+        private readonly int _maxResults;
+
+        public ProxyPayloadPairQueryHandler(List<ProxyPayloadPair> results, int maxResults = int.MaxValue)
+        {
+            _results = results;
+            _maxResults = maxResults;
+        }
+
+        public bool Handle(in int payload1, in int payload2)
+        {
+            _results.Add(new ProxyPayloadPair(payload1, payload2));
             return _results.Count < _maxResults;
         }
     }
