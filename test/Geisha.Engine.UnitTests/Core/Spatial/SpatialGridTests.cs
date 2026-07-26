@@ -1316,6 +1316,13 @@ internal class SpatialGridTests
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults);
         grid.QueryPointAsId(in point, ref queryHandler);
+
+        var payloadResults = new List<int>();
+        var payloadQueryHandler = new ProxyPayloadQueryHandler(payloadResults, maxResults);
+        grid.QueryPointAsPayload(in point, ref payloadQueryHandler);
+
+        Assert.That(payloadResults, Is.EqualTo(queryResults.Select(id => grid.GetProxyData(id).Payload)));
+
         return queryResults;
     }
 
@@ -1324,6 +1331,13 @@ internal class SpatialGridTests
         var queryResults = new List<SpatialGridProxyId>();
         var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults);
         grid.QueryBoundsAsId(in bounds, ref queryHandler);
+
+        var payloadResults = new List<int>();
+        var payloadQueryHandler = new ProxyPayloadQueryHandler(payloadResults, maxResults);
+        grid.QueryBoundsAsPayload(in bounds, ref payloadQueryHandler);
+
+        Assert.That(payloadResults, Is.EqualTo(queryResults.Select(id => grid.GetProxyData(id).Payload)));
+
         return queryResults;
     }
 
@@ -1341,6 +1355,24 @@ internal class SpatialGridTests
         public bool Handle(SpatialGridProxyId proxyId)
         {
             _results.Add(proxyId);
+            return _results.Count < _maxResults;
+        }
+    }
+
+    private readonly struct ProxyPayloadQueryHandler : IProxyPayloadQueryHandler<int>
+    {
+        private readonly List<int> _results;
+        private readonly int _maxResults;
+
+        public ProxyPayloadQueryHandler(List<int> results, int maxResults = int.MaxValue)
+        {
+            _results = results;
+            _maxResults = maxResults;
+        }
+
+        public bool Handle(in int payload)
+        {
+            _results.Add(payload);
             return _results.Count < _maxResults;
         }
     }
