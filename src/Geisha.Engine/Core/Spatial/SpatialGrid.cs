@@ -54,6 +54,16 @@ public readonly record struct SpatialGridProxyId
 /// <summary>
 /// Handles queries that return proxy identifiers.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report proxy identifiers.
+/// A handler is invoked once per matching proxy identifier and can perform additional filtering or processing of candidates.
+/// </para>
+/// <para>
+/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
+/// This allows handlers to keep mutable state across callbacks without per-call allocations.
+/// </para>
+/// </remarks>
 public interface IProxyIdQueryHandler
 {
     /// <summary>
@@ -68,6 +78,16 @@ public interface IProxyIdQueryHandler
 /// Handles queries that return proxy payloads.
 /// </summary>
 /// <typeparam name="TPayload">Type of payload stored in a proxy.</typeparam>
+/// <remarks>
+/// <para>
+/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report payload results.
+/// A handler is invoked once per matching proxy payload and can perform additional filtering or processing of candidates.
+/// </para>
+/// <para>
+/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
+/// This allows handlers to keep mutable state across callbacks without per-call allocations.
+/// </para>
+/// </remarks>
 public interface IProxyPayloadQueryHandler<TPayload> where TPayload : unmanaged
 {
     /// <summary>
@@ -81,6 +101,16 @@ public interface IProxyPayloadQueryHandler<TPayload> where TPayload : unmanaged
 /// <summary>
 /// Handles queries that return pairs of proxy identifiers.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report proxy identifier pairs.
+/// A handler is invoked once per matching proxy pair and can perform additional filtering or processing of candidates.
+/// </para>
+/// <para>
+/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
+/// This allows handlers to keep mutable state across callbacks without per-call allocations.
+/// </para>
+/// </remarks>
 public interface IProxyIdPairQueryHandler
 {
     /// <summary>
@@ -96,6 +126,16 @@ public interface IProxyIdPairQueryHandler
 /// Handles queries that return pairs of proxy payloads.
 /// </summary>
 /// <typeparam name="TPayload">Type of payload stored in a proxy.</typeparam>
+/// <remarks>
+/// <para>
+/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report payload pairs.
+/// A handler is invoked once per matching proxy pair and can perform additional filtering or processing of candidates.
+/// </para>
+/// <para>
+/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
+/// This allows handlers to keep mutable state across callbacks without per-call allocations.
+/// </para>
+/// </remarks>
 public interface IProxyPayloadPairQueryHandler<TPayload> where TPayload : unmanaged
 {
     /// <summary>
@@ -111,6 +151,16 @@ public interface IProxyPayloadPairQueryHandler<TPayload> where TPayload : unmana
 /// Spatial index that maps proxies to uniform grid cells for efficient point, bounds, and overlap queries.
 /// </summary>
 /// <typeparam name="TPayload">Type of payload stored in a proxy.</typeparam>
+/// <remarks>
+/// <para>
+/// <typeparamref name="TPayload"/> represents user-defined data associated with each proxy. The grid uses proxy bounds for
+/// spatial indexing and treats payload values as opaque data.
+/// </para>
+/// <para>
+/// Payload values are returned by payload-based query methods. Typical payloads include entity identifiers,
+/// handles, or other lightweight metadata used by the caller to resolve domain objects.
+/// </para>
+/// </remarks>
 public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
     private const int Null = -1;
