@@ -609,10 +609,8 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(0, 0, 10, 10), 3);
 
         // Act
-        var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults: 1);
         var point = new Vector2(5, 5);
-        grid.QueryPointAsId(in point, ref queryHandler);
+        var queryResults = QueryPointAsId(grid, point, maxResults: 1);
 
         // Assert
         Assert.That(queryResults, Has.Count.EqualTo(1));
@@ -795,10 +793,8 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
 
         // Act
-        var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults: 1);
         var bounds = new AABB2D(0, 0, 20, 20);
-        grid.QueryBoundsAsId(in bounds, ref queryHandler);
+        var queryResults = QueryBoundsAsId(grid, bounds, maxResults: 1);
 
         // Assert
         Assert.That(queryResults, Has.Count.EqualTo(1));
@@ -1147,9 +1143,7 @@ internal class SpatialGridTests
         grid.CreateProxy(new AABB2D(8, 8, 18, 18), 3);
 
         // Act
-        var queryResults = new List<ProxyIdPair>();
-        var queryHandler = new ProxyIdPairQueryHandler(queryResults, maxResults: 1);
-        grid.QueryOverlappingPairsAsId(ref queryHandler);
+        var queryResults = QueryOverlappingPairsAsId(grid, maxResults: 1);
 
         // Assert
         Assert.That(queryResults, Has.Count.EqualTo(1));
@@ -1317,18 +1311,18 @@ internal class SpatialGridTests
 
     #region Helpers
 
-    private static List<SpatialGridProxyId> QueryPointAsId(SpatialGrid<int> grid, Vector2 point)
+    private static List<SpatialGridProxyId> QueryPointAsId(SpatialGrid<int> grid, Vector2 point, int maxResults = int.MaxValue)
     {
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyIdQueryHandler(queryResults);
+        var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults);
         grid.QueryPointAsId(in point, ref queryHandler);
         return queryResults;
     }
 
-    private static List<SpatialGridProxyId> QueryBoundsAsId(SpatialGrid<int> grid, AABB2D bounds)
+    private static List<SpatialGridProxyId> QueryBoundsAsId(SpatialGrid<int> grid, AABB2D bounds, int maxResults = int.MaxValue)
     {
         var queryResults = new List<SpatialGridProxyId>();
-        var queryHandler = new ProxyIdQueryHandler(queryResults);
+        var queryHandler = new ProxyIdQueryHandler(queryResults, maxResults);
         grid.QueryBoundsAsId(in bounds, ref queryHandler);
         return queryResults;
     }
@@ -1338,13 +1332,7 @@ internal class SpatialGridTests
         private readonly List<SpatialGridProxyId> _results;
         private readonly int _maxResults;
 
-        public ProxyIdQueryHandler(List<SpatialGridProxyId> results)
-        {
-            _results = results;
-            _maxResults = int.MaxValue;
-        }
-
-        public ProxyIdQueryHandler(List<SpatialGridProxyId> results, int maxResults)
+        public ProxyIdQueryHandler(List<SpatialGridProxyId> results, int maxResults = int.MaxValue)
         {
             _results = results;
             _maxResults = maxResults;
@@ -1357,10 +1345,10 @@ internal class SpatialGridTests
         }
     }
 
-    private static List<ProxyIdPair> QueryOverlappingPairsAsId(SpatialGrid<int> grid)
+    private static List<ProxyIdPair> QueryOverlappingPairsAsId(SpatialGrid<int> grid, int maxResults = int.MaxValue)
     {
         var queryResults = new List<ProxyIdPair>();
-        var queryHandler = new ProxyIdPairQueryHandler(queryResults);
+        var queryHandler = new ProxyIdPairQueryHandler(queryResults, maxResults);
         grid.QueryOverlappingPairsAsId(ref queryHandler);
         return queryResults;
     }
@@ -1386,13 +1374,7 @@ internal class SpatialGridTests
         private readonly List<ProxyIdPair> _results;
         private readonly int _maxResults;
 
-        public ProxyIdPairQueryHandler(List<ProxyIdPair> results)
-        {
-            _results = results;
-            _maxResults = int.MaxValue;
-        }
-
-        public ProxyIdPairQueryHandler(List<ProxyIdPair> results, int maxResults)
+        public ProxyIdPairQueryHandler(List<ProxyIdPair> results, int maxResults = int.MaxValue)
         {
             _results = results;
             _maxResults = maxResults;
