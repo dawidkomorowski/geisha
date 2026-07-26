@@ -7,7 +7,6 @@ using Geisha.Engine.Core.Memory;
 
 namespace Geisha.Engine.Core.Spatial;
 
-// TODO: Unit tests for both handler variants?
 public readonly record struct SpatialGridProxyId
 {
     private readonly int _value;
