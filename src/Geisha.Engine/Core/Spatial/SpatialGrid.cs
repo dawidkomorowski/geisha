@@ -8,19 +8,19 @@ using Geisha.Engine.Core.Memory;
 namespace Geisha.Engine.Core.Spatial;
 
 /// <summary>
-/// Identifies a proxy stored in <see cref="SpatialGrid{TPayload}"/>.
+///     Identifies a proxy stored in <see cref="SpatialGrid{TPayload}" />.
 /// </summary>
 public readonly record struct SpatialGridProxyId
 {
     private readonly int _value;
 
     /// <summary>
-    /// Gets a null proxy identifier.
+    ///     Gets a null proxy identifier.
     /// </summary>
     public static SpatialGridProxyId Null => default;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGridProxyId"/> struct.
+    ///     Initializes a new instance of the <see cref="SpatialGridProxyId" /> struct.
     /// </summary>
     /// <param name="index">Index of proxy in internal proxy storage.</param>
     /// <param name="version">Version of proxy used to validate stale identifiers.</param>
@@ -31,135 +31,139 @@ public readonly record struct SpatialGridProxyId
     }
 
     /// <summary>
-    /// Gets the index of proxy in internal proxy storage.
+    ///     Gets the index of proxy in internal proxy storage.
     /// </summary>
     public int Index => _value - 1;
 
     /// <summary>
-    /// Gets the proxy version stored in this identifier, used to validate that the identifier is still current.
+    ///     Gets the proxy version stored in this identifier, used to validate that the identifier is still current.
     /// </summary>
     public int Version { get; }
 
     /// <summary>
-    /// Gets a value indicating whether this identifier is null.
+    ///     Gets a value indicating whether this identifier is null.
     /// </summary>
     public bool IsNull => !IsNotNull;
 
     /// <summary>
-    /// Gets a value indicating whether this identifier is not null.
+    ///     Gets a value indicating whether this identifier is not null.
     /// </summary>
     public bool IsNotNull => _value > 0;
 }
 
 /// <summary>
-/// Handles queries that return proxy identifiers.
+///     Handles queries that return proxy identifiers.
 /// </summary>
 /// <remarks>
-/// <para>
-/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report proxy identifiers.
-/// A handler is invoked once per matching proxy identifier and can perform additional filtering or processing of candidates.
-/// </para>
-/// <para>
-/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
-/// This allows handlers to keep mutable state across callbacks without per-call allocations.
-/// </para>
+///     <para>
+///         This interface is intended for use with <see cref="SpatialGrid{TPayload}" /> query methods that report proxy
+///         identifiers. A handler is invoked once per matching proxy identifier and can perform additional filtering or
+///         processing of candidates.
+///     </para>
+///     <para>
+///         For <see cref="SpatialGrid{TPayload}" /> query APIs, handler types are value types and are passed by reference.
+///         This allows handlers to keep mutable state across callbacks without per-call allocations.
+///     </para>
 /// </remarks>
 public interface IProxyIdQueryHandler
 {
     /// <summary>
-    /// Handles a single query result.
+    ///     Handles a single query result.
     /// </summary>
     /// <param name="proxyId">Identifier of proxy that matched query.</param>
-    /// <returns><see langword="true"/> to continue query; otherwise, <see langword="false"/> to stop.</returns>
+    /// <returns><see langword="true" /> to continue query; otherwise, <see langword="false" /> to stop.</returns>
     bool Handle(SpatialGridProxyId proxyId);
 }
 
 /// <summary>
-/// Handles queries that return proxy payloads.
+///     Handles queries that return proxy payloads.
 /// </summary>
 /// <typeparam name="TPayload">Type of payload stored in a proxy.</typeparam>
 /// <remarks>
-/// <para>
-/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report payload results.
-/// A handler is invoked once per matching proxy payload and can perform additional filtering or processing of candidates.
-/// </para>
-/// <para>
-/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
-/// This allows handlers to keep mutable state across callbacks without per-call allocations.
-/// </para>
+///     <para>
+///         This interface is intended for use with <see cref="SpatialGrid{TPayload}" /> query methods that report payload
+///         results. A handler is invoked once per matching proxy payload and can perform additional filtering or
+///         processing of candidates.
+///     </para>
+///     <para>
+///         For <see cref="SpatialGrid{TPayload}" /> query APIs, handler types are value types and are passed by reference.
+///         This allows handlers to keep mutable state across callbacks without per-call allocations.
+///     </para>
 /// </remarks>
 public interface IProxyPayloadQueryHandler<TPayload> where TPayload : unmanaged
 {
     /// <summary>
-    /// Handles a single query result.
+    ///     Handles a single query result.
     /// </summary>
     /// <param name="payload">Payload of proxy that matched query.</param>
-    /// <returns><see langword="true"/> to continue query; otherwise, <see langword="false"/> to stop.</returns>
+    /// <returns><see langword="true" /> to continue query; otherwise, <see langword="false" /> to stop.</returns>
     bool Handle(in TPayload payload);
 }
 
 /// <summary>
-/// Handles queries that return pairs of proxy identifiers.
+///     Handles queries that return pairs of proxy identifiers.
 /// </summary>
 /// <remarks>
-/// <para>
-/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report proxy identifier pairs.
-/// A handler is invoked once per matching proxy pair and can perform additional filtering or processing of candidates.
-/// </para>
-/// <para>
-/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
-/// This allows handlers to keep mutable state across callbacks without per-call allocations.
-/// </para>
+///     <para>
+///         This interface is intended for use with <see cref="SpatialGrid{TPayload}" /> query methods that report proxy
+///         identifier pairs. A handler is invoked once per matching proxy pair and can perform additional filtering or
+///         processing of candidates.
+///     </para>
+///     <para>
+///         For <see cref="SpatialGrid{TPayload}" /> query APIs, handler types are value types and are passed by reference.
+///         This allows handlers to keep mutable state across callbacks without per-call allocations.
+///     </para>
 /// </remarks>
 public interface IProxyIdPairQueryHandler
 {
     /// <summary>
-    /// Handles a single query result.
+    ///     Handles a single query result.
     /// </summary>
     /// <param name="proxyId1">Identifier of first proxy in a matching pair.</param>
     /// <param name="proxyId2">Identifier of second proxy in a matching pair.</param>
-    /// <returns><see langword="true"/> to continue query; otherwise, <see langword="false"/> to stop.</returns>
+    /// <returns><see langword="true" /> to continue query; otherwise, <see langword="false" /> to stop.</returns>
     bool Handle(SpatialGridProxyId proxyId1, SpatialGridProxyId proxyId2);
 }
 
 /// <summary>
-/// Handles queries that return pairs of proxy payloads.
+///     Handles queries that return pairs of proxy payloads.
 /// </summary>
 /// <typeparam name="TPayload">Type of payload stored in a proxy.</typeparam>
 /// <remarks>
-/// <para>
-/// This interface is intended for use with <see cref="SpatialGrid{TPayload}"/> query methods that report payload pairs.
-/// A handler is invoked once per matching proxy pair and can perform additional filtering or processing of candidates.
-/// </para>
-/// <para>
-/// For <see cref="SpatialGrid{TPayload}"/> query APIs, handler types are value types and are passed by reference.
-/// This allows handlers to keep mutable state across callbacks without per-call allocations.
-/// </para>
+///     <para>
+///         This interface is intended for use with <see cref="SpatialGrid{TPayload}" /> query methods that report payload
+///         pairs. A handler is invoked once per matching proxy pair and can perform additional filtering or processing of
+///         candidates.
+///     </para>
+///     <para>
+///         For <see cref="SpatialGrid{TPayload}" /> query APIs, handler types are value types and are passed by reference.
+///         This allows handlers to keep mutable state across callbacks without per-call allocations.
+///     </para>
 /// </remarks>
 public interface IProxyPayloadPairQueryHandler<TPayload> where TPayload : unmanaged
 {
     /// <summary>
-    /// Handles a single query result.
+    ///     Handles a single query result.
     /// </summary>
     /// <param name="payload1">Payload of first proxy in a matching pair.</param>
     /// <param name="payload2">Payload of second proxy in a matching pair.</param>
-    /// <returns><see langword="true"/> to continue query; otherwise, <see langword="false"/> to stop.</returns>
+    /// <returns><see langword="true" /> to continue query; otherwise, <see langword="false" /> to stop.</returns>
     bool Handle(in TPayload payload1, in TPayload payload2);
 }
 
 /// <summary>
-/// Spatial index that maps proxies to uniform grid cells for efficient point, bounds, and overlap queries.
+///     Spatial index that maps proxies to uniform grid cells for efficient point, bounds, and overlap queries.
 /// </summary>
 /// <typeparam name="TPayload">Type of payload stored in a proxy.</typeparam>
 /// <remarks>
-/// <para>
-/// <typeparamref name="TPayload"/> represents user-defined data associated with each proxy. The grid uses proxy bounds for
-/// spatial indexing and treats payload values as opaque data.
-/// </para>
-/// <para>
-/// Payload values are returned by payload-based query methods. Typical payloads include entity identifiers,
-/// handles, or other lightweight metadata used by the caller to resolve domain objects.
-/// </para>
+///     <para>
+///         <typeparamref name="TPayload" /> represents user-defined data associated with each proxy. The grid uses proxy
+///         bounds for spatial indexing and treats payload values as opaque data.
+///     </para>
+///     <para>
+///         Payload values are returned by payload-based query methods. Typical payloads include entity identifiers,
+///         handles, or other lightweight metadata used by the caller to resolve domain objects.
+///     </para>
 /// </remarks>
 public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
 {
@@ -192,18 +196,18 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private int _proxyFreeListHead;
 
     /// <summary>
-    /// Data stored in a proxy.
+    ///     Data stored in a proxy.
     /// </summary>
     /// <typeparam name="T">Type of payload.</typeparam>
     public readonly record struct ProxyData<T>
     {
         /// <summary>
-        /// Gets axis-aligned bounding box of proxy.
+        ///     Gets axis-aligned bounding box of proxy.
         /// </summary>
         public AABB2D Bounds { get; init; }
 
         /// <summary>
-        /// Gets payload of proxy.
+        ///     Gets payload of proxy.
         /// </summary>
         public T Payload { get; init; }
     }
@@ -238,7 +242,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private int _nodeFreeListHead;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class using square cells.
+    ///     Initializes a new instance of the <see cref="SpatialGrid{TPayload}" /> class using square cells.
     /// </summary>
     /// <param name="cellSize">Width and height of each cell.</param>
     public SpatialGrid(double cellSize) : this(new SizeD(cellSize, cellSize))
@@ -246,17 +250,19 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class using square cells and initial capacity.
+    ///     Initializes a new instance of the <see cref="SpatialGrid{TPayload}" /> class using square cells and initial
+    ///     capacity.
     /// </summary>
     /// <param name="cellSize">Width and height of each cell.</param>
     /// <param name="capacity">Initial capacity hint for internal sparse storage.</param>
-    /// <exception cref="ArgumentException"><paramref name="capacity"/> is negative.</exception>
+    /// <exception cref="ArgumentException"><paramref name="capacity" /> is negative.</exception>
     public SpatialGrid(double cellSize, int capacity) : this(new SizeD(cellSize, cellSize), capacity)
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class with the specified cell size and default initial capacity.
+    ///     Initializes a new instance of the <see cref="SpatialGrid{TPayload}" /> class with the specified cell size and
+    ///     default initial capacity.
     /// </summary>
     /// <param name="cellSize">Size of each cell.</param>
     public SpatialGrid(SizeD cellSize) : this(cellSize, DefaultCapacity)
@@ -264,11 +270,12 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class with the specified cell size and initial capacity.
+    ///     Initializes a new instance of the <see cref="SpatialGrid{TPayload}" /> class with the specified cell size and
+    ///     initial capacity.
     /// </summary>
     /// <param name="cellSize">Size of each cell.</param>
     /// <param name="capacity">Initial capacity hint for internal sparse storage.</param>
-    /// <exception cref="ArgumentException"><paramref name="capacity"/> is negative.</exception>
+    /// <exception cref="ArgumentException"><paramref name="capacity" /> is negative.</exception>
     public SpatialGrid(SizeD cellSize, int capacity)
     {
         if (capacity < 0)
@@ -293,19 +300,19 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Gets size of each grid cell.
+    ///     Gets size of each grid cell.
     /// </summary>
     public SizeD CellSize { get; }
 
     /// <summary>
-    /// Determines whether specified proxy identifier points to a currently valid proxy.
+    ///     Determines whether specified proxy identifier points to a currently valid proxy.
     /// </summary>
     /// <param name="id">Proxy identifier to validate.</param>
-    /// <returns><see langword="true"/> if identifier is valid; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true" /> if identifier is valid; otherwise, <see langword="false" />.</returns>
     public bool IsValidProxy(SpatialGridProxyId id) => id.IsNotNull && _proxies[id.Index].Version == id.Version;
 
     /// <summary>
-    /// Creates a new proxy and inserts it into all cells overlapped by provided bounds.
+    ///     Creates a new proxy and inserts it into all cells overlapped by provided bounds.
     /// </summary>
     /// <param name="bounds">Axis-aligned bounding box of proxy.</param>
     /// <param name="payload">Payload associated with proxy.</param>
@@ -335,13 +342,13 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Destroys the proxy identified by <paramref name="id"/>.
+    ///     Destroys the proxy identified by <paramref name="id" />.
     /// </summary>
     /// <param name="id">Identifier of proxy to destroy.</param>
     /// <remarks>
-    /// The destroyed proxy is removed from all grid cells and the proxy identifier becomes invalid after this call.
+    ///     The destroyed proxy is removed from all grid cells and the proxy identifier becomes invalid after this call.
     /// </remarks>
-    /// <exception cref="InvalidOperationException"><paramref name="id"/> is invalid.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="id" /> is invalid.</exception>
     public void DestroyProxy(SpatialGridProxyId id)
     {
         ThrowIfInvalidId(id);
@@ -361,11 +368,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Gets data associated with the specified proxy.
+    ///     Gets data associated with the specified proxy.
     /// </summary>
     /// <param name="id">Identifier of proxy.</param>
     /// <returns>Proxy data for specified proxy.</returns>
-    /// <exception cref="InvalidOperationException"><paramref name="id"/> is invalid.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="id" /> is invalid.</exception>
     public ProxyData<TPayload> GetProxyData(SpatialGridProxyId id)
     {
         ThrowIfInvalidId(id);
@@ -380,11 +387,11 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Updates proxy bounds and reinserts proxy into overlapped cells.
+    ///     Updates proxy bounds and reinserts proxy into overlapped cells.
     /// </summary>
     /// <param name="id">Identifier of proxy to move.</param>
     /// <param name="newBounds">New axis-aligned bounding box of proxy.</param>
-    /// <exception cref="InvalidOperationException"><paramref name="id"/> is invalid.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="id" /> is invalid.</exception>
     public void MoveProxy(SpatialGridProxyId id, in AABB2D newBounds)
     {
         ThrowIfInvalidId(id);
@@ -404,7 +411,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Queries proxies containing specified point and reports matches as proxy identifiers.
+    ///     Queries proxies containing specified point and reports matches as proxy identifiers.
     /// </summary>
     /// <typeparam name="TQueryHandler">Type of query handler.</typeparam>
     /// <param name="point">Point to test.</param>
@@ -420,7 +427,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Queries proxies containing specified point and reports matches as payloads.
+    ///     Queries proxies containing specified point and reports matches as payloads.
     /// </summary>
     /// <typeparam name="TQueryHandler">Type of query handler.</typeparam>
     /// <param name="point">Point to test.</param>
@@ -433,7 +440,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Queries proxies overlapping specified bounds and reports matches as proxy identifiers.
+    ///     Queries proxies overlapping specified bounds and reports matches as proxy identifiers.
     /// </summary>
     /// <typeparam name="TQueryHandler">Type of query handler.</typeparam>
     /// <param name="bounds">Bounds to test.</param>
@@ -449,7 +456,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Queries proxies overlapping specified bounds and reports matches as payloads.
+    ///     Queries proxies overlapping specified bounds and reports matches as payloads.
     /// </summary>
     /// <typeparam name="TQueryHandler">Type of query handler.</typeparam>
     /// <param name="bounds">Bounds to test.</param>
@@ -462,7 +469,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Queries overlapping proxy pairs and reports matches as proxy identifiers.
+    ///     Queries overlapping proxy pairs and reports matches as proxy identifiers.
     /// </summary>
     /// <typeparam name="TQueryHandler">Type of query handler.</typeparam>
     /// <param name="handler">Handler invoked for each matching pair.</param>
@@ -481,7 +488,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Queries overlapping proxy pairs and reports matches as payload pairs.
+    ///     Queries overlapping proxy pairs and reports matches as payload pairs.
     /// </summary>
     /// <typeparam name="TQueryHandler">Type of query handler.</typeparam>
     /// <param name="handler">Handler invoked for each matching pair.</param>
