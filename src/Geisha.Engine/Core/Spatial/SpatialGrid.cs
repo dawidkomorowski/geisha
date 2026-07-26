@@ -36,7 +36,7 @@ public readonly record struct SpatialGridProxyId
     public int Index => _value - 1;
 
     /// <summary>
-    /// Gets the version of proxy in internal proxy storage.
+    /// Gets the proxy version stored in this identifier, used to validate that the identifier is still current.
     /// </summary>
     public int Version { get; }
 
@@ -199,14 +199,14 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class using square cells and initial capacity.
     /// </summary>
     /// <param name="cellSize">Width and height of each cell.</param>
-    /// <param name="capacity">Initial capacity for internal sparse storage.</param>
+    /// <param name="capacity">Initial capacity hint for internal sparse storage.</param>
     /// <exception cref="ArgumentException"><paramref name="capacity"/> is negative.</exception>
     public SpatialGrid(double cellSize, int capacity) : this(new SizeD(cellSize, cellSize), capacity)
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class.
+    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class with the specified cell size and default initial capacity.
     /// </summary>
     /// <param name="cellSize">Size of each cell.</param>
     public SpatialGrid(SizeD cellSize) : this(cellSize, DefaultCapacity)
@@ -214,10 +214,10 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class.
+    /// Initializes a new instance of the <see cref="SpatialGrid{TPayload}"/> class with the specified cell size and initial capacity.
     /// </summary>
     /// <param name="cellSize">Size of each cell.</param>
-    /// <param name="capacity">Initial capacity for internal sparse storage.</param>
+    /// <param name="capacity">Initial capacity hint for internal sparse storage.</param>
     /// <exception cref="ArgumentException"><paramref name="capacity"/> is negative.</exception>
     public SpatialGrid(SizeD cellSize, int capacity)
     {
@@ -285,9 +285,12 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Removes proxy identified by <paramref name="id"/> from grid.
+    /// Destroys the proxy identified by <paramref name="id"/>.
     /// </summary>
-    /// <param name="id">Identifier of proxy to remove.</param>
+    /// <param name="id">Identifier of proxy to destroy.</param>
+    /// <remarks>
+    /// The destroyed proxy is removed from all grid cells and the proxy identifier becomes invalid after this call.
+    /// </remarks>
     /// <exception cref="InvalidOperationException"><paramref name="id"/> is invalid.</exception>
     public void DestroyProxy(SpatialGridProxyId id)
     {
@@ -308,7 +311,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     }
 
     /// <summary>
-    /// Gets current bounds and payload of proxy.
+    /// Gets data associated with the specified proxy.
     /// </summary>
     /// <param name="id">Identifier of proxy.</param>
     /// <returns>Proxy data for specified proxy.</returns>
