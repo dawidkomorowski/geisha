@@ -51,12 +51,14 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
     private const int Null = -1;
     private const int DefaultCapacity = 4;
 
-    // TODO: Describe what it is and why it is used.
+    // Monotonic token identifying current bounds query; compared with Proxy.LastQueryId so each proxy
+    // is processed at most once even when it appears in multiple visited cells.
     private int _queryId;
 
     private static long BuildCellKey(int x, int y) => (long)x << 32 | (uint)y;
 
-    // TODO: Describe how the cells are modelled.
+    // Sparse uniform grid: each occupied cell is identified by packed (x, y) key and maps to
+    // the head node index of an intrusive linked list of proxies intersecting that cell.
     private readonly Dictionary<long, int> _cells;
 
     // Proxies
