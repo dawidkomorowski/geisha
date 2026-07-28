@@ -383,6 +383,26 @@ public class AABB2DTests
         Assert.That(actual.IsValid, Is.False);
     }
 
+    [TestCase( /*A1*/ 0, 0, -1, 6, /*A2*/ -5, 0, 5, 6)]  // A1 inverted X
+    [TestCase( /*A1*/ 0, 0, 10, -1, /*A2*/ 0, -5, 10, 5)] // A1 inverted Y
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 0, -1, 6)]  // A2 inverted X
+    [TestCase( /*A1*/ 0, 0, 10, 6, /*A2*/ 0, 0, 10, -1)] // A2 inverted Y
+    [TestCase( /*A1*/ 0, 0, -1, -1, /*A2*/ 0, 0, -1, -1)] // both inverted on both axes
+    [TestCase( /*A1*/ 0, 0, -1, 6, /*A2*/ 0, 0, 10, -1)] // A1 inverted X, A2 inverted Y
+    public void Intersect_ShouldReturnInvalidAABB_WhenEitherBoxIsInvalid(double minX1, double minY1, double maxX1, double maxY1,
+        double minX2, double minY2, double maxX2, double maxY2)
+    {
+        // Arrange
+        var aabb1 = new AABB2D(minX1, minY1, maxX1, maxY1);
+        var aabb2 = new AABB2D(minX2, minY2, maxX2, maxY2);
+
+        // Act
+        var actual = aabb1.Intersect(aabb2);
+
+        // Assert
+        Assert.That(actual.IsValid, Is.False);
+    }
+
     [Test]
     public void ToAxisAlignedRectangle_ShouldReturnAxisAlignedRectangleWithSameCenterAndSize()
     {
