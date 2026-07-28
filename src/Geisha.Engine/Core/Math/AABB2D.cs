@@ -12,8 +12,17 @@ namespace Geisha.Engine.Core.Math;
 ///         this orientation, <see cref="Min" /> is the bottom-left corner and <see cref="Max" /> is the top-right corner.
 ///     </para>
 ///     <para>The bounding box includes its boundaries for containment and overlap checks.</para>
+///     <para>
+///         A bounding box is not guaranteed to be well-formed. Constructors and factory methods do not validate or
+///         normalize the corners, so a box built from inverted coordinates, or returned by <see cref="Intersect" /> for
+///         non-overlapping boxes, can be invalid. See <see cref="IsValid" />.
+///     </para>
 /// </remarks>
 // ReSharper disable once InconsistentNaming
+// TODO: Consider returning an invalid "empty" AABB (Min = +infinity, Max = -infinity) instead of default for empty input in FromPoints and
+//       FromAABBs. Currently both return default, which is a valid degenerate box at the origin, so an empty-input result is indistinguishable from
+//       a single point (or single degenerate box) at the origin. An invalid sentinel would make IsValid the discriminator and would also be the
+//       identity element for the union these methods compute. This is a breaking behavior change and requires updating the empty-input test cases.
 public readonly record struct AABB2D
 {
     /// <summary>
