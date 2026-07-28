@@ -17,6 +17,11 @@ namespace Geisha.Engine.Core.Math;
 ///         normalize the corners, so a box built from inverted coordinates, or returned by <see cref="Intersect" /> for
 ///         non-overlapping boxes, can be invalid. See <see cref="IsValid" />.
 ///     </para>
+///     <para>
+///         Containment and overlap queries assume well-formed operands. Results are unspecified when a bounding box
+///         involved in the query is invalid, with one exception: <see cref="Intersect" /> propagates invalidity, so an
+///         invalid operand always produces an invalid result.
+///     </para>
 /// </remarks>
 // ReSharper disable once InconsistentNaming
 // TODO: Consider returning an invalid "empty" AABB (Min = +infinity, Max = -infinity) instead of default for empty input in FromPoints and
@@ -274,6 +279,10 @@ public readonly record struct AABB2D
     ///     <para>
     ///         Boxes that only touch at an edge or a corner are treated as overlapping and produce a valid degenerate
     ///         result, because the boundaries are included.
+    ///     </para>
+    ///     <para>
+    ///         Invalidity propagates. When either box is invalid on an axis, the result is invalid on that axis, so chained
+    ///         intersections cannot recover a valid result once one becomes invalid.
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsValid" />
