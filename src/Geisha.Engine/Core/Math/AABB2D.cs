@@ -203,7 +203,21 @@ public readonly record struct AABB2D
     /// </summary>
     public double Height => Max.Y - Min.Y;
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Gets a value indicating whether the bounding box is well-formed, that is, whether each component of
+    ///     <see cref="Min" /> is less than or equal to the corresponding component of <see cref="Max" />.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         A degenerate bounding box is valid. A box that collapses to a line or to a single point still satisfies the
+    ///         condition, because the boundaries are included.
+    ///     </para>
+    ///     <para>
+    ///         Use this property to test the result of <see cref="Intersect" />, which returns an invalid bounding box when
+    ///         the two boxes do not overlap.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Intersect" />
     public bool IsValid
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -235,7 +249,26 @@ public readonly record struct AABB2D
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Overlaps(in AABB2D other) => Max.X >= other.Min.X && Min.X <= other.Max.X && Max.Y >= other.Min.Y && Min.Y <= other.Max.Y;
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Computes the intersection of this bounding box and another bounding box.
+    /// </summary>
+    /// <param name="other">The bounding box to intersect with.</param>
+    /// <returns>
+    ///     The bounding box covering the common area of both boxes, or an invalid bounding box when they do not overlap.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         The result is not guaranteed to be a well-formed bounding box. When the boxes are separated along either
+    ///         axis, the returned box has <see cref="Min" /> greater than <see cref="Max" /> on that axis. Check
+    ///         <see cref="IsValid" /> on the result, or call <see cref="Overlaps" /> first, before using the returned box.
+    ///     </para>
+    ///     <para>
+    ///         Boxes that only touch at an edge or a corner are treated as overlapping and produce a valid degenerate
+    ///         result, because the boundaries are included.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="IsValid" />
+    /// <seealso cref="Overlaps" />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public AABB2D Intersect(in AABB2D other) => new(Vector2.Max(Min, other.Min), Vector2.Min(Max, other.Max));
 
