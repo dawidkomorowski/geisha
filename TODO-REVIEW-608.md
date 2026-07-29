@@ -3,11 +3,11 @@
 Scope: all `TODO` items created, modified or moved by the changes on this branch
 (diff range `master...HEAD`, 80 commits, 20 files changed).
 
-Generated: 2026-07-27 · Updated: 2026-07-29
+Generated: 2026-07-27 · Updated: 2026-07-30
 
 ---
 
-## New TODOs added on this branch (10 open)
+## New TODOs added on this branch (8 open)
 
 ### `src/Geisha.Engine/Core/Spatial/SpatialGrid.cs` *(new file)*
 
@@ -22,13 +22,6 @@ Generated: 2026-07-27 · Updated: 2026-07-29
 | 9 | Review and possibly update related tests to cover new implementation. |
 | 84 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
 | 123 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
-
-### `src/Geisha.Engine/Physics/PhysicsConfiguration.cs`
-
-| Line | TODO |
-|---|---|
-| 85 | Add documentation. *(for new `BroadPhaseGridCellSize`)* |
-| 86 | Add tests. *(same)* |
 
 ### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SceneQuery.cs`
 
@@ -82,8 +75,8 @@ The following shifted line numbers only:
 ## Themes / loose ends introduced by this branch
 
 1. **Missing docs, tests and validation**
-   - `PhysicsConfiguration.BroadPhaseGridCellSize` — docs (`PhysicsConfiguration.cs:85`) and
-     tests (`PhysicsConfiguration.cs:86`) still open. Validation is **done** — see Resolved.
+   - `PhysicsConfiguration.BroadPhaseGridCellSize` — docs, tests and validation are all
+     **done**; the file now contains no TODOs at all. See Resolved.
    - `BroadPhase.cs:9` and `SceneQuery.cs:10` — "review related tests" markers.
    - `PhysicsSceneData.cs:283` — open question about testing proxy destruction.
 
@@ -121,26 +114,45 @@ What was delivered:
 
 `TweakingParametersTests` green (25 tests passed).
 
-**Note:** both changes are still uncommitted in the working tree (`PhysicsSystem.cs` and
-`TweakingParametersTests.cs` show as modified) — they are not yet part of the 80-commit branch
-history.
+Both changes are now committed as `479ea05a` ("Add test for broad-phase grid cell size"); the
+earlier note about them being uncommitted no longer applies.
 
-### Still open for `BroadPhaseGridCellSize`
+### `src/Geisha.Engine/Physics/PhysicsConfiguration.cs` — all TODOs cleared (2026-07-30)
 
-The two TODOs in `PhysicsConfiguration.cs` (85: docs, 86: tests) are **not** covered by this
-work and remain open:
+> `85` Add documentation. · `86` Add tests. *(both for `BroadPhaseGridCellSize`)*
 
-- **Docs** — `BroadPhaseGridCellSize` is the only public `PhysicsConfiguration` property without
-  an XML doc comment. Every sibling has `<summary>` plus `<remarks>` explaining the
-  performance/behaviour trade-off; this one needs the same treatment (what the grid cell size
-  means, units, and how tuning it trades broad-phase cell count against pairs per cell).
-- **Tests** — the new test asserts only the *rejection* of invalid values. Not covered: the
-  default value (`new SizeD(256, 256)`), that valid values are accepted (there is no
-  `ShouldNotThrowException` counterpart, unlike the other four parameters), and that the
-  configured value is actually propagated into `PhysicsScene2DDefinition` (`PhysicsSystem.cs:73`).
-  The propagation path is partially covered one layer down by
-  `PhysicsEngine2DTests.cs:37`, which asserts `scene.BroadPhaseGridCellSize` matches the scene
-  definition, but nothing ties `PhysicsConfiguration` to that definition.
+The file now contains no TODOs at all.
+
+**Tests** — removed in `ccd16842` ("Add BroadPhaseGridCellSize to configuration"), which wired the
+property through the JSON config file and covered it end to end:
+
+- `Configuration.LoadFromFile` parsing (`Configuration.cs`), plus the `BroadPhaseGridCellSize`
+  entry in `full-configuration.json` test data.
+- `ConfigurationTests.Overwrite_ShouldCreateNewConfigurationOverwrittenByGame` — asserts
+  `new SizeD(12, 34)` survives `Game.Configure` overwrite.
+- `ConfigurationIntegrationTests` — two assertions: the default `new SizeD(256, 256)` when the
+  config file omits the value, and `new SizeD(12, 34)` when it is present. This covers the
+  default-value and valid-value gaps flagged in the earlier review.
+- Also added to the `engine-config.json` of Benchmark, Demo, Sandbox and E2EApp (`e145da7a`).
+
+`ConfigurationTests` green (1 test passed).
+
+**Docs** — removed in `5a2f67b6` ("Document broad-phase grid cell size config"), then extended by
+`41f85e86` and `8893837b`:
+
+- `<summary>` for `BroadPhaseGridCellSize` — what the cell size is, units (meters), and the
+  default, plus `<remarks>` in four `<para>` blocks: what the broad phase does, the
+  large-vs-small-cells trade-off framed as guidance rather than prescription, the
+  positive-dimensions requirement pointing at the `ArgumentException`, and that the value is
+  fixed at physics-system creation.
+- **Default values documented across all four configuration types** (`41f85e86`) — 12 properties
+  gained a `Default is <c>X</c>.` sentence, so `AudioConfiguration` (2), `CoreConfiguration` (15),
+  `PhysicsConfiguration` (7) and `RenderingConfiguration` (4) are now at full coverage, 28/28.
+  The `<summary>` placement was chosen over `<value>` to match the existing 28-vs-4 convention
+  in the repo.
+- **`EnableSound` / `EnableVSync` reworded** (`8893837b`) from `If true, …` to the
+  `Specifies whether …` form used by their siblings, so the appended default sentence follows a
+  declarative summary.
 
 ### `src/Geisha.Engine/Core/Math/AABB2D.cs` — all TODOs cleared
 
