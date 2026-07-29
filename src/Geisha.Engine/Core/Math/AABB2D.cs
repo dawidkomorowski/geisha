@@ -24,10 +24,6 @@ namespace Geisha.Engine.Core.Math;
 ///     </para>
 /// </remarks>
 // ReSharper disable once InconsistentNaming
-// TODO: Consider returning an invalid "empty" AABB (Min = +infinity, Max = -infinity) instead of default for empty input in FromPoints and
-//       FromAABBs. Currently both return default, which is a valid degenerate box at the origin, so an empty-input result is indistinguishable from
-//       a single point (or single degenerate box) at the origin. An invalid sentinel would make IsValid the discriminator and would also be the
-//       identity element for the union these methods compute. This is a breaking behavior change and requires updating the empty-input test cases.
 public readonly record struct AABB2D
 {
     /// <summary>
@@ -138,22 +134,17 @@ public readonly record struct AABB2D
     /// </summary>
     /// <param name="points">The points to include.</param>
     /// <returns>
-    ///     A bounding box that contains all points, or <see langword="default" /> when <paramref name="points" /> is empty.
+    ///     A bounding box that contains all points, or an invalid bounding box when <paramref name="points" /> is empty.
     /// </returns>
     public static AABB2D FromPoints(ReadOnlySpan<Vector2> points)
     {
-        if (points.Length == 0)
-        {
-            return default;
-        }
+        var min = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
+        var max = new Vector2(double.NegativeInfinity, double.NegativeInfinity);
 
-        var min = points[0];
-        var max = points[0];
-
-        for (var i = 1; i < points.Length; i++)
+        foreach (var point in points)
         {
-            min = Vector2.Min(min, points[i]);
-            max = Vector2.Max(max, points[i]);
+            min = Vector2.Min(min, point);
+            max = Vector2.Max(max, point);
         }
 
         return new AABB2D(min, max);
@@ -164,24 +155,19 @@ public readonly record struct AABB2D
     /// </summary>
     /// <param name="aabbs">The bounding boxes to include.</param>
     /// <returns>
-    ///     A bounding box that contains all specified bounding boxes, or <see langword="default" /> when
+    ///     A bounding box that contains all specified bounding boxes, or an invalid bounding box when
     ///     <paramref name="aabbs" /> is empty.
     /// </returns>
     // ReSharper disable once InconsistentNaming
     public static AABB2D FromAABBs(ReadOnlySpan<AABB2D> aabbs)
     {
-        if (aabbs.Length == 0)
-        {
-            return default;
-        }
+        var min = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
+        var max = new Vector2(double.NegativeInfinity, double.NegativeInfinity);
 
-        var min = aabbs[0].Min;
-        var max = aabbs[0].Max;
-
-        for (var i = 1; i < aabbs.Length; i++)
+        foreach (var aabb in aabbs)
         {
-            min = Vector2.Min(min, aabbs[i].Min);
-            max = Vector2.Max(max, aabbs[i].Max);
+            min = Vector2.Min(min, aabb.Min);
+            max = Vector2.Max(max, aabb.Max);
         }
 
         return new AABB2D(min, max);

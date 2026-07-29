@@ -1,3 +1,4 @@
+using System;
 using Geisha.Engine.Core.Math;
 using NUnit.Framework;
 
@@ -133,7 +134,7 @@ public class AABB2DTests
         Assert.That(aabb.Max, Is.EqualTo(new Vector2(7, 6)));
     }
 
-    [TestCase(new double[] { }, /*Min*/ 0, 0, /*Max*/ 0, 0)]
+    [TestCase(new[] { 0.0, 0.0 }, /*Min*/ 0, 0, /*Max*/ 0, 0)] // degenerate (single point at origin)
     [TestCase(new[] { 3.0, 4.0 }, /*Min*/ 3, 4, /*Max*/ 3, 4)]
     [TestCase(new[] { 2.0, -3.0, /**/ 8.0, 5.0, /**/ 1.0, 4.0 }, /*Min*/ 1, -3, /*Max*/ 8, 5)]
     public void FromPoints_Test(double[] points, double minX, double minY, double maxX, double maxY)
@@ -151,9 +152,24 @@ public class AABB2DTests
         // Assert
         Assert.That(aabb.Min, Is.EqualTo(new Vector2(minX, minY)));
         Assert.That(aabb.Max, Is.EqualTo(new Vector2(maxX, maxY)));
+        Assert.That(aabb.IsValid, Is.True);
     }
 
-    [TestCase(new double[] { }, /*Min*/ 0, 0, /*Max*/ 0, 0)]
+    [Test]
+    public void FromPoints_ShouldReturnInvalidAABB_WhenThereAreNoPoints()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromPoints(ReadOnlySpan<Vector2>.Empty);
+
+        // Assert
+        Assert.That(aabb.IsValid, Is.False);
+    }
+
+    [TestCase(new[]
+    {
+        /*A1*/ 0.0, 0.0, 0.0, 0.0
+    }, /*Min*/ 0, 0, /*Max*/ 0, 0)] // degenerate (single point at origin)
     [TestCase(new[]
     {
         /*A1*/ 0.0, 0.0, 10.0, 6.0
@@ -181,6 +197,18 @@ public class AABB2DTests
         // Assert
         Assert.That(aabb.Min, Is.EqualTo(new Vector2(minX, minY)));
         Assert.That(aabb.Max, Is.EqualTo(new Vector2(maxX, maxY)));
+        Assert.That(aabb.IsValid, Is.True);
+    }
+
+    [Test]
+    public void FromAABBs_ShouldReturnInvalidAABB_WhenThereAreNoAABBs()
+    {
+        // Arrange
+        // Act
+        var aabb = AABB2D.FromAABBs(ReadOnlySpan<AABB2D>.Empty);
+
+        // Assert
+        Assert.That(aabb.IsValid, Is.False);
     }
 
     #endregion
