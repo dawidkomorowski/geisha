@@ -52,7 +52,11 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                 nameof(physicsConfiguration));
         }
 
-        // TODO: Add tests and validation for BroadPhaseGridCellSize.
+        if (physicsConfiguration.BroadPhaseGridCellSize.Width <= 0 || physicsConfiguration.BroadPhaseGridCellSize.Height <= 0)
+        {
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.BroadPhaseGridCellSize)} must have positive dimensions.",
+                nameof(physicsConfiguration));
+        }
 
         EnableDebugRendering = physicsConfiguration.EnableDebugRendering;
 

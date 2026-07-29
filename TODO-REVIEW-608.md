@@ -7,7 +7,7 @@ Generated: 2026-07-27 · Updated: 2026-07-29
 
 ---
 
-## New TODOs added on this branch (11 open)
+## New TODOs added on this branch (10 open)
 
 ### `src/Geisha.Engine/Core/Spatial/SpatialGrid.cs` *(new file)*
 
@@ -49,12 +49,6 @@ Generated: 2026-07-27 · Updated: 2026-07-29
 |---|---|
 | 25 | Recomputation is only needed for bodies that actually moved. |
 
-### `src/Geisha.Engine/Physics/Systems/PhysicsSystem.cs`
-
-| Line | TODO |
-|---|---|
-| 55 | Add tests and validation for `BroadPhaseGridCellSize`. |
-
 ---
 
 ## Moved TODOs (1)
@@ -88,8 +82,8 @@ The following shifted line numbers only:
 ## Themes / loose ends introduced by this branch
 
 1. **Missing docs, tests and validation**
-   - `PhysicsConfiguration.BroadPhaseGridCellSize` — docs, tests and validation
-     (validation tracked separately in `PhysicsSystem.cs:55`).
+   - `PhysicsConfiguration.BroadPhaseGridCellSize` — docs (`PhysicsConfiguration.cs:85`) and
+     tests (`PhysicsConfiguration.cs:86`) still open. Validation is **done** — see Resolved.
    - `BroadPhase.cs:9` and `SceneQuery.cs:10` — "review related tests" markers.
    - `PhysicsSceneData.cs:283` — open question about testing proxy destruction.
 
@@ -106,6 +100,47 @@ The following shifted line numbers only:
 ---
 
 ## Resolved (2026-07-29)
+
+### `src/Geisha.Engine/Physics/Systems/PhysicsSystem.cs:55` — `BroadPhaseGridCellSize` tests and validation
+
+> Add tests and validation for `BroadPhaseGridCellSize`.
+
+The TODO comment is gone; the line now holds the validation itself.
+
+What was delivered:
+
+- **Validation** in the `PhysicsSystem` constructor (`PhysicsSystem.cs:55-59`): throws
+  `ArgumentException` when `BroadPhaseGridCellSize.Width <= 0 || Height <= 0`, with the message
+  "`Configuration is invalid. BroadPhaseGridCellSize must have positive dimensions.`" and
+  `paramName` of `physicsConfiguration`. Mirrors the existing `TileSize` check immediately above
+  it, so the whole config-validation block stays uniform.
+- **Test** — `TweakingParametersTests.BroadPhaseGridCellSizeTest_Constructor_ShouldThrowException_GivenInvalidBroadPhaseGridCellSize`
+  with 6 `[TestCase]`s covering zero on each axis, zero on both, negative on each axis, and
+  negative on both. Follows the naming and Arrange/Act-Assert shape of the sibling `Substeps`,
+  `VelocityIterations`, `PositionIterations` and `PenetrationTolerance` constructor tests.
+
+`TweakingParametersTests` green (25 tests passed).
+
+**Note:** both changes are still uncommitted in the working tree (`PhysicsSystem.cs` and
+`TweakingParametersTests.cs` show as modified) — they are not yet part of the 80-commit branch
+history.
+
+### Still open for `BroadPhaseGridCellSize`
+
+The two TODOs in `PhysicsConfiguration.cs` (85: docs, 86: tests) are **not** covered by this
+work and remain open:
+
+- **Docs** — `BroadPhaseGridCellSize` is the only public `PhysicsConfiguration` property without
+  an XML doc comment. Every sibling has `<summary>` plus `<remarks>` explaining the
+  performance/behaviour trade-off; this one needs the same treatment (what the grid cell size
+  means, units, and how tuning it trades broad-phase cell count against pairs per cell).
+- **Tests** — the new test asserts only the *rejection* of invalid values. Not covered: the
+  default value (`new SizeD(256, 256)`), that valid values are accepted (there is no
+  `ShouldNotThrowException` counterpart, unlike the other four parameters), and that the
+  configured value is actually propagated into `PhysicsScene2DDefinition` (`PhysicsSystem.cs:73`).
+  The propagation path is partially covered one layer down by
+  `PhysicsEngine2DTests.cs:37`, which asserts `scene.BroadPhaseGridCellSize` matches the scene
+  definition, but nothing ties `PhysicsConfiguration` to that definition.
 
 ### `src/Geisha.Engine/Core/Math/AABB2D.cs` — all TODOs cleared
 
