@@ -83,7 +83,6 @@ public sealed record PhysicsConfiguration
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     // TODO: Add documentation.
-    // TODO: Add tests.
     public SizeD BroadPhaseGridCellSize { get; init; } = new(256, 256);
 
     /// <summary>
