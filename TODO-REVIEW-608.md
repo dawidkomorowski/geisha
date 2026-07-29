@@ -1,9 +1,9 @@
 # TODO Review — Branch `608-add-broad-phase-in-physics-engine-2d`
 
 Scope: all `TODO` items created, modified or moved by the changes on this branch
-(diff range `master...HEAD`, 80 commits, 20 files changed).
+(diff range `master...HEAD`, 95 commits, 32 files changed).
 
-Generated: 2026-07-27 · Updated: 2026-07-30
+Generated: 2026-07-27 · Updated: 2026-07-30 · Open sections re-derived against `9bd3f53d`
 
 ---
 
@@ -23,7 +23,10 @@ Generated: 2026-07-27 · Updated: 2026-07-30
 | 84 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
 | 123 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
 
-### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SceneQuery.cs`
+### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SceneQuery.cs` *(effectively rewritten)*
+
+The file exists in `master` (80 lines, no TODOs) but was rewritten on this branch to query the
+spatial grid, so both TODOs are new.
 
 | Line | TODO |
 |---|---|
@@ -42,12 +45,14 @@ Generated: 2026-07-27 · Updated: 2026-07-30
 |---|---|
 | 25 | Recomputation is only needed for bodies that actually moved. |
 
+All 8 line numbers above verified against `9bd3f53d`.
+
 ---
 
 ## Moved TODOs (1)
 
-`CollisionDetection.cs:123` → `NarrowPhase.cs:46` — the file was renamed as part of the
-broad/narrow phase split. Text unchanged:
+`CollisionDetection.cs:123` → `NarrowPhase.cs:46` — the file was renamed (git reports `R051`,
+51% similarity) as part of the broad/narrow phase split. Text unchanged:
 
 > Once broad phase is implemented in scope of <https://github.com/dawidkomorowski/geisha/issues/608>
 > the collider type switch logic could be investigated…
@@ -67,8 +72,12 @@ The following shifted line numbers only:
 | `Core/Math/Vector2.cs` | 293 → 296 |
 | `Physics/PhysicsEngine2D/Internal/PhysicsSceneData.cs` | 10 → 11, 49 → 50 |
 | `Physics/PhysicsEngine2D/Internal/RigidBodyData.cs` | 7 → 8, 30 → 31 |
-| `Physics/PhysicsEngine2D/Internal/SimulationPipeline.cs` | 38 → 39 |
-| `Physics/Systems/PhysicsSystem.cs` | 319 → 322, 392 → 395, 406 → 409, 501 → 504, 504 → 507 |
+| `Physics/PhysicsEngine2D/Internal/SimulationPipeline.cs` | 16 → 16, 17 → 17, 32 → 33, 38 → 39 |
+| `Physics/Systems/PhysicsSystem.cs` | 319 → 326, 392 → 399, 406 → 413, 501 → 508, 504 → 511 |
+
+The two `SimulationPipeline.cs` entries that did not move (16, 17) are listed for completeness,
+so the file's full TODO inventory is visible in one place: 5 at `HEAD`, of which 4 are
+pre-existing and only line 25 is new.
 
 ---
 
@@ -81,8 +90,9 @@ The following shifted line numbers only:
    - `PhysicsSceneData.cs:283` — open question about testing proxy destruction.
 
 2. **Blocked on .NET 9 / C# 13 (ref fields + ref struct interfaces)**
-   Three new `ProxyQueryHandler` TODOs join three pre-existing ones of the same flavour
-   in `PhysicsSystem.cs` (504, 507) and `PhysicsSceneData.cs:50` (`System.Threading.Lock`),
+   Three new `ProxyQueryHandler` TODOs (`BroadPhase.cs:84`, `BroadPhase.cs:123`,
+   `SceneQuery.cs:111`) join three pre-existing ones of the same flavour in
+   `PhysicsSystem.cs` (508, 511) and `PhysicsSceneData.cs:50` (`System.Threading.Lock`),
    so **six** TODOs are now gated on a single framework upgrade. Worth tracking as one
    umbrella item.
 
