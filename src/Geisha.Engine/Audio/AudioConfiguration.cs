@@ -6,7 +6,7 @@
     public sealed record AudioConfiguration
     {
         /// <summary>
-        ///     If true, the sound output is enabled. Otherwise, the sound output is disabled. Default is <c>true</c>.
+        ///     Specifies whether the sound output is enabled. When disabled, no audio is played. Default is <c>true</c>.
         /// </summary>
         public bool EnableSound { get; init; } = true;
 
