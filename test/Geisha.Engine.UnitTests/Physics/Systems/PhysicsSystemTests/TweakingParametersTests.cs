@@ -261,4 +261,20 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         // Act & Assert
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.ArgumentException);
     }
+
+    [Test]
+    public void BroadPhaseGridCellSizeTest_Constructor_ShouldSetCellSizeOnInternalPhysicsScene_GivenValidCellSize()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            BroadPhaseGridCellSize = new SizeD(10, 20)
+        };
+
+        // Act
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.BroadPhaseGridCellSize, Is.EqualTo(physicsConfiguration.BroadPhaseGridCellSize));
+    }
 }
