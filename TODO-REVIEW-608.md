@@ -3,11 +3,11 @@
 Scope: all `TODO` items created, modified or moved by the changes on this branch
 (diff range `master...HEAD`, 80 commits, 20 files changed).
 
-Generated: 2026-07-27
+Generated: 2026-07-27 · Updated: 2026-07-29
 
 ---
 
-## New TODOs added on this branch (13)
+## New TODOs added on this branch (11 open)
 
 ### `src/Geisha.Engine/Core/Spatial/SpatialGrid.cs` *(new file)*
 
@@ -22,13 +22,6 @@ Generated: 2026-07-27
 | 9 | Review and possibly update related tests to cover new implementation. |
 | 84 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
 | 123 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
-
-### `src/Geisha.Engine/Core/Math/AABB2D.cs`
-
-| Line | TODO |
-|---|---|
-| 206 | Add documentation. *(for new `IsValid` property)* |
-| 238 | Add documentation. *(for new `Intersect` method)* |
 
 ### `src/Geisha.Engine/Physics/PhysicsConfiguration.cs`
 
@@ -95,7 +88,6 @@ The following shifted line numbers only:
 ## Themes / loose ends introduced by this branch
 
 1. **Missing docs, tests and validation**
-   - `AABB2D.IsValid` and `AABB2D.Intersect` — XML docs.
    - `PhysicsConfiguration.BroadPhaseGridCellSize` — docs, tests and validation
      (validation tracked separately in `PhysicsSystem.cs:55`).
    - `BroadPhase.cs:9` and `SceneQuery.cs:10` — "review related tests" markers.
@@ -110,3 +102,54 @@ The following shifted line numbers only:
 3. **Performance follow-ups**
    - `SimulationPipeline.cs:25` — only recompute bodies that actually moved.
    - `SpatialGrid.cs:800` — extract `GrowArrayExp` to a shared helper if reused.
+
+---
+
+## Resolved (2026-07-29)
+
+### `src/Geisha.Engine/Core/Math/AABB2D.cs` — all TODOs cleared
+
+Both original "Add documentation." TODOs (for `IsValid` and `Intersect`) are done, and the
+file now contains no TODOs at all.
+
+What was delivered:
+
+- **XML docs for `IsValid`** — states the well-formedness contract, that degenerate boxes
+  (line, point) are valid, and points at `Intersect` as the main producer of invalid boxes.
+- **XML docs for `Intersect`** — documents the invalid result for non-overlapping boxes,
+  valid degenerate results for edge/corner touching, and invalidity propagation.
+- **Type-level `<remarks>`** — added a paragraph establishing that boxes are not guaranteed
+  well-formed (constructors and factories neither validate nor normalize), and a paragraph
+  stating that containment/overlap results are *unspecified* for invalid operands, with
+  `Intersect`'s propagation as the one guaranteed exception.
+- **`Intersect` invalidity propagation codified by tests** —
+  `Intersect_ShouldReturnInvalidAABB_WhenEitherBoxIsInvalid` with 6 cases (each operand
+  invalid on each axis, both invalid on both axes, and each invalid on a different axis).
+- **`FromPoints` / `FromAABBs` empty-input ambiguity resolved.** Previously both returned
+  `default` — a *valid* degenerate box at the origin — making an empty-input result
+  indistinguishable from a single point at the origin. Both now seed the fold with
+  `Min = +infinity`, `Max = -infinity`, so empty input yields an invalid box and `IsValid`
+  is the discriminator. The `if (length == 0)` early returns were removed; the sentinel is
+  simply the identity element of the union. Docs updated from "`default`" to "an invalid
+  bounding box". Tests: the empty `[TestCase]`s were converted to degenerate
+  single-point-at-origin regression cases, `IsValid` is now asserted in both parameterized
+  methods, and two dedicated tests cover empty input.
+
+Full unit test suite green (4122 tests) after the change. Only in-repo caller is
+`Rectangle.ComputeAABB` (`Rectangle.cs:209`), which always passes 4 vertices and is
+unaffected.
+
+### Deliberately not pursued
+
+- **Invalid-operand behaviour of `Contains` / `Overlaps`** — documented as "unspecified"
+  rather than pinned down. `Contains(in Vector2)` happens to return `false` for an invalid
+  box (empty-set-correct), but `Overlaps` can return `true` for one, so the predicates are
+  not mutually consistent. Deciding whether an invalid box is a supported input or caller
+  error is a design question, not a documentation one. "Unspecified" leaves room for either
+  answer.
+- **NaN coordinate behaviour** — untested and undocumented. With the new fold, a single NaN
+  point makes both `Min` and `Max` NaN, so the result is invalid ("NaN in, invalid out").
+  Reasonable, but not pinned by a test.
+- **`IsValid` style inconsistency** — it is the only computed property using a body-block
+  getter with `[MethodImpl(AggressiveInlining)]`; `Center`, `Size`, `Width` and `Height` are
+  plain expression-bodied members. Cosmetic only.
