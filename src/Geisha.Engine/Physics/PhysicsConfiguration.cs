@@ -9,7 +9,8 @@ namespace Geisha.Engine.Physics;
 public sealed record PhysicsConfiguration
 {
     /// <summary>
-    ///     Defines how many substeps are performed during physics simulation per each game loop fixed update.
+    ///     Defines how many substeps are performed during physics simulation per each game loop fixed update. Default is
+    ///     <c>1</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -26,7 +27,7 @@ public sealed record PhysicsConfiguration
 
     /// <summary>
     ///     Defines how many iterations of velocity constraint solver are performed during physics simulation per each physics
-    ///     step (or substep).
+    ///     step (or substep). Default is <c>4</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -43,7 +44,7 @@ public sealed record PhysicsConfiguration
 
     /// <summary>
     ///     Defines how many iterations of position constraint solver are performed during physics simulation per each physics
-    ///     step (or substep).
+    ///     step (or substep). Default is <c>4</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -59,7 +60,7 @@ public sealed record PhysicsConfiguration
     public int PositionIterations { get; init; } = 4;
 
     /// <summary>
-    ///     Defines a tolerance for penetration resolution in physics simulation.
+    ///     Defines a tolerance for penetration resolution in physics simulation. Default is <c>0.01</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -78,13 +79,14 @@ public sealed record PhysicsConfiguration
     /// <summary>
     ///     Specifies the tile size used by the physics engine. The physics engine allows defining tile-based collision
     ///     geometry and this property represents the size of a single rectangular tile. Tile size is defined in meters.
+    ///     Default is <c>1 x 1</c>.
     /// </summary>
     /// <seealso cref="Components.TileColliderComponent" />
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     /// <summary>
     ///     Specifies the size of a single cell of the uniform grid used by the broad phase of the physics engine. Cell size
-    ///     is defined in meters.
+    ///     is defined in meters. Default is <c>256 x 256</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -112,7 +114,7 @@ public sealed record PhysicsConfiguration
     public SizeD BroadPhaseGridCellSize { get; init; } = new(256, 256);
 
     /// <summary>
-    ///     Indicates whether physics debug rendering is enabled.
+    ///     Indicates whether physics debug rendering is enabled. Default is <c>false</c>.
     /// </summary>
     /// <remarks>
     ///     <para>

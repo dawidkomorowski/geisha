@@ -16,7 +16,7 @@ namespace Geisha.Engine.Core
         /// <summary>
         ///     Specifies custom game loop steps that should be included in game loop update. Order of steps defines order of
         ///     execution, that is, first step in the list is executed first and last step in the list is executed last. Default is
-        ///     empty list.
+        ///     <c>[]</c>.
         /// </summary>
         public IReadOnlyList<string> CustomGameLoopSteps { get; init; } = new List<string>().AsReadOnly();
 
@@ -48,7 +48,7 @@ namespace Geisha.Engine.Core
         public int FixedUpdatesPerSecond { get; init; } = 60;
 
         /// <summary>
-        ///     Minimal level of logged messages.
+        ///     Minimal level of logged messages. Default is <c>Info</c>.
         /// </summary>
         public LogLevel LogLevel { get; init; } = LogLevel.Info;
 
