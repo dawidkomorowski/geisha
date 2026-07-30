@@ -7,21 +7,13 @@ Generated: 2026-07-27 · Updated: 2026-07-30 · Open sections re-derived against
 
 ---
 
-## New TODOs added on this branch (8 open)
-
-### `src/Geisha.Engine/Core/Spatial/SpatialGrid.cs` *(new file)*
-
-| Line | TODO |
-|---|---|
-| 800 | This might be useful helper in other places. If so, move to `ArrayEx`? |
+## New TODOs added on this branch (3 open, 5 postponed)
 
 ### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/BroadPhase.cs` *(new file)*
 
 | Line | TODO |
 |---|---|
 | 9 | Review and possibly update related tests to cover new implementation. |
-| 84 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
-| 123 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
 
 ### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SceneQuery.cs` *(effectively rewritten)*
 
@@ -31,7 +23,6 @@ spatial grid, so both TODOs are new.
 | Line | TODO |
 |---|---|
 | 10 | Review and possibly update related tests to cover new implementation. |
-| 111 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). |
 
 ### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/PhysicsSceneData.cs`
 
@@ -39,13 +30,9 @@ spatial grid, so both TODOs are new.
 |---|---|
 | 283 | How to test that proxy is destroyed when body is destroyed? |
 
-### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SimulationPipeline.cs`
-
-| Line | TODO |
-|---|---|
-| 25 | Recomputation is only needed for bodies that actually moved. |
-
-All 8 line numbers above verified against `9bd3f53d`.
+All 3 line numbers above verified against `9bd3f53d`. `SpatialGrid.cs:800`, `BroadPhase.cs:84`,
+`BroadPhase.cs:123`, `SceneQuery.cs:111` and `SimulationPipeline.cs:25` were moved to
+[Postponed to the future](#postponed-to-the-future-out-of-scope-for-this-branch).
 
 ---
 
@@ -94,11 +81,40 @@ pre-existing and only line 25 is new.
    `SceneQuery.cs:111`) join three pre-existing ones of the same flavour in
    `PhysicsSystem.cs` (508, 511) and `PhysicsSceneData.cs:50` (`System.Threading.Lock`),
    so **six** TODOs are now gated on a single framework upgrade. Worth tracking as one
-   umbrella item.
+   umbrella item. The three new ones are **postponed** — see
+   [Postponed to the future](#postponed-to-the-future-out-of-scope-for-this-branch).
 
-3. **Performance follow-ups**
+3. **Performance follow-ups** — both **postponed**, see
+   [Postponed to the future](#postponed-to-the-future-out-of-scope-for-this-branch).
    - `SimulationPipeline.cs:25` — only recompute bodies that actually moved.
    - `SpatialGrid.cs:800` — extract `GrowArrayExp` to a shared helper if reused.
+
+---
+
+## Postponed to the future (out of scope for this branch)
+
+TODOs intentionally left open. They are acknowledged, deliberately **not** worked on in scope of
+`608-add-broad-phase-in-physics-engine-2d`, and are expected to be picked up later.
+
+| File | Line | TODO | Reason for postponing |
+|---|---|---|---|
+| `src/Geisha.Engine/Core/Spatial/SpatialGrid.cs` | 800 | This might be useful helper in other places. If so, move to `ArrayEx`? | Conditional by its own wording: the move to `ArrayEx` is only worth doing *if* the exponential array-growth pattern is needed elsewhere. `SpatialGrid` is currently the only user, so there is nothing to share yet and extracting now would be speculative generality. Revisit when a second caller appears. |
+| `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SimulationPipeline.cs` | 25 | Recomputation is only needed for bodies that actually moved. | Optimization opportunity, not a correctness gap: recomputing every body's proxy is correct, just wasteful. Skipping unmoved bodies needs a reliable moved/dirty signal, which is a separate design step. The broad phase works without it, so it is deferred to a dedicated performance pass. |
+| `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/BroadPhase.cs` | 84 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). | Gated on a framework upgrade — see the umbrella note below. |
+| `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/BroadPhase.cs` | 123 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). | Gated on a framework upgrade — see the umbrella note below. |
+| `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SceneQuery.cs` | 111 | To implement `ProxyQueryHandler` properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13). | Gated on a framework upgrade — see the umbrella note below. |
+
+### Umbrella: .NET 9 / C# 13 upgrade
+
+The three `ProxyQueryHandler` TODOs above cannot be actioned on this branch — they need
+**ref fields** and **ref struct interfaces**, which arrive with .NET 9 (C# 13). Upgrading the
+target framework is a repo-wide change, unrelated to adding the broad phase, and is therefore
+out of scope here.
+
+They are not alone: three pre-existing TODOs are blocked on the same upgrade
+(`PhysicsSystem.cs:508`, `PhysicsSystem.cs:511`, and `PhysicsSceneData.cs:50` for
+`System.Threading.Lock`), so **six** TODOs unblock together the moment the framework moves.
+Best tracked as one upgrade task rather than six independent items.
 
 ---
 
