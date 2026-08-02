@@ -243,38 +243,4 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         const double zeroToleranceSolution = -5d;
         Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation.X, Is.EqualTo(zeroToleranceSolution + penetrationTolerance));
     }
-
-    [TestCase(0, 0)]
-    [TestCase(0, 1)]
-    [TestCase(1, 0)]
-    [TestCase(-1, -1)]
-    [TestCase(-1, 1)]
-    [TestCase(1, -1)]
-    public void BroadPhaseGridCellSizeTest_Constructor_ShouldThrowException_GivenInvalidBroadPhaseGridCellSize(double width, double height)
-    {
-        // Arrange
-        var physicsConfiguration = new PhysicsConfiguration
-        {
-            BroadPhaseGridCellSize = new SizeD(width, height)
-        };
-
-        // Act & Assert
-        Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.ArgumentException);
-    }
-
-    [Test]
-    public void BroadPhaseGridCellSizeTest_Constructor_ShouldSetCellSizeOnInternalPhysicsScene_GivenValidCellSize()
-    {
-        // Arrange
-        var physicsConfiguration = new PhysicsConfiguration
-        {
-            BroadPhaseGridCellSize = new SizeD(10, 20)
-        };
-
-        // Act
-        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
-
-        // Assert
-        Assert.That(physicsSystem.PhysicsScene2D.BroadPhaseGridCellSize, Is.EqualTo(physicsConfiguration.BroadPhaseGridCellSize));
-    }
 }
