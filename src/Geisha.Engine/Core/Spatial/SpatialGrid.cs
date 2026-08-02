@@ -399,6 +399,7 @@ public sealed class SpatialGrid<TPayload> where TPayload : unmanaged
         ref var proxy = ref _proxies[id.Index];
         proxy.Bounds = newBounds;
 
+        // TODO: Possible optimization - test if new cells differ from existing cells.
         while (proxy.NodeListHead != Null)
         {
             DestroyNode(proxy.NodeListHead);
