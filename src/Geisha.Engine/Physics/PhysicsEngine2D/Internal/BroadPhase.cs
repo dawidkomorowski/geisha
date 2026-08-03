@@ -6,8 +6,6 @@ using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-// TODO: Review and possibly update related tests to cover new implementation.
-//       Now collision detection rely on spatial grid so bugs in updates of spatial grid should be captured in collision detection tests?
 internal static class BroadPhase
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]

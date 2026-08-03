@@ -3,26 +3,11 @@
 Scope: all `TODO` items created, modified or moved by the changes on this branch
 (diff range `master...HEAD`, 95 commits, 32 files changed).
 
-Generated: 2026-07-27 · Updated: 2026-07-30 · Open sections re-derived against `9bd3f53d`
+Generated: 2026-07-27 · Updated: 2026-08-03 · Open sections re-derived against `2ba5c18e`
 
 ---
 
-## New TODOs added on this branch (3 open, 5 postponed)
-
-### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/BroadPhase.cs` *(new file)*
-
-| Line | TODO |
-|---|---|
-| 9 | Review and possibly update related tests to cover new implementation. |
-
-### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/SceneQuery.cs` *(effectively rewritten)*
-
-The file exists in `master` (80 lines, no TODOs) but was rewritten on this branch to query the
-spatial grid, so both TODOs are new.
-
-| Line | TODO |
-|---|---|
-| 10 | Review and possibly update related tests to cover new implementation. |
+## New TODOs added on this branch (1 open, 5 postponed)
 
 ### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/PhysicsSceneData.cs`
 
@@ -30,8 +15,10 @@ spatial grid, so both TODOs are new.
 |---|---|
 | 283 | How to test that proxy is destroyed when body is destroyed? |
 
-All 3 line numbers above verified against `9bd3f53d`. `SpatialGrid.cs:800`, `BroadPhase.cs:84`,
-`BroadPhase.cs:123`, `SceneQuery.cs:111` and `SimulationPipeline.cs:25` were moved to
+`BroadPhase.cs:9` and `SceneQuery.cs:10` — the two "review related tests" markers — are
+**resolved**, see [Resolved](#resolved-broadphasecs9-and-scenequerycs10--review-related-tests).
+`SpatialGrid.cs:800`, `BroadPhase.cs:84`, `BroadPhase.cs:123`, `SceneQuery.cs:111` and
+`SimulationPipeline.cs:25` were moved to
 [Postponed to the future](#postponed-to-the-future-out-of-scope-for-this-branch).
 
 ---
@@ -73,7 +60,8 @@ pre-existing and only line 25 is new.
 1. **Missing docs, tests and validation**
    - `PhysicsConfiguration.BroadPhaseGridCellSize` — docs, tests and validation are all
      **done**; the file now contains no TODOs at all. See Resolved.
-   - `BroadPhase.cs:9` and `SceneQuery.cs:10` — "review related tests" markers.
+   - `BroadPhase.cs:9` and `SceneQuery.cs:10` — "review related tests" markers, now
+     **done**; both comments are gone. See Resolved.
    - `PhysicsSceneData.cs:283` — open question about testing proxy destruction.
 
 2. **Blocked on .NET 9 / C# 13 (ref fields + ref struct interfaces)**
@@ -118,6 +106,166 @@ Best tracked as one upgrade task rather than six independent items.
 
 ---
 
+## Resolved: `BroadPhase.cs:9` and `SceneQuery.cs:10` — review related tests (2026-08-03)
+
+> Review and possibly update related tests to cover new implementation.
+> Now collision detection / queries rely on spatial grid so bugs in updates of spatial grid
+> should be captured in collision detection / query tests?
+
+Both comments are removed. The answer to the question they pose turned out to be "yes for some
+bugs, no for others", so three coverage gaps were identified and closed.
+
+### The testing-layer decision
+
+Broad phase and spatial grid are implementation details that are not directly observable through
+the public physics API, which is what made the right test layer non-obvious. Three options were
+weighed against verification power, brittleness under behaviour-preserving refactoring, and cost of
+adapting when behaviour does change:
+
+- **White box via `InternalsVisibleTo`** — precise, but pins `SpatialGrid`, `SpatialProxyId`,
+  `BroadPhaseAABB` and `MoveProxy`, so any internal reshuffle breaks it. Rejected: the recent
+  OOP → DOD rewrite of the internal engine was cheap precisely because the tests did not do this.
+- **Internal physics engine public API** — the existing middle ground. Does not help here, because
+  the broad phase is not observable at that level either.
+- **Physics system level (chosen)** — entities, components, `ProcessPhysics`, `QueryPoint`,
+  `QueryBounds`.
+
+The unlock was reframing the contract so it never mentions grids, proxies or cells. Two properties
+are stated purely in terms of scene geometry, which makes both fully observable through the public
+API:
+
+1. **History independence** — results depend only on the current geometry of the scene, never on
+   the history of how that geometry came to be.
+2. **Cell size invariance** — the same scene produces the same results for any
+   `BroadPhaseGridCellSize`; it is a performance knob, not a behavioural one.
+
+No test in the new fixture references any broad-phase type, so the whole spatial layer can be
+replaced (grid → BVH, different fat-box factor, different update condition) without touching them.
+Failures read as "collider was not found at (90.5, 0)" rather than as a proxy-bounds mismatch.
+
+Deliberately **not** tested: the 2× fat-box inflation factor itself. Changing it to 3× alters no
+observable result, only how often `MoveProxy` fires, so it is not behaviour. What is tested is the
+consequence of getting the *update condition* wrong.
+
+### Where the tests live
+
+New dedicated fixture `test/…/PhysicsSystemTests/BroadPhaseTests.cs`, rather than spreading the
+tests across the existing query and collision fixtures. Reasons: cell-size invariance would
+otherwise have to be triplicated; shared scaffolding would have to be hoisted into a base class
+inherited by 15 fixtures; scenario-shaped tests break `SceneQueryTests`' per-API idiom; and
+`TileColliderTests` is existing precedent for a subject-scoped fixture that owns its own
+configuration tests.
+
+The two `BroadPhaseGridCellSize` constructor tests moved out of `TweakingParametersTests` into the
+new fixture's `Configuration` region and lost their `BroadPhaseGridCellSizeTest_` prefix.
+`TweakingParametersTests` is left holding only solver-tuning parameters, all following the uniform
+"increasing X makes Y more accurate" idiom.
+
+### Gap A — dual-grid query routing
+
+Scene queries gather from `StaticGrid` **and** `DynamicGrid` (`SceneQuery.cs:25-26`, `:88-89`), but
+the query fixtures only exercised static bodies, so dropping either gather went unnoticed for
+kinematic bodies. Closed by adding kinematic-body cases to `SceneQueryTests` (`f12c0496`).
+
+### Gap C — history independence (`c6d4f97c`, `2ba5c18e`)
+
+Nine tests, region `History independence`. Every scenario reaches identical final geometry through
+a different history and shares one expected result.
+
+Two things had to be got right for these tests to have any power, and both were discovered by
+mutation testing rather than by reading the code:
+
+- **Bodies must be placed away from the origin.** A proxy is created with `bodyRef.AABB` *before*
+  the collider is computed (`PhysicsSceneData.cs:257-262`), i.e. with `default` — a degenerate box
+  at the origin. Deleting `MoveProxy` entirely collapses every kinematic proxy to a point at the
+  origin, which is exactly where the first draft aimed its queries, so the mutation *healed* the
+  tests. Fixed with `FinalPosition = (100, 0)`.
+- **Queries must probe a body's edges, not its centre.** A lagging proxy still covers the body's
+  centre; only the edges fall outside it. Fixed with `PointsAcrossBodyExtent`, which probes the
+  centre plus four points at `BodyRadius - 0.5`.
+
+The offset ladder `{0, ±5, ±25, ±60}` is provably load-bearing — each band is the *only* one that
+catches a particular mutation. With radius 10 the fat box is ±20 and the tight AABB ±10:
+
+| Offset | Why it is there |
+|---|---|
+| 0 | Reference case with no history at all. |
+| ±5 | Inside the fat box, so the update is skipped. The only band that catches a stale proxy. |
+| ±25 | Between 10 and 30, the band where `Contains` and `Overlaps` disagree. |
+| ±60 | Far from everything the body used to overlap. |
+
+Collision scenarios use `BarelyTouchingPosition` — the other body only just overlaps once the
+moving body arrives. A deeply overlapping pair is found even by a badly lagging broad phase.
+
+### Gap B — cell size invariance (2026-08-03)
+
+Five tests, region `Cell size invariance`, each parameterized over four cell sizes chosen relative
+to the 20-unit bodies used: `1×1` and `3×7` (both smaller than a body, so bodies and queries span
+many cells), `256×256` (the default), and `10000×10000` (whole scene in one cell — the reference
+case where space is effectively not partitioned).
+
+`3×7` is non-square on purpose. `BroadPhaseGridCellSize` is a `SizeD` and non-square cells are a
+supported configuration, but before this work nothing in the repo used one.
+
+### Mutation testing
+
+Every gap was validated by deliberately breaking a line and confirming the tests go red. This is
+what found the three first-draft tests that passed for the wrong reason, plus one genuine bug in
+the draft itself (collision tests were using the wrong origin, so the documented offsets did not
+mean what the comment claimed). All mutations reverted; `src/` verified clean.
+
+`RigidBodyData.RecomputeCollider` — the proxy update:
+
+| Mutation | Caught by |
+|---|---|
+| Kinematic `MoveProxy` deleted | 11 tests |
+| `Contains` → `Overlaps` (update fires too late) | 3 tests — only the ±25 cases |
+| Static `MoveProxy` deleted | 15 tests |
+| Proxy moved to tight `AABB` instead of `BroadPhaseAABB` | 3 tests — only the ±5 cases |
+
+`SpatialGrid` — space partitioning. The "before" column is the physics suite as it stood after
+Gap C; the point of Gap B is the two rows where it read *survives*:
+
+| Mutation | Before Gap B | After Gap B |
+|---|---|---|
+| Canonical-cell check disabled (duplicate pairs) | 42 failures | 11 tests |
+| `QueryBounds` `LastQueryId` dedup removed | — | 15 tests |
+| `FindCells` collapsed to a single cell | 211 failures | caught |
+| `FindCells` cell span clamped to 2×2 | **survives all 1495** | 8 tests (`1×1` and `3×7` only) |
+| `FindCell` axis swap (`Width` ↔ `Height`) | **survives all 4177** | 2 tests (`3×7` only) |
+| `FindCells` axis swap (`Width` ↔ `Height`) | **survives all 4177** | 2 tests (`3×7` only) |
+
+The clamp mutation was caught by `SpatialGridTests` (5 tests) but was invisible to the entire
+physics suite. Both axis swaps survived *every* test in the repo, `SpatialGridTests` included,
+because all 80 of its tests use square cells.
+
+One further mutation, `canonicalCell = FindCell(intersection.Max)` instead of `.Min`, survives the
+full suite and was **not** treated as a gap. The canonical cell only has to be *some* cell both
+proxies occupy; since each proxy's bounds contain both corners of the intersection and `FindCells`
+is inclusive at `Max`, both corners always satisfy that. It is an equivalent mutant — a valid
+alternative implementation — so no test should reject it.
+
+### Result
+
+`BroadPhaseTests` — 60 tests (2 configuration, 9 history independence with 33 instances, 5 cell
+size invariance with 20 instances). Full unit suite green at 4197.
+
+### Deliberately not pursued
+
+- **A centralized white-box invariant check** in shared teardown — for every body, assert the proxy
+  exists, lives in the grid matching its `BodyType`, and its bounds contain the body's `AABB`. Needs
+  no new production API (`GetProxyData` and `GetBodiesSpan` exist, `InternalsVisibleTo` is in
+  place). Not added because the behavioural tests already catch every mutation tried; it would be
+  the white-box coupling that was explicitly rejected above, for no demonstrated gain.
+- **Non-square cell sizes below `SpatialGrid` level** — `SpatialGridTests` still uses square cells
+  throughout. The axis swaps are now caught at the physics level, but catching them in the grid's
+  own 80 tests would be more direct and cheaper to diagnose. Worth a follow-up, out of scope here.
+- **The known blind spot of metamorphic testing** — a bug that corrupts every cell size equally is
+  invisible to invariance tests. Mitigated by the ~4000 absolute assertions elsewhere in the suite,
+  not by these tests.
+
+---
+
 ## Resolved (2026-07-29)
 
 ### `src/Geisha.Engine/Physics/Systems/PhysicsSystem.cs:55` — `BroadPhaseGridCellSize` tests and validation
@@ -133,15 +281,21 @@ What was delivered:
   "`Configuration is invalid. BroadPhaseGridCellSize must have positive dimensions.`" and
   `paramName` of `physicsConfiguration`. Mirrors the existing `TileSize` check immediately above
   it, so the whole config-validation block stays uniform.
-- **Test** — `TweakingParametersTests.BroadPhaseGridCellSizeTest_Constructor_ShouldThrowException_GivenInvalidBroadPhaseGridCellSize`
+- **Test** — `BroadPhaseGridCellSizeTest_Constructor_ShouldThrowException_GivenInvalidBroadPhaseGridCellSize`
   with 6 `[TestCase]`s covering zero on each axis, zero on both, negative on each axis, and
-  negative on both. Follows the naming and Arrange/Act-Assert shape of the sibling `Substeps`,
-  `VelocityIterations`, `PositionIterations` and `PenetrationTolerance` constructor tests.
+  negative on both. Originally in `TweakingParametersTests`, following the naming and
+  Arrange/Act-Assert shape of the sibling `Substeps`, `VelocityIterations`, `PositionIterations`
+  and `PenetrationTolerance` constructor tests.
 
 `TweakingParametersTests` green (25 tests passed).
 
 Both changes are now committed as `479ea05a` ("Add test for broad-phase grid cell size"); the
 earlier note about them being uncommitted no longer applies.
+
+Later moved to `BroadPhaseTests` and renamed to
+`Constructor_ShouldThrowException_GivenInvalidBroadPhaseGridCellSize` when that fixture took
+ownership of the option — see
+[Resolved: `BroadPhase.cs:9` and `SceneQuery.cs:10`](#resolved-broadphasecs9-and-scenequerycs10--review-related-tests).
 
 ### `src/Geisha.Engine/Physics/PhysicsConfiguration.cs` — all TODOs cleared (2026-07-30)
 

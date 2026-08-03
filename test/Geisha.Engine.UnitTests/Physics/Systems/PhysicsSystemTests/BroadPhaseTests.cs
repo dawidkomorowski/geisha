@@ -4,6 +4,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.Systems;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -347,6 +348,179 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assert
+        Assert.That(kinematicCollider.IsColliding, Is.True);
+        Assert.That(staticCollider.IsColliding, Is.True);
+    }
+
+    #endregion
+
+    #region Cell size invariance
+
+    // The broad phase partitions space into cells and the size of a cell is configurable. It must be a pure performance
+    // knob: the same scene has to produce the same results no matter how space is partitioned. Each test below therefore
+    // asserts a single expected result for every cell size it runs with.
+    //
+    // The cell sizes are chosen relative to the size of the bodies used in these tests, which is 20 units across:
+    //   -         1x1 - much smaller than a body, so every body and every query covers a large block of cells and the
+    //                   broad phase has to combine partial results from all of them.
+    //   -         3x7 - also smaller than a body, and not square, so cell width and cell height cannot be swapped for
+    //                   one another without changing the results.
+    //   -     256x256 - the default, comparable to the size of the whole scene used here.
+    //   - 10000x10000 - much larger than the whole scene, so all bodies fall into a single cell and the broad phase
+    //                   degenerates into comparing everything with everything. This is the reference case in which
+    //                   space is effectively not partitioned at all.
+    private static IEnumerable<SizeD> CellSizes
+    {
+        get
+        {
+            yield return new SizeD(1, 1);
+            yield return new SizeD(3, 7);
+            yield return new SizeD(256, 256);
+            yield return new SizeD(10000, 10000);
+        }
+    }
+
+    private PhysicsSystem GetPhysicsSystem(SizeD cellSize) =>
+        GetPhysicsSystem(new PhysicsConfiguration
+        {
+            PenetrationTolerance = 0d,
+            BroadPhaseGridCellSize = cellSize
+        });
+
+    // A second body placed far enough from FinalPosition not to overlap a body standing there. Both bodies are away from
+    // the origin and from each other so that they fall into different cells for all cell sizes but the largest one.
+    private static readonly Vector2 DistantPosition = FinalPosition + new Vector2(0, 60);
+
+    [Test]
+    public void QueryPoint_ShouldReturnCollidersAcrossTheirWholeExtent_RegardlessOfCellSize([ValueSource(nameof(CellSizes))] SizeD cellSize)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(cellSize);
+        var staticCollider = CreateCircleStaticBody(FinalPosition.X, FinalPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateCircleKinematicBody(DistantPosition.X, DistantPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var colliders = new List<Collider2DComponent>();
+
+        // Act & Assert
+        // A body is bigger than a cell for the smaller cell sizes, so points across its extent fall into different cells.
+        // All of them must find the body, which they only do when the body is registered in every cell it covers.
+        foreach (var pointToQuery in PointsAcrossBodyExtent(FinalPosition))
+        {
+            Assert.That(physicsSystem.QueryPoint(pointToQuery, colliders), Is.EqualTo(1), $"Static collider was not found at {pointToQuery}.");
+            Assert.That(colliders, Is.EquivalentTo(new[] { staticCollider }));
+        }
+
+        foreach (var pointToQuery in PointsAcrossBodyExtent(DistantPosition))
+        {
+            Assert.That(physicsSystem.QueryPoint(pointToQuery, colliders), Is.EqualTo(1), $"Kinematic collider was not found at {pointToQuery}.");
+            Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
+        }
+
+        var pointBetweenBodies = (FinalPosition + DistantPosition) / 2;
+        Assert.That(physicsSystem.QueryPoint(pointBetweenBodies, colliders), Is.Zero);
+        Assert.That(colliders, Is.Empty);
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnEachOverlappedColliderExactlyOnce_RegardlessOfCellSize([ValueSource(nameof(CellSizes))] SizeD cellSize)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(cellSize);
+        var staticCollider = CreateCircleStaticBody(FinalPosition.X, FinalPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateCircleKinematicBody(DistantPosition.X, DistantPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        // Bounds reaching from one body to the other, overlapping both of them only partially.
+        var boundsToQuery = new AABB2D(new Vector2(FinalPosition.X - 5, FinalPosition.Y - 5), new Vector2(FinalPosition.X + 5, DistantPosition.Y + 5));
+
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        // Both the bounds and the bodies cover many cells for the smaller cell sizes, so a body is reachable through
+        // several cells at once. Each of them must still be reported exactly once.
+        var written = physicsSystem.QueryBounds(boundsToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(2));
+        Assert.That(colliders, Is.EquivalentTo(new Collider2DComponent[] { staticCollider, kinematicCollider }));
+    }
+
+    [Test]
+    public void ProcessPhysics_ShouldDetectSingleCollisionBetweenKinematicAndStaticBody_RegardlessOfCellSize([ValueSource(nameof(CellSizes))] SizeD cellSize)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(cellSize);
+        var kinematicCollider = CreateCircleKinematicBody(FinalPosition.X, FinalPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        var staticCollider = CreateRectangleStaticBody(BarelyTouchingPosition.X, BarelyTouchingPosition.Y, 10, 10)
+            .GetComponent<RectangleColliderComponent>();
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(kinematicCollider.IsColliding, Is.True);
+        Assert.That(staticCollider.IsColliding, Is.True);
+
+        // The two bodies share many cells for the smaller cell sizes. Reporting the collision once per shared cell would
+        // produce duplicated contacts, so the exact contact count is what pins that down.
+        var contacts = new List<Contact2D>();
+        Assert.That(kinematicCollider.GetContacts(contacts), Is.EqualTo(1));
+        Assert.That(contacts[0].OtherCollider, Is.EqualTo(staticCollider));
+    }
+
+    [Test]
+    public void ProcessPhysics_ShouldDetectSingleCollisionBetweenTwoKinematicBodies_RegardlessOfCellSize([ValueSource(nameof(CellSizes))] SizeD cellSize)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(cellSize);
+        var collider1 = CreateCircleKinematicBody(FinalPosition.X, FinalPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        var collider2 = CreateCircleKinematicBody(BarelyTouchingPosition.X, BarelyTouchingPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(collider1.IsColliding, Is.True);
+        Assert.That(collider2.IsColliding, Is.True);
+
+        var contacts = new List<Contact2D>();
+        Assert.That(collider1.GetContacts(contacts), Is.EqualTo(1));
+        Assert.That(contacts[0].OtherCollider, Is.EqualTo(collider2));
+
+        Assert.That(collider2.GetContacts(contacts), Is.EqualTo(1));
+        Assert.That(contacts[0].OtherCollider, Is.EqualTo(collider1));
+    }
+
+    [Test]
+    public void ProcessPhysics_ShouldDetectCollision_WhenKinematicBodyTravelsAcrossManyCells([ValueSource(nameof(CellSizes))] SizeD cellSize)
+    {
+        // Arrange
+        TimeSystem.FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
+
+        var physicsSystem = GetPhysicsSystem(cellSize);
+        var kinematicBody = CreateRectangleKinematicBody(FinalPosition.X, FinalPosition.Y, 10, 10);
+        var kinematicCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(100, 0);
+        var staticCollider = CreateRectangleStaticBody(FinalPosition.X + 100, FinalPosition.Y, 10, 10).GetComponent<RectangleColliderComponent>();
+
+        // Act & Assume - the body advances by 10 units per step, so it is still far away from the static body here.
+        for (var i = 0; i < 5; i++)
+        {
+            physicsSystem.ProcessPhysics();
+        }
+
+        Assert.That(kinematicCollider.IsColliding, Is.False);
+        Assert.That(staticCollider.IsColliding, Is.False);
+
+        // Act
+        for (var i = 0; i < 5; i++)
+        {
+            physicsSystem.ProcessPhysics();
+        }
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(FinalPosition + new Vector2(100, 0)));
         Assert.That(kinematicCollider.IsColliding, Is.True);
         Assert.That(staticCollider.IsColliding, Is.True);
     }
