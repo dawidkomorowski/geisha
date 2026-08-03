@@ -102,6 +102,33 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void QueryPoint_ShouldReturnStaticCollider_AfterStaticBodyIsMoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var startPosition = FinalPosition + new Vector2(60, 0);
+        var staticBody = CreateCircleStaticBody(startPosition.X, startPosition.Y, BodyRadius);
+        var staticCollider = staticBody.GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        staticBody.GetComponent<Transform2DComponent>().Translation = FinalPosition;
+        physicsSystem.SynchronizePhysicsState();
+
+        // Assert
+        foreach (var pointToQuery in PointsAcrossBodyExtent(FinalPosition))
+        {
+            Assert.That(physicsSystem.QueryPoint(pointToQuery, colliders), Is.EqualTo(1), $"Collider was not found at {pointToQuery}.");
+            Assert.That(colliders, Is.EquivalentTo(new[] { staticCollider }));
+        }
+
+        Assert.That(physicsSystem.QueryPoint(startPosition, colliders), Is.Zero);
+        Assert.That(colliders, Is.Empty);
+    }
+
+    [Test]
     public void QueryPoint_ShouldReturnKinematicCollider_RegardlessOfHowBodyReachedItsPosition([ValueSource(nameof(StartOffsets))] double startOffset)
     {
         // Arrange
@@ -322,33 +349,6 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(kinematicCollider.IsColliding, Is.True);
         Assert.That(staticCollider.IsColliding, Is.True);
-    }
-
-    [Test]
-    public void QueryPoint_ShouldReturnStaticCollider_AfterStaticBodyIsMoved()
-    {
-        // Arrange
-        var physicsSystem = GetPhysicsSystem();
-        var startPosition = FinalPosition + new Vector2(60, 0);
-        var staticBody = CreateCircleStaticBody(startPosition.X, startPosition.Y, BodyRadius);
-        var staticCollider = staticBody.GetComponent<CircleColliderComponent>();
-        physicsSystem.SynchronizePhysicsState();
-
-        var colliders = new List<Collider2DComponent>();
-
-        // Act
-        staticBody.GetComponent<Transform2DComponent>().Translation = FinalPosition;
-        physicsSystem.SynchronizePhysicsState();
-
-        // Assert
-        foreach (var pointToQuery in PointsAcrossBodyExtent(FinalPosition))
-        {
-            Assert.That(physicsSystem.QueryPoint(pointToQuery, colliders), Is.EqualTo(1), $"Collider was not found at {pointToQuery}.");
-            Assert.That(colliders, Is.EquivalentTo(new[] { staticCollider }));
-        }
-
-        Assert.That(physicsSystem.QueryPoint(startPosition, colliders), Is.Zero);
-        Assert.That(colliders, Is.Empty);
     }
 
     #endregion
