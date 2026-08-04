@@ -190,6 +190,10 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
     // The other body is placed so that it only just overlaps the moving body once it arrives. A barely overlapping pair
     // is what makes this test sensitive: it is detected only when the broad phase tracks the moving body accurately
     // enough at its edges, whereas a deeply overlapping pair is found even by a considerably lagging broad phase.
+    //
+    // The distance assumes the other body is a rectangle of 10x10 placed at this position, which leaves the two bodies
+    // overlapping by a single unit. Using a different shape or size here changes the overlap and can make it deep enough
+    // for the test to stop being sensitive - two circles of BodyRadius, for example, would overlap by 6 units.
     private static readonly Vector2 BarelyTouchingPosition = FinalPosition + new Vector2(BodyRadius + 4, 0);
 
     [Test]
@@ -387,8 +391,10 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
             BroadPhaseGridCellSize = cellSize
         });
 
-    // A second body placed far enough from FinalPosition not to overlap a body standing there. Both bodies are away from
-    // the origin and from each other so that they fall into different cells for all cell sizes but the largest one.
+    // A second body placed far enough from FinalPosition not to overlap a body standing there. The gap between the two
+    // bodies is wider than the smaller cell sizes, so for those they occupy disjoint sets of cells and neither can be
+    // found by looking at the cells of the other. For the larger cell sizes they share a cell instead, which is the case
+    // where the broad phase has to reject a candidate it did gather.
     private static readonly Vector2 DistantPosition = FinalPosition + new Vector2(0, 60);
 
     [Test]
@@ -417,7 +423,7 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
             Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
         }
 
-        var pointBetweenBodies = (FinalPosition + DistantPosition) / 2;
+        var pointBetweenBodies = DistantPosition.Midpoint(FinalPosition);
         Assert.That(physicsSystem.QueryPoint(pointBetweenBodies, colliders), Is.Zero);
         Assert.That(colliders, Is.Empty);
     }
@@ -431,8 +437,12 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         var kinematicCollider = CreateCircleKinematicBody(DistantPosition.X, DistantPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
         physicsSystem.SynchronizePhysicsState();
 
-        // Bounds reaching from one body to the other, overlapping both of them only partially.
-        var boundsToQuery = new AABB2D(new Vector2(FinalPosition.X - 5, FinalPosition.Y - 5), new Vector2(FinalPosition.X + 5, DistantPosition.Y + 5));
+        // Bounds reaching from the center of one body to the center of the other and extending a little past both. The box
+        // is narrower than the bodies, so it overlaps each of them only partially.
+        const double margin = 5;
+        var boundsToQuery = new AABB2D(
+            new Vector2(FinalPosition.X - margin, FinalPosition.Y - margin),
+            new Vector2(DistantPosition.X + margin, DistantPosition.Y + margin));
 
         var colliders = new List<Collider2DComponent>();
 
@@ -475,7 +485,8 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         // Arrange
         var physicsSystem = GetPhysicsSystem(cellSize);
         var collider1 = CreateCircleKinematicBody(FinalPosition.X, FinalPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
-        var collider2 = CreateCircleKinematicBody(BarelyTouchingPosition.X, BarelyTouchingPosition.Y, BodyRadius).GetComponent<CircleColliderComponent>();
+        var collider2 = CreateRectangleKinematicBody(BarelyTouchingPosition.X, BarelyTouchingPosition.Y, 10, 10)
+            .GetComponent<RectangleColliderComponent>();
 
         // Act
         physicsSystem.ProcessPhysics();
