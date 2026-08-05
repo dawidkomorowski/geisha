@@ -630,6 +630,23 @@ internal class SpatialGridTests
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
     }
 
+    [Test]
+    public void QueryPoint_ShouldReturnProxy_WhenCellsAreNonSquare()
+    {
+        // Arrange
+        // Cell size 10x30, so cell width and cell height cannot be swapped for one another. The proxy is stored in cell
+        // (2,0) and the queried point has to map to that same cell to reach it. The point at (25,5) maps to (0,0) if
+        // width and height are swapped, so the query then looks in a cell the proxy was never stored in.
+        var grid = new SpatialGrid<int>(new SizeD(10, 30));
+        var id = grid.CreateProxy(new AABB2D(20, 0, 29, 29), 1);
+
+        // Act
+        var queryResults = QueryPoint(grid, new Vector2(25, 5));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
     #endregion
 
     #region QueryBounds
@@ -809,6 +826,22 @@ internal class SpatialGridTests
 
         // Act
         var queryResults = QueryBounds(grid, new AABB2D(-15, -15, -5, -5));
+
+        // Assert
+        Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnProxyOnlyOnce_WhenCellsAreNonSquare()
+    {
+        // Arrange
+        // Cell size 10x30. The proxy spans 3 columns and 1 row and the query bounds cover all of them, so the proxy is
+        // reachable through several cells at once and must still be reported only once.
+        var grid = new SpatialGrid<int>(new SizeD(10, 30));
+        var id = grid.CreateProxy(new AABB2D(0, 0, 29, 29), 1);
+
+        // Act
+        var queryResults = QueryBounds(grid, new AABB2D(0, 0, 29, 29));
 
         // Assert
         Assert.That(queryResults, Is.EquivalentTo(new[] { id }));
@@ -1022,6 +1055,26 @@ internal class SpatialGridTests
         var grid = new SpatialGrid<int>(10);
         var id1 = grid.CreateProxy(new AABB2D(0, 0, 9, 29), 1); // 1 col wide, 3 rows tall
         var id2 = grid.CreateProxy(new AABB2D(0, 25, 9, 34), 2); // overlaps id1 in row y=2
+
+        // Act
+        var queryResults = QueryOverlappingPairs(grid);
+
+        // Assert
+        AssertPairsEquivalent(queryResults, (id1, id2));
+    }
+
+    [Test]
+    public void QueryOverlappingPairs_ShouldReturnPair_WhenCellsAreNonSquare()
+    {
+        // Arrange
+        // Cell size 10x30, so cell width and cell height cannot be swapped for one another. Both proxies sit in cell
+        // (2,0). A pair is reported from the single cell containing the minimum corner of the proxies' intersection, so
+        // the cell the proxies are stored in and the cell that corner maps to have to be computed the same way. Cells
+        // are addressed here as (2,0) but the corner at (20,10) maps to (0,0) if width and height are swapped, and the
+        // pair is then reported from a cell it is not stored in - that is, never.
+        var grid = new SpatialGrid<int>(new SizeD(10, 30));
+        var id1 = grid.CreateProxy(new AABB2D(20, 0, 29, 20), 1);
+        var id2 = grid.CreateProxy(new AABB2D(20, 10, 29, 29), 2);
 
         // Act
         var queryResults = QueryOverlappingPairs(grid);

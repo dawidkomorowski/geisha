@@ -3,7 +3,7 @@
 Scope: all `TODO` items created, modified or moved by the changes on this branch
 (diff range `master...HEAD`, 95 commits, 32 files changed).
 
-Generated: 2026-07-27 · Updated: 2026-08-03 · Open sections re-derived against `2ba5c18e`
+Generated: 2026-07-27 · Updated: 2026-08-05 · Open sections re-derived against `2ba5c18e`
 
 ---
 
@@ -237,7 +237,8 @@ Gap C; the point of Gap B is the two rows where it read *survives*:
 
 The clamp mutation was caught by `SpatialGridTests` (5 tests) but was invisible to the entire
 physics suite. Both axis swaps survived *every* test in the repo, `SpatialGridTests` included,
-because all 80 of its tests use square cells.
+because all 80 of its tests use square cells. Both are now caught in `SpatialGridTests` as well —
+see [Non-square cells in `SpatialGridTests`](#non-square-cells-in-spatialgridtests-2026-08-05).
 
 One further mutation, `canonicalCell = FindCell(intersection.Max)` instead of `.Min`, survives the
 full suite and was **not** treated as a gap. The canonical cell only has to be *some* cell both
@@ -257,12 +258,39 @@ size invariance with 20 instances). Full unit suite green at 4197.
   no new production API (`GetProxyData` and `GetBodiesSpan` exist, `InternalsVisibleTo` is in
   place). Not added because the behavioural tests already catch every mutation tried; it would be
   the white-box coupling that was explicitly rejected above, for no demonstrated gain.
-- **Non-square cell sizes below `SpatialGrid` level** — `SpatialGridTests` still uses square cells
-  throughout. The axis swaps are now caught at the physics level, but catching them in the grid's
-  own 80 tests would be more direct and cheaper to diagnose. Worth a follow-up, out of scope here.
+- ~~**Non-square cell sizes below `SpatialGrid` level**~~ — **done**, see
+  [Non-square cells in `SpatialGridTests`](#non-square-cells-in-spatialgridtests-2026-08-05).
 - **The known blind spot of metamorphic testing** — a bug that corrupts every cell size equally is
   invisible to invariance tests. Mitigated by the ~4000 absolute assertions elsewhere in the suite,
   not by these tests.
+
+### Non-square cells in `SpatialGridTests` (2026-08-05)
+
+Both axis swaps were caught only at the physics level, three layers above the defect. `SpatialGrid`
+has its own fixture, so the swaps are now caught there too — directly, and with a failure that names
+the grid rather than a collider position.
+
+Three tests added, one per query API, each using cell size `10x30`:
+
+| Test | Catches |
+|---|---|
+| `QueryPoint_ShouldReturnProxy_WhenCellsAreNonSquare` | both axis swaps |
+| `QueryOverlappingPairs_ShouldReturnPair_WhenCellsAreNonSquare` | both axis swaps |
+| `QueryBounds_ShouldReturnProxyOnlyOnce_WhenCellsAreNonSquare` | multi-cell dedup on non-square cells |
+
+The asymmetry in that table is structural, not an oversight. `QueryPoint` locates a point with
+`FindCell` while insertion places proxies with `FindCells`, and `QueryOverlappingPairs` mixes the two
+the same way, so swapping either one makes the pair disagree and the proxy becomes unreachable.
+`QueryBounds` uses `FindCells` for insertion *and* lookup, so a swap applied consistently maps both
+to the same wrong cells and cancels out — the query still finds the proxy. Confirmed by mutation: a
+full swap and a `Max`-only partial swap both leave the `QueryBounds` test green while failing the
+other two.
+
+That test is kept anyway, on its own merit rather than for the axis swaps: it is the only one
+covering `QueryBounds` dedup when a proxy spans several non-square cells, and it fails when the
+`LastQueryId` dedup is removed.
+
+`SpatialGridTests` — 87 tests. Full unit suite green at 4200.
 
 ---
 
