@@ -196,6 +196,27 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
     // for the test to stop being sensitive - two circles of BodyRadius, for example, would overlap by 6 units.
     private static readonly Vector2 BarelyTouchingPosition = FinalPosition + new Vector2(BodyRadius + 4, 0);
 
+    // Asserts that the two bodies touch exactly once and that they do so barely. The contact count rules out the same
+    // pair being reported more than once when the bodies span several cells, while the penetration depth guards the
+    // setup itself: it is the shallow overlap that makes these tests sensitive, and nothing else here would notice if a
+    // change to the bodies deepened it. See BarelyTouchingPosition for how such a change can come about.
+    //
+    // Both colliders are checked, because each of them reports its contacts on its own. The two reports are separate
+    // results and one of them being correct does not make the other one correct.
+    private static void AssertBodiesBarelyTouchOnce(Collider2DComponent collider, Collider2DComponent otherCollider)
+    {
+        AssertColliderBarelyTouchesOnce(collider, otherCollider);
+        AssertColliderBarelyTouchesOnce(otherCollider, collider);
+    }
+
+    private static void AssertColliderBarelyTouchesOnce(Collider2DComponent collider, Collider2DComponent otherCollider)
+    {
+        var contacts = new List<Contact2D>();
+        Assert.That(collider.GetContacts(contacts), Is.EqualTo(1), $"Unexpected number of contacts of {collider}.");
+        Assert.That(contacts[0].OtherCollider, Is.EqualTo(otherCollider));
+        Assert.That(contacts[0].PenetrationDepth, Is.EqualTo(1).Within(Epsilon), "The bodies no longer overlap barely.");
+    }
+
     [Test]
     public void ProcessPhysics_ShouldDetectCollisionWithStaticBody_RegardlessOfHowKinematicBodyReachedItsPosition(
         [ValueSource(nameof(StartOffsets))] double startOffset)
@@ -215,10 +236,7 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(kinematicCollider.IsColliding, Is.True);
         Assert.That(staticCollider.IsColliding, Is.True);
-
-        var contacts = new List<Contact2D>();
-        Assert.That(kinematicCollider.GetContacts(contacts), Is.EqualTo(1));
-        Assert.That(contacts[0].OtherCollider, Is.EqualTo(staticCollider));
+        AssertBodiesBarelyTouchOnce(kinematicCollider, staticCollider);
     }
 
     [Test]
@@ -240,10 +258,7 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(movingCollider.IsColliding, Is.True);
         Assert.That(standingCollider.IsColliding, Is.True);
-
-        var contacts = new List<Contact2D>();
-        Assert.That(movingCollider.GetContacts(contacts), Is.EqualTo(1));
-        Assert.That(contacts[0].OtherCollider, Is.EqualTo(standingCollider));
+        AssertBodiesBarelyTouchOnce(movingCollider, standingCollider);
     }
 
     [TestCase(25)]
@@ -474,9 +489,7 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
 
         // The two bodies share many cells for the smaller cell sizes. Reporting the collision once per shared cell would
         // produce duplicated contacts, so the exact contact count is what pins that down.
-        var contacts = new List<Contact2D>();
-        Assert.That(kinematicCollider.GetContacts(contacts), Is.EqualTo(1));
-        Assert.That(contacts[0].OtherCollider, Is.EqualTo(staticCollider));
+        AssertBodiesBarelyTouchOnce(kinematicCollider, staticCollider);
     }
 
     [Test]
@@ -494,13 +507,7 @@ public class BroadPhaseTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(collider1.IsColliding, Is.True);
         Assert.That(collider2.IsColliding, Is.True);
-
-        var contacts = new List<Contact2D>();
-        Assert.That(collider1.GetContacts(contacts), Is.EqualTo(1));
-        Assert.That(contacts[0].OtherCollider, Is.EqualTo(collider2));
-
-        Assert.That(collider2.GetContacts(contacts), Is.EqualTo(1));
-        Assert.That(contacts[0].OtherCollider, Is.EqualTo(collider1));
+        AssertBodiesBarelyTouchOnce(collider1, collider2);
     }
 
     [Test]
