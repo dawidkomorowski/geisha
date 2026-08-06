@@ -240,6 +240,10 @@ physics suite. Both axis swaps survived *every* test in the repo, `SpatialGridTe
 because all 80 of its tests use square cells. Both are now caught in `SpatialGridTests` as well —
 see [Non-square cells in `SpatialGridTests`](#non-square-cells-in-spatialgridtests-2026-08-05).
 
+Note on the two axis-swap rows: each mutation swaps `Width`/`Height` in *one* function. Swapping
+both `FindCell` and `FindCells` together is an equivalent mutant that no test catches or should
+catch — it merely transposes the whole grid while keeping placement and lookup in agreement.
+
 One further mutation, `canonicalCell = FindCell(intersection.Max)` instead of `.Min`, survives the
 full suite and was **not** treated as a gap. The canonical cell only has to be *some* cell both
 proxies occupy; since each proxy's bounds contain both corners of the intersection and `FindCells`
@@ -267,26 +271,38 @@ size invariance with 20 instances). Full unit suite green at 4197.
 ### Non-square cells in `SpatialGridTests` (2026-08-05)
 
 Both axis swaps were caught only at the physics level, three layers above the defect. `SpatialGrid`
-has its own fixture, so the swaps are now caught there too — directly, and with a failure that names
-the grid rather than a collider position.
+has its own fixture, so they are now caught there too — directly, and with a failure that names the
+grid rather than a collider position.
 
 Three tests added, one per query API, each using cell size `10x30`:
 
 | Test | Catches |
 |---|---|
-| `QueryPoint_ShouldReturnProxy_WhenCellsAreNonSquare` | both axis swaps |
-| `QueryOverlappingPairs_ShouldReturnPair_WhenCellsAreNonSquare` | both axis swaps |
+| `QueryPoint_ShouldReturnProxy_WhenCellsAreNonSquare` | axis swap in `FindCell` or `FindCells`, individually |
+| `QueryOverlappingPairs_ShouldReturnPair_WhenCellsAreNonSquare` | axis swap in `FindCell` or `FindCells`, individually |
 | `QueryBounds_ShouldReturnProxyOnlyOnce_WhenCellsAreNonSquare` | multi-cell dedup on non-square cells |
 
-The asymmetry in that table is structural, not an oversight. `QueryPoint` locates a point with
-`FindCell` while insertion places proxies with `FindCells`, and `QueryOverlappingPairs` mixes the two
-the same way, so swapping either one makes the pair disagree and the proxy becomes unreachable.
-`QueryBounds` uses `FindCells` for insertion *and* lookup, so a swap applied consistently maps both
-to the same wrong cells and cancels out — the query still finds the proxy. Confirmed by mutation: a
-full swap and a `Max`-only partial swap both leave the `QueryBounds` test green while failing the
-other two.
+**What these tests actually detect is disagreement between `FindCell` and `FindCells`, not the axis
+swap itself.** Applying the swap to *both* functions leaves all 87 tests green, because a uniformly
+transposed grid is still a coherent grid — every proxy is stored and looked up under the same
+addressing, so nothing observable changes. That is an equivalent mutant, the same category as the
+`canonicalCell = .Max` case above. What the tests catch is a swap in *one* function, which
+desynchronizes placement from lookup. Since that is the realistic typo, the tests are worth having —
+but the property they pin is consistency, not orientation.
 
-That test is kept anyway, on its own merit rather than for the axis swaps: it is the only one
+The mechanism differs per API and is worth stating precisely, because it is easy to get wrong:
+
+- `QueryPoint` — proxies are placed by `FindCells`, the point is located by `FindCell`. A swap in
+  either sends the query to a cell the proxy was never stored in.
+- `QueryOverlappingPairs` — placement is by `FindCells`, but the pair is reported only from the cell
+  matching `FindCell(intersection.Min)` (`SpatialGrid.cs:599-602`). Both proxies stay in the same
+  cell under a swap; what breaks is that the canonical cell moves elsewhere, so the pair is reported
+  from a cell it is not stored in — that is, never.
+- `QueryBounds` — uses `FindCells` for placement *and* lookup, so any swap applied there is
+  self-consistent by construction and cancels out. Confirmed: both a full swap and a `Max`-only
+  partial swap leave this test green while failing the other two.
+
+The `QueryBounds` test is kept on its own merit rather than for the axis swaps: it is the only one
 covering `QueryBounds` dedup when a proxy spans several non-square cells, and it fails when the
 `LastQueryId` dedup is removed.
 
