@@ -280,7 +280,6 @@ internal struct PhysicsSceneData
 
         var denseIndex = bodyIndicesSpan[id.Index].DenseIndex;
 
-        // TODO: How to test that proxy is destroyed when body is destroyed?
         switch (body.Type)
         {
             case BodyType.Static:

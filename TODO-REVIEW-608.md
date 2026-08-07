@@ -3,23 +3,22 @@
 Scope: all `TODO` items created, modified or moved by the changes on this branch
 (diff range `master...HEAD`, 95 commits, 32 files changed).
 
-Generated: 2026-07-27 · Updated: 2026-08-05 · Open sections re-derived against `2ba5c18e`
+Generated: 2026-07-27 · Updated: 2026-08-07 · Open sections re-derived against `7e9090d8`
 
 ---
 
-## New TODOs added on this branch (1 open, 5 postponed)
+## New TODOs added on this branch (0 open, 5 postponed)
 
-### `src/Geisha.Engine/Physics/PhysicsEngine2D/Internal/PhysicsSceneData.cs`
-
-| Line | TODO |
-|---|---|
-| 283 | How to test that proxy is destroyed when body is destroyed? |
-
+`PhysicsSceneData.cs:283` — "How to test that proxy is destroyed when body is destroyed?" — is
+**resolved**, see
+[Resolved: proxy destruction](#resolved-physicsscenedatacs283--proxy-destruction-2026-08-07).
 `BroadPhase.cs:9` and `SceneQuery.cs:10` — the two "review related tests" markers — are
 **resolved**, see [Resolved](#resolved-broadphasecs9-and-scenequerycs10--review-related-tests).
 `SpatialGrid.cs:800`, `BroadPhase.cs:84`, `BroadPhase.cs:123`, `SceneQuery.cs:111` and
 `SimulationPipeline.cs:25` were moved to
 [Postponed to the future](#postponed-to-the-future-out-of-scope-for-this-branch).
+
+No TODO added on this branch remains open.
 
 ---
 
@@ -62,7 +61,8 @@ pre-existing and only line 25 is new.
      **done**; the file now contains no TODOs at all. See Resolved.
    - `BroadPhase.cs:9` and `SceneQuery.cs:10` — "review related tests" markers, now
      **done**; both comments are gone. See Resolved.
-   - `PhysicsSceneData.cs:283` — open question about testing proxy destruction.
+   - `PhysicsSceneData.cs:283` — proxy destruction, now **done**; the comment is gone. See
+     [Resolved: proxy destruction](#resolved-physicsscenedatacs283--proxy-destruction-2026-08-07).
 
 2. **Blocked on .NET 9 / C# 13 (ref fields + ref struct interfaces)**
    Three new `ProxyQueryHandler` TODOs (`BroadPhase.cs:84`, `BroadPhase.cs:123`,
@@ -307,6 +307,69 @@ covering `QueryBounds` dedup when a proxy spans several non-square cells, and it
 `LastQueryId` dedup is removed.
 
 `SpatialGridTests` — 87 tests. Full unit suite green at 4200.
+
+---
+
+## Resolved: `PhysicsSceneData.cs:283` — proxy destruction (2026-08-07)
+
+The TODO asked how to test that a body's spatial proxy is destroyed together with the body. It is
+removed; the behaviour is now covered by
+`IntegrityTest_WhenMultipleCollidingBodiesAreCreatedAndDestroyed` (`7e9090d8`).
+
+### Why the existing coverage was not enough
+
+Two mutations sit in this `switch`. The first — deleting `StaticGrid.DestroyProxy` — was already
+caught by 368 tests, so it looked covered. The second was not, and the reason is structural:
+
+```csharp
+if (_kinematicBodyCount > 0 && denseIndex < _staticBodyCount)
+{
+    SwapBodies(_staticBodyCount, denseIndex);
+    denseIndex = _staticBodyCount;
+    body = ref bodiesSpan[denseIndex];   // dropping this line destroys the wrong proxy
+}
+```
+
+Both conditions must hold to reach the rebind: kinematic bodies must exist, *and* the destroyed
+static must not be the last one. `IntegrityTest` had four kinematic bodies and **no static bodies**,
+so `case BodyType.Static` never ran there at all.
+
+Dropping the rebind did fail 12 tests, but all 12 failed in `PhysicsSystemTestsBase.TearDown` —
+`Scene.RemoveObserver` tears down every body, and some fixtures happen to have a static-plus-kinematic
+population. That is incidental coverage: it reports `TearDown : Invalid proxy id` from tests about
+ghost collisions and normal filtering, none of which destroy a body in their own act. It would
+disappear with any change to teardown ordering.
+
+### What was added
+
+Four static bodies on the diagonals of the existing four-kinematic layout, at `(±75, ±75)` with
+rotations 0.5–0.8, each straddling two adjacent kinematic bodies. Every kinematic body goes from 2 to
+4 contacts; every static has 2. Eight new acts (9–16) cycle all four statics through
+destroy → assert → `ProcessPhysics` → assert → recreate → assert, mirroring the four kinematic rounds.
+
+The overlap property the test was built on is preserved and strengthened: because each static touches
+two kinematic bodies, destroying one splices two contact lists rather than one.
+
+**Cycling all four statics is what makes the test insensitive to ordering.** Only destroying the
+last-created static skips the swap branch, so 3 of the 4 rounds reach it regardless of the order
+chosen. A single round would have to destroy a specific static — a precondition a later edit could
+silently break.
+
+| Mutation | Before | After |
+|---|---|---|
+| `StaticGrid.DestroyProxy` deleted | caught, but not by this test's own acts | fails in Act 0 |
+| `body = ref bodiesSpan[denseIndex]` rebind dropped | **passed this test**; caught only in shared teardown elsewhere | fails in Act 9.2 |
+
+Full unit suite green at 4200.
+
+### Caveat
+
+Both mutations surface as a thrown `ArgumentException: Invalid Rigid Body ID` from
+`BroadPhase.DetectCollisions_Kinematic_Vs_Static`, not as a failed assertion. That is inherent to how
+a leaked or misdirected proxy becomes observable through the public API: the contact assertions pin
+contact bookkeeping, while proxy lifetime rides on the simulation not throwing. The alternative — a
+white-box `IsValidProxy` teardown check — is the coupling rejected under
+[Deliberately not pursued](#deliberately-not-pursued).
 
 ---
 
