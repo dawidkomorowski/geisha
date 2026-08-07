@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
@@ -829,9 +830,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertKinematicBody1Destroyed();
 
         // Act 2
-        var transform1 = kinematicBody1.CreateComponent<Transform2DComponent>();
-        transform1.Translation = new Vector2(-75, 0);
-        transform1.Rotation = 0.1;
+        RecreateTransform(kinematicBody1, -75, 0, 0.1);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 2);
@@ -853,9 +852,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertKinematicBody2Destroyed();
 
         // Act 4
-        var transform2 = kinematicBody2.CreateComponent<Transform2DComponent>();
-        transform2.Translation = new Vector2(0, 75);
-        transform2.Rotation = 0.2;
+        RecreateTransform(kinematicBody2, 0, 75, 0.2);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 4);
@@ -877,9 +874,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertKinematicBody3Destroyed();
 
         // Act 6
-        var transform3 = kinematicBody3.CreateComponent<Transform2DComponent>();
-        transform3.Translation = new Vector2(75, 0);
-        transform3.Rotation = 0.3;
+        RecreateTransform(kinematicBody3, 75, 0, 0.3);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 6);
@@ -901,9 +896,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertKinematicBody4Destroyed();
 
         // Act 8
-        var transform4 = kinematicBody4.CreateComponent<Transform2DComponent>();
-        transform4.Translation = new Vector2(0, -75);
-        transform4.Rotation = 0.4;
+        RecreateTransform(kinematicBody4, 0, -75, 0.4);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 8);
@@ -925,9 +918,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertStaticBody1Destroyed();
 
         // Act 10
-        var staticTransform1 = staticBody1.CreateComponent<Transform2DComponent>();
-        staticTransform1.Translation = new Vector2(-75, 75);
-        staticTransform1.Rotation = 0.5;
+        RecreateTransform(staticBody1, -75, 75, 0.5);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 10);
@@ -949,9 +940,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertStaticBody2Destroyed();
 
         // Act 12
-        var staticTransform2 = staticBody2.CreateComponent<Transform2DComponent>();
-        staticTransform2.Translation = new Vector2(75, 75);
-        staticTransform2.Rotation = 0.6;
+        RecreateTransform(staticBody2, 75, 75, 0.6);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 12);
@@ -973,9 +962,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertStaticBody3Destroyed();
 
         // Act 14
-        var staticTransform3 = staticBody3.CreateComponent<Transform2DComponent>();
-        staticTransform3.Translation = new Vector2(75, -75);
-        staticTransform3.Rotation = 0.7;
+        RecreateTransform(staticBody3, 75, -75, 0.7);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 14);
@@ -997,9 +984,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertStaticBody4Destroyed();
 
         // Act 16
-        var staticTransform4 = staticBody4.CreateComponent<Transform2DComponent>();
-        staticTransform4.Translation = new Vector2(-75, -75);
-        staticTransform4.Rotation = 0.8;
+        RecreateTransform(staticBody4, -75, -75, 0.8);
 
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 16);
@@ -1008,6 +993,15 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         AssertFullLayout();
 
         return;
+
+        // Gives the body back the transform that was removed to destroy it, restoring its place in the ring. Scale is left
+        // at its default, which is what the body was created with.
+        static void RecreateTransform(Entity body, double x, double y, double rotation)
+        {
+            var transform = body.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+            transform.Rotation = rotation;
+        }
 
         // Asserts the complete ring of eight bodies, the state every round starts from and returns to.
         void AssertFullLayout()
