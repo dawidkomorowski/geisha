@@ -756,8 +756,30 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
     #endregion
 
+    // This test guards the bookkeeping that creating and destroying bodies has to keep consistent: the contact lists of
+    // the bodies involved, and the internal layout of the bodies themselves. It does that by keeping every body
+    // overlapping several others, so each create and destroy has to splice contacts rather than merely add or drop an
+    // isolated body, and then destroying and recreating every body in turn while asserting the complete contact graph
+    // after each step.
+    //
+    // The layout is a ring of eight bodies: four kinematic ones on the axes and four static ones on the diagonals, with
+    // each body overlapping its two neighbours. Every kinematic body therefore has four contacts and every static body
+    // two. Removing any single body leaves its neighbours with contacts to splice while the body opposite it keeps all of
+    // its own, so a splice that removes too much or too little shows up as a wrong count somewhere in the ring.
+    //
+    // Static bodies are not just more of the same. Static and kinematic bodies are kept apart in the internal layout, so
+    // destroying a static body while kinematic bodies exist has to relocate the surviving static ones, and no amount of
+    // kinematic churn reaches that path. Cycling through all four static bodies also keeps the test insensitive to the
+    // order they are destroyed in: only destroying the last created static body leaves the surviving ones in place, so no
+    // single reordering can turn every round into that case.
+    //
+    // Each round asserts twice, before and after ProcessPhysics, because the two assertions say different things: the
+    // first that removal took effect immediately, the second that simulating a frame afterwards left that result alone.
+    // Rotations differ per body and never change, so they double as a check that components stayed bound to the internal
+    // bodies they were created with.
     [Test]
-    [Description("This test stresses body removal that forces updates to existing contacts.")]
+    [Description(
+        "This test stresses creation and destruction of overlapping static and kinematic bodies, which forces updates to existing contacts and relocation of the internal bodies layout.")]
     public void IntegrityTest_WhenMultipleCollidingBodiesAreCreatedAndDestroyed()
     {
         // Arrange
@@ -768,13 +790,6 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         var kinematicBody3 = CreateRectangleKinematicBody(75, 0, 100, 100, 0.3);
         var kinematicBody4 = CreateRectangleKinematicBody(0, -75, 100, 100, 0.4);
 
-        // Static bodies are placed on the diagonals, so each of them overlaps two neighbouring kinematic bodies. This
-        // keeps contacts appearing and disappearing as static bodies are created and destroyed, the same way they do for
-        // kinematic bodies. It also means that destroying a static body has to relocate the surviving ones, because
-        // static and kinematic bodies are kept apart internally, and that relocation is what the static rounds below
-        // exercise. Cycling through all four of them makes the test insensitive to the order they are destroyed in: only
-        // destroying the last created static body leaves the surviving ones in place, so no single reordering can turn
-        // every round into that case.
         var staticBody1 = CreateRectangleStaticBody(-75, 75, 100, 100, 0.5);
         var staticBody2 = CreateRectangleStaticBody(75, 75, 100, 100, 0.6);
         var staticBody3 = CreateRectangleStaticBody(75, -75, 100, 100, 0.7);
