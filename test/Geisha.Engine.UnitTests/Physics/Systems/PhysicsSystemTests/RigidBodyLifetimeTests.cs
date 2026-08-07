@@ -773,10 +773,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     // order they are destroyed in: only destroying the last created static body leaves the surviving ones in place, so no
     // single reordering can turn every round into that case.
     //
-    // Each round asserts twice, before and after ProcessPhysics, because the two assertions say different things: the
-    // first that removal took effect immediately, the second that simulating a frame afterwards left that result alone.
-    // Rotations differ per body and never change, so they double as a check that components stayed bound to the internal
-    // bodies they were created with.
+    // Each round asserts the same expected state twice, before and after ProcessPhysics. Destruction takes effect
+    // immediately, when the entity loses the components that represent a body, so the expected state is identical at both
+    // points; what differs is when it is checked. The first call asserts that removal took effect right away, the second
+    // that simulating a frame afterwards left that result alone. Rotations differ per body and never change, so they
+    // double as a check that components stayed bound to the internal bodies they were created with.
+    //
+    // The expected numbers of each state are written out as literals in a helper per round, rather than derived from the
+    // ring layout, so that a misunderstanding of the layout cannot cancel out an engine bug.
     [Test]
     [Description(
         "This test stresses creation and destruction of overlapping static and kinematic bodies, which forces updates to existing contacts and relocation of the internal bodies layout.")]
@@ -815,55 +819,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<Transform2DComponent>());
 
         // Assert 1.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(0));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(1));
-
-        AssertContacts(kinematicCollider2, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider4);
+        AssertKinematicBody1Destroyed();
 
         // Act 1.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 1);
 
         // Assert 1.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(0));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(1));
-
-        AssertContacts(kinematicCollider2, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider4);
+        AssertKinematicBody1Destroyed();
 
         // Act 2
         var transform1 = kinematicBody1.CreateComponent<Transform2DComponent>();
@@ -880,55 +843,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         kinematicBody2.RemoveComponent(kinematicBody2.GetComponent<Transform2DComponent>());
 
         // Assert 3.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(0));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider3, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1);
-        AssertContacts(staticCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertKinematicBody2Destroyed();
 
         // Act 3.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 3);
 
         // Assert 3.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(0));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider3, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1);
-        AssertContacts(staticCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertKinematicBody2Destroyed();
 
         // Act 4
         var transform2 = kinematicBody2.CreateComponent<Transform2DComponent>();
@@ -945,55 +867,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         kinematicBody3.RemoveComponent(kinematicBody3.GetComponent<Transform2DComponent>());
 
         // Assert 5.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(0));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider4, kinematicCollider1, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2);
-        AssertContacts(staticCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertKinematicBody3Destroyed();
 
         // Act 5.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 5);
 
         // Assert 5.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(0));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider4, kinematicCollider1, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2);
-        AssertContacts(staticCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertKinematicBody3Destroyed();
 
         // Act 6
         var transform3 = kinematicBody3.CreateComponent<Transform2DComponent>();
@@ -1010,55 +891,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         kinematicBody4.RemoveComponent(kinematicBody4.GetComponent<Transform2DComponent>());
 
         // Assert 7.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(1));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, staticCollider2, staticCollider3);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3);
-        AssertContacts(staticCollider4, kinematicCollider1);
+        AssertKinematicBody4Destroyed();
 
         // Act 7.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 7);
 
         // Assert 7.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(1));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(1));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, staticCollider2, staticCollider3);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3);
-        AssertContacts(staticCollider4, kinematicCollider1);
+        AssertKinematicBody4Destroyed();
 
         // Act 8
         var transform4 = kinematicBody4.CreateComponent<Transform2DComponent>();
@@ -1075,55 +915,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         staticBody1.RemoveComponent(staticBody1.GetComponent<Transform2DComponent>());
 
         // Assert 9.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertStaticBody1Destroyed();
 
         // Act 9.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 9);
 
         // Assert 9.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertStaticBody1Destroyed();
 
         // Act 10
         var staticTransform1 = staticBody1.CreateComponent<Transform2DComponent>();
@@ -1140,55 +939,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         staticBody2.RemoveComponent(staticBody2.GetComponent<Transform2DComponent>());
 
         // Assert 11.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertStaticBody2Destroyed();
 
         // Act 11.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 11);
 
         // Assert 11.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertStaticBody2Destroyed();
 
         // Act 12
         var staticTransform2 = staticBody2.CreateComponent<Transform2DComponent>();
@@ -1205,55 +963,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         staticBody3.RemoveComponent(staticBody3.GetComponent<Transform2DComponent>());
 
         // Assert 13.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertStaticBody3Destroyed();
 
         // Act 13.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 13);
 
         // Assert 13.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(0));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider4);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        AssertStaticBody3Destroyed();
 
         // Act 14
         var staticTransform3 = staticBody3.CreateComponent<Transform2DComponent>();
@@ -1270,55 +987,14 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         staticBody4.RemoveComponent(staticBody4.GetComponent<Transform2DComponent>());
 
         // Assert 15.1
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(0));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
+        AssertStaticBody4Destroyed();
 
         // Act 15.2
         physicsSystem.ProcessPhysics();
         SaveVisualOutput(physicsSystem, 15);
 
         // Assert 15.2
-        Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
-
-        // Check that components are correctly linked to internal rigid bodies.
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
-        Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
-        Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
-        Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
-        Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
-        Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
-
-        Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
-        Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
-        Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
-        Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
-        Assert.That(staticCollider4.ContactCount, Is.EqualTo(0));
-
-        AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1);
-        AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
-        AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
-        AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3);
-        AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
-        AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
-        AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
+        AssertStaticBody4Destroyed();
 
         // Act 16
         var staticTransform4 = staticBody4.CreateComponent<Transform2DComponent>();
@@ -1365,6 +1041,241 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
             AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
             AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
             AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        }
+
+        // One helper per round, asserting the state left behind by destroying that one body. Each is called twice, before
+        // and after ProcessPhysics, because destruction takes effect immediately and simulating a frame must not disturb
+        // it. The destroyed body is the one missing from the rotation checks and the one expected to have no contacts.
+        void AssertKinematicBody1Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(0));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(1));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(1));
+
+            AssertContacts(kinematicCollider2, kinematicCollider3, staticCollider1, staticCollider2);
+            AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
+            AssertContacts(kinematicCollider4, kinematicCollider3, staticCollider3, staticCollider4);
+            AssertContacts(staticCollider1, kinematicCollider2);
+            AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
+            AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
+            AssertContacts(staticCollider4, kinematicCollider4);
+        }
+
+        void AssertKinematicBody2Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(0));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(1));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(1));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
+
+            AssertContacts(kinematicCollider1, kinematicCollider4, staticCollider1, staticCollider4);
+            AssertContacts(kinematicCollider3, kinematicCollider4, staticCollider2, staticCollider3);
+            AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
+            AssertContacts(staticCollider1, kinematicCollider1);
+            AssertContacts(staticCollider2, kinematicCollider3);
+            AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
+            AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        }
+
+        void AssertKinematicBody3Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(0));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(1));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(1));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
+
+            AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
+            AssertContacts(kinematicCollider2, kinematicCollider1, staticCollider1, staticCollider2);
+            AssertContacts(kinematicCollider4, kinematicCollider1, staticCollider3, staticCollider4);
+            AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
+            AssertContacts(staticCollider2, kinematicCollider2);
+            AssertContacts(staticCollider3, kinematicCollider4);
+            AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        }
+
+        void AssertKinematicBody4Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(0));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(1));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(1));
+
+            AssertContacts(kinematicCollider1, kinematicCollider2, staticCollider1, staticCollider4);
+            AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
+            AssertContacts(kinematicCollider3, kinematicCollider2, staticCollider2, staticCollider3);
+            AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
+            AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
+            AssertContacts(staticCollider3, kinematicCollider3);
+            AssertContacts(staticCollider4, kinematicCollider1);
+        }
+
+        void AssertStaticBody1Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(0));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
+
+            AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider4);
+            AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider2);
+            AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
+            AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
+            AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
+            AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
+            AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        }
+
+        void AssertStaticBody2Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(4));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(0));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
+
+            AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
+            AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1);
+            AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider3);
+            AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3, staticCollider4);
+            AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
+            AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
+            AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        }
+
+        void AssertStaticBody3Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.8));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(0));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(2));
+
+            AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1, staticCollider4);
+            AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
+            AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2);
+            AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider4);
+            AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
+            AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
+            AssertContacts(staticCollider4, kinematicCollider1, kinematicCollider4);
+        }
+
+        void AssertStaticBody4Destroyed()
+        {
+            Assert.That(physicsSystem.PhysicsScene2D.Bodies.Count, Is.EqualTo(7));
+            Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.1));
+            Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.2));
+            Assert.That(kinematicBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.3));
+            Assert.That(kinematicBody4.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.4));
+            Assert.That(staticBody1.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.5));
+            Assert.That(staticBody2.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.6));
+            Assert.That(staticBody3.GetComponent<Transform2DComponent>().Rotation, Is.EqualTo(0.7));
+
+            Assert.That(kinematicCollider1.ContactCount, Is.EqualTo(3));
+            Assert.That(kinematicCollider2.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider3.ContactCount, Is.EqualTo(4));
+            Assert.That(kinematicCollider4.ContactCount, Is.EqualTo(3));
+            Assert.That(staticCollider1.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider2.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider3.ContactCount, Is.EqualTo(2));
+            Assert.That(staticCollider4.ContactCount, Is.EqualTo(0));
+
+            AssertContacts(kinematicCollider1, kinematicCollider2, kinematicCollider4, staticCollider1);
+            AssertContacts(kinematicCollider2, kinematicCollider1, kinematicCollider3, staticCollider1, staticCollider2);
+            AssertContacts(kinematicCollider3, kinematicCollider2, kinematicCollider4, staticCollider2, staticCollider3);
+            AssertContacts(kinematicCollider4, kinematicCollider1, kinematicCollider3, staticCollider3);
+            AssertContacts(staticCollider1, kinematicCollider1, kinematicCollider2);
+            AssertContacts(staticCollider2, kinematicCollider2, kinematicCollider3);
+            AssertContacts(staticCollider3, kinematicCollider3, kinematicCollider4);
         }
 
         static void AssertContacts(Collider2DComponent collider, params Collider2DComponent[] collidersInContact)
