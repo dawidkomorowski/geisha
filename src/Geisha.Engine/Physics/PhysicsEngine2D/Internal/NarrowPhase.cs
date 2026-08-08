@@ -3,8 +3,6 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
-// Watch out with refactoring this class! It is performance critical and should be kept as fast as possible.
-// Trivial refactorings like combining methods or extracting methods can have a significant impact on performance.
 internal static class NarrowPhase
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -43,9 +41,11 @@ internal static class NarrowPhase
         }
     }
 
-    // TODO: Once broad phase is implemented in scope of https://github.com/dawidkomorowski/geisha/issues/608 the collider type switch logic could be investigated
-    //       for deduplication - it will no longer be so hot path. Maybe there is some way to group all switch/case logic in single place for these type of operations.
-    //       It could also benefit ContactManager as it also tests for combinations of colliding pairs.
+    // TODO: The collider type dispatch is duplicated across TestOverlap, TestOverlapWithMtv and ContactManager.ComputeManifold,
+    //       each enumerating the same combinations of collider pairs. There is no obvious way to deduplicate it without deeper
+    //       design work, likely introducing some auxiliary generic shape representation to dispatch on, so it is left as is for
+    //       now. Worth revisiting as the number of supported geometry shapes grows, since each new shape adds a row and a column
+    //       to every one of these dispatches. Keep in mind that this is a hot path and the current shape is deliberate.
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static bool TestOverlap(ref RigidBodyData body1, ref RigidBodyData body2)
     {
