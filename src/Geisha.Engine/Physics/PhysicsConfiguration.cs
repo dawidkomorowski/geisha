@@ -9,7 +9,8 @@ namespace Geisha.Engine.Physics;
 public sealed record PhysicsConfiguration
 {
     /// <summary>
-    ///     Defines how many substeps are performed during physics simulation per each game loop fixed update.
+    ///     Defines how many substeps are performed during physics simulation per each game loop fixed update. Default is
+    ///     <c>1</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -26,7 +27,7 @@ public sealed record PhysicsConfiguration
 
     /// <summary>
     ///     Defines how many iterations of velocity constraint solver are performed during physics simulation per each physics
-    ///     step (or substep).
+    ///     step (or substep). Default is <c>4</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -43,7 +44,7 @@ public sealed record PhysicsConfiguration
 
     /// <summary>
     ///     Defines how many iterations of position constraint solver are performed during physics simulation per each physics
-    ///     step (or substep).
+    ///     step (or substep). Default is <c>4</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -59,7 +60,7 @@ public sealed record PhysicsConfiguration
     public int PositionIterations { get; init; } = 4;
 
     /// <summary>
-    ///     Defines a tolerance for penetration resolution in physics simulation.
+    ///     Defines a tolerance for penetration resolution in physics simulation. Default is <c>0.01</c>.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -78,12 +79,42 @@ public sealed record PhysicsConfiguration
     /// <summary>
     ///     Specifies the tile size used by the physics engine. The physics engine allows defining tile-based collision
     ///     geometry and this property represents the size of a single rectangular tile. Tile size is defined in meters.
+    ///     Default is <c>1 x 1</c>.
     /// </summary>
     /// <seealso cref="Components.TileColliderComponent" />
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     /// <summary>
-    ///     Indicates whether physics debug rendering is enabled.
+    ///     Specifies the size of a single cell of the uniform grid used by the broad phase of the physics engine. Cell size
+    ///     is defined in meters. Default is <c>256 x 256</c>.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Before checking pairs of bodies for actual collisions, the physics engine uses a uniform grid to narrow down
+    ///         the set of candidate pairs to those that are close to each other. Each body is indexed in every cell its
+    ///         bounding box overlaps. This property controls the size of those cells and therefore how bodies are
+    ///         distributed among them. It affects performance of collision detection and physics scene queries, but not the
+    ///         outcome of the simulation.
+    ///     </para>
+    ///     <para>
+    ///         Cell size that is large relative to the bodies in the scene results in fewer occupied cells, but more bodies
+    ///         per cell, so more candidate pairs reach the more expensive exact collision checks. Cell size that is small
+    ///         relative to the bodies results in each body being indexed in more cells, which increases the cost of keeping
+    ///         the grid up to date as bodies move. The most suitable value depends on the size and spatial distribution of
+    ///         bodies in a particular game, so it is best established by measurement.
+    ///     </para>
+    ///     <para>
+    ///         Both dimensions must be greater than zero. The physics system throws
+    ///         <see cref="System.ArgumentException" /> during initialization when this requirement is not met.
+    ///     </para>
+    ///     <para>
+    ///         This value is applied when the physics system is created and it cannot be changed afterwards.
+    ///     </para>
+    /// </remarks>
+    public SizeD BroadPhaseGridCellSize { get; init; } = new(256, 256);
+
+    /// <summary>
+    ///     Indicates whether physics debug rendering is enabled. Default is <c>false</c>.
     /// </summary>
     /// <remarks>
     ///     <para>

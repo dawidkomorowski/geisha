@@ -251,6 +251,72 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         }
     }
 
+    // Static and kinematic bodies are registered in two separate broad-phase grids, so a query must gather candidates
+    // from both of them. The tests below pin that routing: without the kinematic body the dynamic grid is never queried
+    // and a scene containing only kinematic bodies would silently return no results.
+    [Test]
+    public void QueryPoint_ShouldReturnKinematicCollider_WhenSceneHasNoStaticBodies()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToQuery = Vector2.Zero;
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryPoint(pointToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(1));
+        Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldReturnBothColliders_WhenStaticAndKinematicBodyMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var staticCollider = CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateRectangleKinematicBody(0, 0, 20, 10).GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var pointToQuery = Vector2.Zero;
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryPoint(pointToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(2));
+        Assert.That(colliders, Is.EquivalentTo(new Collider2DComponent[] { staticCollider, kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryPoint_ShouldNotReturnKinematicCollider_WhenItDoesNotMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        // The broad-phase proxy of a kinematic body uses an AABB twice as big as the collider, so this point is inside
+        // the proxy bounds but outside the collider. It verifies that gathered candidates are still tested exactly.
+        var pointToQuery = new Vector2(15, 0);
+        var colliders = new List<Collider2DComponent>();
+
+        // Assume
+        Assert.That(kinematicCollider.ContainsPoint(pointToQuery), Is.False);
+
+        // Act
+        var written = physicsSystem.QueryPoint(pointToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.Zero);
+        Assert.That(colliders, Is.Empty);
+    }
+
     #endregion
 
     #region QueryBounds
@@ -463,6 +529,73 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         {
             Assert.That(colliders[0], Is.EqualTo(collider));
         }
+    }
+
+    // Static and kinematic bodies are registered in two separate broad-phase grids, so a query must gather candidates
+    // from both of them. The tests below pin that routing: without the kinematic body the dynamic grid is never queried
+    // and a scene containing only kinematic bodies would silently return no results.
+    [Test]
+    public void QueryBounds_ShouldReturnKinematicCollider_WhenSceneHasNoStaticBodies()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 4, 4);
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryBounds(aabbToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(1));
+        Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldReturnBothColliders_WhenStaticAndKinematicBodyMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var staticCollider = CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateRectangleKinematicBody(0, 0, 20, 10).GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 4, 4);
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryBounds(aabbToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(2));
+        Assert.That(colliders, Is.EquivalentTo(new Collider2DComponent[] { staticCollider, kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryBounds_ShouldNotReturnKinematicCollider_WhenItDoesNotMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        // The broad-phase proxy of a kinematic body uses an AABB twice as big as the collider, so these query bounds
+        // overlap the proxy bounds but not the collider bounding box. It verifies that gathered candidates are still
+        // tested exactly.
+        var aabbToQuery = AABB2D.FromCenterAndSize(15, 0, 4, 4);
+        var colliders = new List<Collider2DComponent>();
+
+        // Assume
+        Assert.That(kinematicCollider.BoundingBox.Overlaps(aabbToQuery), Is.False);
+
+        // Act
+        var written = physicsSystem.QueryBounds(aabbToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.Zero);
+        Assert.That(colliders, Is.Empty);
     }
 
     #endregion
@@ -699,6 +832,72 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         }
     }
 
+    // Static and kinematic bodies are registered in two separate broad-phase grids, so a query must gather candidates
+    // from both of them. The tests below pin that routing: without the kinematic body the dynamic grid is never queried
+    // and a scene containing only kinematic bodies would silently return no results.
+    [Test]
+    public void QueryOverlap_AABB_ShouldReturnKinematicCollider_WhenSceneHasNoStaticBodies()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 4, 4);
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryOverlap(aabbToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(1));
+        Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryOverlap_AABB_ShouldReturnBothColliders_WhenStaticAndKinematicBodyMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var staticCollider = CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateRectangleKinematicBody(0, 0, 20, 10).GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var aabbToQuery = AABB2D.FromCenterAndSize(0, 0, 4, 4);
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryOverlap(aabbToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(2));
+        Assert.That(colliders, Is.EquivalentTo(new Collider2DComponent[] { staticCollider, kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryOverlap_AABB_ShouldNotReturnKinematicCollider_WhenItDoesNotMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        // The broad-phase proxy of a kinematic body uses an AABB twice as big as the collider, so these query bounds
+        // overlap the proxy bounds but not the collider. It verifies that gathered candidates are still tested exactly.
+        var aabbToQuery = AABB2D.FromCenterAndSize(15, 0, 4, 4);
+        var colliders = new List<Collider2DComponent>();
+
+        // Assume
+        Assert.That(kinematicCollider.Overlaps(aabbToQuery), Is.False);
+
+        // Act
+        var written = physicsSystem.QueryOverlap(aabbToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.Zero);
+        Assert.That(colliders, Is.Empty);
+    }
+
     #endregion
 
     #region QueryOverlap Circle
@@ -931,6 +1130,72 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         {
             Assert.That(colliders[0], Is.EqualTo(collider));
         }
+    }
+
+    // Static and kinematic bodies are registered in two separate broad-phase grids, so a query must gather candidates
+    // from both of them. The tests below pin that routing: without the kinematic body the dynamic grid is never queried
+    // and a scene containing only kinematic bodies would silently return no results.
+    [Test]
+    public void QueryOverlap_Circle_ShouldReturnKinematicCollider_WhenSceneHasNoStaticBodies()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToQuery = new Circle(Vector2.Zero, 2);
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryOverlap(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(1));
+        Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryOverlap_Circle_ShouldReturnBothColliders_WhenStaticAndKinematicBodyMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var staticCollider = CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateRectangleKinematicBody(0, 0, 20, 10).GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var circleToQuery = new Circle(Vector2.Zero, 2);
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryOverlap(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(2));
+        Assert.That(colliders, Is.EquivalentTo(new Collider2DComponent[] { staticCollider, kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryOverlap_Circle_ShouldNotReturnKinematicCollider_WhenItDoesNotMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        // The broad-phase proxy of a kinematic body uses an AABB twice as big as the collider, so this circle overlaps
+        // the proxy bounds but not the collider. It verifies that gathered candidates are still tested exactly.
+        var circleToQuery = new Circle(new Vector2(15, 0), 2);
+        var colliders = new List<Collider2DComponent>();
+
+        // Assume
+        Assert.That(kinematicCollider.Overlaps(circleToQuery), Is.False);
+
+        // Act
+        var written = physicsSystem.QueryOverlap(circleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.Zero);
+        Assert.That(colliders, Is.Empty);
     }
 
     #endregion
@@ -1212,6 +1477,72 @@ public class SceneQueryTests : PhysicsSystemTestsBase
         {
             Assert.That(colliders[0], Is.EqualTo(collider));
         }
+    }
+
+    // Static and kinematic bodies are registered in two separate broad-phase grids, so a query must gather candidates
+    // from both of them. The tests below pin that routing: without the kinematic body the dynamic grid is never queried
+    // and a scene containing only kinematic bodies would silently return no results.
+    [Test]
+    public void QueryOverlap_Rectangle_ShouldReturnKinematicCollider_WhenSceneHasNoStaticBodies()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = CreateQueryRectangleData(0, 0, 4, 4, 0).QueryRectangle;
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(1));
+        Assert.That(colliders, Is.EquivalentTo(new[] { kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryOverlap_Rectangle_ShouldReturnBothColliders_WhenStaticAndKinematicBodyMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var staticCollider = CreateCircleStaticBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        var kinematicCollider = CreateRectangleKinematicBody(0, 0, 20, 10).GetComponent<RectangleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        var rectangleToQuery = CreateQueryRectangleData(0, 0, 4, 4, 0).QueryRectangle;
+        var colliders = new List<Collider2DComponent>();
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.EqualTo(2));
+        Assert.That(colliders, Is.EquivalentTo(new Collider2DComponent[] { staticCollider, kinematicCollider }));
+    }
+
+    [Test]
+    public void QueryOverlap_Rectangle_ShouldNotReturnKinematicCollider_WhenItDoesNotMatch()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(CreatePhysicsConfiguration());
+        var kinematicCollider = CreateCircleKinematicBody(0, 0, 10).GetComponent<CircleColliderComponent>();
+        physicsSystem.SynchronizePhysicsState();
+
+        // The broad-phase proxy of a kinematic body uses an AABB twice as big as the collider, so this rectangle
+        // overlaps the proxy bounds but not the collider. It verifies that gathered candidates are still tested exactly.
+        var rectangleToQuery = CreateQueryRectangleData(15, 0, 4, 4, 0).QueryRectangle;
+        var colliders = new List<Collider2DComponent>();
+
+        // Assume
+        Assert.That(kinematicCollider.Overlaps(rectangleToQuery), Is.False);
+
+        // Act
+        var written = physicsSystem.QueryOverlap(rectangleToQuery, colliders);
+
+        // Assert
+        Assert.That(written, Is.Zero);
+        Assert.That(colliders, Is.Empty);
     }
 
     #endregion

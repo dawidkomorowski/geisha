@@ -14,13 +14,14 @@ public sealed record RenderingConfiguration
     public const string DefaultSortingLayerName = "Default";
 
     /// <summary>
-    ///     If true, enables VSync. This makes rendered frames wait for vertical synchronization in order to be presented.
-    ///     Therefore, frame rate is limited to refresh rate of display.
+    ///     Specifies whether VSync is enabled. When enabled, rendered frames wait for vertical synchronization in order to be
+    ///     presented, therefore frame rate is limited to refresh rate of display. Default is <c>false</c>.
     /// </summary>
     public bool EnableVSync { get; init; } = false;
 
     /// <summary>
-    ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels.
+    ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels. Default is
+    ///     <c>1280 x 720</c>.
     /// </summary>
     public Size ScreenSize { get; init; } = new(1280, 720);
 

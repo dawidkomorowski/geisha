@@ -30,6 +30,10 @@
       "Width": 50,
       "Height": 50
     },
+    "BroadPhaseGridCellSize": {
+      "Width": 256,
+      "Height": 256
+    },
     "EnableDebugRendering": true
   },
   "Rendering": {

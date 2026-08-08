@@ -21,7 +21,8 @@ public class PhysicsEngine2DTests
             PositionIterations = 456,
             VelocityIterations = 789,
             PenetrationTolerance = 123.456,
-            TileSize = new SizeD(12, 34)
+            TileSize = new SizeD(12, 34),
+            BroadPhaseGridCellSize = new SizeD(20, 30)
         };
 
         // Act
@@ -33,6 +34,7 @@ public class PhysicsEngine2DTests
         Assert.That(scene.VelocityIterations, Is.EqualTo(sceneDefinition.VelocityIterations));
         Assert.That(scene.PenetrationTolerance, Is.EqualTo(sceneDefinition.PenetrationTolerance));
         Assert.That(scene.TileSize, Is.EqualTo(sceneDefinition.TileSize));
+        Assert.That(scene.BroadPhaseGridCellSize, Is.EqualTo(sceneDefinition.BroadPhaseGridCellSize));
     }
 
     [Test]

@@ -22,12 +22,13 @@ internal static class SimulationPipeline
 
             KinematicIntegration.IntegrateKinematicMotion(ref scene, deltaTimeSeconds);
 
+            // TODO: Recomputation is only needed for bodies that actually moved.
             foreach (ref var body in scene.GetKinematicBodiesSpan())
             {
-                body.RecomputeCollider();
+                body.RecomputeCollider(ref scene);
             }
 
-            CollisionDetection.DetectCollisions(ref scene);
+            BroadPhase.DetectCollisions(ref scene);
 
             // TODO: SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < simulationParameters.PositionIterations; i++)
@@ -38,7 +39,7 @@ internal static class SimulationPipeline
             // TODO: Recomputation is only needed for bodies fixed by position constraints solver. If the touched bodies would be tracked only those could be recomputed.
             foreach (ref var body in scene.GetKinematicBodiesSpan())
             {
-                body.RecomputeCollider();
+                body.RecomputeCollider(ref scene);
             }
 
             GenerateEvents(ref scene);

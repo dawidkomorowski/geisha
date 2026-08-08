@@ -52,6 +52,12 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
                 nameof(physicsConfiguration));
         }
 
+        if (physicsConfiguration.BroadPhaseGridCellSize.Width <= 0 || physicsConfiguration.BroadPhaseGridCellSize.Height <= 0)
+        {
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.BroadPhaseGridCellSize)} must have positive dimensions.",
+                nameof(physicsConfiguration));
+        }
+
         EnableDebugRendering = physicsConfiguration.EnableDebugRendering;
 
         _timeSystem = timeSystem;
@@ -63,7 +69,8 @@ internal sealed class PhysicsSystem : IPhysicsSystem, IPhysicsGameLoopStep, ISce
             Substeps = physicsConfiguration.Substeps,
             VelocityIterations = physicsConfiguration.VelocityIterations,
             PositionIterations = physicsConfiguration.PositionIterations,
-            PenetrationTolerance = physicsConfiguration.PenetrationTolerance
+            PenetrationTolerance = physicsConfiguration.PenetrationTolerance,
+            BroadPhaseGridCellSize = physicsConfiguration.BroadPhaseGridCellSize
         };
 
         _physicsScene2D = PhysicsScene2D.Create(sceneDefinition);

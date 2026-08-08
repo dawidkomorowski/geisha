@@ -1,6 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.Memory;
+using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
@@ -42,7 +43,11 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
     public int FirstContactIndex;
     public int LastContactIndex;
 
-    public bool ContainsPoint(in Vector2 point) =>
+    // Broad phase
+    public SpatialGridProxyId SpatialProxyId;
+    public AABB2D BroadPhaseAABB;
+
+    public readonly bool ContainsPoint(in Vector2 point) =>
         ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Contains(point),
@@ -51,7 +56,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in AABB2D aabb) =>
+    public readonly bool Overlaps(in AABB2D aabb) =>
         ColliderType switch
         {
             ColliderType.Circle => AABB.Overlaps(aabb) && TransformedCircleCollider.Overlaps(aabb.ToRectangle()),
@@ -60,7 +65,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in Circle circle) =>
+    public readonly bool Overlaps(in Circle circle) =>
         ColliderType switch
         {
             ColliderType.Circle => TransformedCircleCollider.Overlaps(circle),
@@ -69,7 +74,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public bool Overlaps(in Rectangle rectangle) =>
+    public readonly bool Overlaps(in Rectangle rectangle) =>
         ColliderType switch
         {
             ColliderType.Circle => AABB.Overlaps(rectangle.ComputeAABB()) && TransformedCircleCollider.Overlaps(rectangle),
@@ -78,7 +83,7 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    internal void RecomputeCollider()
+    internal void RecomputeCollider(ref PhysicsSceneData scene)
     {
         var transform = Matrix3x3.CreateTRS(Position, Rotation, Vector2.One);
 
@@ -92,6 +97,26 @@ internal struct RigidBodyData : IUnmanaged<RigidBodyData>
             case ColliderType.Tile:
                 TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform);
                 AABB = TransformedRectangleCollider.ComputeAABB();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        // Update broad phase proxy.
+        switch (Type)
+        {
+            case BodyType.Static:
+                BroadPhaseAABB = AABB;
+                scene.StaticGrid.MoveProxy(SpatialProxyId, BroadPhaseAABB);
+                break;
+            case BodyType.Kinematic:
+                if (!BroadPhaseAABB.Contains(AABB))
+                {
+                    // Use twice as big AABB for broad phase to update it less often for moving bodies.
+                    BroadPhaseAABB = AABB2D.FromCenterAndSize(AABB.Center, AABB.Size * 2);
+                    scene.DynamicGrid.MoveProxy(SpatialProxyId, BroadPhaseAABB);
+                }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

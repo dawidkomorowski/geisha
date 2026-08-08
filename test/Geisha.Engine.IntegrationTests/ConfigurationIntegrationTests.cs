@@ -45,6 +45,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.PositionIterations, Is.EqualTo(4));
         Assert.That(configuration.Physics.PenetrationTolerance, Is.EqualTo(0.01));
         Assert.That(configuration.Physics.TileSize, Is.EqualTo(new SizeD(1, 1)));
+        Assert.That(configuration.Physics.BroadPhaseGridCellSize, Is.EqualTo(new SizeD(256, 256)));
         Assert.That(configuration.Physics.EnableDebugRendering, Is.False);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
@@ -87,6 +88,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.PositionIterations, Is.EqualTo(56));
         Assert.That(configuration.Physics.PenetrationTolerance, Is.EqualTo(1.23));
         Assert.That(configuration.Physics.TileSize, Is.EqualTo(new SizeD(1.2, 3.4)));
+        Assert.That(configuration.Physics.BroadPhaseGridCellSize, Is.EqualTo(new SizeD(12, 34)));
         Assert.That(configuration.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.True);

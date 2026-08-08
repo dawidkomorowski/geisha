@@ -116,6 +116,8 @@ namespace Geisha.Engine
                 physicsConfiguration = physicsConfiguration with { PenetrationTolerance = fileContent.Physics.PenetrationTolerance.Value };
             if (fileContent.Physics?.TileSize != null)
                 physicsConfiguration = physicsConfiguration with { TileSize = fileContent.Physics.TileSize.Value };
+            if (fileContent.Physics?.BroadPhaseGridCellSize != null)
+                physicsConfiguration = physicsConfiguration with { BroadPhaseGridCellSize = fileContent.Physics.BroadPhaseGridCellSize.Value };
             if (fileContent.Physics?.EnableDebugRendering != null)
                 physicsConfiguration = physicsConfiguration with { EnableDebugRendering = fileContent.Physics.EnableDebugRendering.Value };
 
@@ -198,6 +200,7 @@ namespace Geisha.Engine
             public int? PositionIterations { get; init; }
             public double? PenetrationTolerance { get; init; }
             public SizeD? TileSize { get; init; }
+            public SizeD? BroadPhaseGridCellSize { get; init; }
             public bool? EnableDebugRendering { get; init; }
         }
 

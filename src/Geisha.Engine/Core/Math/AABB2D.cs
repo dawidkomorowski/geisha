@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math;
@@ -13,6 +12,16 @@ namespace Geisha.Engine.Core.Math;
 ///         this orientation, <see cref="Min" /> is the bottom-left corner and <see cref="Max" /> is the top-right corner.
 ///     </para>
 ///     <para>The bounding box includes its boundaries for containment and overlap checks.</para>
+///     <para>
+///         A bounding box is not guaranteed to be well-formed. Constructors and factory methods do not validate or
+///         normalize the corners, so a box built from inverted coordinates, or returned by <see cref="Intersect" /> for
+///         non-overlapping boxes, can be invalid. See <see cref="IsValid" />.
+///     </para>
+///     <para>
+///         Containment and overlap queries assume well-formed operands. Results are unspecified when a bounding box
+///         involved in the query is invalid, with one exception: <see cref="Intersect" /> propagates invalidity, so an
+///         invalid operand always produces an invalid result.
+///     </para>
 /// </remarks>
 // ReSharper disable once InconsistentNaming
 public readonly record struct AABB2D
@@ -24,9 +33,6 @@ public readonly record struct AABB2D
     /// <param name="max">The maximum corner.</param>
     public AABB2D(in Vector2 min, in Vector2 max)
     {
-        Debug.Assert(min.X <= max.X, "Min.X must be less than or equal to Max.X.");
-        Debug.Assert(min.Y <= max.Y, "Min.Y must be less than or equal to Max.Y.");
-
         Min = min;
         Max = max;
     }
@@ -128,22 +134,17 @@ public readonly record struct AABB2D
     /// </summary>
     /// <param name="points">The points to include.</param>
     /// <returns>
-    ///     A bounding box that contains all points, or <see langword="default" /> when <paramref name="points" /> is empty.
+    ///     A bounding box that contains all points, or an invalid bounding box when <paramref name="points" /> is empty.
     /// </returns>
     public static AABB2D FromPoints(ReadOnlySpan<Vector2> points)
     {
-        if (points.Length == 0)
-        {
-            return default;
-        }
+        var min = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
+        var max = new Vector2(double.NegativeInfinity, double.NegativeInfinity);
 
-        var min = points[0];
-        var max = points[0];
-
-        for (var i = 1; i < points.Length; i++)
+        foreach (var point in points)
         {
-            min = Vector2.Min(min, points[i]);
-            max = Vector2.Max(max, points[i]);
+            min = Vector2.Min(min, point);
+            max = Vector2.Max(max, point);
         }
 
         return new AABB2D(min, max);
@@ -154,24 +155,19 @@ public readonly record struct AABB2D
     /// </summary>
     /// <param name="aabbs">The bounding boxes to include.</param>
     /// <returns>
-    ///     A bounding box that contains all specified bounding boxes, or <see langword="default" /> when
+    ///     A bounding box that contains all specified bounding boxes, or an invalid bounding box when
     ///     <paramref name="aabbs" /> is empty.
     /// </returns>
     // ReSharper disable once InconsistentNaming
     public static AABB2D FromAABBs(ReadOnlySpan<AABB2D> aabbs)
     {
-        if (aabbs.Length == 0)
-        {
-            return default;
-        }
+        var min = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
+        var max = new Vector2(double.NegativeInfinity, double.NegativeInfinity);
 
-        var min = aabbs[0].Min;
-        var max = aabbs[0].Max;
-
-        for (var i = 1; i < aabbs.Length; i++)
+        foreach (var aabb in aabbs)
         {
-            min = Vector2.Min(min, aabbs[i].Min);
-            max = Vector2.Max(max, aabbs[i].Max);
+            min = Vector2.Min(min, aabb.Min);
+            max = Vector2.Max(max, aabb.Max);
         }
 
         return new AABB2D(min, max);
@@ -208,6 +204,27 @@ public readonly record struct AABB2D
     public double Height => Max.Y - Min.Y;
 
     /// <summary>
+    ///     Gets a value indicating whether the bounding box is well-formed, that is, whether each component of
+    ///     <see cref="Min" /> is less than or equal to the corresponding component of <see cref="Max" />.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         A degenerate bounding box is valid. A box that collapses to a line or to a single point still satisfies the
+    ///         condition, because the boundaries are included.
+    ///     </para>
+    ///     <para>
+    ///         Use this property to test the result of <see cref="Intersect" />, which returns an invalid bounding box when
+    ///         the two boxes do not overlap.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="Intersect" />
+    public bool IsValid
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Min.X <= Max.X && Min.Y <= Max.Y;
+    }
+
+    /// <summary>
     ///     Determines whether the specified point is inside this bounding box.
     /// </summary>
     /// <param name="point">The point to test.</param>
@@ -231,6 +248,33 @@ public readonly record struct AABB2D
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Overlaps(in AABB2D other) => Max.X >= other.Min.X && Min.X <= other.Max.X && Max.Y >= other.Min.Y && Min.Y <= other.Max.Y;
+
+    /// <summary>
+    ///     Computes the intersection of this bounding box and another bounding box.
+    /// </summary>
+    /// <param name="other">The bounding box to intersect with.</param>
+    /// <returns>
+    ///     The bounding box covering the common area of both boxes, or an invalid bounding box when they do not overlap.
+    /// </returns>
+    /// <remarks>
+    ///     <para>
+    ///         The result is not guaranteed to be a well-formed bounding box. When the boxes are separated along either
+    ///         axis, the returned box has <see cref="Min" /> greater than <see cref="Max" /> on that axis. Check
+    ///         <see cref="IsValid" /> on the result, or call <see cref="Overlaps" /> first, before using the returned box.
+    ///     </para>
+    ///     <para>
+    ///         Boxes that only touch at an edge or a corner are treated as overlapping and produce a valid degenerate
+    ///         result, because the boundaries are included.
+    ///     </para>
+    ///     <para>
+    ///         Invalidity propagates. When either box is invalid on an axis, the result is invalid on that axis, so chained
+    ///         intersections cannot recover a valid result once one becomes invalid.
+    ///     </para>
+    /// </remarks>
+    /// <seealso cref="IsValid" />
+    /// <seealso cref="Overlaps" />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public AABB2D Intersect(in AABB2D other) => new(Vector2.Max(Min, other.Min), Vector2.Min(Max, other.Max));
 
     /// <summary>
     ///     Converts this bounding box to an axis-aligned rectangle.

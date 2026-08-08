@@ -50,14 +50,19 @@ C# / XML documentation guidance:
 - Use <summary>, <param>, <returns>, <exception>, and <remarks> only when appropriate.
 - Do not add XML tags mechanically when they do not add value.
 - Keep <summary> focused on the API contract.
+- For constructors, prefer standard .NET summary phrasing (for example, "Initializes a new instance of the ... class") and differentiate overloads by meaningful behavioral details.
 - Use <remarks> for lifecycle notes, threading expectations, ownership, performance caveats, or usage constraints when these are supported by the code or tests.
 - When <remarks> contains multiple caveats or guidance points, format each logical section as its own paragraph for readability and consistency.
 - Do not rely on blank lines inside XML comments for visual separation; rendered docs usually collapse them.
 - Use explicit <para> blocks when separation must be preserved in rendered documentation.
 - If a note is short and directly defines the member, prefer a single concise <summary> sentence over splitting into <summary> and <remarks>.
 - If <remarks> contains one continuous thought, keep it as one paragraph; split into multiple paragraphs only for distinct guidance points.
+- Prefer resilient summaries that describe the contract (for example, "Gets data associated with...") instead of enumerating every current field when return shapes may evolve.
+- Use lifecycle verbs precisely (for example, destroy vs remove) and document observable effects such as identifier invalidation when they are part of the public contract.
+- Avoid absolute performance prescriptions unless enforced by the API contract; present performance guidance as context and trade-offs.
 - Add examples only when requested or when examples are necessary for clarity.
 - Cross references: use <see> for inline references and <seealso> for related overloads or sibling APIs. Avoid prose "See also" lines in remarks.
+- When public APIs use performance-oriented signatures (for example, generic struct constraints with ref handler parameters), document those requirements and their intent when they are externally visible.
 
 Module-Specific Addenda:
 - Physics API Addendum:
@@ -82,6 +87,7 @@ Preferred workflow:
 3. Draft or revise documentation.
 4. Review for accuracy, consistency, and missing information.
 5. Suggest follow-up improvements separately from the main documentation draft.
+6. For repeated patterns across multiple related APIs, draft one representative member first, get feedback on wording, then roll out consistently.
 
 When the request is ambiguous:
 - Ask whether the user wants inline XML docs, Markdown reference docs, module overview docs, or documentation review feedback.

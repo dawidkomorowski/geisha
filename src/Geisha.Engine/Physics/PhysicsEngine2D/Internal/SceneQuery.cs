@@ -1,81 +1,147 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.Spatial;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D.Internal;
 
 internal static class SceneQuery
 {
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     public static void QueryPoint<TQueryHandler>(in PhysicsSceneData scene, in Vector2 point, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        foreach (ref var body in scene.GetBodiesSpan())
+        // 1. Init
+        var bodyIds = InitScratchBuffer();
+        var queryHandler = new ProxyPayloadQueryHandler(bodyIds);
+
+        try
         {
-            if (body.ContainsPoint(point))
+            // 2. Gather
+            scene.StaticGrid.QueryPointAsPayload(point, ref queryHandler);
+            scene.DynamicGrid.QueryPointAsPayload(point, ref queryHandler);
+
+            // 3. Process
+            foreach (var bodyId in bodyIds)
             {
-                if (!handler.Handle(body.Id))
+                ref var body = ref scene.GetBodyData(bodyId);
+                if (body.ContainsPoint(point))
                 {
-                    return;
+                    if (!handler.Handle(body.Id))
+                    {
+                        return;
+                    }
                 }
             }
+        }
+        finally
+        {
+            // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
+            ClearScratchBuffer(bodyIds);
         }
     }
 
     public static void QueryBounds<TQueryHandler>(in PhysicsSceneData scene, in AABB2D aabb, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        foreach (ref var body in scene.GetBodiesSpan())
-        {
-            if (body.AABB.Overlaps(aabb))
-            {
-                if (!handler.Handle(body.Id))
-                {
-                    return;
-                }
-            }
-        }
+        QueryByBounds(scene, aabb, ref handler, aabb, static (in RigidBodyData body, in AABB2D queryArg) => body.AABB.Overlaps(queryArg));
     }
 
     public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in AABB2D aabb, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        foreach (ref var body in scene.GetBodiesSpan())
-        {
-            if (body.Overlaps(aabb))
-            {
-                if (!handler.Handle(body.Id))
-                {
-                    return;
-                }
-            }
-        }
+        QueryByBounds(scene, aabb, ref handler, aabb, static (in RigidBodyData body, in AABB2D queryArg) => body.Overlaps(queryArg));
     }
 
     public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in Circle circle, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        foreach (ref var body in scene.GetBodiesSpan())
-        {
-            if (body.Overlaps(circle))
-            {
-                if (!handler.Handle(body.Id))
-                {
-                    return;
-                }
-            }
-        }
+        QueryByBounds(scene, circle.ComputeAABB(), ref handler, circle, static (in RigidBodyData body, in Circle queryArg) => body.Overlaps(queryArg));
     }
 
     public static void QueryOverlap<TQueryHandler>(in PhysicsSceneData scene, in Rectangle rectangle, ref TQueryHandler handler)
         where TQueryHandler : struct, IRigidBodyIdQueryHandler
     {
-        foreach (ref var body in scene.GetBodiesSpan())
+        QueryByBounds(scene, rectangle.ComputeAABB(), ref handler, rectangle, static (in RigidBodyData body, in Rectangle queryArg) => body.Overlaps(queryArg));
+    }
+
+    private delegate bool QueryFunc<TQueryArg>(in RigidBodyData body, in TQueryArg queryArg);
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static void QueryByBounds<TQueryHandler, TQueryArg>(in PhysicsSceneData scene, in AABB2D bounds, ref TQueryHandler handler,
+        in TQueryArg queryArg, QueryFunc<TQueryArg> queryFunc
+    )
+        where TQueryHandler : struct, IRigidBodyIdQueryHandler
+        where TQueryArg : struct
+    {
+        // 1. Init
+        var bodyIds = InitScratchBuffer();
+        var queryHandler = new ProxyPayloadQueryHandler(bodyIds);
+
+        try
         {
-            if (body.Overlaps(rectangle))
+            // 2. Gather
+            scene.StaticGrid.QueryBoundsAsPayload(bounds, ref queryHandler);
+            scene.DynamicGrid.QueryBoundsAsPayload(bounds, ref queryHandler);
+
+            // 3. Process
+            foreach (var bodyId in bodyIds)
             {
-                if (!handler.Handle(body.Id))
+                ref var body = ref scene.GetBodyData(bodyId);
+                if (queryFunc(body, in queryArg))
                 {
-                    return;
+                    if (!handler.Handle(body.Id))
+                    {
+                        return;
+                    }
                 }
             }
+        }
+        finally
+        {
+            // 4. Cleanup (guaranteed execution even if an exception is thrown or an early return happens)
+            ClearScratchBuffer(bodyIds);
+        }
+    }
+
+    // TODO: To implement ProxyQueryHandler properly it requires ref fields and ref struct interfaces features of .NET 9 (C# 13).
+    //       Once upgraded to .NET 9, refactor it to use ref fields and ref struct interfaces and implement single pass query logic.
+    //       -----------------------------------------------------------------------------------------------------------------------------
+    //       As a workaround, a static scratch buffer is used to do double-pass gather-then-process query logic.
+    //       [ThreadStatic] ensures every thread gets its own isolated buffer. This prevents thread collisions if queries run in parallel.
+    //       However, this implementation does not support reentrancy.
+    [ThreadStatic] private static List<RigidBodyId>? _scratchBuffer;
+
+    private static List<RigidBodyId> InitScratchBuffer()
+    {
+        _scratchBuffer ??= new List<RigidBodyId>(2048);
+
+        Debug.Assert(_scratchBuffer.Count == 0, "Reentrancy is not yet supported.");
+
+        return _scratchBuffer;
+    }
+
+    private static void ClearScratchBuffer(List<RigidBodyId> buffer)
+    {
+        Debug.Assert(_scratchBuffer == buffer, "Invalid buffer.");
+        buffer.Clear();
+    }
+
+    private readonly struct ProxyPayloadQueryHandler : IProxyPayloadQueryHandler<RigidBodyId>
+    {
+        private readonly List<RigidBodyId> _bodyIds;
+
+        public ProxyPayloadQueryHandler(List<RigidBodyId> bodyIds)
+        {
+            _bodyIds = bodyIds;
+        }
+
+        public bool Handle(in RigidBodyId bodyId)
+        {
+            _bodyIds.Add(bodyId);
+            return true;
         }
     }
 }

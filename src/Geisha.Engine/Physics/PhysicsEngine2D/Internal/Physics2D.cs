@@ -74,6 +74,12 @@ internal static class Physics2D
             return scene.TileSize;
         }
 
+        public static SizeD GetBroadPhaseGridCellSize(PhysicsSceneId id)
+        {
+            ref var scene = ref PhysicsSceneData.Get(id);
+            return scene.CellSize;
+        }
+
         public static int GetBodyCount(PhysicsSceneId id)
         {
             ref var scene = ref PhysicsSceneData.Get(id);
@@ -227,7 +233,7 @@ internal static class Physics2D
                 body.Position = value;
             }
 
-            body.RecomputeCollider();
+            body.RecomputeCollider(ref scene);
         }
 
         public static double GetRotation(RigidBodyId id)
@@ -238,13 +244,14 @@ internal static class Physics2D
 
         public static void SetRotation(RigidBodyId id, double value)
         {
-            ref var body = ref GetBodyData(id);
+            ref var scene = ref PhysicsSceneData.Get(id.PhysicsSceneId);
+            ref var body = ref scene.GetBodyData(id);
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (body.Rotation == value) return;
 
             body.Rotation = body.ColliderType is ColliderType.Tile ? 0 : value;
-            body.RecomputeCollider();
+            body.RecomputeCollider(ref scene);
         }
 
         public static Vector2 GetLinearVelocity(RigidBodyId id)
@@ -433,7 +440,7 @@ internal static class Physics2D
             body.ColliderType = ColliderType.Circle;
             body.CircleColliderRadius = radius;
             body.RectangleColliderSize = default;
-            body.RecomputeCollider();
+            body.RecomputeCollider(ref scene);
         }
 
         public static void SetRectangleCollider(RigidBodyId id, in SizeD size)
@@ -454,7 +461,7 @@ internal static class Physics2D
             body.ColliderType = ColliderType.Rectangle;
             body.CircleColliderRadius = 0;
             body.RectangleColliderSize = size;
-            body.RecomputeCollider();
+            body.RecomputeCollider(ref scene);
         }
 
         public static void SetTileCollider(RigidBodyId id)
@@ -485,7 +492,7 @@ internal static class Physics2D
 
             body.CircleColliderRadius = 0;
             body.RectangleColliderSize = scene.TileSize;
-            body.RecomputeCollider();
+            body.RecomputeCollider(ref scene);
         }
 
         public static bool ContainsPoint(RigidBodyId id, in Vector2 point)
