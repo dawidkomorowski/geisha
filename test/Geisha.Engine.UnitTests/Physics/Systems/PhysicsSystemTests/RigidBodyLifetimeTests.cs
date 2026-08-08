@@ -757,6 +757,8 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
     #endregion
 
+    #region Integrity
+
     // This test guards the bookkeeping that creating and destroying bodies has to keep consistent: the contact lists of
     // the bodies involved, and the internal layout of the bodies themselves. It does that by keeping every body
     // overlapping several others, so each create and destroy has to splice contacts rather than merely add or drop an
@@ -785,7 +787,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     [Test]
     [Description(
         "This test stresses creation and destruction of overlapping static and kinematic bodies, which forces updates to existing contacts and relocation of the internal bodies layout.")]
-    public void IntegrityTest_WhenMultipleCollidingBodiesAreCreatedAndDestroyed()
+    public void RigidBody_ShouldPreserveContactsAndBodiesLayoutIntegrity_WhenMultipleCollidingBodiesAreCreatedAndDestroyed()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -1279,4 +1281,6 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
             Assert.That(contacts.Select(c => c.OtherCollider), Is.EquivalentTo(collidersInContact));
         }
     }
+
+    #endregion
 }

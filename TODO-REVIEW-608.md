@@ -314,7 +314,8 @@ covering `QueryBounds` dedup when a proxy spans several non-square cells, and it
 
 The TODO asked how to test that a body's spatial proxy is destroyed together with the body. It is
 removed; the behaviour is now covered by
-`IntegrityTest_WhenMultipleCollidingBodiesAreCreatedAndDestroyed` (`7e9090d8`).
+`RigidBody_ShouldPreserveContactsAndBodiesLayoutIntegrity_WhenMultipleCollidingBodiesAreCreatedAndDestroyed`
+(`7e9090d8`).
 
 ### Why the existing coverage was not enough
 
@@ -331,7 +332,7 @@ if (_kinematicBodyCount > 0 && denseIndex < _staticBodyCount)
 ```
 
 Both conditions must hold to reach the rebind: kinematic bodies must exist, *and* the destroyed
-static must not be the last one. `IntegrityTest` had four kinematic bodies and **no static bodies**,
+static must not be the last one. The integrity test had four kinematic bodies and **no static bodies**,
 so `case BodyType.Static` never ran there at all.
 
 Dropping the rebind did fail 12 tests, but all 12 failed in `PhysicsSystemTestsBase.TearDown` —
