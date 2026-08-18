@@ -1,5 +1,5 @@
-﻿using Geisha.Engine.Rendering.Backend;
-using System;
+﻿using System;
+using Geisha.Engine.Rendering.Backend;
 using SharpDX.DirectWrite;
 
 namespace Geisha.Engine.Rendering.DirectX
