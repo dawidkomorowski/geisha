@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using Geisha.Engine.Rendering.Backend;
+using Microsoft.Win32.SafeHandles;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
@@ -17,6 +19,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     private readonly Statistics _statistics;
     private readonly Device _d3D11Device;
     private readonly SwapChain _dxgiSwapChain;
+    private readonly SafeWaitHandle _frameLatencyWaitHandle;
+    private readonly EventWaitHandle _frameLatencyWaitEvent;
     private readonly RenderingContext2D _renderingContext2D;
 
     /// <summary>
@@ -28,15 +32,18 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
         _statistics = new Statistics();
 
+        // TODO: Check if tearing is supported?
+
         var swapChainDescription = new SwapChainDescription
         {
-            BufferCount = 1,
+            BufferCount = 2,
             ModeDescription = new ModeDescription(form.ClientSize.Width, form.ClientSize.Height, new Rational(60, 1), Format.B8G8R8A8_UNorm),
             IsWindowed = true,
             OutputHandle = form.Handle,
-            SampleDescription = new SampleDescription(4, 0),
-            SwapEffect = SwapEffect.Discard, // TODO FlipDiscard is preferred for performance but it breaks current screen shot capture.
-            Usage = Usage.RenderTargetOutput
+            SampleDescription = new SampleDescription(1, 0),
+            SwapEffect = SwapEffect.FlipDiscard,
+            Usage = Usage.RenderTargetOutput,
+            Flags = SwapChainFlags.AllowTearing | SwapChainFlags.FrameLatencyWaitAbleObject
         };
 
         var directXDriverType = driverType switch
@@ -54,6 +61,13 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
             out _d3D11Device,
             out _dxgiSwapChain
         );
+
+        using var swapChain2 = _dxgiSwapChain.QueryInterface<SwapChain2>();
+        var waitableObject = swapChain2.FrameLatencyWaitableObject;
+        _frameLatencyWaitHandle = new SafeWaitHandle(waitableObject, false);
+        _frameLatencyWaitEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
+        _frameLatencyWaitEvent.SafeWaitHandle = _frameLatencyWaitHandle;
+        swapChain2.MaximumFrameLatency = 1;
 
         using var dxgiFactory = _dxgiSwapChain.GetParent<Factory>();
         dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
@@ -95,9 +109,19 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         _renderingContext2D.DrawToSwapChainSurface(backBufferSurface);
 
-        _dxgiSwapChain.Present(waitForVSync ? 1 : 0, PresentFlags.None);
+        if (waitForVSync)
+        {
+            _dxgiSwapChain.Present(1, PresentFlags.None);
+        }
+        else
+        {
+            _dxgiSwapChain.Present(0, PresentFlags.AllowTearing);
+        }
 
         _statistics.UpdateLastFrameStats();
+
+        // Wait for the presentation to complete before working on next frame.
+        _frameLatencyWaitEvent.WaitOne(1000);
     }
 
     /// <summary>
@@ -107,6 +131,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
         _renderingContext2D.Dispose();
         _dxgiSwapChain.Dispose();
+        _frameLatencyWaitEvent.Dispose();
+        _frameLatencyWaitHandle.Dispose();
         _d3D11Device.Dispose();
     }
 }

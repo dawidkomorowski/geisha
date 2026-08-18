@@ -26,6 +26,7 @@ using SpriteBatch = Geisha.Engine.Rendering.Backend.SpriteBatch;
 
 namespace Geisha.Engine.Rendering.DirectX;
 
+// TODO: Refactor to make client API for rendering separate from internal render pipeline logic (msaa target, resolve, copy to swapchain)?
 internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 {
     private readonly Form _form;
