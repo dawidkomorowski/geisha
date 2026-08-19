@@ -15,9 +15,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Color = Geisha.Engine.Core.Math.Color;
-using DeviceContext3 = SharpDX.Direct2D1.DeviceContext3;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
-using Factory4 = SharpDX.Direct2D1.Factory4;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
@@ -32,8 +30,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private readonly Form _form;
     private readonly Statistics _statistics;
 
-    private readonly SharpDX.Direct3D11.DeviceContext _d3D11DeviceContext;
-    private readonly DeviceContext3 _d2D1DeviceContext;
+    private readonly DeviceContext _deviceContext;
 
     private readonly Texture2D _msaaTargetTexture;
     private readonly Bitmap1 _msaaTargetBitmap;
@@ -48,18 +45,11 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private string _currentFontFamilyName = string.Empty;
     private bool _clippingEnabled;
 
-    public RenderingContext2D(Form form, SharpDX.Direct3D11.Device d3D11Device, Statistics statistics)
+    public RenderingContext2D(Form form, DeviceContext deviceContext, Statistics statistics)
     {
         _form = form;
 
-        _d3D11DeviceContext = d3D11Device.ImmediateContext;
-
-        using var dxgiDevice = d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
-        using var d2D1Factory = CreateD2D1Factory(SharpDX.Direct2D1.FactoryType.SingleThreaded, DebugLevel.None);
-        using var d2D1Device = new SharpDX.Direct2D1.Device3(d2D1Factory, dxgiDevice);
-
-        _d2D1DeviceContext = new DeviceContext3(d2D1Device, DeviceContextOptions.None);
-        _d2D1DeviceContext.AntialiasMode = AntialiasMode.Aliased;
+        _deviceContext = deviceContext;
 
         // TODO: Check supported multisample quality levels and use D3D11_STANDARD_MULTISAMPLE_PATTERN?
         var msaaTextureDescription = new Texture2DDescription
@@ -73,14 +63,14 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
             Usage = ResourceUsage.Default,
             BindFlags = BindFlags.RenderTarget
         };
-        _msaaTargetTexture = new Texture2D(d3D11Device, msaaTextureDescription);
+        _msaaTargetTexture = new Texture2D(_deviceContext.D3D11Device, msaaTextureDescription);
 
         using var msaaSurface = _msaaTargetTexture.QueryInterface<Surface>();
         var renderTargetProps = new BitmapProperties1(
-            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1DeviceContext.DotsPerInch.Width,
-            _d2D1DeviceContext.DotsPerInch.Height, BitmapOptions.Target | BitmapOptions.CannotDraw
+            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
+            _deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.Target | BitmapOptions.CannotDraw
         );
-        _msaaTargetBitmap = new Bitmap1(_d2D1DeviceContext, msaaSurface, renderTargetProps);
+        _msaaTargetBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, msaaSurface, renderTargetProps);
 
         var resolveTextureDescription = new Texture2DDescription
         {
@@ -93,21 +83,21 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
             Usage = ResourceUsage.Default,
             BindFlags = BindFlags.ShaderResource
         };
-        _resolveTexture = new Texture2D(d3D11Device, resolveTextureDescription);
+        _resolveTexture = new Texture2D(_deviceContext.D3D11Device, resolveTextureDescription);
 
         using var resolveSurface = _resolveTexture.QueryInterface<Surface>();
         var resolveProps = new BitmapProperties1(
-            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1DeviceContext.DotsPerInch.Width,
-            _d2D1DeviceContext.DotsPerInch.Height, BitmapOptions.None
+            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
+            deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.None
         );
-        _resolveBitmap = new Bitmap1(_d2D1DeviceContext, resolveSurface, resolveProps);
+        _resolveBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, resolveSurface, resolveProps);
 
-        _d2D1DeviceContext.Target = _msaaTargetBitmap;
+        _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 
         _statistics = statistics;
         _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
-        _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
-        _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);
+        _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
+        _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
     }
 
     private Vector2 WindowCenter => ScreenSize.ToVector2() / 2d;
@@ -159,7 +149,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         bitmapDataStream.Position = 0;
 
         // Create Direct2D1 bitmap from data stream
-        var d2D1Bitmap = new Bitmap(_d2D1DeviceContext, new Size2(cpuBitmap.Width, cpuBitmap.Height), bitmapDataStream, stride,
+        var d2D1Bitmap = new Bitmap(_deviceContext.D2D1DeviceContext, new Size2(cpuBitmap.Width, cpuBitmap.Height), bitmapDataStream, stride,
             new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
 
         return new Texture(d2D1Bitmap);
@@ -174,10 +164,10 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void CaptureScreenShotAsPng(Stream stream)
     {
-        using var d2D1CpuBitmap = new Bitmap1(_d2D1DeviceContext, _d2D1DeviceContext.PixelSize,
-            new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1DeviceContext.DotsPerInch.Width,
-                _d2D1DeviceContext.DotsPerInch.Height, BitmapOptions.CpuRead | BitmapOptions.CannotDraw));
-        d2D1CpuBitmap.CopyFromRenderTarget(_d2D1DeviceContext);
+        using var d2D1CpuBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, _deviceContext.D2D1DeviceContext.PixelSize,
+            new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
+                _deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.CpuRead | BitmapOptions.CannotDraw));
+        d2D1CpuBitmap.CopyFromRenderTarget(_deviceContext.D2D1DeviceContext);
 
         var dataRectangle = d2D1CpuBitmap.Surface.Map(MapFlags.Read, out var dataStream);
         try
@@ -212,17 +202,17 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void BeginDraw()
     {
-        _d2D1DeviceContext.BeginDraw();
+        _deviceContext.D2D1DeviceContext.BeginDraw();
     }
 
     public void EndDraw()
     {
-        _d2D1DeviceContext.EndDraw();
+        _deviceContext.D2D1DeviceContext.EndDraw();
     }
 
     public void Clear(Color color)
     {
-        _d2D1DeviceContext.Clear(color.ToRawColor4());
+        _deviceContext.D2D1DeviceContext.Clear(color.ToRawColor4());
     }
 
     public void DrawSprite(
@@ -240,8 +230,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
             (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
-        _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, interpolationMode.ToDirectXBitmapInterpolationMode(),
+        _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+        _deviceContext.D2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, interpolationMode.ToDirectXBitmapInterpolationMode(),
             sourceRawRectangleF);
 
         _statistics.IncrementDrawCalls();
@@ -254,7 +244,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         var spritesCount = spriteBatch.Count;
         var d2D1Bitmap = ((Texture)spriteBatch.Texture).D2D1Bitmap;
 
-        _d2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
+        _deviceContext.D2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
 
         var destinationRectangles = ArrayPool<RawRectangleF>.Shared.Rent(spritesCount);
         var sourceRectangles = ArrayPool<RawRectangle>.Shared.Rent(spritesCount);
@@ -288,7 +278,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
                 Marshal.SizeOf<RawMatrix3x2>()
             );
 
-            _d2D1DeviceContext.DrawSpriteBatch(_d2D1SpriteBatch, 0, _d2D1SpriteBatch.SpriteCount, d2D1Bitmap,
+            _deviceContext.D2D1DeviceContext.DrawSpriteBatch(_d2D1SpriteBatch, 0, _d2D1SpriteBatch.SpriteCount, d2D1Bitmap,
                 spriteBatch.BitmapInterpolationMode.ToDirectXBitmapInterpolationMode(),
                 SpriteOptions.None);
         }
@@ -315,8 +305,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
         _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
-        _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _d2D1DeviceContext.DrawText(text, _d2D1TextFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+        _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+        _deviceContext.D2D1DeviceContext.DrawText(text, _d2D1TextFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
 
         _statistics.IncrementDrawCalls();
     }
@@ -332,8 +322,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
         _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
-        _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _d2D1DeviceContext.DrawTextLayout(
+        _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+        _deviceContext.D2D1DeviceContext.DrawTextLayout(
             new RawVector2((float)-pivot.X, (float)-pivot.Y),
             internalTextLayout.DWTextLayout,
             _d2D1SolidColorBrush,
@@ -349,13 +339,13 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
         _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
-        _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _d2D1DeviceContext.DrawRectangle(rawRectangleF, _d2D1SolidColorBrush);
+        _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+        _deviceContext.D2D1DeviceContext.DrawRectangle(rawRectangleF, _d2D1SolidColorBrush);
         _statistics.IncrementDrawCalls();
 
         if (fillInterior)
         {
-            _d2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
+            _deviceContext.D2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
             _statistics.IncrementDrawCalls();
         }
     }
@@ -366,13 +356,13 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
         _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
-        _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _d2D1DeviceContext.DrawEllipse(directXEllipse, _d2D1SolidColorBrush);
+        _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+        _deviceContext.D2D1DeviceContext.DrawEllipse(directXEllipse, _d2D1SolidColorBrush);
         _statistics.IncrementDrawCalls();
 
         if (fillInterior)
         {
-            _d2D1DeviceContext.FillEllipse(directXEllipse, _d2D1SolidColorBrush);
+            _deviceContext.D2D1DeviceContext.FillEllipse(directXEllipse, _d2D1SolidColorBrush);
             _statistics.IncrementDrawCalls();
         }
     }
@@ -381,12 +371,12 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
         if (_clippingEnabled)
         {
-            _d2D1DeviceContext.PopAxisAlignedClip();
+            _deviceContext.D2D1DeviceContext.PopAxisAlignedClip();
         }
 
         _clippingEnabled = true;
-        _d2D1DeviceContext.Transform = ConvertTransformToDirectX(Matrix3x3.Identity);
-        _d2D1DeviceContext.PushAxisAlignedClip(clippingRectangle.ToRawRectangleF(), AntialiasMode.Aliased);
+        _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(Matrix3x3.Identity);
+        _deviceContext.D2D1DeviceContext.PushAxisAlignedClip(clippingRectangle.ToRawRectangleF(), AntialiasMode.Aliased);
     }
 
     public void ClearClipping()
@@ -394,7 +384,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         if (_clippingEnabled)
         {
             _clippingEnabled = false;
-            _d2D1DeviceContext.PopAxisAlignedClip();
+            _deviceContext.D2D1DeviceContext.PopAxisAlignedClip();
         }
         else
         {
@@ -416,8 +406,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _resolveTexture.Dispose();
         _msaaTargetBitmap.Dispose();
         _msaaTargetTexture.Dispose();
-        _d2D1DeviceContext.Dispose();
-        _d3D11DeviceContext.Dispose();
     }
 
     #endregion
@@ -425,23 +413,24 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     public void DrawToSwapChainSurface(Surface surface)
     {
         // TODO: It probably can be created once for the back buffer surface?
-        var backBufferProps = new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1DeviceContext.DotsPerInch.Width,
-            _d2D1DeviceContext.DotsPerInch.Height, BitmapOptions.Target | BitmapOptions.CannotDraw);
-        using var surfaceBitmap = new Bitmap1(_d2D1DeviceContext, surface, backBufferProps);
+        var backBufferProps = new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
+            _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
+            _deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.Target | BitmapOptions.CannotDraw);
+        using var surfaceBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, surface, backBufferProps);
 
-        _d2D1DeviceContext.Target = null;
+        _deviceContext.D2D1DeviceContext.Target = null;
 
-        _d3D11DeviceContext.ResolveSubresource(_msaaTargetTexture, 0, _resolveTexture, 0, Format.B8G8R8A8_UNorm);
+        _deviceContext.D3D11DeviceContext.ResolveSubresource(_msaaTargetTexture, 0, _resolveTexture, 0, Format.B8G8R8A8_UNorm);
 
-        _d2D1DeviceContext.Target = surfaceBitmap;
+        _deviceContext.D2D1DeviceContext.Target = surfaceBitmap;
 
-        _d2D1DeviceContext.BeginDraw();
-        _d2D1DeviceContext.Clear(new RawColor4(0, 0, 0, 1));
-        _d2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
-        _d2D1DeviceContext.DrawBitmap(_resolveBitmap, 1.0f, SharpDX.Direct2D1.BitmapInterpolationMode.Linear);
-        _d2D1DeviceContext.EndDraw();
+        _deviceContext.D2D1DeviceContext.BeginDraw();
+        _deviceContext.D2D1DeviceContext.Clear(new RawColor4(0, 0, 0, 1));
+        _deviceContext.D2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
+        _deviceContext.D2D1DeviceContext.DrawBitmap(_resolveBitmap, 1.0f, SharpDX.Direct2D1.BitmapInterpolationMode.Linear);
+        _deviceContext.D2D1DeviceContext.EndDraw();
 
-        _d2D1DeviceContext.Target = _msaaTargetBitmap;
+        _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
     }
 
     /// <summary>
@@ -465,20 +454,5 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
             -(float)transform.M12, (float)transform.M22,
             (float)(transform.M13 + WindowCenter.X), (float)(-transform.M23 + WindowCenter.Y)
         );
-    }
-
-    private static Factory4 CreateD2D1Factory(SharpDX.Direct2D1.FactoryType factoryType, DebugLevel debugLevel)
-    {
-        FactoryOptions? factoryOptionsRef = null;
-        if (debugLevel != DebugLevel.None)
-        {
-            factoryOptionsRef = new FactoryOptions
-            {
-                DebugLevel = debugLevel
-            };
-        }
-
-        D2D1.CreateFactory(factoryType, Utilities.GetGuidFromType(typeof(Factory4)), factoryOptionsRef, out var iFactoryOut);
-        return new Factory4(iFactoryOut);
     }
 }

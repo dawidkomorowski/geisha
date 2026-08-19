@@ -21,6 +21,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     private readonly SwapChain _dxgiSwapChain;
     private readonly SafeWaitHandle _frameLatencyWaitHandle;
     private readonly EventWaitHandle _frameLatencyWaitEvent;
+    private readonly DeviceContext _deviceContext;
     private readonly RenderingContext2D _renderingContext2D;
 
     /// <summary>
@@ -62,6 +63,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
             out _dxgiSwapChain
         );
 
+        _deviceContext = new DeviceContext(_d3D11Device);
+
         using var swapChain2 = _dxgiSwapChain.QueryInterface<SwapChain2>();
         var waitableObject = swapChain2.FrameLatencyWaitableObject;
         _frameLatencyWaitHandle = new SafeWaitHandle(waitableObject, false);
@@ -74,7 +77,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
 
-        _renderingContext2D = new RenderingContext2D(form, _d3D11Device, _statistics);
+        _renderingContext2D = new RenderingContext2D(form, _deviceContext, _statistics);
 
         Info = new RenderingBackendInfo(
             Name: "DirectX 11",
@@ -130,9 +133,10 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public void Dispose()
     {
         _renderingContext2D.Dispose();
-        _dxgiSwapChain.Dispose();
         _frameLatencyWaitEvent.Dispose();
         _frameLatencyWaitHandle.Dispose();
+        _deviceContext.Dispose();
+        _dxgiSwapChain.Dispose();
         _d3D11Device.Dispose();
     }
 }
