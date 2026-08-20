@@ -22,6 +22,8 @@ internal sealed class SwapChainPipeline : IDisposable
     private readonly Texture2D _resolveTexture;
     private readonly Bitmap1 _resolveBitmap;
 
+    private readonly Bitmap1 _backBufferBitmap;
+
     public SwapChainPipeline(DeviceContext deviceContext, Size screenSize, SwapChain swapChain)
     {
         _deviceContext = deviceContext;
@@ -43,20 +45,19 @@ internal sealed class SwapChainPipeline : IDisposable
         _resolveBitmap = _deviceContext.CreateBitmap(_resolveTexture, BitmapOptions.None);
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
+
+        // It is safe to cache the back buffer reference in DX 11.
+        using var backBufferSurface = _swapChain.GetBackBuffer<Surface>(0);
+        _backBufferBitmap = _deviceContext.CreateBitmap(backBufferSurface, BitmapOptions.Target | BitmapOptions.CannotDraw);
     }
 
     public void Present(bool waitForVSync)
     {
-        using var backBufferSurface = _swapChain.GetBackBuffer<Surface>(0);
-
-        // TODO: It probably can be created once for the back buffer surface?
-        using var surfaceBitmap = _deviceContext.CreateBitmap(backBufferSurface, BitmapOptions.Target | BitmapOptions.CannotDraw);
-
         _deviceContext.D2D1DeviceContext.Target = null;
 
         _deviceContext.D3D11DeviceContext.ResolveSubresource(_msaaTargetTexture, 0, _resolveTexture, 0, Format.B8G8R8A8_UNorm);
 
-        _deviceContext.D2D1DeviceContext.Target = surfaceBitmap;
+        _deviceContext.D2D1DeviceContext.Target = _backBufferBitmap;
 
         _deviceContext.D2D1DeviceContext.BeginDraw();
         _deviceContext.D2D1DeviceContext.Clear(new RawColor4(0, 0, 0, 1));
@@ -81,6 +82,7 @@ internal sealed class SwapChainPipeline : IDisposable
 
     public void Dispose()
     {
+        _backBufferBitmap.Dispose();
         _resolveBitmap.Dispose();
         _resolveTexture.Dispose();
         _msaaTargetBitmap.Dispose();
