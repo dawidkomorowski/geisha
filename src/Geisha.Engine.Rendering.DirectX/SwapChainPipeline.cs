@@ -49,7 +49,7 @@ internal sealed class SwapChainPipeline : IDisposable
             throw new NotSupportedException("Multisampling is not supported on this device.");
         }
 
-        _msaaTargetTexture = _deviceContext.CreateTexture(screenSize, BindFlags.RenderTarget, 4);
+        _msaaTargetTexture = _deviceContext.CreateTexture(screenSize, BindFlags.RenderTarget, sampleCount);
         _msaaTargetBitmap = _deviceContext.CreateBitmap(_msaaTargetTexture, BitmapOptions.Target | BitmapOptions.CannotDraw);
 
         _resolveTexture = _deviceContext.CreateTexture(screenSize, BindFlags.ShaderResource, 1);
