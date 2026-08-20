@@ -12,7 +12,7 @@ namespace Geisha.Engine.Rendering.DirectX;
 internal sealed class SwapChainPipeline : IDisposable
 {
     private readonly DeviceContext _deviceContext;
-    private readonly SwapChain _swapChain;
+    private readonly SwapChain1 _swapChain;
     private readonly SafeWaitHandle _frameLatencyWaitHandle;
     private readonly EventWaitHandle _frameLatencyWaitEvent;
 
@@ -24,7 +24,7 @@ internal sealed class SwapChainPipeline : IDisposable
 
     private readonly Bitmap1 _backBufferBitmap;
 
-    public SwapChainPipeline(DeviceContext deviceContext, Size screenSize, SwapChain swapChain)
+    public SwapChainPipeline(DeviceContext deviceContext, Size screenSize, SwapChain1 swapChain)
     {
         _deviceContext = deviceContext;
         _swapChain = swapChain;

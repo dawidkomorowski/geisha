@@ -4,9 +4,10 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
+using Feature = SharpDX.DXGI.Feature;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
-using Rational = SharpDX.DXGI.Rational;
 
 namespace Geisha.Engine.Rendering.DirectX;
 
@@ -17,7 +18,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 {
     private readonly Statistics _statistics;
     private readonly Device _d3D11Device;
-    private readonly SwapChain _dxgiSwapChain;
+    private readonly SwapChain1 _dxgiSwapChain;
     private readonly DeviceContext _deviceContext;
     private readonly SwapChainPipeline _swapChainPipeline;
     private readonly RenderingContext2D _renderingContext2D;
@@ -32,19 +33,6 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         _statistics = new Statistics();
         var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
 
-        // TODO: Check if tearing is supported?
-        var swapChainDescription = new SwapChainDescription
-        {
-            BufferCount = 2,
-            ModeDescription = new ModeDescription(form.ClientSize.Width, form.ClientSize.Height, new Rational(60, 1), Format.B8G8R8A8_UNorm),
-            IsWindowed = true,
-            OutputHandle = form.Handle,
-            SampleDescription = new SampleDescription(1, 0),
-            SwapEffect = SwapEffect.FlipDiscard,
-            Usage = Usage.RenderTargetOutput,
-            Flags = SwapChainFlags.AllowTearing | SwapChainFlags.FrameLatencyWaitAbleObject
-        };
-
         var directXDriverType = driverType switch
         {
             DriverType.Hardware => SharpDX.Direct3D.DriverType.Hardware,
@@ -52,29 +40,43 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
             _ => throw new ArgumentOutOfRangeException(nameof(driverType), driverType, "Unknown driver type.")
         };
 
-        Device.CreateWithSwapChain(
-            directXDriverType,
-            DeviceCreationFlags.BgraSupport, // TODO Investigate DeviceCreationFlags.Debug
-            new[] { FeatureLevel.Level_11_0 },
-            swapChainDescription,
-            out _d3D11Device,
-            out _dxgiSwapChain
-        );
+        // TODO: Investigate DeviceCreationFlags.Debug
+        _d3D11Device = new Device(directXDriverType, DeviceCreationFlags.BgraSupport, FeatureLevel.Level_11_1);
+
+        using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
+        using var dxgiAdapter = dxgiDevice.Adapter;
+        using var dxgiFactory = dxgiAdapter.GetParent<Factory5>();
+        dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all window events.
+
+        if (!IsTearingSupported(dxgiFactory))
+        {
+            throw new NotSupportedException("Tearing is not supported on this device.");
+        }
+
+        var swapChainDescription = new SwapChainDescription1
+        {
+            Width = screenSize.Width,
+            Height = screenSize.Height,
+            Format = Format.B8G8R8A8_UNorm,
+            SampleDescription = new SampleDescription(1, 0),
+            Usage = Usage.RenderTargetOutput,
+            BufferCount = 2,
+            Scaling = Scaling.Stretch,
+            SwapEffect = SwapEffect.FlipDiscard,
+            Flags = SwapChainFlags.AllowTearing | SwapChainFlags.FrameLatencyWaitAbleObject
+        };
+
+        _dxgiSwapChain = new SwapChain1(dxgiFactory, dxgiDevice, form.Handle, ref swapChainDescription);
 
         _deviceContext = new DeviceContext(_d3D11Device);
         _swapChainPipeline = new SwapChainPipeline(_deviceContext, screenSize, _dxgiSwapChain);
-
-        using var dxgiFactory = _dxgiSwapChain.GetParent<Factory>();
-        dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all window events.
-
-        using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
 
         _renderingContext2D = new RenderingContext2D(_deviceContext, screenSize, _statistics);
 
         Info = new RenderingBackendInfo(
             Name: "DirectX 11",
-            GraphicsAdapterName: dxgiDevice.Adapter.Description.Description,
-            VideoMemorySize: dxgiDevice.Adapter.Description.DedicatedVideoMemory,
+            GraphicsAdapterName: dxgiAdapter.Description.Description,
+            VideoMemorySize: dxgiAdapter.Description.DedicatedVideoMemory,
             FeatureLevel: _d3D11Device.FeatureLevel.ToString()
         );
     }
@@ -114,5 +116,12 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         _deviceContext.Dispose();
         _dxgiSwapChain.Dispose();
         _d3D11Device.Dispose();
+    }
+
+    private static unsafe bool IsTearingSupported(Factory5 dxgiFactory)
+    {
+        RawBool allowTearing = false;
+        dxgiFactory.CheckFeatureSupport(Feature.PresentAllowTearing, new IntPtr(&allowTearing), sizeof(RawBool));
+        return allowTearing;
     }
 }
