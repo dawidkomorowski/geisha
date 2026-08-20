@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using Microsoft.Win32.SafeHandles;
 using SharpDX.Direct3D11;
@@ -77,7 +78,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
 
-        _renderingContext2D = new RenderingContext2D(form, _deviceContext, _statistics);
+        var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
+        _renderingContext2D = new RenderingContext2D(_deviceContext, screenSize, _statistics);
 
         Info = new RenderingBackendInfo(
             Name: "DirectX 11",

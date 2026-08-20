@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX;
@@ -25,11 +24,8 @@ namespace Geisha.Engine.Rendering.DirectX;
 // TODO: Refactor to make client API for rendering separate from internal render pipeline logic (msaa target, resolve, copy to swapchain)?
 internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 {
-    // TODO: Is it needed in here?
-    private readonly Form _form;
-    private readonly Statistics _statistics;
-
     private readonly DeviceContext _deviceContext;
+    private readonly Statistics _statistics;
 
     private readonly Texture2D _msaaTargetTexture;
     private readonly Bitmap1 _msaaTargetBitmap;
@@ -44,11 +40,11 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private string _currentFontFamilyName = string.Empty;
     private bool _clippingEnabled;
 
-    public RenderingContext2D(Form form, DeviceContext deviceContext, Statistics statistics)
+    public RenderingContext2D(DeviceContext deviceContext, Size screenSize, Statistics statistics)
     {
-        _form = form;
-
         _deviceContext = deviceContext;
+        ScreenSize = screenSize;
+        _statistics = statistics;
 
         // TODO: How to consistently handle DPI?
         // TODO: Check supported multisample quality levels and use D3D11_STANDARD_MULTISAMPLE_PATTERN?
@@ -60,17 +56,16 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 
-        _statistics = statistics;
         _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
         _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
         _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
     }
 
-    private Vector2 WindowCenter => ScreenSize.ToVector2() / 2d;
+    private Vector2 ScreenCenter => ScreenSize.ToVector2() / 2d;
 
     #region Implementation of IRenderingContext2D
 
-    public Size ScreenSize => new(_form.ClientSize.Width, _form.ClientSize.Height);
+    public Size ScreenSize { get; }
 
     // TODO: It should specify more clearly what formats are supported and maybe expose some importer extensions?
     public ITexture CreateTexture(Stream stream)
@@ -413,7 +408,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         return new RawMatrix3x2(
             (float)transform.M11, -(float)transform.M21,
             -(float)transform.M12, (float)transform.M22,
-            (float)(transform.M13 + WindowCenter.X), (float)(-transform.M23 + WindowCenter.Y)
+            (float)(transform.M13 + ScreenCenter.X), (float)(-transform.M23 + ScreenCenter.Y)
         );
     }
 }
