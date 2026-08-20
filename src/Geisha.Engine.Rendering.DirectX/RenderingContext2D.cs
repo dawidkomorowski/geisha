@@ -6,9 +6,7 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
-using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -21,17 +19,10 @@ using SpriteBatch = Geisha.Engine.Rendering.Backend.SpriteBatch;
 
 namespace Geisha.Engine.Rendering.DirectX;
 
-// TODO: Refactor to make client API for rendering separate from internal render pipeline logic (msaa target, resolve, copy to swapchain)?
 internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 {
     private readonly DeviceContext _deviceContext;
     private readonly Statistics _statistics;
-
-    private readonly Texture2D _msaaTargetTexture;
-    private readonly Bitmap1 _msaaTargetBitmap;
-
-    private readonly Texture2D _resolveTexture;
-    private readonly Bitmap1 _resolveBitmap;
 
     private readonly SharpDX.DirectWrite.Factory _dwFactory;
     private readonly SolidColorBrush _d2D1SolidColorBrush;
@@ -45,16 +36,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _deviceContext = deviceContext;
         ScreenSize = screenSize;
         _statistics = statistics;
-
-        // TODO: How to consistently handle DPI?
-        // TODO: Check supported multisample quality levels and use D3D11_STANDARD_MULTISAMPLE_PATTERN?
-        _msaaTargetTexture = _deviceContext.CreateTexture(ScreenSize, BindFlags.RenderTarget, 4);
-        _msaaTargetBitmap = _deviceContext.CreateBitmap(_msaaTargetTexture, BitmapOptions.Target | BitmapOptions.CannotDraw);
-
-        _resolveTexture = _deviceContext.CreateTexture(ScreenSize, BindFlags.ShaderResource, 1);
-        _resolveBitmap = _deviceContext.CreateBitmap(_resolveTexture, BitmapOptions.None);
-
-        _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 
         _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
         _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
@@ -361,33 +342,9 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _d2D1SpriteBatch.Dispose();
         _d2D1SolidColorBrush.Dispose();
         _dwFactory.Dispose();
-        _resolveBitmap.Dispose();
-        _resolveTexture.Dispose();
-        _msaaTargetBitmap.Dispose();
-        _msaaTargetTexture.Dispose();
     }
 
     #endregion
-
-    public void DrawToSwapChainSurface(Surface surface)
-    {
-        // TODO: It probably can be created once for the back buffer surface?
-        using var surfaceBitmap = _deviceContext.CreateBitmap(surface, BitmapOptions.Target | BitmapOptions.CannotDraw);
-
-        _deviceContext.D2D1DeviceContext.Target = null;
-
-        _deviceContext.D3D11DeviceContext.ResolveSubresource(_msaaTargetTexture, 0, _resolveTexture, 0, Format.B8G8R8A8_UNorm);
-
-        _deviceContext.D2D1DeviceContext.Target = surfaceBitmap;
-
-        _deviceContext.D2D1DeviceContext.BeginDraw();
-        _deviceContext.D2D1DeviceContext.Clear(new RawColor4(0, 0, 0, 1));
-        _deviceContext.D2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
-        _deviceContext.D2D1DeviceContext.DrawBitmap(_resolveBitmap, 1.0f, SharpDX.Direct2D1.BitmapInterpolationMode.Linear);
-        _deviceContext.D2D1DeviceContext.EndDraw();
-
-        _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
-    }
 
     /// <summary>
     ///     Converts given <see cref="Matrix3x3" /> transform to Direct2D <see cref="RawMatrix3x2" /> adjusting coordinates

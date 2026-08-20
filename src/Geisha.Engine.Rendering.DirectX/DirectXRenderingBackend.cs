@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
-using Microsoft.Win32.SafeHandles;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
@@ -20,9 +18,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     private readonly Statistics _statistics;
     private readonly Device _d3D11Device;
     private readonly SwapChain _dxgiSwapChain;
-    private readonly SafeWaitHandle _frameLatencyWaitHandle;
-    private readonly EventWaitHandle _frameLatencyWaitEvent;
     private readonly DeviceContext _deviceContext;
+    private readonly SwapChainPipeline _swapChainPipeline;
     private readonly RenderingContext2D _renderingContext2D;
 
     /// <summary>
@@ -33,9 +30,9 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public DirectXRenderingBackend(Form form, DriverType driverType)
     {
         _statistics = new Statistics();
+        var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
 
         // TODO: Check if tearing is supported?
-
         var swapChainDescription = new SwapChainDescription
         {
             BufferCount = 2,
@@ -65,20 +62,13 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         );
 
         _deviceContext = new DeviceContext(_d3D11Device);
-
-        using var swapChain2 = _dxgiSwapChain.QueryInterface<SwapChain2>();
-        var waitableObject = swapChain2.FrameLatencyWaitableObject;
-        _frameLatencyWaitHandle = new SafeWaitHandle(waitableObject, false);
-        _frameLatencyWaitEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
-        _frameLatencyWaitEvent.SafeWaitHandle = _frameLatencyWaitHandle;
-        swapChain2.MaximumFrameLatency = 1;
+        _swapChainPipeline = new SwapChainPipeline(_deviceContext, screenSize, _dxgiSwapChain);
 
         using var dxgiFactory = _dxgiSwapChain.GetParent<Factory>();
-        dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
+        dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all window events.
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
 
-        var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
         _renderingContext2D = new RenderingContext2D(_deviceContext, screenSize, _statistics);
 
         Info = new RenderingBackendInfo(
@@ -110,23 +100,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     /// <inheritdoc />
     public void Present(bool waitForVSync)
     {
-        using var backBufferSurface = _dxgiSwapChain.GetBackBuffer<Surface>(0);
-
-        _renderingContext2D.DrawToSwapChainSurface(backBufferSurface);
-
-        if (waitForVSync)
-        {
-            _dxgiSwapChain.Present(1, PresentFlags.None);
-        }
-        else
-        {
-            _dxgiSwapChain.Present(0, PresentFlags.AllowTearing);
-        }
-
+        _swapChainPipeline.Present(waitForVSync);
         _statistics.UpdateLastFrameStats();
-
-        // Wait for the presentation to complete before working on next frame.
-        _frameLatencyWaitEvent.WaitOne(1000);
     }
 
     /// <summary>
@@ -135,8 +110,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public void Dispose()
     {
         _renderingContext2D.Dispose();
-        _frameLatencyWaitEvent.Dispose();
-        _frameLatencyWaitHandle.Dispose();
+        _swapChainPipeline.Dispose();
         _deviceContext.Dispose();
         _dxgiSwapChain.Dispose();
         _d3D11Device.Dispose();
