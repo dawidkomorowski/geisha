@@ -25,6 +25,7 @@ namespace Geisha.Engine.Rendering.DirectX;
 // TODO: Refactor to make client API for rendering separate from internal render pipeline logic (msaa target, resolve, copy to swapchain)?
 internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 {
+    // TODO: Is it needed in here?
     private readonly Form _form;
     private readonly Statistics _statistics;
 
