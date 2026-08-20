@@ -1,6 +1,12 @@
 ﻿using System;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
+using Device3 = SharpDX.Direct2D1.Device3;
+using DeviceContext3 = SharpDX.Direct2D1.DeviceContext3;
+using Factory4 = SharpDX.Direct2D1.Factory4;
+using Size = Geisha.Engine.Core.Math.Size;
 
 namespace Geisha.Engine.Rendering.DirectX;
 
@@ -22,6 +28,22 @@ internal sealed class DeviceContext : IDisposable
     public SharpDX.Direct3D11.Device D3D11Device { get; }
     public SharpDX.Direct3D11.DeviceContext D3D11DeviceContext { get; }
     public DeviceContext3 D2D1DeviceContext { get; }
+
+    public Texture2D CreateTexture(Size size, BindFlags bindFlags, int samples)
+    {
+        var textureDescription = new Texture2DDescription
+        {
+            Width = size.Width,
+            Height = size.Height,
+            MipLevels = 1,
+            ArraySize = 1,
+            Format = Format.B8G8R8A8_UNorm,
+            SampleDescription = new SampleDescription(samples, 0),
+            Usage = ResourceUsage.Default,
+            BindFlags = bindFlags
+        };
+        return new Texture2D(D3D11Device, textureDescription);
+    }
 
     private static Factory4 CreateD2D1Factory(FactoryType factoryType, DebugLevel debugLevel)
     {

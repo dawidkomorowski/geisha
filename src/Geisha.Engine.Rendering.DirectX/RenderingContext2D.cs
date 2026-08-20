@@ -52,18 +52,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _deviceContext = deviceContext;
 
         // TODO: Check supported multisample quality levels and use D3D11_STANDARD_MULTISAMPLE_PATTERN?
-        var msaaTextureDescription = new Texture2DDescription
-        {
-            Width = ScreenSize.Width,
-            Height = ScreenSize.Height,
-            MipLevels = 1,
-            ArraySize = 1,
-            Format = Format.B8G8R8A8_UNorm,
-            SampleDescription = new SampleDescription(4, 0),
-            Usage = ResourceUsage.Default,
-            BindFlags = BindFlags.RenderTarget
-        };
-        _msaaTargetTexture = new Texture2D(_deviceContext.D3D11Device, msaaTextureDescription);
+        _msaaTargetTexture = _deviceContext.CreateTexture(ScreenSize, BindFlags.RenderTarget, 4);
 
         using var msaaSurface = _msaaTargetTexture.QueryInterface<Surface>();
         var renderTargetProps = new BitmapProperties1(
@@ -72,18 +61,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         );
         _msaaTargetBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, msaaSurface, renderTargetProps);
 
-        var resolveTextureDescription = new Texture2DDescription
-        {
-            Width = ScreenSize.Width,
-            Height = ScreenSize.Height,
-            MipLevels = 1,
-            ArraySize = 1,
-            Format = Format.B8G8R8A8_UNorm,
-            SampleDescription = new SampleDescription(1, 0),
-            Usage = ResourceUsage.Default,
-            BindFlags = BindFlags.ShaderResource
-        };
-        _resolveTexture = new Texture2D(_deviceContext.D3D11Device, resolveTextureDescription);
+        _resolveTexture = _deviceContext.CreateTexture(ScreenSize, BindFlags.ShaderResource, 1);
 
         using var resolveSurface = _resolveTexture.QueryInterface<Surface>();
         var resolveProps = new BitmapProperties1(
