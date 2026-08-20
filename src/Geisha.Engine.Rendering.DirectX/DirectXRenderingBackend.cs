@@ -42,7 +42,14 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         };
 
         // TODO: Investigate DeviceCreationFlags.Debug
-        _d3D11Device = new Device(directXDriverType, DeviceCreationFlags.BgraSupport, FeatureLevel.Level_11_1);
+        var featureLevels = new[]
+        {
+            FeatureLevel.Level_11_1,
+            FeatureLevel.Level_11_0,
+            FeatureLevel.Level_10_1,
+            FeatureLevel.Level_10_0
+        };
+        _d3D11Device = new Device(directXDriverType, DeviceCreationFlags.BgraSupport, featureLevels);
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
         using var dxgiAdapter = dxgiDevice.Adapter;
