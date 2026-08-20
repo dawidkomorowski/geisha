@@ -3,6 +3,7 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device3 = SharpDX.Direct2D1.Device3;
 using DeviceContext3 = SharpDX.Direct2D1.DeviceContext3;
 using Factory4 = SharpDX.Direct2D1.Factory4;
@@ -43,6 +44,45 @@ internal sealed class DeviceContext : IDisposable
             BindFlags = bindFlags
         };
         return new Texture2D(D3D11Device, textureDescription);
+    }
+
+    public Bitmap1 CreateBitmap(Texture2D texture, BitmapOptions bitmapOptions)
+    {
+        using var surface = texture.QueryInterface<Surface>();
+        return CreateBitmap(surface, bitmapOptions);
+    }
+
+    public Bitmap1 CreateBitmap(Surface surface, BitmapOptions bitmapOptions)
+    {
+        var bitmapProperties = new BitmapProperties1(
+            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
+            D2D1DeviceContext.DotsPerInch.Width,
+            D2D1DeviceContext.DotsPerInch.Height,
+            bitmapOptions
+        );
+        return new Bitmap1(D2D1DeviceContext, surface, bitmapProperties);
+    }
+
+    public Bitmap1 CreateBitmap(Size size, DataStream dataStream, int pitch, BitmapOptions bitmapOptions)
+    {
+        var bitmapProperties = new BitmapProperties1(
+            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
+            D2D1DeviceContext.DotsPerInch.Width,
+            D2D1DeviceContext.DotsPerInch.Height,
+            bitmapOptions
+        );
+        return new Bitmap1(D2D1DeviceContext, size.ToSize2(), dataStream, pitch, bitmapProperties);
+    }
+
+    public Bitmap1 CreateBitmap(Size size, BitmapOptions bitmapOptions)
+    {
+        var bitmapProperties = new BitmapProperties1(
+            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
+            D2D1DeviceContext.DotsPerInch.Width,
+            D2D1DeviceContext.DotsPerInch.Height,
+            bitmapOptions
+        );
+        return new Bitmap1(D2D1DeviceContext, size.ToSize2(), bitmapProperties);
     }
 
     private static Factory4 CreateD2D1Factory(FactoryType factoryType, DebugLevel debugLevel)

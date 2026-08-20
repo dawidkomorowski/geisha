@@ -13,12 +13,10 @@ using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Color = Geisha.Engine.Core.Math.Color;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
-using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using Size = Geisha.Engine.Core.Math.Size;
 using SpriteBatch = Geisha.Engine.Rendering.Backend.SpriteBatch;
 
@@ -51,24 +49,13 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
         _deviceContext = deviceContext;
 
+        // TODO: How to consistently handle DPI?
         // TODO: Check supported multisample quality levels and use D3D11_STANDARD_MULTISAMPLE_PATTERN?
         _msaaTargetTexture = _deviceContext.CreateTexture(ScreenSize, BindFlags.RenderTarget, 4);
-
-        using var msaaSurface = _msaaTargetTexture.QueryInterface<Surface>();
-        var renderTargetProps = new BitmapProperties1(
-            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
-            _deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.Target | BitmapOptions.CannotDraw
-        );
-        _msaaTargetBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, msaaSurface, renderTargetProps);
+        _msaaTargetBitmap = _deviceContext.CreateBitmap(_msaaTargetTexture, BitmapOptions.Target | BitmapOptions.CannotDraw);
 
         _resolveTexture = _deviceContext.CreateTexture(ScreenSize, BindFlags.ShaderResource, 1);
-
-        using var resolveSurface = _resolveTexture.QueryInterface<Surface>();
-        var resolveProps = new BitmapProperties1(
-            new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
-            deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.None
-        );
-        _resolveBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, resolveSurface, resolveProps);
+        _resolveBitmap = _deviceContext.CreateBitmap(_resolveTexture, BitmapOptions.None);
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 
@@ -127,8 +114,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         bitmapDataStream.Position = 0;
 
         // Create Direct2D1 bitmap from data stream
-        var d2D1Bitmap = new Bitmap(_deviceContext.D2D1DeviceContext, new Size2(cpuBitmap.Width, cpuBitmap.Height), bitmapDataStream, stride,
-            new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
+        var d2D1Bitmap = _deviceContext.CreateBitmap(new Size(cpuBitmap.Width, cpuBitmap.Height), bitmapDataStream, stride, BitmapOptions.None);
 
         return new Texture(d2D1Bitmap);
     }
@@ -142,9 +128,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void CaptureScreenShotAsPng(Stream stream)
     {
-        using var d2D1CpuBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, _deviceContext.D2D1DeviceContext.PixelSize,
-            new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
-                _deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.CpuRead | BitmapOptions.CannotDraw));
+        var size = _deviceContext.D2D1DeviceContext.PixelSize.ToSize();
+        using var d2D1CpuBitmap = _deviceContext.CreateBitmap(size, BitmapOptions.CpuRead | BitmapOptions.CannotDraw);
         d2D1CpuBitmap.CopyFromRenderTarget(_deviceContext.D2D1DeviceContext);
 
         var dataRectangle = d2D1CpuBitmap.Surface.Map(MapFlags.Read, out var dataStream);
@@ -391,10 +376,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     public void DrawToSwapChainSurface(Surface surface)
     {
         // TODO: It probably can be created once for the back buffer surface?
-        var backBufferProps = new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
-            _deviceContext.D2D1DeviceContext.DotsPerInch.Width,
-            _deviceContext.D2D1DeviceContext.DotsPerInch.Height, BitmapOptions.Target | BitmapOptions.CannotDraw);
-        using var surfaceBitmap = new Bitmap1(_deviceContext.D2D1DeviceContext, surface, backBufferProps);
+        using var surfaceBitmap = _deviceContext.CreateBitmap(surface, BitmapOptions.Target | BitmapOptions.CannotDraw);
 
         _deviceContext.D2D1DeviceContext.Target = null;
 
