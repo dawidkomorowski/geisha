@@ -30,8 +30,10 @@ internal sealed class DeviceContext : IDisposable
     public SharpDX.Direct3D11.DeviceContext D3D11DeviceContext { get; }
     public DeviceContext3 D2D1DeviceContext { get; }
 
-    public Texture2D CreateTexture(Size size, BindFlags bindFlags, int samples)
+    public Texture2D CreateTexture(Size size, BindFlags bindFlags, int sampleCount)
     {
+        var sampleQuality = sampleCount > 1 ? (int)StandardMultisampleQualityLevels.StandardMultisamplePattern : 0;
+
         var textureDescription = new Texture2DDescription
         {
             Width = size.Width,
@@ -39,7 +41,7 @@ internal sealed class DeviceContext : IDisposable
             MipLevels = 1,
             ArraySize = 1,
             Format = Format.B8G8R8A8_UNorm,
-            SampleDescription = new SampleDescription(samples, 0),
+            SampleDescription = new SampleDescription(sampleCount, sampleQuality),
             Usage = ResourceUsage.Default,
             BindFlags = bindFlags
         };

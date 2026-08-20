@@ -36,8 +36,19 @@ internal sealed class SwapChainPipeline : IDisposable
         _frameLatencyWaitEvent.SafeWaitHandle = _frameLatencyWaitHandle;
         swapChain2.MaximumFrameLatency = 1;
 
-        // TODO: How to consistently handle DPI?
-        // TODO: Check supported multisample quality levels and use D3D11_STANDARD_MULTISAMPLE_PATTERN?
+        var formatSupport = _deviceContext.D3D11Device.CheckFormatSupport(Format.B8G8R8A8_UNorm);
+        if (!formatSupport.HasFlag(FormatSupport.MultisampleRenderTarget))
+        {
+            throw new NotSupportedException("Multisampling is not supported on this device.");
+        }
+
+        const int sampleCount = 4;
+
+        if (_deviceContext.D3D11Device.CheckMultisampleQualityLevels(Format.B8G8R8A8_UNorm, sampleCount) == 0)
+        {
+            throw new NotSupportedException("Multisampling is not supported on this device.");
+        }
+
         _msaaTargetTexture = _deviceContext.CreateTexture(screenSize, BindFlags.RenderTarget, 4);
         _msaaTargetBitmap = _deviceContext.CreateBitmap(_msaaTargetTexture, BitmapOptions.Target | BitmapOptions.CannotDraw);
 

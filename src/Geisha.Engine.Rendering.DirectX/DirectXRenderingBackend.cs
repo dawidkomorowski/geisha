@@ -30,6 +30,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     /// <param name="driverType">Type of driver to use by rendering API.</param>
     public DirectXRenderingBackend(Form form, DriverType driverType)
     {
+        // TODO: How to consistently handle DPI?
         _statistics = new Statistics();
         var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
 
