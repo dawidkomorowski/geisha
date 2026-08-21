@@ -191,14 +191,18 @@ internal sealed class Renderer : IRenderNodeVisitor
     private void RenderDiagnosticInfo()
     {
         var screenSize = _renderingContext2D.ScreenSize;
-        var color = Color.Green;
-
-        var translation = new Vector2(-(screenSize.Width / 2d) + 1, screenSize.Height / 2d - 1);
+        var translation = new Vector2(-(screenSize.Width / 2d) + 3, screenSize.Height / 2d - 3);
 
         foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
         {
-            _renderingContext2D.DrawText(diagnosticInfo.ToString(), "Consolas", FontSize.FromDips(14), color, Matrix3x3.CreateTranslation(translation));
-            translation -= new Vector2(0, 14);
+            var text = diagnosticInfo.ToString();
+            var rectSize = new Vector2(text.Length * 8, 16);
+            var rectCenter = translation + new Vector2(rectSize.X * 0.5, -rectSize.Y * 0.5);
+
+            _renderingContext2D.DrawRectangle(new AxisAlignedRectangle(rectCenter, rectSize), Color.Green, true, Matrix3x3.Identity);
+            _renderingContext2D.DrawText(text, "Consolas", FontSize.FromDips(14), Color.White, Matrix3x3.CreateTranslation(translation + new Vector2(2, 0)));
+
+            translation -= new Vector2(0, 20);
         }
     }
 

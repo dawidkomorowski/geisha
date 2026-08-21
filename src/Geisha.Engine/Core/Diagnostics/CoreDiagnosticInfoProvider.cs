@@ -46,7 +46,7 @@ namespace Geisha.Engine.Core.Diagnostics
 
         private DiagnosticInfo GetFpsDiagnosticInfo()
         {
-            return new DiagnosticInfo("FPS", _performanceStatisticsProvider.AvgFps.ToString(CultureInfo.InvariantCulture));
+            return new DiagnosticInfo("FPS", _performanceStatisticsProvider.AvgFps.ToString("F", CultureInfo.InvariantCulture));
         }
 
         private DiagnosticInfo GetFrameTimeDiagnosticInfo()
