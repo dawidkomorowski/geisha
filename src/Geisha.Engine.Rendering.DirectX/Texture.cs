@@ -6,9 +6,9 @@ namespace Geisha.Engine.Rendering.DirectX
 {
     internal sealed class Texture : ITexture
     {
-        internal readonly Bitmap D2D1Bitmap;
+        internal readonly Bitmap1 D2D1Bitmap;
 
-        public Texture(Bitmap d2D1Bitmap)
+        public Texture(Bitmap1 d2D1Bitmap)
         {
             D2D1Bitmap = d2D1Bitmap;
             RuntimeId = RuntimeId.Next();
