@@ -195,6 +195,7 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
         {
+            // TODO: How to measure text?
             var text = diagnosticInfo.ToString();
             var rectSize = new Vector2(text.Length * 8, 16);
             var rectCenter = translation + new Vector2(rectSize.X * 0.5, -rectSize.Y * 0.5);
