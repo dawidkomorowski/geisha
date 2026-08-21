@@ -118,14 +118,13 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
             {
                 using var cpuBitmap = new Image<Bgra32>(surfaceDescription.Width, surfaceDescription.Height);
 
-                for (var y = 0; y < surfaceDescription.Height; y++)
+                cpuBitmap.ProcessPixelRows(pixelAccessor =>
                 {
-                    dataStream.Seek(y * dataRectangle.Pitch, SeekOrigin.Begin);
-
-                    var rowIndex = y;
-                    cpuBitmap.ProcessPixelRows(p =>
+                    for (var y = 0; y < surfaceDescription.Height; y++)
                     {
-                        var pixelRow = p.GetRowSpan(rowIndex);
+                        dataStream.Seek(y * dataRectangle.Pitch, SeekOrigin.Begin);
+
+                        var pixelRow = pixelAccessor.GetRowSpan(y);
 
                         for (var x = 0; x < surfaceDescription.Width; x++)
                         {
@@ -135,8 +134,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
                             var a = (byte)dataStream.ReadByte();
                             pixelRow[x] = new Bgra32(r, g, b, a);
                         }
-                    });
-                }
+                    }
+                });
 
                 cpuBitmap.SaveAsPng(stream);
             }
