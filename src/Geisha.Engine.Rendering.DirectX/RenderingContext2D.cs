@@ -120,15 +120,22 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
                 for (var y = 0; y < surfaceDescription.Height; y++)
                 {
-                    for (var x = 0; x < surfaceDescription.Width; x++)
+                    dataStream.Seek(y * dataRectangle.Pitch, SeekOrigin.Begin);
+
+                    var rowIndex = y;
+                    cpuBitmap.ProcessPixelRows(p =>
                     {
-                        dataStream.Seek((y * dataRectangle.Pitch) + (x * sizeof(int)), SeekOrigin.Begin);
-                        var b = (byte)dataStream.ReadByte();
-                        var g = (byte)dataStream.ReadByte();
-                        var r = (byte)dataStream.ReadByte();
-                        var a = (byte)dataStream.ReadByte();
-                        cpuBitmap[x, y] = new Bgra32(r, g, b, a);
-                    }
+                        var pixelRow = p.GetRowSpan(rowIndex);
+
+                        for (var x = 0; x < surfaceDescription.Width; x++)
+                        {
+                            var b = (byte)dataStream.ReadByte();
+                            var g = (byte)dataStream.ReadByte();
+                            var r = (byte)dataStream.ReadByte();
+                            var a = (byte)dataStream.ReadByte();
+                            pixelRow[x] = new Bgra32(r, g, b, a);
+                        }
+                    });
                 }
 
                 cpuBitmap.SaveAsPng(stream);
