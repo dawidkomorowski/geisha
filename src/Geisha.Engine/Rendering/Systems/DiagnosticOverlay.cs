@@ -1,0 +1,49 @@
+﻿using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering.Backend;
+
+namespace Geisha.Engine.Rendering.Systems;
+
+internal sealed class DiagnosticOverlay
+{
+    private readonly IRenderingContext2D _renderingContext2D;
+    private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
+
+    private const string FontFamily = "Consolas";
+    private readonly FontSize _fontSize;
+
+    private readonly double _glyphWidth;
+
+    public DiagnosticOverlay(IRenderingContext2D renderingContext2D, IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
+    {
+        _renderingContext2D = renderingContext2D;
+        _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
+
+        _fontSize = FontSize.FromDips(14);
+
+        var screenSize = _renderingContext2D.ScreenSize;
+        using var textLayout = _renderingContext2D.CreateTextLayout("X", FontFamily, _fontSize, screenSize.Width, screenSize.Height);
+        _glyphWidth = textLayout.Metrics.Width;
+    }
+
+    public void Draw()
+    {
+        var screenSize = _renderingContext2D.ScreenSize;
+        var translation = new Vector2(-(screenSize.Width / 2d) + 3, screenSize.Height / 2d - 3);
+
+        foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
+        {
+            var text = diagnosticInfo.ToString();
+            const double margin = 4;
+            var rectSize = new Vector2(text.Length * _glyphWidth + margin * 2, _fontSize.Dips + margin);
+            var rectCenter = translation + new Vector2(rectSize.X * 0.5, -rectSize.Y * 0.5);
+
+            _renderingContext2D.DrawRectangle(new AxisAlignedRectangle(rectCenter, rectSize), Color.Green, true, Matrix3x3.Identity);
+
+            var textTransform = Matrix3x3.CreateTranslation(translation + new Vector2(margin, 0));
+            _renderingContext2D.DrawText(text, FontFamily, _fontSize, Color.White, textTransform);
+
+            translation -= new Vector2(0, rectSize.Y + 4);
+        }
+    }
+}
