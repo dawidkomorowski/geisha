@@ -154,7 +154,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "FPS");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(avgFps.ToString(CultureInfo.InvariantCulture)));
+            Assert.That(actual.Value, Is.EqualTo(avgFps.ToString("F", CultureInfo.InvariantCulture)));
         }
 
         [Test]
