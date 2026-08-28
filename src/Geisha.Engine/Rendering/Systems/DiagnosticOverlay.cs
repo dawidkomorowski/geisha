@@ -30,22 +30,24 @@ internal sealed class DiagnosticOverlay
 
     public void Draw()
     {
+        const double margin = 4;
+        const double padding = 4;
+
         var screenSize = _renderingContext2D.ScreenSize;
-        var translation = new Vector2(-(screenSize.Width / 2d) + 3, screenSize.Height / 2d - 3);
+        var translation = new Vector2(-(screenSize.Width / 2d) + margin, screenSize.Height / 2d - margin);
 
         foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
         {
             var text = diagnosticInfo.ToString();
-            const double margin = 4;
-            var rectSize = new Vector2(text.Length * _glyphWidth + margin * 2, _lineHeight + margin * 2);
+            var rectSize = new Vector2(text.Length * _glyphWidth + padding * 2, _lineHeight + padding * 2);
             var rectCenter = translation + new Vector2(rectSize.X * 0.5, -rectSize.Y * 0.5);
 
             _renderingContext2D.DrawRectangle(new AxisAlignedRectangle(rectCenter, rectSize), Color.Green, true, Matrix3x3.Identity);
 
-            var textTransform = Matrix3x3.CreateTranslation(translation + new Vector2(margin, -margin));
+            var textTransform = Matrix3x3.CreateTranslation(translation + new Vector2(padding, -padding));
             _renderingContext2D.DrawText(text, FontFamily, _fontSize, Color.White, textTransform);
 
-            translation -= new Vector2(0, rectSize.Y + 4);
+            translation -= new Vector2(0, rectSize.Y + margin);
         }
     }
 }
