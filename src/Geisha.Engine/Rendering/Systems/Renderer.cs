@@ -14,7 +14,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
     private readonly IRenderingBackend _renderingBackend;
     private readonly IRenderingContext2D _renderingContext2D;
-    private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
+    private readonly DiagnosticOverlay _diagnosticOverlay;
     private readonly IDebugRendererForRenderingSystem _debugRendererForRenderingSystem;
     private readonly IRenderingDiagnosticInfoProvider _renderingDiagnosticInfoProvider;
     private readonly RenderingState _renderingState;
@@ -34,7 +34,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         _renderingBackend = renderingBackend;
         _renderingContext2D = renderingBackend.Context2D;
-        _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
+        _diagnosticOverlay = new DiagnosticOverlay(_renderingContext2D, aggregatedDiagnosticInfoProvider);
         _debugRendererForRenderingSystem = debugRendererForRenderingSystem;
         _renderingDiagnosticInfoProvider = renderingDiagnosticInfoProvider;
         _renderingState = renderingState;
@@ -67,7 +67,7 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         _renderingDiagnosticInfoProvider.UpdateDiagnostics(_renderingBackend.Statistics);
 
-        RenderDiagnosticInfo();
+        _diagnosticOverlay.Draw();
 
         _renderingContext2D.EndDraw();
     }
@@ -186,20 +186,6 @@ internal sealed class Renderer : IRenderNodeVisitor
         }
 
         FlushSpriteBatch();
-    }
-
-    private void RenderDiagnosticInfo()
-    {
-        var screenSize = _renderingContext2D.ScreenSize;
-        var color = Color.Green;
-
-        var translation = new Vector2(-(screenSize.Width / 2d) + 1, screenSize.Height / 2d - 1);
-
-        foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
-        {
-            _renderingContext2D.DrawText(diagnosticInfo.ToString(), "Consolas", FontSize.FromDips(14), color, Matrix3x3.CreateTranslation(translation));
-            translation -= new Vector2(0, 14);
-        }
     }
 
     private void FlushSpriteBatch()
