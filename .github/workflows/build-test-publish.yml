@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload test output as artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-output
           path: test/Geisha.Engine.IntegrationTests/bin/**/Rendering/TestOutput/**
@@ -107,7 +107,7 @@ jobs:
         run: .\scripts\workflow\prepare-sdk-package.ps1
 
       - name: Upload SDK package as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sdk-package
           path: GeishaSDK*.zip
@@ -116,7 +116,7 @@ jobs:
         run: .\scripts\workflow\prepare-demo-app-package.ps1
 
       - name: Upload Demo App package as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: demo-app
           path: Geisha.Demo*.zip
@@ -125,7 +125,7 @@ jobs:
         run: .\scripts\workflow\prepare-benchmark-app-package.ps1
 
       - name: Upload Benchmark App package as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: benchmark-app
           path: Geisha.Benchmark*.zip
