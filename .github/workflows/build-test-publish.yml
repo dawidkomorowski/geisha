@@ -156,7 +156,7 @@ jobs:
           cat .\.version
 
       - name: Download benchmark binaries from latest master build
-        uses: dawidd6/action-download-artifact@v9
+        uses: dawidd6/action-download-artifact@v24
         with:
           workflow: build-test-publish.yml
           workflow_conclusion: success
