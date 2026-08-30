@@ -1,7 +1,6 @@
 name: Build & Publish Documentation
 
-permissions:
-  contents: read
+permissions: {}
 
 on:
   # Allows you to run this workflow manually from the Actions tab.

@@ -1,7 +1,6 @@
 name: Build/Test/Publish
 
 permissions:
-  contents: read
   checks: write
 
 on:
