@@ -1,7 +1,6 @@
 name: Build/Test/Publish
 
-permissions:
-  checks: write
+permissions: {}
 
 on:
   push:
@@ -135,6 +134,10 @@ jobs:
     needs: publish
     runs-on: windows-latest
     if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+
+    # Grant GITHUB_TOKEN the permissions required to publish GitHub check with benchmark results.
+    permissions:
+      checks: write
 
     steps:
       - name: Checkout repository
