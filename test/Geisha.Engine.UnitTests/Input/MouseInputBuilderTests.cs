@@ -7,19 +7,20 @@ namespace Geisha.Engine.UnitTests.Input;
 [TestFixture]
 public class MouseInputBuilderTests
 {
-    [Test]
-    public void Build_CreatesMouseInputWithStateSetAsSpecified()
+    [TestCase(true, false, true, false, true)]
+    [TestCase(false, true, false, true, false)]
+    public void Build_CreatesMouseInputWithStateSetAsSpecified(bool leftButton, bool middleButton, bool rightButton, bool xButton1, bool xButton2)
     {
         // Arrange
         var builder = new MouseInputBuilder
         {
             Position = new Vector2(12, 34),
             PositionDelta = new Vector2(5, 6),
-            LeftButton = true,
-            MiddleButton = true,
-            RightButton = true,
-            XButton1 = true,
-            XButton2 = true,
+            LeftButton = leftButton,
+            MiddleButton = middleButton,
+            RightButton = rightButton,
+            XButton1 = xButton1,
+            XButton2 = xButton2,
             ScrollDelta = 120
         };
 
