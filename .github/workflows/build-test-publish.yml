@@ -1,7 +1,6 @@
 name: Build/Test/Publish
 
-permissions:
-  checks: write
+permissions: {}
 
 on:
   push:
@@ -26,7 +25,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           lfs: true
           fetch-depth: 0
@@ -43,13 +42,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           lfs: true
           fetch-depth: 0
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 6.0.x
 
@@ -65,7 +64,7 @@ jobs:
         run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           name: Test Results
@@ -74,7 +73,7 @@ jobs:
 
       - name: Upload test output as artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-output
           path: test/Geisha.Engine.IntegrationTests/bin/**/Rendering/TestOutput/**
@@ -86,13 +85,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           lfs: true
           fetch-depth: 0
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 6.0.x
 
@@ -107,7 +106,7 @@ jobs:
         run: .\scripts\workflow\prepare-sdk-package.ps1
 
       - name: Upload SDK package as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sdk-package
           path: GeishaSDK*.zip
@@ -116,7 +115,7 @@ jobs:
         run: .\scripts\workflow\prepare-demo-app-package.ps1
 
       - name: Upload Demo App package as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: demo-app
           path: Geisha.Demo*.zip
@@ -125,7 +124,7 @@ jobs:
         run: .\scripts\workflow\prepare-benchmark-app-package.ps1
 
       - name: Upload Benchmark App package as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: benchmark-app
           path: Geisha.Benchmark*.zip
@@ -136,14 +135,18 @@ jobs:
     runs-on: windows-latest
     if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
 
+    # Grant GITHUB_TOKEN the permissions required to publish GitHub check with benchmark results.
+    permissions:
+      checks: write
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           lfs: true
 
       - name: Download benchmark binaries from current build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: benchmark-app
           path: benchmark-app\current
@@ -156,7 +159,7 @@ jobs:
           cat .\.version
 
       - name: Download benchmark binaries from latest master build
-        uses: dawidd6/action-download-artifact@v9
+        uses: dawidd6/action-download-artifact@v24
         with:
           workflow: build-test-publish.yml
           workflow_conclusion: success
