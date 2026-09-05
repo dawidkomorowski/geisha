@@ -15,6 +15,8 @@ internal sealed class DiagnosticOverlay
     private readonly double _glyphWidth;
     private readonly double _lineHeight;
 
+    private readonly Color _backgroundColor = Color.FromArgb(255, 0, 128, 0);
+
     public DiagnosticOverlay(IRenderingContext2D renderingContext2D, IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
     {
         _renderingContext2D = renderingContext2D;
@@ -42,7 +44,7 @@ internal sealed class DiagnosticOverlay
             var rectSize = new Vector2(text.Length * _glyphWidth + padding * 2, _lineHeight + padding * 2);
             var rectCenter = translation + new Vector2(rectSize.X * 0.5, -rectSize.Y * 0.5);
 
-            _renderingContext2D.DrawRectangle(new AxisAlignedRectangle(rectCenter, rectSize), Color.Green, true, Matrix3x3.Identity);
+            _renderingContext2D.DrawRectangle(new AxisAlignedRectangle(rectCenter, rectSize), _backgroundColor, true, Matrix3x3.Identity);
 
             var textTransform = Matrix3x3.CreateTranslation(translation + new Vector2(padding, -padding));
             _renderingContext2D.DrawText(text, FontFamily, _fontSize, Color.White, textTransform);
