@@ -80,6 +80,9 @@ namespace Geisha.Engine.Windows
 
                 RenderLoop.Run(form, () =>
                 {
+                    // TODO: Track the client size and if changed resize rendering resources.
+                    var clientSize = form.ClientSize;
+
                     // ReSharper disable AccessToDisposedClosure
                     engine.Update();
 
