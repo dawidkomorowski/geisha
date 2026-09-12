@@ -45,6 +45,7 @@ public class ConfigurationTests
         Assert.That(actual.Physics.BroadPhaseGridCellSize, Is.EqualTo(new SizeD(12, 34)));
         Assert.That(actual.Physics.EnableDebugRendering, Is.True);
 
+        Assert.That(actual.Rendering.AllowWindowResizing, Is.True);
         Assert.That(actual.Rendering.EnableVSync, Is.True);
         Assert.That(actual.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
@@ -90,6 +91,7 @@ public class ConfigurationTests
             },
             Rendering = configuration.Rendering with
             {
+                AllowWindowResizing = true,
                 EnableVSync = true,
                 ScreenSize = new Size(3840, 2160),
                 ShowRenderingStatistics = true,

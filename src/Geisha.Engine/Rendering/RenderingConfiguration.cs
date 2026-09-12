@@ -13,12 +13,16 @@ public sealed record RenderingConfiguration
     /// </summary>
     public const string DefaultSortingLayerName = "Default";
 
+    // TODO: Add documentation.
+    public bool AllowWindowResizing { get; init; } = false;
+
     /// <summary>
     ///     Specifies whether VSync is enabled. When enabled, rendered frames wait for vertical synchronization in order to be
     ///     presented, therefore frame rate is limited to refresh rate of display. Default is <c>false</c>.
     /// </summary>
     public bool EnableVSync { get; init; } = false;
 
+    // TODO: This documentation needs adjustments as it is no longer valid for fullscreen.
     /// <summary>
     ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels. Default is
     ///     <c>1280 x 720</c>.

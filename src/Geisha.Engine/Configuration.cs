@@ -68,67 +68,69 @@ namespace Geisha.Engine
             if (fileContent is null) throw new InvalidOperationException($"Cannot load configuration from file: {path}.");
 
             var audioConfiguration = new AudioConfiguration();
-            if (fileContent.Audio?.EnableSound != null)
+            if (fileContent.Audio?.EnableSound is not null)
                 audioConfiguration = audioConfiguration with { EnableSound = fileContent.Audio.EnableSound.Value };
-            if (fileContent.Audio?.Volume != null)
+            if (fileContent.Audio?.Volume is not null)
                 audioConfiguration = audioConfiguration with { Volume = fileContent.Audio.Volume.Value };
 
             var coreConfiguration = new CoreConfiguration();
-            if (fileContent.Core?.AssetsRootDirectoryPath != null)
+            if (fileContent.Core?.AssetsRootDirectoryPath is not null)
                 coreConfiguration = coreConfiguration with { AssetsRootDirectoryPath = fileContent.Core.AssetsRootDirectoryPath };
-            if (fileContent.Core?.CustomGameLoopSteps != null)
+            if (fileContent.Core?.CustomGameLoopSteps is not null)
                 coreConfiguration = coreConfiguration with { CustomGameLoopSteps = fileContent.Core.CustomGameLoopSteps };
-            if (fileContent.Core?.EnableGCLogging != null)
+            if (fileContent.Core?.EnableGCLogging is not null)
                 coreConfiguration = coreConfiguration with { EnableGCLogging = fileContent.Core.EnableGCLogging.Value };
-            if (fileContent.Core?.FixedUpdatesPerFrameLimit != null)
+            if (fileContent.Core?.FixedUpdatesPerFrameLimit is not null)
                 coreConfiguration = coreConfiguration with { FixedUpdatesPerFrameLimit = fileContent.Core.FixedUpdatesPerFrameLimit.Value };
-            if (fileContent.Core?.FixedUpdatesPerSecond != null)
+            if (fileContent.Core?.FixedUpdatesPerSecond is not null)
                 coreConfiguration = coreConfiguration with { FixedUpdatesPerSecond = fileContent.Core.FixedUpdatesPerSecond.Value };
             if (fileContent.Core?.LogLevel is not null)
                 coreConfiguration = coreConfiguration with { LogLevel = fileContent.Core.LogLevel.Value };
-            if (fileContent.Core?.ShowAllEntitiesCount != null)
+            if (fileContent.Core?.ShowAllEntitiesCount is not null)
                 coreConfiguration = coreConfiguration with { ShowAllEntitiesCount = fileContent.Core.ShowAllEntitiesCount.Value };
-            if (fileContent.Core?.ShowRootEntitiesCount != null)
+            if (fileContent.Core?.ShowRootEntitiesCount is not null)
                 coreConfiguration = coreConfiguration with { ShowRootEntitiesCount = fileContent.Core.ShowRootEntitiesCount.Value };
-            if (fileContent.Core?.ShowFps != null)
+            if (fileContent.Core?.ShowFps is not null)
                 coreConfiguration = coreConfiguration with { ShowFps = fileContent.Core.ShowFps.Value };
-            if (fileContent.Core?.ShowFrameTime != null)
+            if (fileContent.Core?.ShowFrameTime is not null)
                 coreConfiguration = coreConfiguration with { ShowFrameTime = fileContent.Core.ShowFrameTime.Value };
-            if (fileContent.Core?.ShowGameLoopStatistics != null)
+            if (fileContent.Core?.ShowGameLoopStatistics is not null)
                 coreConfiguration = coreConfiguration with { ShowGameLoopStatistics = fileContent.Core.ShowGameLoopStatistics.Value };
-            if (fileContent.Core?.ShowTotalFrames != null)
+            if (fileContent.Core?.ShowTotalFrames is not null)
                 coreConfiguration = coreConfiguration with { ShowTotalFrames = fileContent.Core.ShowTotalFrames.Value };
-            if (fileContent.Core?.ShowTotalTime != null)
+            if (fileContent.Core?.ShowTotalTime is not null)
                 coreConfiguration = coreConfiguration with { ShowTotalTime = fileContent.Core.ShowTotalTime.Value };
-            if (fileContent.Core?.StartUpScene != null)
+            if (fileContent.Core?.StartUpScene is not null)
                 coreConfiguration = coreConfiguration with { StartUpScene = fileContent.Core.StartUpScene };
-            if (fileContent.Core?.StartUpSceneBehavior != null)
+            if (fileContent.Core?.StartUpSceneBehavior is not null)
                 coreConfiguration = coreConfiguration with { StartUpSceneBehavior = fileContent.Core.StartUpSceneBehavior };
 
             var physicsConfiguration = new PhysicsConfiguration();
-            if (fileContent.Physics?.Substeps != null)
+            if (fileContent.Physics?.Substeps is not null)
                 physicsConfiguration = physicsConfiguration with { Substeps = fileContent.Physics.Substeps.Value };
-            if (fileContent.Physics?.VelocityIterations != null)
+            if (fileContent.Physics?.VelocityIterations is not null)
                 physicsConfiguration = physicsConfiguration with { VelocityIterations = fileContent.Physics.VelocityIterations.Value };
-            if (fileContent.Physics?.PositionIterations != null)
+            if (fileContent.Physics?.PositionIterations is not null)
                 physicsConfiguration = physicsConfiguration with { PositionIterations = fileContent.Physics.PositionIterations.Value };
-            if (fileContent.Physics?.PenetrationTolerance != null)
+            if (fileContent.Physics?.PenetrationTolerance is not null)
                 physicsConfiguration = physicsConfiguration with { PenetrationTolerance = fileContent.Physics.PenetrationTolerance.Value };
-            if (fileContent.Physics?.TileSize != null)
+            if (fileContent.Physics?.TileSize is not null)
                 physicsConfiguration = physicsConfiguration with { TileSize = fileContent.Physics.TileSize.Value };
-            if (fileContent.Physics?.BroadPhaseGridCellSize != null)
+            if (fileContent.Physics?.BroadPhaseGridCellSize is not null)
                 physicsConfiguration = physicsConfiguration with { BroadPhaseGridCellSize = fileContent.Physics.BroadPhaseGridCellSize.Value };
-            if (fileContent.Physics?.EnableDebugRendering != null)
+            if (fileContent.Physics?.EnableDebugRendering is not null)
                 physicsConfiguration = physicsConfiguration with { EnableDebugRendering = fileContent.Physics.EnableDebugRendering.Value };
 
             var renderingConfiguration = new RenderingConfiguration();
-            if (fileContent.Rendering?.EnableVSync != null)
+            if (fileContent.Rendering?.AllowWindowResizing is not null)
+                renderingConfiguration = renderingConfiguration with { AllowWindowResizing = fileContent.Rendering.AllowWindowResizing.Value };
+            if (fileContent.Rendering?.EnableVSync is not null)
                 renderingConfiguration = renderingConfiguration with { EnableVSync = fileContent.Rendering.EnableVSync.Value };
-            if (fileContent.Rendering?.ScreenSize != null)
+            if (fileContent.Rendering?.ScreenSize is not null)
                 renderingConfiguration = renderingConfiguration with { ScreenSize = fileContent.Rendering.ScreenSize.Value };
-            if (fileContent.Rendering?.ShowRenderingStatistics != null)
+            if (fileContent.Rendering?.ShowRenderingStatistics is not null)
                 renderingConfiguration = renderingConfiguration with { ShowRenderingStatistics = fileContent.Rendering.ShowRenderingStatistics.Value };
-            if (fileContent.Rendering?.SortingLayersOrder != null)
+            if (fileContent.Rendering?.SortingLayersOrder is not null)
                 renderingConfiguration = renderingConfiguration with { SortingLayersOrder = fileContent.Rendering.SortingLayersOrder };
 
             return new Configuration
@@ -208,6 +210,7 @@ namespace Geisha.Engine
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
         private sealed record RenderingSection
         {
+            public bool? AllowWindowResizing { get; init; }
             public bool? EnableVSync { get; init; }
             public Size? ScreenSize { get; init; }
             public bool? ShowRenderingStatistics { get; init; }

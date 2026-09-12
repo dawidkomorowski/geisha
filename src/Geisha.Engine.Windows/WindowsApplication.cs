@@ -65,7 +65,7 @@ namespace Geisha.Engine.Windows
             {
                 var screenSize = configuration.Rendering.ScreenSize;
                 form.ClientSize = new Size(screenSize.Width, screenSize.Height);
-                form.AllowUserResizing = false;
+                form.AllowUserResizing = configuration.Rendering.AllowWindowResizing;
                 form.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
                 using var engine = new Engine(
