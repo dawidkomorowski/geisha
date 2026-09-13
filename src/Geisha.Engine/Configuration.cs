@@ -127,8 +127,6 @@ public sealed record Configuration
             physicsConfiguration = physicsConfiguration with { EnableDebugRendering = fileContent.Physics.EnableDebugRendering.Value };
 
         var renderingConfiguration = new RenderingConfiguration();
-        if (fileContent.Rendering?.AllowWindowResizing is not null)
-            renderingConfiguration = renderingConfiguration with { AllowWindowResizing = fileContent.Rendering.AllowWindowResizing.Value };
         if (fileContent.Rendering?.EnableVSync is not null)
             renderingConfiguration = renderingConfiguration with { EnableVSync = fileContent.Rendering.EnableVSync.Value };
         if (fileContent.Rendering?.ScreenSize is not null)
@@ -221,7 +219,6 @@ public sealed record Configuration
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     private sealed record RenderingSection
     {
-        public bool? AllowWindowResizing { get; init; }
         public bool? EnableVSync { get; init; }
         public Size? ScreenSize { get; init; }
         public bool? ShowRenderingStatistics { get; init; }

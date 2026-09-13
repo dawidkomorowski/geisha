@@ -48,7 +48,6 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.BroadPhaseGridCellSize, Is.EqualTo(new SizeD(256, 256)));
         Assert.That(configuration.Physics.EnableDebugRendering, Is.False);
 
-        Assert.That(configuration.Rendering.AllowWindowResizing, Is.False);
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
         Assert.That(configuration.Rendering.ScreenSize, Is.EqualTo(new Size(1280, 720)));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.False);
@@ -94,7 +93,6 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.BroadPhaseGridCellSize, Is.EqualTo(new SizeD(12, 34)));
         Assert.That(configuration.Physics.EnableDebugRendering, Is.True);
 
-        Assert.That(configuration.Rendering.AllowWindowResizing, Is.True);
         Assert.That(configuration.Rendering.EnableVSync, Is.True);
         Assert.That(configuration.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.True);
