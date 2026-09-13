@@ -18,6 +18,7 @@ public class GameLoopStepsTests
     private IPhysicsGameLoopStep _physicsStep = null!;
     private IRenderingGameLoopStep _renderingStep = null!;
     private ITransformInterpolationGameLoopStep _transformInterpolationStep = null!;
+    private IWindowingGameLoopStep _windowingStep = null!;
 
     [SetUp]
     public void SetUp()
@@ -30,6 +31,7 @@ public class GameLoopStepsTests
         _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
         _renderingStep = Substitute.For<IRenderingGameLoopStep>();
         _transformInterpolationStep = Substitute.For<ITransformInterpolationGameLoopStep>();
+        _windowingStep = Substitute.For<IWindowingGameLoopStep>();
     }
 
     [Test]
@@ -113,7 +115,8 @@ public class GameLoopStepsTests
             gameLoopSteps.InputStepName,
             gameLoopSteps.PhysicsStepName,
             gameLoopSteps.RenderingStepName,
-            gameLoopSteps.TransformInterpolationStepName
+            gameLoopSteps.TransformInterpolationStepName,
+            gameLoopSteps.WindowingStepName
         }));
     }
 
@@ -149,7 +152,8 @@ public class GameLoopStepsTests
             gameLoopSteps.InputStepName,
             gameLoopSteps.PhysicsStepName,
             gameLoopSteps.RenderingStepName,
-            gameLoopSteps.TransformInterpolationStepName
+            gameLoopSteps.TransformInterpolationStepName,
+            gameLoopSteps.WindowingStepName
         }));
     }
 
@@ -184,7 +188,8 @@ public class GameLoopStepsTests
             gameLoopSteps.InputStepName,
             gameLoopSteps.PhysicsStepName,
             gameLoopSteps.RenderingStepName,
-            gameLoopSteps.TransformInterpolationStepName
+            gameLoopSteps.TransformInterpolationStepName,
+            gameLoopSteps.WindowingStepName
         }));
     }
 
@@ -259,6 +264,7 @@ public class GameLoopStepsTests
             _physicsStep,
             _renderingStep,
             _transformInterpolationStep,
+            _windowingStep,
             customSteps,
             coreConfiguration);
     }
