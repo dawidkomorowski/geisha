@@ -57,5 +57,8 @@
       "Layer8",
       "Layer9"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": false
   }
 }

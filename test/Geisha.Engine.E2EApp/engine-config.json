@@ -48,5 +48,8 @@
     "SortingLayersOrder": [
       "Default"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": false
   }
 }

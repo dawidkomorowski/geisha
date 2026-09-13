@@ -50,6 +50,8 @@ public class ConfigurationTests
         Assert.That(actual.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
+
+        Assert.That(actual.Windowing.AllowWindowResizing, Is.True);
     }
 
     private sealed class ConfigurationTestGame : Game
@@ -96,6 +98,10 @@ public class ConfigurationTests
                 ScreenSize = new Size(3840, 2160),
                 ShowRenderingStatistics = true,
                 SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
+            },
+            Windowing = configuration.Windowing with
+            {
+                AllowWindowResizing = true
             }
         };
     }

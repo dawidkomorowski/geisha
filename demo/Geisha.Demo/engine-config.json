@@ -50,5 +50,8 @@
       "Default",
       "Menu"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": false
   }
 }

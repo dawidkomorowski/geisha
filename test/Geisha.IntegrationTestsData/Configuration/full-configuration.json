@@ -52,5 +52,8 @@
       "Layer2",
       "Layer3"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": true
   }
 }

@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Geisha.Engine.Audio.NAudio\Geisha.Engine.Audio.NAudio.csproj" />
     <ProjectReference Include="..\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj" />
     <ProjectReference Include="..\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj" />
+    <ProjectReference Include="..\Geisha.Engine.Windowing.WinForms\Geisha.Engine.Windowing.Windows.csproj" />
   </ItemGroup>
 
 </Project>

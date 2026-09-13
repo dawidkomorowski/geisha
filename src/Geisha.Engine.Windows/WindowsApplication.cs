@@ -8,6 +8,7 @@ using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering.DirectX;
+using Geisha.Engine.Windowing.Windows;
 using NLog;
 using SharpDX.Windows;
 
@@ -65,7 +66,6 @@ namespace Geisha.Engine.Windows
             {
                 var screenSize = configuration.Rendering.ScreenSize;
                 form.ClientSize = new Size(screenSize.Width, screenSize.Height);
-                form.AllowUserResizing = configuration.Rendering.AllowWindowResizing;
                 form.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
                 using var engine = new Engine(
@@ -73,6 +73,7 @@ namespace Geisha.Engine.Windows
                     new NAudioAudioBackend(),
                     new WindowsInputBackend(form),
                     new DirectXRenderingBackend(form, DriverType.Hardware),
+                    new WindowsWindowingBackend(form),
                     game
                 );
 

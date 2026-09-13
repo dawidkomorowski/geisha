@@ -12,6 +12,7 @@ using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Windowing.Backend;
 using NLog;
 
 namespace Geisha.Engine
@@ -39,6 +40,7 @@ namespace Geisha.Engine
         /// <param name="audioBackend">Audio backend to be used by engine.</param>
         /// <param name="inputBackend">Input backend to be used by engine.</param>
         /// <param name="renderingBackend">Rendering backend to be used by engine.</param>
+        /// <param name="windowingBackend">Windowing backend to be used by engine.</param>
         /// <param name="game"><see cref="Game" /> instance to be run by engine.</param>
         /// <exception cref="ArgumentNullException">Thrown when any of parameters is null.</exception>
         public Engine(
@@ -46,12 +48,14 @@ namespace Geisha.Engine
             IAudioBackend audioBackend,
             IInputBackend inputBackend,
             IRenderingBackend renderingBackend,
+            IWindowingBackend windowingBackend,
             Game game)
         {
-            if (audioBackend == null) throw new ArgumentNullException(nameof(audioBackend));
-            if (inputBackend == null) throw new ArgumentNullException(nameof(inputBackend));
-            if (renderingBackend == null) throw new ArgumentNullException(nameof(renderingBackend));
-            if (game == null) throw new ArgumentNullException(nameof(game));
+            if (audioBackend is null) throw new ArgumentNullException(nameof(audioBackend));
+            if (inputBackend is null) throw new ArgumentNullException(nameof(inputBackend));
+            if (renderingBackend is null) throw new ArgumentNullException(nameof(renderingBackend));
+            if (windowingBackend is null) throw new ArgumentNullException(nameof(windowingBackend));
+            if (game is null) throw new ArgumentNullException(nameof(game));
 
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
@@ -76,6 +80,7 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(windowingBackend).As<IWindowingBackend>().SingleInstance();
 
             var componentsRegistry = new ComponentsRegistry(containerBuilder);
             game.RegisterComponents(componentsRegistry);
@@ -83,6 +88,7 @@ namespace Geisha.Engine
             _container = containerBuilder.Build();
 
             ConfigureAudioBackend();
+            ConfigureWindowingBackend();
             RegisterAssets();
             LoadStartUpScene();
 
@@ -126,6 +132,13 @@ namespace Geisha.Engine
 
             audioBackend.AudioPlayer.EnableSound = _configuration.Audio.EnableSound;
             audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
+        }
+
+        private void ConfigureWindowingBackend()
+        {
+            var windowingBackend = _container.Resolve<IWindowingBackend>();
+
+            windowingBackend.AllowWindowResizing = _configuration.Windowing.AllowWindowResizing;
         }
 
         private void RegisterAssets()

@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Rendering;
+﻿namespace Geisha.Engine.Windowing;
 
 // TODO: Add documentation.
 public enum DisplayMode
