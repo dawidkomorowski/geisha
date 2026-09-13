@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Rendering.Backend;
+﻿using Geisha.Engine.Core.Math;
+
+namespace Geisha.Engine.Rendering.Backend;
 
 /// <summary>
 ///     Defines interface of rendering backend used by Geisha Engine.
@@ -33,4 +35,7 @@ public interface IRenderingBackend
     ///     frame is presented.
     /// </remarks>
     void Present(bool waitForVSync);
+
+    // TODO: Add documentation.
+    void ResizeBuffers(Size size);
 }

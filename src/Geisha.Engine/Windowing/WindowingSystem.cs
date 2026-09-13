@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Windowing.Backend;
 
 namespace Geisha.Engine.Windowing;
@@ -8,11 +9,14 @@ namespace Geisha.Engine.Windowing;
 internal sealed class WindowingSystem : IWindowingGameLoopStep
 {
     private readonly IWindowingBackend _windowingBackend;
+    private readonly IRenderingBackend _renderingBackend;
     private Size _windowClientSize;
 
-    public WindowingSystem(IWindowingBackend windowingBackend)
+    public WindowingSystem(IWindowingBackend windowingBackend, IRenderingBackend renderingBackend)
     {
         _windowingBackend = windowingBackend;
+        _renderingBackend = renderingBackend;
+
         _windowClientSize = _windowingBackend.WindowClientSize;
     }
 
@@ -23,9 +27,7 @@ internal sealed class WindowingSystem : IWindowingGameLoopStep
         if (currentSize != _windowClientSize)
         {
             _windowClientSize = currentSize;
-
-            Debug.WriteLine($"Resize to {currentSize}");
-            // TODO: Implement resize.
+            _renderingBackend.ResizeBuffers(_windowClientSize);
         }
     }
 }
