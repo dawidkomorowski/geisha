@@ -9,6 +9,8 @@ using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
+using Geisha.Engine.Windowing.Backend;
+using Geisha.Engine.Windowing.Windows;
 using NUnit.Framework;
 using SharpDX.Windows;
 
@@ -46,6 +48,7 @@ namespace Geisha.Engine.IntegrationTests
             containerBuilder.RegisterInstance(new NAudioAudioBackend()).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new WindowsInputBackend(_renderForm)).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm, DriverType.Software)).As<IRenderingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new WindowsWindowingBackend(_renderForm)).As<IWindowingBackend>().SingleInstance();
 
             // Register engine modules
             EngineModules.RegisterAll(containerBuilder);
