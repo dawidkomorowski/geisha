@@ -37,7 +37,6 @@
     "EnableDebugRendering": true
   },
   "Rendering": {
-    "AllowWindowResizing": true,
     "EnableVSync": false,
     "ScreenSize": {
       "Width": 1280,
