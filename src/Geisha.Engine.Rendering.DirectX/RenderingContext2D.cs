@@ -46,7 +46,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     #region Implementation of IRenderingContext2D
 
-    public Size ScreenSize { get; }
+    public Size ScreenSize { get; private set; }
 
     // TODO: It should specify more clearly what formats are supported and maybe expose some importer extensions?
     public ITexture CreateTexture(Stream stream)
@@ -351,6 +351,11 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     }
 
     #endregion
+
+    public void Resize(Size size)
+    {
+        ScreenSize = size;
+    }
 
     /// <summary>
     ///     Converts given <see cref="Matrix3x3" /> transform to Direct2D <see cref="RawMatrix3x2" /> adjusting coordinates

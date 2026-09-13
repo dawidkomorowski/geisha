@@ -27,7 +27,12 @@ internal sealed class WindowingSystem : IWindowingGameLoopStep
         if (currentSize != _windowClientSize)
         {
             _windowClientSize = currentSize;
-            _renderingBackend.ResizeBuffers(_windowClientSize);
+
+            // When window is minimized it gets zero size but buffer cannot be zero.
+            if (_windowClientSize != Size.Empty)
+            {
+                _renderingBackend.ResizeBuffers(_windowClientSize);
+            }
         }
     }
 }

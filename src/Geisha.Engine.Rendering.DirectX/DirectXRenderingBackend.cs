@@ -95,6 +95,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public void ResizeBuffers(Size size)
     {
         _swapChainPipeline.ResizeBuffers(size);
+        _renderingContext2D.Resize(size);
     }
 
     /// <summary>
