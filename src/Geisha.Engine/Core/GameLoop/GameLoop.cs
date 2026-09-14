@@ -49,7 +49,7 @@ internal sealed class GameLoop : IGameLoop
         var fixedUpdatesPerFrame = 0;
 
         _performanceStatisticsRecorder.BeginStepDuration();
-        _gameLoopSteps.WindowingStep.HandleWindowResize();
+        _gameLoopSteps.WindowingStep.HandleWindowState();
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.WindowingStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();

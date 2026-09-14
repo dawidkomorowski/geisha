@@ -7,6 +7,6 @@ internal sealed class WindowingModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<WindowingSystem>().As<IWindowingGameLoopStep>().SingleInstance();
+        builder.RegisterType<WindowingSystem>().As<IWindowingSystem>().As<IWindowingGameLoopStep>().SingleInstance();
     }
 }

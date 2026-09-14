@@ -2,5 +2,5 @@
 
 internal interface IWindowingGameLoopStep
 {
-    void HandleWindowResize();
+    void HandleWindowState();
 }

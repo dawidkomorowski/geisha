@@ -138,7 +138,7 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
-            _windowingStep.Received(1).HandleWindowResize();
+            _windowingStep.Received(1).HandleWindowState();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -192,7 +192,7 @@ public class GameLoopTests
         Received.InOrder(() =>
         {
             // Handle window and input at beginning of frame.
-            _windowingStep.Received(1).HandleWindowResize();
+            _windowingStep.Received(1).HandleWindowState();
             _inputStep.Received(1).ProcessInput();
 
             // Process fixed time step game loop steps expected number of times.
@@ -272,7 +272,7 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
-            _windowingStep.Received(1).HandleWindowResize();
+            _windowingStep.Received(1).HandleWindowState();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
