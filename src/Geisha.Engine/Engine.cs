@@ -131,12 +131,6 @@ namespace Geisha.Engine
             return !_engineManager.IsEngineScheduledForShutdown;
         }
 
-        private void ConfigureAudioBackend()
-        {
-            _audioBackend.AudioPlayer.EnableSound = _configuration.Audio.EnableSound;
-            _audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
-        }
-
         private void ConfigureWindowingBackend(Game game)
         {
             _windowingBackend.WindowTitle = game.WindowTitle;
@@ -144,6 +138,12 @@ namespace Geisha.Engine
             _windowingBackend.AllowWindowResizing = _configuration.Windowing.AllowWindowResizing;
 
             _renderingBackend.ResizeBuffers(_windowingBackend.WindowClientSize);
+        }
+
+        private void ConfigureAudioBackend()
+        {
+            _audioBackend.AudioPlayer.EnableSound = _configuration.Audio.EnableSound;
+            _audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
         }
 
         private void RegisterAssets()
