@@ -1,4 +1,8 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
@@ -13,10 +17,6 @@ using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using Color = Geisha.Engine.Core.Math.Color;
 using Size = Geisha.Engine.Core.Math.Size;
 
@@ -152,9 +152,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.DegreesToRadians(-45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75), rotation: Angle.DegreesToRadians(-135),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
+                        rotation: Angle.DegreesToRadians(-135),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75), rotation: Angle.DegreesToRadians(135),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75),
+                        rotation: Angle.DegreesToRadians(135),
                         scale: new Vector2(0.2, 0.2));
 
                     // Visibility
@@ -810,10 +812,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100),
+                        rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115),
+                        rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120),
+                        rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150),
+                        rotation: Angle.DegreesToRadians(45));
                 }
             },
             new()

@@ -77,18 +77,18 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(_configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(_configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
 
-            containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(windowingBackend).As<IWindowingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance().ExternallyOwned();
+            containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance().ExternallyOwned();
+            containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance().ExternallyOwned();
+            containerBuilder.RegisterInstance(windowingBackend).As<IWindowingBackend>().SingleInstance().ExternallyOwned();
 
             var componentsRegistry = new ComponentsRegistry(containerBuilder);
             game.RegisterComponents(componentsRegistry);
 
             _container = containerBuilder.Build();
 
+            ConfigureWindowingBackend(game);
             ConfigureAudioBackend();
-            ConfigureWindowingBackend();
             RegisterAssets();
             LoadStartUpScene();
 
@@ -134,11 +134,16 @@ namespace Geisha.Engine
             audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
         }
 
-        private void ConfigureWindowingBackend()
+        private void ConfigureWindowingBackend(Game game)
         {
             var windowingBackend = _container.Resolve<IWindowingBackend>();
+            var renderingBackend = _container.Resolve<IRenderingBackend>();
 
+            windowingBackend.WindowTitle = game.WindowTitle;
+            windowingBackend.WindowClientSize = _configuration.Rendering.ScreenSize;
             windowingBackend.AllowWindowResizing = _configuration.Windowing.AllowWindowResizing;
+
+            renderingBackend.ResizeBuffers(windowingBackend.WindowClientSize);
         }
 
         private void RegisterAssets()

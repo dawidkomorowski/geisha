@@ -1,29 +1,35 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
-using Geisha.Engine.Core.Math;
 using Geisha.Engine.Windowing.Backend;
 using SharpDX.Windows;
+using Size = Geisha.Engine.Core.Math.Size;
 
 namespace Geisha.Engine.Windowing.Windows;
 
 // TODO: Add documentation.
-public sealed class WindowsWindowingBackend : IWindowingBackend
+public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
 {
     private readonly RenderForm _renderForm;
     private DisplayMode _displayMode;
     private WindowState _windowState;
 
-    public WindowsWindowingBackend(RenderForm renderForm)
+    public WindowsWindowingBackend()
     {
-        _renderForm = renderForm;
+        Application.SetHighDpiMode(HighDpiMode.SystemAware);
+
+        _renderForm = new RenderForm();
+        _renderForm.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
         SaveWindowState();
     }
 
-    public bool AllowWindowResizing
+    public Form Window => _renderForm;
+
+    public string WindowTitle
     {
-        get => _renderForm.AllowUserResizing;
-        set => _renderForm.AllowUserResizing = value;
+        get => _renderForm.Text;
+        set => _renderForm.Text = value;
     }
 
     public Size WindowClientSize
@@ -63,6 +69,12 @@ public sealed class WindowsWindowingBackend : IWindowingBackend
         }
     }
 
+    public bool AllowWindowResizing
+    {
+        get => _renderForm.AllowUserResizing;
+        set => _renderForm.AllowUserResizing = value;
+    }
+
     private void SaveWindowState()
     {
         _windowState = new WindowState
@@ -79,5 +91,10 @@ public sealed class WindowsWindowingBackend : IWindowingBackend
     private readonly record struct WindowState
     {
         public bool AllowWindowResizing { get; init; }
+    }
+
+    public void Dispose()
+    {
+        _renderForm.Dispose();
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Autofac;
+﻿using Autofac;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core;
@@ -12,13 +11,11 @@ using Geisha.Engine.Rendering.DirectX;
 using Geisha.Engine.Windowing.Backend;
 using Geisha.Engine.Windowing.Windows;
 using NUnit.Framework;
-using SharpDX.Windows;
 
 namespace Geisha.Engine.IntegrationTests
 {
     public abstract class IntegrationTests<TSystemUnderTest> where TSystemUnderTest : notnull
     {
-        private RenderForm _renderForm = null!;
         private IContainer _container = null!;
         private ILifetimeScope _lifetimeScope = null!;
         protected TSystemUnderTest SystemUnderTest { get; private set; } = default!;
@@ -29,14 +26,6 @@ namespace Geisha.Engine.IntegrationTests
         {
             var renderingConfiguration = ConfigureRendering(new RenderingConfiguration());
 
-            var screenSize = renderingConfiguration.ScreenSize;
-            _renderForm = new RenderForm("IntegrationTestsWindow")
-            {
-                ClientSize = new Size(screenSize.Width, screenSize.Height)
-            };
-
-            if (ShowDebugWindow) _renderForm.Show();
-
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
@@ -45,10 +34,17 @@ namespace Geisha.Engine.IntegrationTests
             containerBuilder.RegisterInstance(new PhysicsConfiguration()).As<PhysicsConfiguration>().SingleInstance();
 
             // Register engine back-ends
+            var windowingBackend = new WindowsWindowingBackend();
+            windowingBackend.WindowTitle = "IntegrationTestsWindow";
+            windowingBackend.WindowClientSize = renderingConfiguration.ScreenSize;
+
+            if (ShowDebugWindow) windowingBackend.Window.Show();
+
+            containerBuilder.RegisterInstance(windowingBackend).As<IWindowingBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new NAudioAudioBackend()).As<IAudioBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new WindowsInputBackend(_renderForm)).As<IInputBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm, DriverType.Software)).As<IRenderingBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new WindowsWindowingBackend(_renderForm)).As<IWindowingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new WindowsInputBackend(windowingBackend.Window)).As<IInputBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new DirectXRenderingBackend(windowingBackend.Window, DriverType.Software)).As<IRenderingBackend>()
+                .SingleInstance();
 
             // Register engine modules
             EngineModules.RegisterAll(containerBuilder);
@@ -70,7 +66,6 @@ namespace Geisha.Engine.IntegrationTests
         {
             _lifetimeScope.Dispose();
             _container.Dispose();
-            _renderForm.Dispose();
         }
 
         protected virtual RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)

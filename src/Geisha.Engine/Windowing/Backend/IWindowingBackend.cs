@@ -6,7 +6,8 @@ namespace Geisha.Engine.Windowing.Backend;
 // TODO: Allow to hide/show cursor.
 public interface IWindowingBackend
 {
-    bool AllowWindowResizing { get; set; }
+    string WindowTitle { get; set; }
     Size WindowClientSize { get; set; }
     DisplayMode DisplayMode { get; set; }
+    bool AllowWindowResizing { get; set; }
 }

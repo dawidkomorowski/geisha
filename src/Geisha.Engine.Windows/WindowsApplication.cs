@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -61,33 +60,30 @@ namespace Geisha.Engine.Windows
                 Environment.NewLine,
                 JsonSerializer.Serialize(configuration, new JsonSerializerOptions { WriteIndented = true, Converters = { new JsonStringEnumConverter() } }));
 
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            using (var form = new RenderForm(game.WindowTitle))
+            using var windowingBackend = new WindowsWindowingBackend();
+            using var renderingBackend = new DirectXRenderingBackend(windowingBackend.Window, DriverType.Hardware);
+            using var audioBackend = new NAudioAudioBackend();
+            var inputBackend = new WindowsInputBackend(windowingBackend.Window);
+
+            using var engine = new Engine(
+                configuration,
+                audioBackend,
+                inputBackend,
+                renderingBackend,
+                windowingBackend,
+                game
+            );
+
+            logger.Info("Engine started successfully.");
+
+            RenderLoop.Run(windowingBackend.Window, () =>
             {
-                var screenSize = configuration.Rendering.ScreenSize;
-                form.ClientSize = new Size(screenSize.Width, screenSize.Height);
-                form.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+                // ReSharper disable AccessToDisposedClosure
+                engine.Update();
 
-                using var engine = new Engine(
-                    configuration,
-                    new NAudioAudioBackend(),
-                    new WindowsInputBackend(form),
-                    new DirectXRenderingBackend(form, DriverType.Hardware),
-                    new WindowsWindowingBackend(form),
-                    game
-                );
-
-                logger.Info("Engine started successfully.");
-
-                RenderLoop.Run(form, () =>
-                {
-                    // ReSharper disable AccessToDisposedClosure
-                    engine.Update();
-
-                    if (engine.IsScheduledForShutdown) form.Close();
-                    // ReSharper restore AccessToDisposedClosure
-                });
-            }
+                if (engine.IsScheduledForShutdown) windowingBackend.Window.Close();
+                // ReSharper restore AccessToDisposedClosure
+            });
 
             logger.Info("Engine shutdown completed.");
         }
