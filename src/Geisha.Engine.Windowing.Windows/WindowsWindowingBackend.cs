@@ -75,6 +75,20 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         set => _renderForm.AllowUserResizing = value;
     }
 
+    public void RunUpdateLoop(Func<bool> updateCallback)
+    {
+        RenderLoop.Run(_renderForm, () =>
+        {
+            var shouldContinue = updateCallback();
+            if (!shouldContinue) _renderForm.Close();
+        });
+    }
+
+    public void Dispose()
+    {
+        _renderForm.Dispose();
+    }
+
     private void SaveWindowState()
     {
         _windowState = new WindowState
@@ -91,10 +105,5 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     private readonly record struct WindowState
     {
         public bool AllowWindowResizing { get; init; }
-    }
-
-    public void Dispose()
-    {
-        _renderForm.Dispose();
     }
 }

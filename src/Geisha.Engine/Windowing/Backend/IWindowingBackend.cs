@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Windowing.Backend;
 
@@ -10,4 +11,6 @@ public interface IWindowingBackend
     Size WindowClientSize { get; set; }
     DisplayMode DisplayMode { get; set; }
     bool AllowWindowResizing { get; set; }
+
+    void RunUpdateLoop(Func<bool> updateCallback);
 }

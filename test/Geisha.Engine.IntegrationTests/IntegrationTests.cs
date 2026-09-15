@@ -17,7 +17,6 @@ namespace Geisha.Engine.IntegrationTests
     public abstract class IntegrationTests<TSystemUnderTest> where TSystemUnderTest : notnull
     {
         private IContainer _container = null!;
-        private ILifetimeScope _lifetimeScope = null!;
         protected TSystemUnderTest SystemUnderTest { get; private set; } = default!;
         protected virtual bool ShowDebugWindow => false;
 
@@ -56,15 +55,13 @@ namespace Geisha.Engine.IntegrationTests
             containerBuilder.RegisterType<TSystemUnderTest>().AsSelf().SingleInstance();
 
             _container = containerBuilder.Build();
-            _lifetimeScope = _container.BeginLifetimeScope();
 
-            SystemUnderTest = _lifetimeScope.Resolve<TSystemUnderTest>();
+            SystemUnderTest = _container.Resolve<TSystemUnderTest>();
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            _lifetimeScope.Dispose();
             _container.Dispose();
         }
 

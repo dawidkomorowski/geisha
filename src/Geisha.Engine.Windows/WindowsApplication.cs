@@ -9,7 +9,6 @@ using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering.DirectX;
 using Geisha.Engine.Windowing.Windows;
 using NLog;
-using SharpDX.Windows;
 
 namespace Geisha.Engine.Windows
 {
@@ -76,14 +75,7 @@ namespace Geisha.Engine.Windows
 
             logger.Info("Engine started successfully.");
 
-            RenderLoop.Run(windowingBackend.Window, () =>
-            {
-                // ReSharper disable AccessToDisposedClosure
-                engine.Update();
-
-                if (engine.IsScheduledForShutdown) windowingBackend.Window.Close();
-                // ReSharper restore AccessToDisposedClosure
-            });
+            engine.Run();
 
             logger.Info("Engine shutdown completed.");
         }
