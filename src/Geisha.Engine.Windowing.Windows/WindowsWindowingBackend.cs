@@ -11,7 +11,7 @@ namespace Geisha.Engine.Windowing.Windows;
 public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
 {
     private readonly RenderForm _renderForm;
-    private DisplayMode _displayMode;
+    private DisplayMode _displayMode = DisplayMode.Windowed;
     private WindowState _windowState;
 
     public WindowsWindowingBackend()
@@ -47,21 +47,27 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         get => _displayMode;
         set
         {
+            // TODO: Will that allow to correctly initialize display mode?
+            if (_displayMode == value)
+            {
+                return;
+            }
+
             _displayMode = value;
 
             switch (value)
             {
                 case DisplayMode.Windowed:
                     _renderForm.IsFullscreen = false;
-                    _renderForm.WindowState = FormWindowState.Normal;
                     RestoreWindowState();
                     break;
                 case DisplayMode.Fullscreen:
                     SaveWindowState();
                     _renderForm.IsFullscreen = true;
                     _renderForm.AllowUserResizing = false;
-                    // TODO: If window is already maximized but not borderless it does not work properly.
-                    _renderForm.WindowState = FormWindowState.Maximized;
+                    _renderForm.WindowState = FormWindowState.Normal;
+                    _renderForm.ClientSize = Screen.PrimaryScreen.Bounds.Size;
+                    _renderForm.Location = new Point(0, 0);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported display mode.");
@@ -93,17 +99,26 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     {
         _windowState = new WindowState
         {
-            AllowWindowResizing = AllowWindowResizing
+            AllowWindowResizing = _renderForm.AllowUserResizing,
+            State = _renderForm.WindowState,
+            ClientSize = _renderForm.ClientSize,
+            Location = _renderForm.Location
         };
     }
 
     private void RestoreWindowState()
     {
-        AllowWindowResizing = _windowState.AllowWindowResizing;
+        _renderForm.AllowUserResizing = _windowState.AllowWindowResizing;
+        _renderForm.WindowState = _windowState.State;
+        _renderForm.ClientSize = _windowState.ClientSize;
+        _renderForm.Location = _windowState.Location;
     }
 
     private readonly record struct WindowState
     {
         public bool AllowWindowResizing { get; init; }
+        public FormWindowState State { get; init; }
+        public System.Drawing.Size ClientSize { get; init; }
+        public Point Location { get; init; }
     }
 }

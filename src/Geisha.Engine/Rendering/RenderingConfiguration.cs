@@ -20,6 +20,7 @@ public sealed record RenderingConfiguration
     public bool EnableVSync { get; init; } = false;
 
     // TODO: This documentation needs adjustments as it is no longer valid for fullscreen.
+    // TODO: This configuration should be moved to windowing configuration.
     /// <summary>
     ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels. Default is
     ///     <c>1280 x 720</c>.
