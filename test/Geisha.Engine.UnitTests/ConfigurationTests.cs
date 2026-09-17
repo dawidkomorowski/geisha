@@ -51,6 +51,7 @@ public class ConfigurationTests
         Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
 
         Assert.That(actual.Windowing.AllowWindowResizing, Is.True);
+        Assert.That(actual.Windowing.WindowClientSize, Is.EqualTo(new Size(3840, 2160)));
     }
 
     private sealed class ConfigurationTestGame : Game
@@ -99,7 +100,8 @@ public class ConfigurationTests
             },
             Windowing = configuration.Windowing with
             {
-                AllowWindowResizing = true
+                AllowWindowResizing = true,
+                WindowClientSize = new Size(3840, 2160)
             }
         };
     }

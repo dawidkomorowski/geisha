@@ -134,7 +134,7 @@ namespace Geisha.Engine
         private void ConfigureWindowingBackend(Game game)
         {
             _windowingBackend.WindowTitle = game.WindowTitle;
-            _windowingBackend.WindowClientSize = _configuration.Rendering.ScreenSize;
+            _windowingBackend.WindowClientSize = _configuration.Windowing.WindowClientSize;
             _windowingBackend.AllowWindowResizing = _configuration.Windowing.AllowWindowResizing;
 
             _renderingBackend.ResizeBuffers(_windowingBackend.WindowClientSize);

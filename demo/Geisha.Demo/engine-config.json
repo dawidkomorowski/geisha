@@ -51,6 +51,10 @@
     ]
   },
   "Windowing": {
-    "AllowWindowResizing": false
+    "AllowWindowResizing": false,
+    "WindowClientSize": {
+      "Width": 1600,
+      "Height": 900
+    }
   }
 }

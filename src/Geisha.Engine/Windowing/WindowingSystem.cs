@@ -17,6 +17,7 @@ internal sealed class WindowingSystem : IWindowingSystem, IWindowingGameLoopStep
         _renderingBackend = renderingBackend;
 
         _windowClientSize = _windowingBackend.WindowClientSize;
+        DisplayMode = _windowingBackend.DisplayMode;
     }
 
     public DisplayMode DisplayMode { get; set; }

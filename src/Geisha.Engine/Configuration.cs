@@ -139,6 +139,8 @@ public sealed record Configuration
         var windowingConfiguration = new WindowingConfiguration();
         if (fileContent.Windowing?.AllowWindowResizing is not null)
             windowingConfiguration = windowingConfiguration with { AllowWindowResizing = fileContent.Windowing.AllowWindowResizing.Value };
+        if (fileContent.Windowing?.WindowClientSize is not null)
+            windowingConfiguration = windowingConfiguration with { WindowClientSize = fileContent.Windowing.WindowClientSize.Value };
 
         return new Configuration
         {
@@ -230,5 +232,6 @@ public sealed record Configuration
     private sealed record WindowingSection
     {
         public bool? AllowWindowResizing { get; init; }
+        public Size? WindowClientSize { get; init; }
     }
 }

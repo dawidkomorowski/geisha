@@ -49,6 +49,10 @@
     ]
   },
   "Windowing": {
-    "AllowWindowResizing": true
+    "AllowWindowResizing": true,
+    "WindowClientSize": {
+      "Width": 1280,
+      "Height": 720
+    }
   }
 }
