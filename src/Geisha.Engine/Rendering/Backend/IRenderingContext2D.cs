@@ -13,6 +13,7 @@ namespace Geisha.Engine.Rendering.Backend;
 /// </remarks>
 public interface IRenderingContext2D
 {
+    // TODO: This name no longer makes sense?
     // TODO: This documentation needs adjustments as it is no longer valid for fullscreen.
     /// <summary>
     ///     Gets the size of the screen (full screen) or the window client area (excluding window frame) in pixels.

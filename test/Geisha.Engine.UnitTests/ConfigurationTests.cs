@@ -46,7 +46,6 @@ public class ConfigurationTests
         Assert.That(actual.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(actual.Rendering.EnableVSync, Is.True);
-        Assert.That(actual.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
 
@@ -94,7 +93,6 @@ public class ConfigurationTests
             Rendering = configuration.Rendering with
             {
                 EnableVSync = true,
-                ScreenSize = new Size(3840, 2160),
                 ShowRenderingStatistics = true,
                 SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
             },

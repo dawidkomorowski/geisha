@@ -12,6 +12,7 @@ using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Windowing;
 using Geisha.Engine.Windowing.Backend;
 using NLog;
 
@@ -82,6 +83,7 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(_configuration.Core).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(_configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(_configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(_configuration.Windowing).As<WindowingConfiguration>().SingleInstance();
 
             containerBuilder.RegisterInstance(_audioBackend).As<IAudioBackend>().SingleInstance().ExternallyOwned();
             containerBuilder.RegisterInstance(_inputBackend).As<IInputBackend>().SingleInstance().ExternallyOwned();

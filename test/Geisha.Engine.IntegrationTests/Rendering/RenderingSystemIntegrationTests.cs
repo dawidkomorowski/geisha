@@ -49,12 +49,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
         protected override bool ShowDebugWindow => false;
 
-        protected override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
+        protected override Configuration Configure(Configuration configuration)
         {
-            return base.ConfigureRendering(configuration) with
+            return base.Configure(configuration) with
             {
-                ScreenSize = new Size(200, 200),
-                SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
+                Rendering = configuration.Rendering with
+                {
+                    SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
+                },
+                Windowing = configuration.Windowing with
+                {
+                    WindowClientSize = new Size(200, 200)
+                }
             };
         }
 

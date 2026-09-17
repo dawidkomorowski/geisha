@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core;
@@ -8,6 +9,7 @@ using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
+using Geisha.Engine.Windowing;
 using Geisha.Engine.Windowing.Backend;
 using Geisha.Engine.Windowing.Windows;
 using NUnit.Framework;
@@ -23,19 +25,22 @@ namespace Geisha.Engine.IntegrationTests
         [SetUp]
         public virtual void SetUp()
         {
-            var renderingConfiguration = ConfigureRendering(new RenderingConfiguration());
+            var configuration = Configuration.CreateDefault();
+            Configure(configuration);
 
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
-            containerBuilder.RegisterInstance(new CoreConfiguration()).As<CoreConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(new PhysicsConfiguration()).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Audio).As<AudioConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Windowing).As<WindowingConfiguration>().SingleInstance();
 
             // Register engine back-ends
             var windowingBackend = new WindowsWindowingBackend();
             windowingBackend.WindowTitle = "IntegrationTestsWindow";
-            windowingBackend.WindowClientSize = renderingConfiguration.ScreenSize;
+            windowingBackend.WindowClientSize = configuration.Windowing.WindowClientSize;
 
             if (ShowDebugWindow) windowingBackend.Window.Show();
 
@@ -65,7 +70,7 @@ namespace Geisha.Engine.IntegrationTests
             _container.Dispose();
         }
 
-        protected virtual RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
+        protected virtual Configuration Configure(Configuration configuration)
         {
             return configuration;
         }

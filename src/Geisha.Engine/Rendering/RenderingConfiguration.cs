@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering;
 
@@ -18,14 +17,6 @@ public sealed record RenderingConfiguration
     ///     presented, therefore frame rate is limited to refresh rate of display. Default is <c>false</c>.
     /// </summary>
     public bool EnableVSync { get; init; } = false;
-
-    // TODO: This documentation needs adjustments as it is no longer valid for fullscreen.
-    // TODO: This configuration should be moved to windowing configuration.
-    /// <summary>
-    ///     Size of the screen (full screen) or the window client area (excluding window frame) in pixels. Default is
-    ///     <c>1280 x 720</c>.
-    /// </summary>
-    public Size ScreenSize { get; init; } = new(1280, 720);
 
     /// <summary>
     ///     Specifies whether to display rendering statistics. Default is <c>false</c>.
