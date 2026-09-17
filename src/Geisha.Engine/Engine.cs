@@ -139,7 +139,7 @@ namespace Geisha.Engine
             _windowingBackend.WindowClientSize = _configuration.Windowing.WindowClientSize;
             _windowingBackend.AllowWindowResizing = _configuration.Windowing.AllowWindowResizing;
             _windowingBackend.DisplayMode = _configuration.Windowing.DisplayMode;
-            _windowingBackend.CursorVisible = true; // TODO: Read from config.
+            _windowingBackend.CursorVisible = _configuration.Windowing.CursorVisible;
 
             _renderingBackend.ResizeBuffers(_windowingBackend.WindowClientSize);
         }

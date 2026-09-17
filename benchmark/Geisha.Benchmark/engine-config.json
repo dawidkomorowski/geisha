@@ -55,6 +55,7 @@
   },
   "Windowing": {
     "AllowWindowResizing": false,
+    "CursorVisible": true,
     "DisplayMode": "Windowed",
     "WindowClientSize": {
       "Width": 1280,

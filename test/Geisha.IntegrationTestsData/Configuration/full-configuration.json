@@ -50,6 +50,7 @@
   },
   "Windowing": {
     "AllowWindowResizing": true,
+    "CursorVisible": false,
     "DisplayMode": "Fullscreen",
     "WindowClientSize": {
       "Width": 3840,

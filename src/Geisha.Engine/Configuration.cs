@@ -137,6 +137,8 @@ public sealed record Configuration
         var windowingConfiguration = new WindowingConfiguration();
         if (fileContent.Windowing?.AllowWindowResizing is not null)
             windowingConfiguration = windowingConfiguration with { AllowWindowResizing = fileContent.Windowing.AllowWindowResizing.Value };
+        if (fileContent.Windowing?.CursorVisible is not null)
+            windowingConfiguration = windowingConfiguration with { CursorVisible = fileContent.Windowing.CursorVisible.Value };
         if (fileContent.Windowing?.DisplayMode is not null)
             windowingConfiguration = windowingConfiguration with { DisplayMode = fileContent.Windowing.DisplayMode.Value };
         if (fileContent.Windowing?.WindowClientSize is not null)
@@ -231,6 +233,7 @@ public sealed record Configuration
     private sealed record WindowingSection
     {
         public bool? AllowWindowResizing { get; init; }
+        public bool? CursorVisible { get; init; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public DisplayMode? DisplayMode { get; init; }
