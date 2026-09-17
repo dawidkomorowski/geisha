@@ -94,6 +94,11 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     /// <inheritdoc />
     public void ResizeBuffers(Size size)
     {
+        if (size.Width <= 0 || size.Height <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Rendering buffer width and height must be greater than zero.");
+        }
+
         _swapChainPipeline.ResizeBuffers(size);
         _renderingContext2D.Resize(size);
     }
