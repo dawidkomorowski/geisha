@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Windowing;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests;
@@ -50,6 +51,7 @@ public class ConfigurationTests
         Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
 
         Assert.That(actual.Windowing.AllowWindowResizing, Is.True);
+        Assert.That(actual.Windowing.DisplayMode, Is.EqualTo(DisplayMode.Fullscreen));
         Assert.That(actual.Windowing.WindowClientSize, Is.EqualTo(new Size(3840, 2160)));
     }
 
@@ -99,6 +101,7 @@ public class ConfigurationTests
             Windowing = configuration.Windowing with
             {
                 AllowWindowResizing = true,
+                DisplayMode = DisplayMode.Fullscreen,
                 WindowClientSize = new Size(3840, 2160)
             }
         };

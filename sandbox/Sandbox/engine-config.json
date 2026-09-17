@@ -46,6 +46,7 @@
   },
   "Windowing": {
     "AllowWindowResizing": true,
+    "DisplayMode": "Windowed",
     "WindowClientSize": {
       "Width": 1280,
       "Height": 720

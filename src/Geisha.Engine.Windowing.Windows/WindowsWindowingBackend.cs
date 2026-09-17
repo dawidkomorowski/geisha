@@ -47,7 +47,6 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         get => _displayMode;
         set
         {
-            // TODO: Will that allow to correctly initialize display mode?
             if (_displayMode == value)
             {
                 return;

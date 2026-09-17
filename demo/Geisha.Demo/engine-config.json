@@ -48,6 +48,7 @@
   },
   "Windowing": {
     "AllowWindowResizing": false,
+    "DisplayMode": "Windowed",
     "WindowClientSize": {
       "Width": 1600,
       "Height": 900
