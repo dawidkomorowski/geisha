@@ -12,6 +12,7 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
 {
     private readonly RenderForm _renderForm;
     private DisplayMode _displayMode = DisplayMode.Windowed;
+    private bool _cursorVisible = true;
     private WindowState _windowState;
 
     public WindowsWindowingBackend()
@@ -78,6 +79,29 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     {
         get => _renderForm.AllowUserResizing;
         set => _renderForm.AllowUserResizing = value;
+    }
+
+    public bool CursorVisible
+    {
+        get => _cursorVisible;
+        set
+        {
+            if (_cursorVisible == value)
+            {
+                return;
+            }
+
+            _cursorVisible = value;
+
+            if (_cursorVisible)
+            {
+                Cursor.Show();
+            }
+            else
+            {
+                Cursor.Hide();
+            }
+        }
     }
 
     public void RunUpdateLoop(Func<bool> updateCallback)

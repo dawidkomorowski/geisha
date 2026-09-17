@@ -17,13 +17,20 @@ internal sealed class WindowingSystem : IWindowingSystem, IWindowingGameLoopStep
         _renderingBackend = renderingBackend;
 
         _windowClientSize = _windowingBackend.WindowClientSize;
+        CursorVisible = _windowingBackend.CursorVisible;
         DisplayMode = _windowingBackend.DisplayMode;
     }
 
+    public bool CursorVisible { get; set; }
     public DisplayMode DisplayMode { get; set; }
 
     public void HandleWindowState()
     {
+        if (CursorVisible != _windowingBackend.CursorVisible)
+        {
+            _windowingBackend.CursorVisible = CursorVisible;
+        }
+
         if (DisplayMode != _windowingBackend.DisplayMode)
         {
             _windowingBackend.DisplayMode = DisplayMode;

@@ -42,6 +42,7 @@ public sealed class CommonEntityFactory
         inputComponent.InputMapping = InputMapping.CreateBuilder()
             .MapAction("Exit", Key.Escape)
             .MapAction("ToggleFullscreen", Key.F)
+            .MapAction("ToggleCursorVisible", Key.C)
             .Build();
 
         inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);
@@ -54,6 +55,7 @@ public sealed class CommonEntityFactory
                 _ => throw new InvalidOperationException("Unsupported display mode.")
             };
         });
+        inputComponent.BindAction("ToggleCursorVisible", () => { _windowingSystem.CursorVisible = !_windowingSystem.CursorVisible; });
 
         return entity;
     }
