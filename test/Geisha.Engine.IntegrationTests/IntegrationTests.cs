@@ -25,8 +25,7 @@ namespace Geisha.Engine.IntegrationTests
         [SetUp]
         public virtual void SetUp()
         {
-            var configuration = Configuration.CreateDefault();
-            Configure(configuration);
+            var configuration = Configure(Configuration.CreateDefault());
 
             var containerBuilder = new ContainerBuilder();
 
