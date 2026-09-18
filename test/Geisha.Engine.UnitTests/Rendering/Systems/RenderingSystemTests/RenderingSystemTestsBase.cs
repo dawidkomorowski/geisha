@@ -32,7 +32,7 @@ public abstract class RenderingSystemTestsBase
     public void SetUp()
     {
         RenderingContext2D = Substitute.For<IRenderingContext2D>();
-        RenderingContext2D.ScreenSize.Returns(ScreenSize);
+        RenderingContext2D.RenderTargetSize.Returns(ScreenSize);
 
         RenderingBackend = Substitute.For<IRenderingBackend>();
         RenderingBackend.Context2D.Returns(RenderingContext2D);

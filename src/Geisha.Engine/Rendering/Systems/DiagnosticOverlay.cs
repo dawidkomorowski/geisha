@@ -24,8 +24,8 @@ internal sealed class DiagnosticOverlay
 
         _fontSize = FontSize.FromDips(20);
 
-        var screenSize = _renderingContext2D.ScreenSize;
-        using var textLayout = _renderingContext2D.CreateTextLayout("X", FontFamily, _fontSize, screenSize.Width, screenSize.Height);
+        var renderTargetSize = _renderingContext2D.RenderTargetSize;
+        using var textLayout = _renderingContext2D.CreateTextLayout("X", FontFamily, _fontSize, renderTargetSize.Width, renderTargetSize.Height);
         _glyphWidth = textLayout.Metrics.Width;
         _lineHeight = textLayout.Metrics.Height;
     }
@@ -35,8 +35,8 @@ internal sealed class DiagnosticOverlay
         const double margin = 4;
         const double padding = 4;
 
-        var screenSize = _renderingContext2D.ScreenSize;
-        var translation = new Vector2(-(screenSize.Width / 2d) + margin, screenSize.Height / 2d - margin);
+        var renderTargetSize = _renderingContext2D.RenderTargetSize;
+        var translation = new Vector2(-(renderTargetSize.Width / 2d) + margin, renderTargetSize.Height / 2d - margin);
 
         foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
         {

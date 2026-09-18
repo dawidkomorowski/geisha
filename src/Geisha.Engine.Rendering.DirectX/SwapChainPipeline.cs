@@ -32,7 +32,7 @@ internal sealed class SwapChainPipeline : IDisposable
 
     private Bitmap1 _backBufferBitmap;
 
-    public SwapChainPipeline(DeviceContext deviceContext, Size screenSize, IntPtr windowHandle)
+    public SwapChainPipeline(DeviceContext deviceContext, Size resolution, IntPtr windowHandle)
     {
         _deviceContext = deviceContext;
 
@@ -59,8 +59,8 @@ internal sealed class SwapChainPipeline : IDisposable
 
         var swapChainDescription = new SwapChainDescription1
         {
-            Width = screenSize.Width,
-            Height = screenSize.Height,
+            Width = resolution.Width,
+            Height = resolution.Height,
             Format = PixelFormat,
             SampleDescription = new SampleDescription(1, 0),
             Usage = Usage.RenderTargetOutput,
@@ -79,7 +79,7 @@ internal sealed class SwapChainPipeline : IDisposable
         _frameLatencyWaitEvent.SafeWaitHandle = _frameLatencyWaitHandle;
         swapChain2.MaximumFrameLatency = 1;
 
-        CreateBitmaps(screenSize);
+        CreateBitmaps(resolution);
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 

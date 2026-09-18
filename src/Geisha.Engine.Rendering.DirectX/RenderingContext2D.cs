@@ -31,10 +31,10 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private string _currentFontFamilyName = string.Empty;
     private bool _clippingEnabled;
 
-    public RenderingContext2D(DeviceContext deviceContext, Size screenSize, Statistics statistics)
+    public RenderingContext2D(DeviceContext deviceContext, Size renderTargetSize, Statistics statistics)
     {
         _deviceContext = deviceContext;
-        ScreenSize = screenSize;
+        RenderTargetSize = renderTargetSize;
         _statistics = statistics;
 
         _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
@@ -42,11 +42,11 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
     }
 
-    private Vector2 ScreenCenter => ScreenSize.ToVector2() / 2d;
+    private Vector2 RenderTargetCenter => RenderTargetSize.ToVector2() / 2d;
 
     #region Implementation of IRenderingContext2D
 
-    public Size ScreenSize { get; private set; }
+    public Size RenderTargetSize { get; private set; }
 
     // TODO: It should specify more clearly what formats are supported and maybe expose some importer extensions?
     public ITexture CreateTexture(Stream stream)
@@ -352,9 +352,9 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     #endregion
 
-    public void Resize(Size size)
+    public void UpdateRenderTargetSize(Size size)
     {
-        ScreenSize = size;
+        RenderTargetSize = size;
     }
 
     /// <summary>
@@ -376,7 +376,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         return new RawMatrix3x2(
             (float)transform.M11, -(float)transform.M21,
             -(float)transform.M12, (float)transform.M22,
-            (float)(transform.M13 + ScreenCenter.X), (float)(-transform.M23 + ScreenCenter.Y)
+            (float)(transform.M13 + RenderTargetCenter.X), (float)(-transform.M23 + RenderTargetCenter.Y)
         );
     }
 }

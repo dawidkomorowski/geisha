@@ -28,7 +28,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
         // TODO: How to consistently handle DPI?
         _statistics = new Statistics();
-        var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
+        var windowClientSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
 
         var directXDriverType = driverType switch
         {
@@ -52,8 +52,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         _d3D11Device = new Device(directXDriverType, deviceCreationFlags, featureLevels);
 
         _deviceContext = new DeviceContext(_d3D11Device);
-        _swapChainPipeline = new SwapChainPipeline(_deviceContext, screenSize, form.Handle);
-        _renderingContext2D = new RenderingContext2D(_deviceContext, screenSize, _statistics);
+        _swapChainPipeline = new SwapChainPipeline(_deviceContext, windowClientSize, form.Handle);
+        _renderingContext2D = new RenderingContext2D(_deviceContext, windowClientSize, _statistics);
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
         using var dxgiAdapter = dxgiDevice.Adapter;
@@ -100,7 +100,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         }
 
         _swapChainPipeline.ResizeBuffers(size);
-        _renderingContext2D.Resize(size);
+        _renderingContext2D.UpdateRenderTargetSize(size);
     }
 
     /// <summary>
