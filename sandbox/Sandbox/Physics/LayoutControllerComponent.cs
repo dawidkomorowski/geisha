@@ -154,7 +154,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
         var cameraComponent = Scene.RootEntities.Single(e => e.HasComponent<CameraComponent>()).GetComponent<CameraComponent>();
 
         var mousePosition = inputComponent.HardwareInput.MouseInput.Position;
-        return cameraComponent.ScreenPointToWorld2DPoint(mousePosition);
+        return cameraComponent.ViewportPointToWorld2DPoint(mousePosition);
     }
 
     private void UpdateSpawnSizeFactor()

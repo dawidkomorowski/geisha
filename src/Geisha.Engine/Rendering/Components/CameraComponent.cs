@@ -108,10 +108,13 @@ public sealed class CameraComponent : Component
     public AxisAlignedRectangle BoundingRectangleOfView => CameraNode.GetBoundingRectangleOfView();
 
     /// <summary>
-    ///     Transforms point in screen space to point in 2D world space as seen by camera.
+    ///     Transforms a point from camera viewport pixel coordinates to 2D world coordinates as seen by camera.
     /// </summary>
-    /// <param name="screenPoint">Point in screen space.</param>
-    /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
+    /// <param name="viewportPoint">Point in camera viewport pixel coordinates, with the origin in the top-left corner.</param>
+    /// <returns>
+    ///     Point in 2D world coordinates corresponding to given point in camera viewport pixel coordinates as seen by
+    ///     camera.
+    /// </returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
@@ -119,13 +122,16 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
+    public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint) => CameraNode.ViewportPointToWorld2DPoint(viewportPoint);
 
     /// <summary>
-    ///     Transforms point in 2D world space to point in screen space as seen by camera.
+    ///     Transforms a point from 2D world coordinates to camera viewport pixel coordinates as seen by camera.
     /// </summary>
-    /// <param name="worldPoint">Point in 2D world space.</param>
-    /// <returns>Point in screen space corresponding to given point in 2D world space as seen by camera.</returns>
+    /// <param name="worldPoint">Point in 2D world coordinates.</param>
+    /// <returns>
+    ///     Point in camera viewport pixel coordinates corresponding to given point in 2D world coordinates as seen by
+    ///     camera.
+    /// </returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
@@ -133,7 +139,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
+    public Vector2 World2DPointToViewportPoint(in Vector2 worldPoint) => CameraNode.World2DPointToViewportPoint(worldPoint);
 
     /// <summary>
     ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the

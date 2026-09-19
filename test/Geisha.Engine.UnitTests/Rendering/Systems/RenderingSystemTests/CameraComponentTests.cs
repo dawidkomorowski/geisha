@@ -351,7 +351,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    public void CameraComponent_ViewportPointToWorld2DPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
@@ -363,7 +363,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
-        var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(200, 100));
+        var actual = cameraComponent.ViewportPointToWorld2DPoint(new Vector2(200, 100));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
@@ -383,7 +383,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Underscan, 200, 100, -76, 44)]
     [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
     [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
-    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
+    public void CameraComponent_ViewportPointToWorld2DPoint_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
         double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double px, double py, double wx, double wy)
     {
         // Arrange
@@ -396,7 +396,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         cameraComponent.AspectRatioBehavior = arb;
 
         // Act
-        var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(px, py));
+        var actual = cameraComponent.ViewportPointToWorld2DPoint(new Vector2(px, py));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
@@ -404,7 +404,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    public void CameraComponent_ViewportPointToWorld2DPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
@@ -429,7 +429,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
 
         // Act
-        var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(200, 100));
+        var actual = cameraComponent.ViewportPointToWorld2DPoint(new Vector2(200, 100));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
@@ -437,7 +437,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_World2DPointToScreenPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    public void CameraComponent_World2DPointToViewportPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
@@ -449,7 +449,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
-        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(-760, 440));
+        var actual = cameraComponent.World2DPointToViewportPoint(new Vector2(-760, 440));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
@@ -469,7 +469,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Underscan, 200, 100, -76, 44)]
     [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
     [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
-    public void CameraComponent_World2DPointToScreenPoint_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
+    public void CameraComponent_World2DPointToViewportPoint_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
         double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double px, double py, double wx, double wy)
     {
         // Arrange
@@ -482,7 +482,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         cameraComponent.AspectRatioBehavior = arb;
 
         // Act
-        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(wx, wy));
+        var actual = cameraComponent.World2DPointToViewportPoint(new Vector2(wx, wy));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
@@ -490,7 +490,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_World2DPointToScreenPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
+    public void CameraComponent_World2DPointToViewportPoint_ShouldReturnComputedValue_WhenTransformIsInterpolated()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
@@ -515,7 +515,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(transform2DComponent.InterpolatedTransform, Is.Not.EqualTo(transform2DComponent.Transform));
 
         // Act
-        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(-2265, 1350));
+        var actual = cameraComponent.World2DPointToViewportPoint(new Vector2(-2265, 1350));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
@@ -778,7 +778,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldUseViewportSize_WhenViewRectangleIsDefault()
+    public void CameraComponent_ViewportPointToWorld2DPoint_ShouldUseViewportSize_WhenViewRectangleIsDefault()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
@@ -794,7 +794,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
 
         // Act
-        var actual = camera.ScreenPointToWorld2DPoint(new Vector2(200, 100));
+        var actual = camera.ViewportPointToWorld2DPoint(new Vector2(200, 100));
 
         // Assert
         // With default ViewRectangle, should behave as if ViewRectangle = ViewportSize (1920, 1080)
@@ -803,7 +803,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void CameraComponent_World2DPointToScreenPoint_ShouldUseViewportSize_WhenViewRectangleIsDefault()
+    public void CameraComponent_World2DPointToViewportPoint_ShouldUseViewportSize_WhenViewRectangleIsDefault()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
@@ -819,7 +819,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(camera.ViewRectangle, Is.EqualTo(Vector2.Zero));
 
         // Act
-        var actual = camera.World2DPointToScreenPoint(new Vector2(-760, 440));
+        var actual = camera.World2DPointToViewportPoint(new Vector2(-760, 440));
 
         // Assert
         // With default ViewRectangle, should behave as if ViewRectangle = ViewportSize (1920, 1080)

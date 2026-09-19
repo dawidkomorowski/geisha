@@ -12,8 +12,8 @@ internal interface ICameraNode
     AspectRatioBehavior AspectRatioBehavior { get; set; }
     Size ViewportSize { get; }
     Vector2 ViewRectangle { get; set; }
-    Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint);
-    Vector2 World2DPointToScreenPoint(in Vector2 worldPoint);
+    Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint);
+    Vector2 World2DPointToViewportPoint(in Vector2 worldPoint);
     Matrix3x3 CreateViewMatrix();
     Matrix3x3 CreateViewMatrixScaledToViewport();
     AxisAlignedRectangle GetBoundingRectangleOfView();
@@ -25,8 +25,8 @@ internal sealed class DetachedCameraNode : ICameraNode
     public AspectRatioBehavior AspectRatioBehavior { get; set; }
     public Size ViewportSize => Size.Empty;
     public Vector2 ViewRectangle { get; set; }
-    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => default;
-    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => default;
+    public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint) => default;
+    public Vector2 World2DPointToViewportPoint(in Vector2 worldPoint) => default;
     public Matrix3x3 CreateViewMatrix() => default;
     public Matrix3x3 CreateViewMatrixScaledToViewport() => default;
 
@@ -56,17 +56,17 @@ internal sealed class CameraNode : ICameraNode, IDisposable
     public Size ViewportSize { get; set; }
     public Vector2 ViewRectangle { get; set; }
 
-    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint)
+    public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint)
     {
         var viewRectangleScale = GetViewRectangleScale();
         var transformationMatrix = _transform.InterpolatedTransform.ToMatrix() *
                                    Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
                                    Matrix3x3.CreateTranslation(ViewportSize.ToVector2() / -2d);
 
-        return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
+        return (transformationMatrix * viewportPoint.Homogeneous).ToVector2();
     }
 
-    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint)
+    public Vector2 World2DPointToViewportPoint(in Vector2 worldPoint)
     {
         var transformationMatrix = Matrix3x3.CreateTranslation(ViewportSize.ToVector2() / 2d) *
                                    Matrix3x3.CreateScale(new Vector2(1, -1)) *

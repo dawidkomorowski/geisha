@@ -157,7 +157,7 @@ internal sealed class SetTextToMouseInputComponent : BehaviorComponent
         stringBuilder.AppendLine($"Mouse Position: {_inputComponent.HardwareInput.MouseInput.Position}");
         stringBuilder.AppendLine($"Mouse Position Delta: {_inputComponent.HardwareInput.MouseInput.PositionDelta}");
         stringBuilder.AppendLine(
-            $"Mouse Position in World Space: {_cameraComponent.ScreenPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position)}");
+            $"Mouse Position in World Space: {_cameraComponent.ViewportPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position)}");
         stringBuilder.AppendLine($"Scroll Delta: {_inputComponent.HardwareInput.MouseInput.ScrollDelta}");
 
         _textRendererComponent.Text = stringBuilder.ToString();
@@ -201,7 +201,7 @@ internal sealed class FollowMousePositionComponent : BehaviorComponent
         // We read position of mouse from InputComponent,
         // then we convert it to world space using CameraComponent
         // and finally we set it as translation of Transform2DComponent.
-        _transform2DComponent.Translation = _cameraComponent.ScreenPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position);
+        _transform2DComponent.Translation = _cameraComponent.ViewportPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position);
     }
 }
 
