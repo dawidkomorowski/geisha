@@ -37,6 +37,16 @@ public interface IRenderingBackend
     /// </remarks>
     void Present(bool waitForVSync);
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Resizes the buffers used for rendering to the specified size.
+    /// </summary>
+    /// <param name="size">The new buffer size. Both dimensions must be greater than zero.</param>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    ///     Thrown when either dimension of <paramref name="size" /> is less than or equal to zero.
+    /// </exception>
+    /// <remarks>
+    ///     Call this method after the render target size changes and before rendering at the new size. For a window-backed
+    ///     render target, <paramref name="size" /> should match the window client-area size.
+    /// </remarks>
     void ResizeBuffers(Size size);
 }

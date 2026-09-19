@@ -105,7 +105,12 @@ namespace Geisha.Engine
             Logger.Info("Engine components initialized.");
         }
 
-        // TODO: Add documentation.
+        /// <summary>
+        ///     Runs the engine game loop.
+        /// </summary>
+        /// <remarks>
+        ///     The game loop runs until the engine is scheduled for shutdown.
+        /// </remarks>
         public void Run()
         {
             _windowingBackend.RunUpdateLoop(Update);

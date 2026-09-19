@@ -47,7 +47,9 @@ public sealed record Configuration
     /// </summary>
     public RenderingConfiguration Rendering { get; init; }
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     <see cref="WindowingConfiguration" /> loaded from Windowing configuration section.
+    /// </summary>
     public WindowingConfiguration Windowing { get; init; }
 
     /// <summary>

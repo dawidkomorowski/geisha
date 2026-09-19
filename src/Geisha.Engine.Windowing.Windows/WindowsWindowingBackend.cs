@@ -7,7 +7,9 @@ using Size = Geisha.Engine.Core.Math.Size;
 
 namespace Geisha.Engine.Windowing.Windows;
 
-// TODO: Add documentation.
+/// <summary>
+///     Windowing backend implementation for Windows using WinForms.
+/// </summary>
 public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
 {
     private readonly RenderForm _renderForm;
@@ -15,6 +17,9 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     private bool _cursorVisible = true;
     private WindowState _windowState;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="WindowsWindowingBackend" /> class.
+    /// </summary>
     public WindowsWindowingBackend()
     {
         Application.SetHighDpiMode(HighDpiMode.SystemAware);
@@ -25,14 +30,19 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         SaveWindowState();
     }
 
+    /// <summary>
+    ///     Gets the WinForms window managed by this backend.
+    /// </summary>
     public Form Window => _renderForm;
 
+    /// <inheritdoc />
     public string WindowTitle
     {
         get => _renderForm.Text;
         set => _renderForm.Text = value;
     }
 
+    /// <inheritdoc />
     public Size WindowClientSize
     {
         get
@@ -43,6 +53,7 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         set => _renderForm.ClientSize = new System.Drawing.Size(value.Width, value.Height);
     }
 
+    /// <inheritdoc />
     public DisplayMode DisplayMode
     {
         get => _displayMode;
@@ -75,12 +86,14 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public bool AllowWindowResizing
     {
         get => _renderForm.AllowUserResizing;
         set => _renderForm.AllowUserResizing = value;
     }
 
+    /// <inheritdoc />
     public bool CursorVisible
     {
         get => _cursorVisible;
@@ -104,6 +117,7 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public void RunUpdateLoop(Func<bool> updateCallback)
     {
         RenderLoop.Run(_renderForm, () =>
@@ -113,6 +127,9 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         });
     }
 
+    /// <summary>
+    ///     Releases the window resources.
+    /// </summary>
     public void Dispose()
     {
         _renderForm.Dispose();
