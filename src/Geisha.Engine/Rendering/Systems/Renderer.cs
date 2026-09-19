@@ -49,8 +49,8 @@ internal sealed class Renderer : IRenderNodeVisitor
         if (_renderingState.CameraNode != null)
         {
             var cameraNode = _renderingState.CameraNode;
-            cameraNode.ScreenSize = _renderingContext2D.RenderTargetSize;
-            _cameraTransformationMatrix = _renderingState.CameraNode.CreateViewMatrixScaledToScreen();
+            cameraNode.ViewportSize = _renderingContext2D.RenderTargetSize;
+            _cameraTransformationMatrix = _renderingState.CameraNode.CreateViewMatrixScaledToViewport();
 
             EnableAspectRatio(cameraNode);
             UpdateRenderList();

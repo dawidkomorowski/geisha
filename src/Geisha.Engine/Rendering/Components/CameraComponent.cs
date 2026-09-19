@@ -50,16 +50,19 @@ public sealed class CameraComponent : Component
     }
 
     /// <summary>
-    ///     Gets the size of the screen (full screen) or the window client area (excluding window frame) in pixels.
+    ///     Gets the size of the camera viewport in pixels.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         This property returns <see cref="Size.Empty" /> when <see cref="CameraComponent" /> is not managed by rendering
-    ///         system.
+    ///         The viewport is the pixel area to which this camera renders.
+    ///     </para>
+    ///     <para>
+    ///         This property returns <see cref="Size.Empty" /> when <see cref="CameraComponent" /> is not managed by the
+    ///         rendering system.
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Size ScreenSize => CameraNode.ScreenSize;
+    public Size ViewportSize => CameraNode.ViewportSize;
 
     /// <summary>
     ///     Dimensions of rectangle that defines fragment of space visible for camera using logical units that are independent
@@ -69,7 +72,7 @@ public sealed class CameraComponent : Component
     ///     <para>
     ///         When <see cref="ViewRectangle" /> is set to (0, 0) or any non-positive value, and the
     ///         <see cref="CameraComponent" /> is managed by the rendering system, the engine automatically uses
-    ///         <see cref="ScreenSize" /> as the effective view rectangle for all camera computations. This allows the camera
+    ///         <see cref="ViewportSize" /> as the effective view rectangle for all camera computations. This allows the camera
     ///         to adapt to the current screen resolution without requiring explicit configuration.
     ///     </para>
     ///     <para>
@@ -160,7 +163,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToScreen();
+    public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToViewport();
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)

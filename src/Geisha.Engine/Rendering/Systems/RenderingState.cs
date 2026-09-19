@@ -186,7 +186,7 @@ internal sealed class RenderingState
     {
         var cameraNode = new CameraNode(transform, cameraComponent)
         {
-            ScreenSize = _renderingContext2D.RenderTargetSize
+            ViewportSize = _renderingContext2D.RenderTargetSize
         };
         return cameraNode;
     }

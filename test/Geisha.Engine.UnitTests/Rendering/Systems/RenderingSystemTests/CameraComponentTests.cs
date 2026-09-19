@@ -96,7 +96,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Assert
         var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-        Assert.That(cameraComponent.ScreenSize, Is.EqualTo(screenSize));
+        Assert.That(cameraComponent.ViewportSize, Is.EqualTo(screenSize));
     }
 
     [Test]
@@ -254,7 +254,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         context.Scene.RemoveObserver(context.RenderingSystem);
 
         // Act
-        var screenSize = cameraComponent.ScreenSize;
+        var screenSize = cameraComponent.ViewportSize;
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
@@ -274,7 +274,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var cameraComponent = entity.GetComponent<CameraComponent>();
 
         // Act
-        var actual = cameraComponent.ScreenSize;
+        var actual = cameraComponent.ViewportSize;
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
@@ -724,7 +724,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        // With default ViewRectangle and ScreenSize 2000x1000, effective view rectangle should be 2000x1000
+        // With default ViewRectangle and ViewportSize 2000x1000, effective view rectangle should be 2000x1000
         // Scale should be 1:1 (no scaling)
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.Identity, entity.GetOpacity());
     }
@@ -772,7 +772,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var actual = camera.BoundingRectangleOfView;
 
         // Assert
-        // ScreenSize is 2000x1000, so effective view rectangle should be based on that
+        // ViewportSize is 2000x1000, so effective view rectangle should be based on that
         Assert.That(camera.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 4000, 2000)));
     }
@@ -797,7 +797,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var actual = camera.ScreenPointToWorld2DPoint(new Vector2(200, 100));
 
         // Assert
-        // With default ViewRectangle, should behave as if ViewRectangle = ScreenSize (1920, 1080)
+        // With default ViewRectangle, should behave as if ViewRectangle = ViewportSize (1920, 1080)
         Assert.That(camera.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new Vector2(-760, 440)).Using<Vector2>(Vector2Equality));
     }
@@ -822,7 +822,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var actual = camera.World2DPointToScreenPoint(new Vector2(-760, 440));
 
         // Assert
-        // With default ViewRectangle, should behave as if ViewRectangle = ScreenSize (1920, 1080)
+        // With default ViewRectangle, should behave as if ViewRectangle = ViewportSize (1920, 1080)
         Assert.That(camera.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new Vector2(200, 100)).Using<Vector2>(Vector2Equality));
     }
@@ -851,7 +851,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         context.RenderingSystem.RenderScene();
 
         // Assert
-        // With default ViewRectangle (0, 0), effective view rectangle should be ScreenSize (1920, 1080)
+        // With default ViewRectangle (0, 0), effective view rectangle should be ViewportSize (1920, 1080)
         // Since effective view rectangle equals screen size, scale should be 1:1 with camera translation applied
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
     }
