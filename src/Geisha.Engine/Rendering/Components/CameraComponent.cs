@@ -108,13 +108,13 @@ public sealed class CameraComponent : Component
     public AxisAlignedRectangle BoundingRectangleOfView => CameraNode.GetBoundingRectangleOfView();
 
     /// <summary>
-    ///     Transforms a point from camera viewport pixel coordinates to 2D world coordinates as seen by camera.
+    ///     Transforms a point from viewport pixel coordinates to 2D world coordinates.
     /// </summary>
-    /// <param name="viewportPoint">Point in camera viewport pixel coordinates, with the origin in the top-left corner.</param>
-    /// <returns>
-    ///     Point in 2D world coordinates corresponding to given point in camera viewport pixel coordinates as seen by
-    ///     camera.
-    /// </returns>
+    /// <param name="viewportPoint">
+    ///     Point in viewport pixel coordinates. The origin is at the top-left corner of the viewport, with the X axis
+    ///     pointing right and the Y axis pointing down.
+    /// </param>
+    /// <returns>The 2D world-space point corresponding to <paramref name="viewportPoint" /> for this camera.</returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
@@ -125,12 +125,12 @@ public sealed class CameraComponent : Component
     public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint) => CameraNode.ViewportPointToWorld2DPoint(viewportPoint);
 
     /// <summary>
-    ///     Transforms a point from 2D world coordinates to camera viewport pixel coordinates as seen by camera.
+    ///     Transforms a point from 2D world coordinates to viewport pixel coordinates.
     /// </summary>
     /// <param name="worldPoint">Point in 2D world coordinates.</param>
     /// <returns>
-    ///     Point in camera viewport pixel coordinates corresponding to given point in 2D world coordinates as seen by
-    ///     camera.
+    ///     The viewport-space point corresponding to <paramref name="worldPoint" /> for this camera. The origin is at the
+    ///     top-left corner of the viewport, with the X axis pointing right and the Y axis pointing down.
     /// </returns>
     /// <remarks>
     ///     <para>
