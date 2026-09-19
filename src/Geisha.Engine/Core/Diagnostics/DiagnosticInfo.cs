@@ -3,7 +3,7 @@
     /// <summary>
     ///     Represents single diagnostic information composed of <see cref="Name" /> and <see cref="Value" />.
     /// </summary>
-    /// <remarks>Example of internal usage of this class inside the engine is FPS that can be shown on the screen.</remarks>
+    /// <remarks>An example of internal usage of this class is displaying FPS information over the rendered scene.</remarks>
     public sealed class DiagnosticInfo
     {
         /// <summary>

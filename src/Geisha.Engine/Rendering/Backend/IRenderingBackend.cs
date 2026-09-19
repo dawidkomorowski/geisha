@@ -6,7 +6,8 @@ namespace Geisha.Engine.Rendering.Backend;
 ///     Defines interface of rendering backend used by Geisha Engine.
 /// </summary>
 /// <remarks>
-///     Rendering backend provides API for loading graphical resources (like textures) and rendering them to the screen.
+///     Rendering backend provides API for loading graphical resources (like textures) rendering them to a render target
+///     and presenting rendered images.
 /// </remarks>
 public interface IRenderingBackend
 {
