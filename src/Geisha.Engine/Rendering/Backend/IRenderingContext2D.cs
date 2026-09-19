@@ -134,7 +134,7 @@ public interface IRenderingContext2D
     ///     Enables clipping of rendered image to specified rectangle.
     /// </summary>
     /// <param name="clippingRectangle">
-    ///     Defines area of screen in pixels to be rendered while everything outside this area is
+    ///     Defines area of render target in pixels to be rendered while everything outside this area is
     ///     clipped.
     /// </param>
     /// <seealso cref="ClearClipping" />

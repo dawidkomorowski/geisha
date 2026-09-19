@@ -40,7 +40,7 @@ public sealed class CameraComponent : Component
     public bool IsManagedByRenderingSystem => CameraNode.IsManagedByRenderingSystem;
 
     /// <summary>
-    ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch. Default is
+    ///     Defines how camera view is fit in the viewport when there is an aspect ratio mismatch. Default is
     ///     <see cref="AspectRatioBehavior.Overscan" />.
     /// </summary>
     public AspectRatioBehavior AspectRatioBehavior
@@ -153,9 +153,9 @@ public sealed class CameraComponent : Component
     public Matrix3x3 CreateViewMatrix() => CameraNode.CreateViewMatrix();
 
     /// <summary>
-    ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match screen dimensions.
+    ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match viewport size.
     /// </summary>
-    /// <returns>View matrix that is scaled to match screen dimensions.</returns>
+    /// <returns>View matrix that is scaled to match viewport size.</returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Matrix3x3" /> when <see cref="CameraComponent" /> is not
@@ -163,7 +163,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToViewport();
+    public Matrix3x3 CreateViewMatrixScaledToViewport() => CameraNode.CreateViewMatrixScaledToViewport();
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
@@ -183,18 +183,18 @@ public sealed class CameraComponent : Component
 }
 
 /// <summary>
-///     Defines behaviors of camera view fitting in the screen when there is an aspect ratio mismatch.
+///     Defines behaviors of camera view fitting in the viewport when there is an aspect ratio mismatch.
 /// </summary>
 public enum AspectRatioBehavior
 {
     /// <summary>
-    ///     Whole screen is used to present camera view while keeping aspect ratio. It may result in parts of the view being
-    ///     not visible as scaled outside the screen. It is default <see cref="AspectRatioBehavior" />.
+    ///     Whole viewport is used to present camera view while keeping aspect ratio. It may result in parts of the view being
+    ///     not visible as scaled outside the viewport. It is default <see cref="AspectRatioBehavior" />.
     /// </summary>
     Overscan,
 
     /// <summary>
-    ///     Whole camera view is visible on the screen, and it is fit to match either width or height of the screen while
+    ///     Whole camera view is visible in the viewport, and it is fit to match either width or height of the viewport while
     ///     keeping aspect ratio. It may result in some kind of window-boxed view with black bars filling the missing space.
     /// </summary>
     Underscan

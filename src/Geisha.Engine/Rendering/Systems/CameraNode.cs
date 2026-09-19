@@ -173,9 +173,9 @@ internal sealed class CameraNode : ICameraNode, IDisposable
     private bool CameraIsWiderThanViewport(in Vector2 effectiveViewRectangle)
     {
         var cameraAspectRatio = effectiveViewRectangle.X / effectiveViewRectangle.Y;
-        var screenAspectRatio = (double)ViewportSize.Width / ViewportSize.Height;
+        var viewportAspectRatio = (double)ViewportSize.Width / ViewportSize.Height;
 
-        return cameraAspectRatio > screenAspectRatio;
+        return cameraAspectRatio > viewportAspectRatio;
     }
 
     private static void CopyData(ICameraNode source, ICameraNode target)

@@ -324,6 +324,6 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var rectangleRenderer = rectangle.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.GetTransformMatrix());
+            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToViewport() * rectangle.GetTransformMatrix());
     }
 }
