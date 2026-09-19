@@ -63,6 +63,8 @@ C# / XML documentation guidance:
 - Add examples only when requested or when examples are necessary for clarity.
 - Cross references: use <see> for inline references and <seealso> for related overloads or sibling APIs. Avoid prose "See also" lines in remarks.
 - When public APIs use performance-oriented signatures (for example, generic struct constraints with ref handler parameters), document those requirements and their intent when they are externally visible.
+- For shared abstractions, document only behavior guaranteed by the abstraction. Document platform-specific or backend-specific behavior on the concrete implementation unless the shared API explicitly guarantees it.
+- For stateful operations, document when callers should invoke them and how inputs relate to surrounding engine state when supported by the code. Do not expose implementation mechanisms as API guarantees.
 
 Module-Specific Addenda:
 - Physics API Addendum:
