@@ -6,8 +6,9 @@
     public interface IInputProvider
     {
         /// <summary>
-        ///     Specifies whether to lock the cursor position at center of the window/screen. If <c>true</c> the cursor is
-        ///     successively moved to the center of the window/screen; otherwise it is unlocked and can move freely.
+        ///     Specifies whether to lock the cursor position at the center of the window client area. If <c>true</c> the
+        ///     cursor is successively moved to the center of the window client area; otherwise it is unlocked and can move
+        ///     freely.
         /// </summary>
         /// <remarks>
         ///     It is useful to lock the cursor position (and often to hide it) when mouse is used as two-directional axis
