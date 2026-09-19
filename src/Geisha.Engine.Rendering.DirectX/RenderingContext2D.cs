@@ -103,7 +103,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         return new TextLayout(dwTextFormat, dwTextLayout, text);
     }
 
-    public void CaptureScreenShotAsPng(Stream stream)
+    public void CaptureScreenshotAsPng(Stream stream)
     {
         var size = _deviceContext.D2D1DeviceContext.PixelSize.ToSize();
         using var d2D1CpuBitmap = _deviceContext.CreateBitmap(size, BitmapOptions.CpuRead | BitmapOptions.CannotDraw);

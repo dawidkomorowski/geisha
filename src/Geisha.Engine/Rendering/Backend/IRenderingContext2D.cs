@@ -43,7 +43,7 @@ public interface IRenderingContext2D
     ///     Captures screenshot of currently rendered image as a PNG.
     /// </summary>
     /// <param name="stream">Output stream for PNG image bytes of captured screenshot.</param>
-    public void CaptureScreenShotAsPng(Stream stream);
+    public void CaptureScreenshotAsPng(Stream stream);
 
     /// <summary>
     ///     Initiates drawing on render target in this context. It should be called in pair with <see cref="EndDraw" />
