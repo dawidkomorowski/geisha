@@ -362,16 +362,17 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     ///     system.
     /// </summary>
     /// <remarks>
-    ///     Direct2D renders from upper left corner with Y axis towards bottom of the screen while it is required to have
-    ///     origin in center of screen with Y axis towards top of the screen.
+    ///     Direct2D renders from the upper-left corner with the Y axis pointing downward,
+    ///     while the Geisha rendering coordinate system has its origin at the center of the
+    ///     render target with the Y axis pointing upward.
     /// </remarks>
-    /// <param name="transform">Raw transform to be used for rendering.</param>
-    /// <returns></returns>
+    /// <param name="transform">Geisha transform.</param>
+    /// <returns>Direct2D transform.</returns>
     private RawMatrix3x2 ConvertTransformToDirectX(in Matrix3x3 transform)
     {
         // Prepare transformation matrix to be used in rendering.
-        // Set coordinates system origin to center of the screen.
-        // Make Y axis to point towards top of the screen.
+        // Set the coordinate-system origin to the center of the render target.
+        // Make the Y axis point upward.
         // Convert Geisha matrix to DirectX matrix.
         return new RawMatrix3x2(
             (float)transform.M11, -(float)transform.M21,
