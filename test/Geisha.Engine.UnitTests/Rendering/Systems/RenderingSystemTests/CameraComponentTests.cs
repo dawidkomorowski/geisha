@@ -108,7 +108,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var cameraEntity = context.AddCamera(new Vector2(10, -10), 0, Vector2.One);
         var camera = cameraEntity.GetComponent<CameraComponent>();
 
-        // Camera view rectangle is twice the screen resolution
+        // Camera view rectangle is twice the viewport size
         camera.ViewRectangle = RenderTargetSize.ToVector2() * 2;
 
         var entity = context.AddSpriteWithDefaultTransform();
@@ -124,7 +124,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByHeight_WhenCameraAndViewportAspectRatioDiffers()
     {
         // Arrange
         var context = CreateRenderingTestContext();
@@ -133,8 +133,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
-        // Camera view rectangle 4xScreenWidth and 2xScreenHeight
-        // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
+        // Camera view rectangle 4xViewportWidth and 2xViewportHeight
+        // Camera view rectangle is 4:1 ratio while viewport is 2:1 ratio
         camera.ViewRectangle = new Vector2(RenderTargetSize.Width * 4, RenderTargetSize.Height * 2);
 
         var entity = context.AddSpriteWithDefaultTransform();
@@ -150,7 +150,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByWidth_WhenCameraAndViewportAspectRatioDiffers()
     {
         // Arrange
         var context = CreateRenderingTestContext();
@@ -159,8 +159,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
-        // Camera view rectangle 2xScreenWidth and 4xScreenHeight
-        // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
+        // Camera view rectangle 2xViewportWidth and 4xViewportHeight
+        // Camera view rectangle is 1:1 ratio while viewport is 2:1 ratio
         camera.ViewRectangle = new Vector2(RenderTargetSize.Width * 2, RenderTargetSize.Height * 4);
 
         var entity = context.AddSpriteWithDefaultTransform();
@@ -176,7 +176,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByHeight_WhenCameraAndViewportAspectRatioDiffers()
     {
         // Arrange
         var context = CreateRenderingTestContext();
@@ -185,8 +185,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
-        // Camera view rectangle 1xScreenWidth and 2xScreenHeight
-        // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
+        // Camera view rectangle 1xViewportWidth and 2xViewportHeight
+        // Camera view rectangle is 1:1 ratio while viewport is 2:1 ratio
         camera.ViewRectangle = new Vector2(RenderTargetSize.Width, RenderTargetSize.Height * 2);
 
         var entity = context.AddSpriteWithDefaultTransform();
@@ -210,7 +210,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByWidth_WhenCameraAndViewportAspectRatioDiffers()
     {
         // Arrange
         var context = CreateRenderingTestContext();
@@ -219,8 +219,8 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.GetComponent<CameraComponent>();
         camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
-        // Camera view rectangle 2xScreenWidth and 1xScreenHeight
-        // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
+        // Camera view rectangle 2xViewportWidth and 1xViewportHeight
+        // Camera view rectangle is 4:1 ratio while viewport is 2:1 ratio
         camera.ViewRectangle = new Vector2(RenderTargetSize.Width * 2, RenderTargetSize.Height);
 
         var entity = context.AddSpriteWithDefaultTransform();
@@ -828,7 +828,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldApplyAspectRatioBehaviorWithDefaultViewRectangle_WhenScreenAspectRatioDiffers()
+    public void RenderScene_ShouldApplyAspectRatioBehaviorWithDefaultViewRectangle_WhenViewportAspectRatioDiffers()
     {
         // Arrange
         RenderingContext2D.RenderTargetSize.Returns(new Size(1920, 1080));
