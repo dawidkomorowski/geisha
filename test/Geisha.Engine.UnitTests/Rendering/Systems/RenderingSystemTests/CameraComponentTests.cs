@@ -109,7 +109,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         var camera = cameraEntity.GetComponent<CameraComponent>();
 
         // Camera view rectangle is twice the screen resolution
-        camera.ViewRectangle = ScreenSize.ToVector2() * 2;
+        camera.ViewRectangle = RenderTargetSize.ToVector2() * 2;
 
         var entity = context.AddSpriteWithDefaultTransform();
 
@@ -135,7 +135,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Camera view rectangle 4xScreenWidth and 2xScreenHeight
         // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
-        camera.ViewRectangle = new Vector2(ScreenSize.Width * 4, ScreenSize.Height * 2);
+        camera.ViewRectangle = new Vector2(RenderTargetSize.Width * 4, RenderTargetSize.Height * 2);
 
         var entity = context.AddSpriteWithDefaultTransform();
 
@@ -161,7 +161,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Camera view rectangle 2xScreenWidth and 4xScreenHeight
         // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
-        camera.ViewRectangle = new Vector2(ScreenSize.Width * 2, ScreenSize.Height * 4);
+        camera.ViewRectangle = new Vector2(RenderTargetSize.Width * 2, RenderTargetSize.Height * 4);
 
         var entity = context.AddSpriteWithDefaultTransform();
 
@@ -187,7 +187,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Camera view rectangle 1xScreenWidth and 2xScreenHeight
         // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
-        camera.ViewRectangle = new Vector2(ScreenSize.Width, ScreenSize.Height * 2);
+        camera.ViewRectangle = new Vector2(RenderTargetSize.Width, RenderTargetSize.Height * 2);
 
         var entity = context.AddSpriteWithDefaultTransform();
 
@@ -199,7 +199,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         {
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.Clear(Color.Black);
-            RenderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenSize.Height, ScreenSize.Height));
+            RenderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(RenderTargetSize.Height, RenderTargetSize.Height));
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
@@ -221,7 +221,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
 
         // Camera view rectangle 2xScreenWidth and 1xScreenHeight
         // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
-        camera.ViewRectangle = new Vector2(ScreenSize.Width * 2, ScreenSize.Height);
+        camera.ViewRectangle = new Vector2(RenderTargetSize.Width * 2, RenderTargetSize.Height);
 
         var entity = context.AddSpriteWithDefaultTransform();
 
@@ -233,7 +233,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         {
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.Clear(Color.Black);
-            RenderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenSize.Width, ScreenSize.Height / 2d));
+            RenderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(RenderTargetSize.Width, RenderTargetSize.Height / 2d));
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
