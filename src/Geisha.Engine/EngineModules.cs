@@ -5,6 +5,7 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Input;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Windowing;
 
 namespace Geisha.Engine
 {
@@ -18,6 +19,7 @@ namespace Geisha.Engine
             containerBuilder.RegisterModule<InputModule>();
             containerBuilder.RegisterModule<PhysicsModule>();
             containerBuilder.RegisterModule<RenderingModule>();
+            containerBuilder.RegisterModule<WindowingModule>();
         }
     }
 }

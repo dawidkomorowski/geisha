@@ -254,7 +254,7 @@ public class CommonTests : RenderingSystemTestsBase
 
         // Act
         var cameraComponent = spriteEntity.CreateComponent<CameraComponent>();
-        cameraComponent.ViewRectangle = ScreenSize.ToVector2();
+        cameraComponent.ViewRectangle = RenderTargetSize.ToVector2();
         context.RenderingSystem.RenderScene();
 
         // Assert

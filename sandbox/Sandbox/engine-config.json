@@ -38,14 +38,19 @@
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenSize": {
-      "Width": 1280,
-      "Height": 720
-    },
     "ShowRenderingStatistics": true,
     "SortingLayersOrder": [
       "Default",
       "UI"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": true,
+    "CursorVisible": true,
+    "DisplayMode": "Windowed",
+    "WindowClientSize": {
+      "Width": 1280,
+      "Height": 720
+    }
   }
 }

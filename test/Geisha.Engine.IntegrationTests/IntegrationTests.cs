@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using Autofac;
+﻿using Autofac;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core;
@@ -9,43 +9,45 @@ using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
+using Geisha.Engine.Windowing;
+using Geisha.Engine.Windowing.Backend;
+using Geisha.Engine.Windowing.Windows;
 using NUnit.Framework;
-using SharpDX.Windows;
 
 namespace Geisha.Engine.IntegrationTests
 {
     public abstract class IntegrationTests<TSystemUnderTest> where TSystemUnderTest : notnull
     {
-        private RenderForm _renderForm = null!;
         private IContainer _container = null!;
-        private ILifetimeScope _lifetimeScope = null!;
         protected TSystemUnderTest SystemUnderTest { get; private set; } = default!;
         protected virtual bool ShowDebugWindow => false;
 
         [SetUp]
         public virtual void SetUp()
         {
-            var renderingConfiguration = ConfigureRendering(new RenderingConfiguration());
-
-            var screenSize = renderingConfiguration.ScreenSize;
-            _renderForm = new RenderForm("IntegrationTestsWindow")
-            {
-                ClientSize = new Size(screenSize.Width, screenSize.Height)
-            };
-
-            if (ShowDebugWindow) _renderForm.Show();
+            var configuration = Configure(Configuration.CreateDefault());
 
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
-            containerBuilder.RegisterInstance(new CoreConfiguration()).As<CoreConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(new PhysicsConfiguration()).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Audio).As<AudioConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Windowing).As<WindowingConfiguration>().SingleInstance();
 
             // Register engine back-ends
+            var windowingBackend = new WindowsWindowingBackend();
+            windowingBackend.WindowTitle = "IntegrationTestsWindow";
+            windowingBackend.WindowClientSize = configuration.Windowing.WindowClientSize;
+
+            if (ShowDebugWindow) windowingBackend.Window.Show();
+
+            containerBuilder.RegisterInstance(windowingBackend).As<IWindowingBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new NAudioAudioBackend()).As<IAudioBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new WindowsInputBackend(_renderForm)).As<IInputBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm, DriverType.Software)).As<IRenderingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new WindowsInputBackend(windowingBackend.Window)).As<IInputBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new DirectXRenderingBackend(windowingBackend.Window, DriverType.Software)).As<IRenderingBackend>()
+                .SingleInstance();
 
             // Register engine modules
             EngineModules.RegisterAll(containerBuilder);
@@ -57,20 +59,17 @@ namespace Geisha.Engine.IntegrationTests
             containerBuilder.RegisterType<TSystemUnderTest>().AsSelf().SingleInstance();
 
             _container = containerBuilder.Build();
-            _lifetimeScope = _container.BeginLifetimeScope();
 
-            SystemUnderTest = _lifetimeScope.Resolve<TSystemUnderTest>();
+            SystemUnderTest = _container.Resolve<TSystemUnderTest>();
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            _lifetimeScope.Dispose();
             _container.Dispose();
-            _renderForm.Dispose();
         }
 
-        protected virtual RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
+        protected virtual Configuration Configure(Configuration configuration)
         {
             return configuration;
         }

@@ -40,7 +40,7 @@ public sealed class CameraComponent : Component
     public bool IsManagedByRenderingSystem => CameraNode.IsManagedByRenderingSystem;
 
     /// <summary>
-    ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch. Default is
+    ///     Defines how camera view is fit in the viewport when there is an aspect ratio mismatch. Default is
     ///     <see cref="AspectRatioBehavior.Overscan" />.
     /// </summary>
     public AspectRatioBehavior AspectRatioBehavior
@@ -50,36 +50,38 @@ public sealed class CameraComponent : Component
     }
 
     /// <summary>
-    ///     Gets the size of the screen (full screen) or the window client area (excluding window frame) in pixels.
+    ///     Gets the size of the camera viewport in pixels.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         This property returns <see cref="Size.Empty" /> when <see cref="CameraComponent" /> is not managed by rendering
-    ///         system.
+    ///         The viewport is the pixel area to which this camera renders.
+    ///     </para>
+    ///     <para>
+    ///         This property returns <see cref="Size.Empty" /> when <see cref="CameraComponent" /> is not managed by the
+    ///         rendering system.
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Size ScreenSize => CameraNode.ScreenSize;
+    public Size ViewportSize => CameraNode.ViewportSize;
 
     /// <summary>
-    ///     Dimensions of rectangle that defines fragment of space visible for camera using logical units that are independent
-    ///     of window size or screen resolution.
+    ///     Gets or sets the dimensions of the camera's logical view rectangle in world units.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         When <see cref="ViewRectangle" /> is set to (0, 0) or any non-positive value, and the
-    ///         <see cref="CameraComponent" /> is managed by the rendering system, the engine automatically uses
-    ///         <see cref="ScreenSize" /> as the effective view rectangle for all camera computations. This allows the camera
-    ///         to adapt to the current screen resolution without requiring explicit configuration.
+    ///         When either component of <see cref="ViewRectangle" /> is non-positive and the
+    ///         <see cref="CameraComponent" /> is managed by the rendering system, the engine uses
+    ///         <see cref="ViewportSize" /> as the effective view rectangle for camera computations. This allows the
+    ///         camera's logical view to follow the current viewport size without requiring explicit configuration.
     ///     </para>
     ///     <para>
-    ///         The stored value of <see cref="ViewRectangle" /> is never mutated by the rendering system. If left at the
-    ///         default (0, 0), it remains (0, 0) even during rendering and serialization, ensuring that scenes saved with
-    ///         default settings will adapt to any screen resolution when loaded.
+    ///         The stored value of <see cref="ViewRectangle" /> is never modified by the rendering system. If left at its
+    ///         default value of (0, 0), it remains (0, 0) during rendering and serialization. The effective view rectangle
+    ///         is derived from the current viewport size when the camera is rendered.
     ///     </para>
     ///     <para>
-    ///         Setting an explicit non-zero <see cref="ViewRectangle" /> enables logical scaling independent of screen
-    ///         resolution, which is useful for achieving consistent game world dimensions across different display sizes.
+    ///         Setting an explicit positive <see cref="ViewRectangle" /> enables logical scaling independent of viewport
+    ///         size. This is useful for maintaining consistent world-space dimensions across different viewport sizes.
     ///     </para>
     /// </remarks>
     public Vector2 ViewRectangle
@@ -105,10 +107,13 @@ public sealed class CameraComponent : Component
     public AxisAlignedRectangle BoundingRectangleOfView => CameraNode.GetBoundingRectangleOfView();
 
     /// <summary>
-    ///     Transforms point in screen space to point in 2D world space as seen by camera.
+    ///     Transforms a point from viewport pixel coordinates to 2D world coordinates.
     /// </summary>
-    /// <param name="screenPoint">Point in screen space.</param>
-    /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
+    /// <param name="viewportPoint">
+    ///     Point in viewport pixel coordinates. The origin is at the top-left corner of the viewport, with the X axis
+    ///     pointing right and the Y axis pointing down.
+    /// </param>
+    /// <returns>The 2D world-space point corresponding to <paramref name="viewportPoint" /> for this camera.</returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
@@ -116,13 +121,16 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
+    public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint) => CameraNode.ViewportPointToWorld2DPoint(viewportPoint);
 
     /// <summary>
-    ///     Transforms point in 2D world space to point in screen space as seen by camera.
+    ///     Transforms a point from 2D world coordinates to viewport pixel coordinates.
     /// </summary>
-    /// <param name="worldPoint">Point in 2D world space.</param>
-    /// <returns>Point in screen space corresponding to given point in 2D world space as seen by camera.</returns>
+    /// <param name="worldPoint">Point in 2D world coordinates.</param>
+    /// <returns>
+    ///     The viewport-space point corresponding to <paramref name="worldPoint" /> for this camera. The origin is at the
+    ///     top-left corner of the viewport, with the X axis pointing right and the Y axis pointing down.
+    /// </returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
@@ -130,7 +138,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
+    public Vector2 World2DPointToViewportPoint(in Vector2 worldPoint) => CameraNode.World2DPointToViewportPoint(worldPoint);
 
     /// <summary>
     ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the
@@ -150,9 +158,9 @@ public sealed class CameraComponent : Component
     public Matrix3x3 CreateViewMatrix() => CameraNode.CreateViewMatrix();
 
     /// <summary>
-    ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match screen dimensions.
+    ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match viewport size.
     /// </summary>
-    /// <returns>View matrix that is scaled to match screen dimensions.</returns>
+    /// <returns>View matrix that is scaled to match viewport size.</returns>
     /// <remarks>
     ///     <para>
     ///         This method returns default value of <see cref="Matrix3x3" /> when <see cref="CameraComponent" /> is not
@@ -160,7 +168,7 @@ public sealed class CameraComponent : Component
     ///     </para>
     /// </remarks>
     /// <seealso cref="IsManagedByRenderingSystem" />
-    public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToScreen();
+    public Matrix3x3 CreateViewMatrixScaledToViewport() => CameraNode.CreateViewMatrixScaledToViewport();
 
     /// <inheritdoc />
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
@@ -180,18 +188,18 @@ public sealed class CameraComponent : Component
 }
 
 /// <summary>
-///     Defines behaviors of camera view fitting in the screen when there is an aspect ratio mismatch.
+///     Defines behaviors of camera view fitting in the viewport when there is an aspect ratio mismatch.
 /// </summary>
 public enum AspectRatioBehavior
 {
     /// <summary>
-    ///     Whole screen is used to present camera view while keeping aspect ratio. It may result in parts of the view being
-    ///     not visible as scaled outside the screen. It is default <see cref="AspectRatioBehavior" />.
+    ///     Whole viewport is used to present camera view while keeping aspect ratio. It may result in parts of the view being
+    ///     not visible as scaled outside the viewport. It is default <see cref="AspectRatioBehavior" />.
     /// </summary>
     Overscan,
 
     /// <summary>
-    ///     Whole camera view is visible on the screen, and it is fit to match either width or height of the screen while
+    ///     Whole camera view is visible in the viewport, and it is fit to match either width or height of the viewport while
     ///     keeping aspect ratio. It may result in some kind of window-boxed view with black bars filling the missing space.
     /// </summary>
     Underscan

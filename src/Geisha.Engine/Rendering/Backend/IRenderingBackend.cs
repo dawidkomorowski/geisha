@@ -1,10 +1,13 @@
-﻿namespace Geisha.Engine.Rendering.Backend;
+﻿using Geisha.Engine.Core.Math;
+
+namespace Geisha.Engine.Rendering.Backend;
 
 /// <summary>
 ///     Defines interface of rendering backend used by Geisha Engine.
 /// </summary>
 /// <remarks>
-///     Rendering backend provides API for loading graphical resources (like textures) and rendering them to the screen.
+///     Rendering backend provides API for loading graphical resources (like textures) rendering them to a render target
+///     and presenting rendered images.
 /// </remarks>
 public interface IRenderingBackend
 {
@@ -33,4 +36,17 @@ public interface IRenderingBackend
     ///     frame is presented.
     /// </remarks>
     void Present(bool waitForVSync);
+
+    /// <summary>
+    ///     Resizes the buffers used for rendering to the specified size.
+    /// </summary>
+    /// <param name="size">The new buffer size. Both dimensions must be greater than zero.</param>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    ///     Thrown when either dimension of <paramref name="size" /> is less than or equal to zero.
+    /// </exception>
+    /// <remarks>
+    ///     Call this method after the render target size changes and before rendering at the new size. For a window-backed
+    ///     render target, <paramref name="size" /> should match the window client-area size.
+    /// </remarks>
+    void ResizeBuffers(Size size);
 }

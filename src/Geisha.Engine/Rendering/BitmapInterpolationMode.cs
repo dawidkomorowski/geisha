@@ -2,7 +2,7 @@
 
 /// <summary>
 ///     Specifies how bitmap images are interpolated when they are rendered with any transform where the pixels in the
-///     bitmap don't line up exactly one-to-one with pixels on screen.
+///     bitmap do not map exactly one-to-one to pixels in the rendered image.
 /// </summary>
 public enum BitmapInterpolationMode
 {

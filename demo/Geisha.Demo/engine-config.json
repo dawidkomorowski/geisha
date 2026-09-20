@@ -36,10 +36,6 @@
   },
   "Rendering": {
     "EnableVSync": true,
-    "ScreenSize": {
-      "Width": 1600,
-      "Height": 900
-    },
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "BackgroundGrid",
@@ -49,5 +45,14 @@
       "Default",
       "Menu"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": false,
+    "CursorVisible": true,
+    "DisplayMode": "Windowed",
+    "WindowClientSize": {
+      "Width": 1600,
+      "Height": 900
+    }
   }
 }

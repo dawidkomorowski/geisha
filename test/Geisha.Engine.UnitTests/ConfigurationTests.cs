@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Windowing;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests;
@@ -46,9 +47,13 @@ public class ConfigurationTests
         Assert.That(actual.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(actual.Rendering.EnableVSync, Is.True);
-        Assert.That(actual.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
+
+        Assert.That(actual.Windowing.AllowWindowResizing, Is.True);
+        Assert.That(actual.Windowing.CursorVisible, Is.False);
+        Assert.That(actual.Windowing.DisplayMode, Is.EqualTo(DisplayMode.Fullscreen));
+        Assert.That(actual.Windowing.WindowClientSize, Is.EqualTo(new Size(3840, 2160)));
     }
 
     private sealed class ConfigurationTestGame : Game
@@ -91,9 +96,15 @@ public class ConfigurationTests
             Rendering = configuration.Rendering with
             {
                 EnableVSync = true,
-                ScreenSize = new Size(3840, 2160),
                 ShowRenderingStatistics = true,
                 SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
+            },
+            Windowing = configuration.Windowing with
+            {
+                AllowWindowResizing = true,
+                CursorVisible = false,
+                DisplayMode = DisplayMode.Fullscreen,
+                WindowClientSize = new Size(3840, 2160)
             }
         };
     }

@@ -3,6 +3,7 @@ using System.IO;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Windowing;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -49,9 +50,13 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.EnableDebugRendering, Is.False);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
-        Assert.That(configuration.Rendering.ScreenSize, Is.EqualTo(new Size(1280, 720)));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.False);
         Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] { RenderingConfiguration.DefaultSortingLayerName }));
+
+        Assert.That(configuration.Windowing.AllowWindowResizing, Is.False);
+        Assert.That(configuration.Windowing.CursorVisible, Is.True);
+        Assert.That(configuration.Windowing.DisplayMode, Is.EqualTo(DisplayMode.Windowed));
+        Assert.That(configuration.Windowing.WindowClientSize, Is.EqualTo(new Size(1280, 720)));
     }
 
     [Test]
@@ -92,8 +97,12 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.True);
-        Assert.That(configuration.Rendering.ScreenSize, Is.EqualTo(new Size(3840, 2160)));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
+
+        Assert.That(configuration.Windowing.AllowWindowResizing, Is.True);
+        Assert.That(configuration.Windowing.CursorVisible, Is.False);
+        Assert.That(configuration.Windowing.DisplayMode, Is.EqualTo(DisplayMode.Fullscreen));
+        Assert.That(configuration.Windowing.WindowClientSize, Is.EqualTo(new Size(3840, 2160)));
     }
 }

@@ -10,12 +10,12 @@ internal interface ICameraNode
 {
     bool IsManagedByRenderingSystem { get; }
     AspectRatioBehavior AspectRatioBehavior { get; set; }
-    Size ScreenSize { get; }
+    Size ViewportSize { get; }
     Vector2 ViewRectangle { get; set; }
-    Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint);
-    Vector2 World2DPointToScreenPoint(in Vector2 worldPoint);
+    Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint);
+    Vector2 World2DPointToViewportPoint(in Vector2 worldPoint);
     Matrix3x3 CreateViewMatrix();
-    Matrix3x3 CreateViewMatrixScaledToScreen();
+    Matrix3x3 CreateViewMatrixScaledToViewport();
     AxisAlignedRectangle GetBoundingRectangleOfView();
 }
 
@@ -23,12 +23,12 @@ internal sealed class DetachedCameraNode : ICameraNode
 {
     public bool IsManagedByRenderingSystem => false;
     public AspectRatioBehavior AspectRatioBehavior { get; set; }
-    public Size ScreenSize => Size.Empty;
+    public Size ViewportSize => Size.Empty;
     public Vector2 ViewRectangle { get; set; }
-    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint) => default;
-    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint) => default;
+    public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint) => default;
+    public Vector2 World2DPointToViewportPoint(in Vector2 worldPoint) => default;
     public Matrix3x3 CreateViewMatrix() => default;
-    public Matrix3x3 CreateViewMatrixScaledToScreen() => default;
+    public Matrix3x3 CreateViewMatrixScaledToViewport() => default;
 
     public AxisAlignedRectangle GetBoundingRectangleOfView() => default;
 }
@@ -53,24 +53,24 @@ internal sealed class CameraNode : ICameraNode, IDisposable
 
     public bool IsManagedByRenderingSystem => true;
     public AspectRatioBehavior AspectRatioBehavior { get; set; }
-    public Size ScreenSize { get; set; }
+    public Size ViewportSize { get; set; }
     public Vector2 ViewRectangle { get; set; }
 
-    public Vector2 ScreenPointToWorld2DPoint(in Vector2 screenPoint)
+    public Vector2 ViewportPointToWorld2DPoint(in Vector2 viewportPoint)
     {
         var viewRectangleScale = GetViewRectangleScale();
         var transformationMatrix = _transform.InterpolatedTransform.ToMatrix() *
                                    Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
-                                   Matrix3x3.CreateTranslation(ScreenSize.ToVector2() / -2d);
+                                   Matrix3x3.CreateTranslation(ViewportSize.ToVector2() / -2d);
 
-        return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
+        return (transformationMatrix * viewportPoint.Homogeneous).ToVector2();
     }
 
-    public Vector2 World2DPointToScreenPoint(in Vector2 worldPoint)
+    public Vector2 World2DPointToViewportPoint(in Vector2 worldPoint)
     {
-        var transformationMatrix = Matrix3x3.CreateTranslation(ScreenSize.ToVector2() / 2d) *
+        var transformationMatrix = Matrix3x3.CreateTranslation(ViewportSize.ToVector2() / 2d) *
                                    Matrix3x3.CreateScale(new Vector2(1, -1)) *
-                                   CreateViewMatrixScaledToScreen();
+                                   CreateViewMatrixScaledToViewport();
 
         return (transformationMatrix * worldPoint.Homogeneous).ToVector2();
     }
@@ -84,7 +84,7 @@ internal sealed class CameraNode : ICameraNode, IDisposable
                Matrix3x3.CreateTranslation(-transform.Translation) * Matrix3x3.Identity;
     }
 
-    public Matrix3x3 CreateViewMatrixScaledToScreen()
+    public Matrix3x3 CreateViewMatrixScaledToViewport()
     {
         var viewRectangleScale = GetViewRectangleScale();
         return Matrix3x3.CreateScale(new Vector2(1 / viewRectangleScale.X, 1 / viewRectangleScale.Y)) * CreateViewMatrix();
@@ -110,24 +110,24 @@ internal sealed class CameraNode : ICameraNode, IDisposable
     public AxisAlignedRectangle GetClippingRectangle()
     {
         var effectiveViewRectangle = GetEffectiveViewRectangle();
-        if (CameraIsWiderThanScreen(effectiveViewRectangle))
+        if (CameraIsWiderThanViewport(effectiveViewRectangle))
         {
-            var scaleFactor = ScreenSize.Width / effectiveViewRectangle.X;
-            return new AxisAlignedRectangle(new Vector2(ScreenSize.Width, effectiveViewRectangle.Y * scaleFactor));
+            var scaleFactor = ViewportSize.Width / effectiveViewRectangle.X;
+            return new AxisAlignedRectangle(new Vector2(ViewportSize.Width, effectiveViewRectangle.Y * scaleFactor));
         }
         else
         {
-            var scaleFactor = ScreenSize.Height / effectiveViewRectangle.Y;
-            return new AxisAlignedRectangle(new Vector2(effectiveViewRectangle.X * scaleFactor, ScreenSize.Height));
+            var scaleFactor = ViewportSize.Height / effectiveViewRectangle.Y;
+            return new AxisAlignedRectangle(new Vector2(effectiveViewRectangle.X * scaleFactor, ViewportSize.Height));
         }
     }
 
     private Vector2 GetEffectiveViewRectangle()
     {
-        // When ViewRectangle is 0x0 (or any non-positive value), use ScreenSize as the effective view rectangle
+        // When ViewRectangle is 0x0 (or any non-positive value), use ViewportSize as the effective view rectangle
         if (ViewRectangle.X <= 0 || ViewRectangle.Y <= 0)
         {
-            return ScreenSize.ToVector2();
+            return ViewportSize.ToVector2();
         }
 
         return ViewRectangle;
@@ -148,34 +148,34 @@ internal sealed class CameraNode : ICameraNode, IDisposable
 
     private Vector2 ComputeOverscan(in Vector2 effectiveViewRectangle)
     {
-        if (CameraIsWiderThanScreen(effectiveViewRectangle))
+        if (CameraIsWiderThanViewport(effectiveViewRectangle))
         {
-            var scaleForHeight = effectiveViewRectangle.Y / ScreenSize.Height;
+            var scaleForHeight = effectiveViewRectangle.Y / ViewportSize.Height;
             return new Vector2(scaleForHeight, scaleForHeight);
         }
 
-        var scaleForWidth = effectiveViewRectangle.X / ScreenSize.Width;
+        var scaleForWidth = effectiveViewRectangle.X / ViewportSize.Width;
         return new Vector2(scaleForWidth, scaleForWidth);
     }
 
     private Vector2 ComputeUnderscan(in Vector2 effectiveViewRectangle)
     {
-        if (CameraIsWiderThanScreen(effectiveViewRectangle))
+        if (CameraIsWiderThanViewport(effectiveViewRectangle))
         {
-            var scaleForWidth = effectiveViewRectangle.X / ScreenSize.Width;
+            var scaleForWidth = effectiveViewRectangle.X / ViewportSize.Width;
             return new Vector2(scaleForWidth, scaleForWidth);
         }
 
-        var scaleForHeight = effectiveViewRectangle.Y / ScreenSize.Height;
+        var scaleForHeight = effectiveViewRectangle.Y / ViewportSize.Height;
         return new Vector2(scaleForHeight, scaleForHeight);
     }
 
-    private bool CameraIsWiderThanScreen(in Vector2 effectiveViewRectangle)
+    private bool CameraIsWiderThanViewport(in Vector2 effectiveViewRectangle)
     {
         var cameraAspectRatio = effectiveViewRectangle.X / effectiveViewRectangle.Y;
-        var screenAspectRatio = (double)ScreenSize.Width / ScreenSize.Height;
+        var viewportAspectRatio = (double)ViewportSize.Width / ViewportSize.Height;
 
-        return cameraAspectRatio > screenAspectRatio;
+        return cameraAspectRatio > viewportAspectRatio;
     }
 
     private static void CopyData(ICameraNode source, ICameraNode target)

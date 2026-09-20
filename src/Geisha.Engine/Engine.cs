@@ -12,6 +12,8 @@ using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Windowing;
+using Geisha.Engine.Windowing.Backend;
 using NLog;
 
 namespace Geisha.Engine
@@ -26,7 +28,13 @@ namespace Geisha.Engine
     public sealed class Engine : IDisposable
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly Configuration _configuration;
+        private readonly IAudioBackend _audioBackend;
+        private readonly IInputBackend _inputBackend;
+        private readonly IRenderingBackend _renderingBackend;
+        private readonly IWindowingBackend _windowingBackend;
+
         private readonly IContainer _container;
 
         private readonly IGameLoop _gameLoop;
@@ -39,6 +47,7 @@ namespace Geisha.Engine
         /// <param name="audioBackend">Audio backend to be used by engine.</param>
         /// <param name="inputBackend">Input backend to be used by engine.</param>
         /// <param name="renderingBackend">Rendering backend to be used by engine.</param>
+        /// <param name="windowingBackend">Windowing backend to be used by engine.</param>
         /// <param name="game"><see cref="Game" /> instance to be run by engine.</param>
         /// <exception cref="ArgumentNullException">Thrown when any of parameters is null.</exception>
         public Engine(
@@ -46,14 +55,16 @@ namespace Geisha.Engine
             IAudioBackend audioBackend,
             IInputBackend inputBackend,
             IRenderingBackend renderingBackend,
+            IWindowingBackend windowingBackend,
             Game game)
         {
-            if (audioBackend == null) throw new ArgumentNullException(nameof(audioBackend));
-            if (inputBackend == null) throw new ArgumentNullException(nameof(inputBackend));
-            if (renderingBackend == null) throw new ArgumentNullException(nameof(renderingBackend));
-            if (game == null) throw new ArgumentNullException(nameof(game));
+            if (game is null) throw new ArgumentNullException(nameof(game));
 
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _audioBackend = audioBackend ?? throw new ArgumentNullException(nameof(audioBackend));
+            _inputBackend = inputBackend ?? throw new ArgumentNullException(nameof(inputBackend));
+            _renderingBackend = renderingBackend ?? throw new ArgumentNullException(nameof(renderingBackend));
+            _windowingBackend = windowingBackend ?? throw new ArgumentNullException(nameof(windowingBackend));
 
             Logger.Info("Initializing engine components.");
 
@@ -72,16 +83,19 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(_configuration.Core).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(_configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(_configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(_configuration.Windowing).As<WindowingConfiguration>().SingleInstance();
 
-            containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(_audioBackend).As<IAudioBackend>().SingleInstance().ExternallyOwned();
+            containerBuilder.RegisterInstance(_inputBackend).As<IInputBackend>().SingleInstance().ExternallyOwned();
+            containerBuilder.RegisterInstance(_renderingBackend).As<IRenderingBackend>().SingleInstance().ExternallyOwned();
+            containerBuilder.RegisterInstance(_windowingBackend).As<IWindowingBackend>().SingleInstance().ExternallyOwned();
 
             var componentsRegistry = new ComponentsRegistry(containerBuilder);
             game.RegisterComponents(componentsRegistry);
 
             _container = containerBuilder.Build();
 
+            ConfigureWindowingBackend(game);
             ConfigureAudioBackend();
             RegisterAssets();
             LoadStartUpScene();
@@ -92,16 +106,14 @@ namespace Geisha.Engine
         }
 
         /// <summary>
-        ///     True if engine is scheduled for shutdown, otherwise false.
+        ///     Runs the engine game loop.
         /// </summary>
-        public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;
-
-        /// <summary>
-        ///     Executes one frame of game loop.
-        /// </summary>
-        public void Update()
+        /// <remarks>
+        ///     The game loop runs until the engine is scheduled for shutdown.
+        /// </remarks>
+        public void Run()
         {
-            _gameLoop.Update();
+            _windowingBackend.RunUpdateLoop(Update);
         }
 
         /// <summary>
@@ -120,12 +132,27 @@ namespace Geisha.Engine
             Logger.Info("Engine components disposed.");
         }
 
+        private bool Update()
+        {
+            _gameLoop.Update();
+            return !_engineManager.IsEngineScheduledForShutdown;
+        }
+
+        private void ConfigureWindowingBackend(Game game)
+        {
+            _windowingBackend.WindowTitle = game.WindowTitle;
+            _windowingBackend.WindowClientSize = _configuration.Windowing.WindowClientSize;
+            _windowingBackend.AllowWindowResizing = _configuration.Windowing.AllowWindowResizing;
+            _windowingBackend.DisplayMode = _configuration.Windowing.DisplayMode;
+            _windowingBackend.CursorVisible = _configuration.Windowing.CursorVisible;
+
+            _renderingBackend.ResizeBuffers(_windowingBackend.WindowClientSize);
+        }
+
         private void ConfigureAudioBackend()
         {
-            var audioBackend = _container.Resolve<IAudioBackend>();
-
-            audioBackend.AudioPlayer.EnableSound = _configuration.Audio.EnableSound;
-            audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
+            _audioBackend.AudioPlayer.EnableSound = _configuration.Audio.EnableSound;
+            _audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
         }
 
         private void RegisterAssets()

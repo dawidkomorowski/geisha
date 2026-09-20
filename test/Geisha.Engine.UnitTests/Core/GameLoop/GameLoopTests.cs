@@ -30,6 +30,7 @@ public class GameLoopTests
     private IPhysicsGameLoopStep _physicsStep = null!;
     private IRenderingGameLoopStep _renderingStep = null!;
     private ITransformInterpolationGameLoopStep _transformInterpolationStep = null!;
+    private IWindowingGameLoopStep _windowingStep = null!;
     private ICustomGameLoopStep _customStep1 = null!;
     private ICustomGameLoopStep _customStep2 = null!;
     private ICustomGameLoopStep _customStep3 = null!;
@@ -42,6 +43,7 @@ public class GameLoopTests
     private const string PhysicsStepName = "PhysicsStep";
     private const string RenderingStepName = "RenderingStep";
     private const string TransformInterpolationStepName = "TransformInterpolationStep";
+    private const string WindowingStepName = "WindowingStep";
     private const string CustomStep1Name = "CustomStep1";
     private const string CustomStep2Name = "CustomStep2";
     private const string CustomStep3Name = "CustomStep3";
@@ -93,6 +95,10 @@ public class GameLoopTests
         _gameLoopSteps.TransformInterpolationStep.Returns(_transformInterpolationStep);
         _gameLoopSteps.TransformInterpolationStepName.Returns(TransformInterpolationStepName);
 
+        _windowingStep = Substitute.For<IWindowingGameLoopStep>();
+        _gameLoopSteps.WindowingStep.Returns(_windowingStep);
+        _gameLoopSteps.WindowingStepName.Returns(WindowingStepName);
+
         _customStep1 = Substitute.For<ICustomGameLoopStep>();
         _customStep1.Name.Returns(CustomStep1Name);
         _customStep2 = Substitute.For<ICustomGameLoopStep>();
@@ -132,6 +138,7 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
+            _windowingStep.Received(1).HandleWindowState();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -184,7 +191,8 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
-            // Process input at beginning of frame.
+            // Handle window and input at beginning of frame.
+            _windowingStep.Received(1).HandleWindowState();
             _inputStep.Received(1).ProcessInput();
 
             // Process fixed time step game loop steps expected number of times.
@@ -264,6 +272,7 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
+            _windowingStep.Received(1).HandleWindowState();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -307,6 +316,8 @@ public class GameLoopTests
         // Assert
         Received.InOrder(() =>
         {
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _performanceStatisticsRecorder.EndStepDuration(WindowingStepName);
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(InputStepName);
             _performanceStatisticsRecorder.BeginStepDuration();

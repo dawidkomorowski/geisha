@@ -38,10 +38,6 @@
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenSize": {
-      "Width": 1280,
-      "Height": 720
-    },
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "Default",
@@ -56,5 +52,14 @@
       "Layer8",
       "Layer9"
     ]
+  },
+  "Windowing": {
+    "AllowWindowResizing": false,
+    "CursorVisible": true,
+    "DisplayMode": "Windowed",
+    "WindowClientSize": {
+      "Width": 1280,
+      "Height": 720
+    }
   }
 }

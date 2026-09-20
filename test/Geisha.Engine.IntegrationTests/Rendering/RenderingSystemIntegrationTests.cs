@@ -1,4 +1,8 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
@@ -13,10 +17,6 @@ using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using Color = Geisha.Engine.Core.Math.Color;
 using Size = Geisha.Engine.Core.Math.Size;
 
@@ -49,12 +49,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
         protected override bool ShowDebugWindow => false;
 
-        protected override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
+        protected override Configuration Configure(Configuration configuration)
         {
-            return base.ConfigureRendering(configuration) with
+            return base.Configure(configuration) with
             {
-                ScreenSize = new Size(200, 200),
-                SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
+                Rendering = configuration.Rendering with
+                {
+                    SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
+                },
+                Windowing = configuration.Windowing with
+                {
+                    WindowClientSize = new Size(200, 200)
+                }
             };
         }
 
@@ -152,9 +158,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.DegreesToRadians(-45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75), rotation: Angle.DegreesToRadians(-135),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
+                        rotation: Angle.DegreesToRadians(-135),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75), rotation: Angle.DegreesToRadians(135),
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75),
+                        rotation: Angle.DegreesToRadians(135),
                         scale: new Vector2(0.2, 0.2));
 
                     // Visibility
@@ -810,10 +818,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150), rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100),
+                        rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115),
+                        rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120),
+                        rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150),
+                        rotation: Angle.DegreesToRadians(45));
                 }
             },
             new()
@@ -1033,7 +1045,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             // Assert
             using var memoryStream = new MemoryStream();
-            SystemUnderTest.RenderingBackend.Context2D.CaptureScreenShotAsPng(memoryStream);
+            SystemUnderTest.RenderingBackend.Context2D.CaptureScreenshotAsPng(memoryStream);
             using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
 
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));

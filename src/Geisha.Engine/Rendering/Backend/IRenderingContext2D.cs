@@ -14,9 +14,9 @@ namespace Geisha.Engine.Rendering.Backend;
 public interface IRenderingContext2D
 {
     /// <summary>
-    ///     Gets the size of the screen (full screen) or the window client area (excluding window frame) in pixels.
+    ///     Gets the size of the render target in pixels.
     /// </summary>
-    Size ScreenSize { get; }
+    Size RenderTargetSize { get; }
 
     /// <summary>
     ///     Creates new instance of <see cref="ITexture" /> object out of data given in a <see cref="Stream" />.
@@ -43,7 +43,7 @@ public interface IRenderingContext2D
     ///     Captures screenshot of currently rendered image as a PNG.
     /// </summary>
     /// <param name="stream">Output stream for PNG image bytes of captured screenshot.</param>
-    public void CaptureScreenShotAsPng(Stream stream);
+    public void CaptureScreenshotAsPng(Stream stream);
 
     /// <summary>
     ///     Initiates drawing on render target in this context. It should be called in pair with <see cref="EndDraw" />
@@ -134,7 +134,7 @@ public interface IRenderingContext2D
     ///     Enables clipping of rendered image to specified rectangle.
     /// </summary>
     /// <param name="clippingRectangle">
-    ///     Defines area of screen in pixels to be rendered while everything outside this area is
+    ///     Defines area of render target in pixels to be rendered while everything outside this area is
     ///     clipped.
     /// </param>
     /// <seealso cref="ClearClipping" />

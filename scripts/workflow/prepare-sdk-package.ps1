@@ -14,6 +14,7 @@ Copy-Item -Path "..\..\src\Geisha.Engine\bin\Release\Geisha.Engine.*.nupkg" -Des
 Copy-Item -Path "..\..\src\Geisha.Engine.Audio.NAudio\bin\Release\Geisha.Engine.Audio.NAudio.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Engine.Input.Windows\bin\Release\Geisha.Engine.Input.Windows.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Engine.Rendering.DirectX\bin\Release\Geisha.Engine.Rendering.DirectX.*.nupkg" -Destination "$sdkPackagePath\lib"
+Copy-Item -Path "..\..\src\Geisha.Engine.Windowing.Windows\bin\Release\Geisha.Engine.Windowing.Windows.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Engine.Windows\bin\Release\Geisha.Engine.Windows.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Tools\bin\Release\Geisha.Tools.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Extensions.Tiled\bin\Release\Geisha.Extensions.Tiled.*.nupkg" -Destination "$sdkPackagePath\lib"

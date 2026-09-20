@@ -3,10 +3,7 @@ using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
-using Feature = SharpDX.DXGI.Feature;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 
 namespace Geisha.Engine.Rendering.DirectX;
@@ -18,7 +15,6 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 {
     private readonly Statistics _statistics;
     private readonly Device _d3D11Device;
-    private readonly SwapChain1 _dxgiSwapChain;
     private readonly DeviceContext _deviceContext;
     private readonly SwapChainPipeline _swapChainPipeline;
     private readonly RenderingContext2D _renderingContext2D;
@@ -32,7 +28,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
         // TODO: How to consistently handle DPI?
         _statistics = new Statistics();
-        var screenSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
+        var windowClientSize = new Size(form.ClientSize.Width, form.ClientSize.Height);
 
         var directXDriverType = driverType switch
         {
@@ -41,7 +37,6 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
             _ => throw new ArgumentOutOfRangeException(nameof(driverType), driverType, "Unknown driver type.")
         };
 
-        // TODO: Investigate DeviceCreationFlags.Debug
         var featureLevels = new[]
         {
             FeatureLevel.Level_11_1,
@@ -49,37 +44,19 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
             FeatureLevel.Level_10_1,
             FeatureLevel.Level_10_0
         };
-        _d3D11Device = new Device(directXDriverType, DeviceCreationFlags.BgraSupport, featureLevels);
+
+        var deviceCreationFlags = DeviceCreationFlags.BgraSupport;
+        // TODO: Investigate DeviceCreationFlags.Debug
+        //deviceCreationFlags |= DeviceCreationFlags.Debug;
+
+        _d3D11Device = new Device(directXDriverType, deviceCreationFlags, featureLevels);
+
+        _deviceContext = new DeviceContext(_d3D11Device);
+        _swapChainPipeline = new SwapChainPipeline(_deviceContext, windowClientSize, form.Handle);
+        _renderingContext2D = new RenderingContext2D(_deviceContext, windowClientSize, _statistics);
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
         using var dxgiAdapter = dxgiDevice.Adapter;
-        using var dxgiFactory = dxgiAdapter.GetParent<Factory5>();
-        dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all window events.
-
-        if (!IsTearingSupported(dxgiFactory))
-        {
-            throw new NotSupportedException("Tearing is not supported on this device.");
-        }
-
-        var swapChainDescription = new SwapChainDescription1
-        {
-            Width = screenSize.Width,
-            Height = screenSize.Height,
-            Format = Format.B8G8R8A8_UNorm,
-            SampleDescription = new SampleDescription(1, 0),
-            Usage = Usage.RenderTargetOutput,
-            BufferCount = 2,
-            Scaling = Scaling.Stretch,
-            SwapEffect = SwapEffect.FlipDiscard,
-            Flags = SwapChainFlags.AllowTearing | SwapChainFlags.FrameLatencyWaitAbleObject
-        };
-
-        _dxgiSwapChain = new SwapChain1(dxgiFactory, dxgiDevice, form.Handle, ref swapChainDescription);
-
-        _deviceContext = new DeviceContext(_d3D11Device);
-        _swapChainPipeline = new SwapChainPipeline(_deviceContext, screenSize, _dxgiSwapChain);
-
-        _renderingContext2D = new RenderingContext2D(_deviceContext, screenSize, _statistics);
 
         Info = new RenderingBackendInfo(
             Name: "DirectX 11",
@@ -114,6 +91,18 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         _statistics.UpdateLastFrameStats();
     }
 
+    /// <inheritdoc />
+    public void ResizeBuffers(Size size)
+    {
+        if (size.Width <= 0 || size.Height <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Rendering buffer width and height must be greater than zero.");
+        }
+
+        _swapChainPipeline.ResizeBuffers(size);
+        _renderingContext2D.UpdateRenderTargetSize(size);
+    }
+
     /// <summary>
     ///     Releases rendering API resources.
     /// </summary>
@@ -122,14 +111,6 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         _renderingContext2D.Dispose();
         _swapChainPipeline.Dispose();
         _deviceContext.Dispose();
-        _dxgiSwapChain.Dispose();
         _d3D11Device.Dispose();
-    }
-
-    private static unsafe bool IsTearingSupported(Factory5 dxgiFactory)
-    {
-        RawBool allowTearing = false;
-        dxgiFactory.CheckFeatureSupport(Feature.PresentAllowTearing, new IntPtr(&allowTearing), sizeof(RawBool));
-        return allowTearing;
     }
 }

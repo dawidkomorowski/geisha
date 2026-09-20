@@ -16,6 +16,7 @@ internal interface IGameLoopSteps
     IPhysicsGameLoopStep PhysicsStep { get; }
     IRenderingGameLoopStep RenderingStep { get; }
     ITransformInterpolationGameLoopStep TransformInterpolationStep { get; }
+    IWindowingGameLoopStep WindowingStep { get; }
     IReadOnlyCollection<ICustomGameLoopStep> CustomSteps { get; }
 
     string AnimationStepName { get; }
@@ -26,6 +27,7 @@ internal interface IGameLoopSteps
     string PhysicsStepName { get; }
     string RenderingStepName { get; }
     string TransformInterpolationStepName { get; }
+    string WindowingStepName { get; }
     IReadOnlyCollection<string> StepsNames { get; }
 }
 
@@ -42,6 +44,7 @@ internal sealed class GameLoopSteps : IGameLoopSteps
         IPhysicsGameLoopStep physicsStep,
         IRenderingGameLoopStep renderingStep,
         ITransformInterpolationGameLoopStep transformInterpolationStep,
+        IWindowingGameLoopStep windowingStep,
         IEnumerable<ICustomGameLoopStep> customSteps,
         CoreConfiguration configuration)
     {
@@ -53,6 +56,7 @@ internal sealed class GameLoopSteps : IGameLoopSteps
         PhysicsStep = physicsStep;
         RenderingStep = renderingStep;
         TransformInterpolationStep = transformInterpolationStep;
+        WindowingStep = windowingStep;
 
         var configuredCustomGameLoopSteps = configuration.CustomGameLoopSteps;
         var customStepsList = customSteps.ToList();
@@ -99,7 +103,8 @@ internal sealed class GameLoopSteps : IGameLoopSteps
             InputStepName,
             PhysicsStepName,
             RenderingStepName,
-            TransformInterpolationStepName
+            TransformInterpolationStepName,
+            WindowingStepName
         }.Concat(CustomSteps.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
 
         Logger.Debug("Custom game loop steps has been configured to execute in following order:");
@@ -117,6 +122,7 @@ internal sealed class GameLoopSteps : IGameLoopSteps
     public IPhysicsGameLoopStep PhysicsStep { get; }
     public IRenderingGameLoopStep RenderingStep { get; }
     public ITransformInterpolationGameLoopStep TransformInterpolationStep { get; }
+    public IWindowingGameLoopStep WindowingStep { get; }
     public IReadOnlyCollection<ICustomGameLoopStep> CustomSteps { get; }
 
     public string AnimationStepName => nameof(AnimationStep);
@@ -127,5 +133,6 @@ internal sealed class GameLoopSteps : IGameLoopSteps
     public string PhysicsStepName => nameof(PhysicsStep);
     public string RenderingStepName => nameof(RenderingStep);
     public string TransformInterpolationStepName => nameof(TransformInterpolationStep);
+    public string WindowingStepName => nameof(WindowingStep);
     public IReadOnlyCollection<string> StepsNames { get; }
 }

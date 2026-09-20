@@ -312,7 +312,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             camera.GetComponent<Transform2DComponent>().Transform = transform;
         }
 
-        var rectangle = context.AddRectangle(ScreenSize.ToVector2(), Vector2.Zero, 0, Vector2.One);
+        var rectangle = context.AddRectangle(RenderTargetSize.ToVector2(), Vector2.Zero, 0, Vector2.One);
 
         // Act
         context.RenderingSystem.RenderScene();
@@ -324,6 +324,6 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
 
         var rectangleRenderer = rectangle.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.GetTransformMatrix());
+            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToViewport() * rectangle.GetTransformMatrix());
     }
 }
