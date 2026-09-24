@@ -70,11 +70,19 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
             {
                 case DisplayMode.Windowed:
                     _renderForm.IsFullscreen = false;
+
+                    // Force RenderForm to update window style.
+                    _renderForm.AllowUserResizing = !_renderForm.AllowUserResizing;
+
                     RestoreWindowState();
                     break;
                 case DisplayMode.Fullscreen:
                     SaveWindowState();
                     _renderForm.IsFullscreen = true;
+
+                    // Force RenderForm to update window style.
+                    _renderForm.AllowUserResizing = !_renderForm.AllowUserResizing;
+
                     _renderForm.AllowUserResizing = false;
                     _renderForm.WindowState = FormWindowState.Normal;
                     _renderForm.ClientSize = Screen.PrimaryScreen.Bounds.Size;
