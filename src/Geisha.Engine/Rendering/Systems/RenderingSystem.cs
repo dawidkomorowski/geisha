@@ -13,7 +13,6 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     private readonly RenderingState _renderingState;
     private readonly Renderer _renderer;
     private readonly IRenderingBackend _renderingBackend;
-    private readonly RenderingConfiguration _renderingConfiguration;
 
     public RenderingSystem(
         IRenderingBackend renderingBackend,
@@ -24,7 +23,7 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     )
     {
         _renderingBackend = renderingBackend;
-        _renderingConfiguration = renderingConfiguration;
+        VSyncEnabled = renderingConfiguration.EnableVSync;
 
         _renderingState = new RenderingState(renderingBackend.Context2D, renderingConfiguration);
 
@@ -48,7 +47,7 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     public void RenderScene()
     {
         _renderer.RenderScene();
-        _renderingBackend.Present(_renderingConfiguration.EnableVSync);
+        _renderingBackend.Present(VSyncEnabled);
     }
 
     #endregion

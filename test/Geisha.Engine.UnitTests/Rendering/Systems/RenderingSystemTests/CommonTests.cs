@@ -11,6 +11,35 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 [TestFixture]
 public class CommonTests : RenderingSystemTestsBase
 {
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Constructor_ShouldInitialize_VSyncEnabled_FromConfiguration(bool enableVSync)
+    {
+        // Arrange
+        var renderingConfiguration = new RenderingConfiguration { EnableVSync = enableVSync };
+
+        // Act
+        var context = CreateRenderingTestContext(renderingConfiguration);
+
+        // Assert
+        Assert.That(context.RenderingSystem.VSyncEnabled, Is.EqualTo(enableVSync));
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void RenderScene_Should_Present_WithWaitForVSync_BasedOn_VSyncEnabled(bool vSyncEnabled)
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.RenderingSystem.VSyncEnabled = vSyncEnabled;
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingBackend.Received().Present(vSyncEnabled);
+    }
+
     [Test]
     public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_EndDraw_Present_GivenAnEmptyScene()
     {
@@ -50,20 +79,6 @@ public class CommonTests : RenderingSystemTestsBase
             RenderingContext2D.EndDraw();
             RenderingBackend.Present(false);
         });
-    }
-
-    [TestCase(true)]
-    [TestCase(false)]
-    public void RenderScene_Should_Present_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
-    {
-        // Arrange
-        var context = CreateRenderingTestContext(new RenderingConfiguration { EnableVSync = enableVSync });
-
-        // Act
-        context.RenderingSystem.RenderScene();
-
-        // Assert
-        RenderingBackend.Received().Present(enableVSync);
     }
 
     [Test]
