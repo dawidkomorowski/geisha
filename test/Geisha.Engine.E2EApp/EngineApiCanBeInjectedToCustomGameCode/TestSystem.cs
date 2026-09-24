@@ -7,6 +7,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Physics.Systems;
+using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
 {
@@ -22,6 +23,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ICoroutineSystem _coroutineSystem;
         private readonly IPhysicsSystem _physicsSystem;
         private readonly ITimeSystem _timeSystem;
+        private readonly IRenderingSystem _renderingSystem;
 
         public TestSystem
         (
@@ -34,8 +36,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             ISceneSerializer sceneSerializer,
             ICoroutineSystem coroutineSystem,
             IPhysicsSystem physicsSystem,
-            ITimeSystem timeSystem
-        )
+            ITimeSystem timeSystem,
+            IRenderingSystem renderingSystem)
         {
             _audioBackend = audioBackend;
             _engineManager = engineManager;
@@ -47,6 +49,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _coroutineSystem = coroutineSystem;
             _physicsSystem = physicsSystem;
             _timeSystem = timeSystem;
+            _renderingSystem = renderingSystem;
         }
 
         public string Name => "EngineApiCanBeInjectedToCustomGameCode-TestSystem";
@@ -77,6 +80,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
                 "Engine API Injected Into System", _physicsSystem.GetType().ToString());
             E2ETestApi.PublishMessage("8AEB6833-DA48-48D7-ADCA-24DF92F4FB80",
                 "Engine API Injected Into System", _timeSystem.GetType().ToString());
+            E2ETestApi.PublishMessage("0A9DCF17-1510-456D-8551-78CCD61196EE",
+                "Engine API Injected Into System", _renderingSystem.GetType().ToString());
         }
 
         public void OnEntityCreated(Entity entity)
