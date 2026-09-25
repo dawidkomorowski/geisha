@@ -38,7 +38,11 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
 
     #region Implementation of IRenderingSystem
 
-    public bool VSyncEnabled { get; set; }
+    public bool VSyncEnabled
+    {
+        get => _renderingBackend.VSyncEnabled;
+        set => _renderingBackend.VSyncEnabled = value;
+    }
 
     #endregion
 

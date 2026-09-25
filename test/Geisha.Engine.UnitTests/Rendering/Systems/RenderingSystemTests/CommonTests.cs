@@ -27,17 +27,17 @@ public class CommonTests : RenderingSystemTestsBase
 
     [TestCase(true)]
     [TestCase(false)]
-    public void RenderScene_Should_Present_WithWaitForVSync_BasedOn_VSyncEnabled(bool vSyncEnabled)
+    public void VSyncEnabled_Should_Configure_VSyncEnabled_OnRenderingBackend(bool vSyncEnabled)
     {
         // Arrange
         var context = CreateRenderingTestContext();
-        context.RenderingSystem.VSyncEnabled = vSyncEnabled;
 
         // Act
-        context.RenderingSystem.RenderScene();
+        context.RenderingSystem.VSyncEnabled = vSyncEnabled;
 
         // Assert
-        RenderingBackend.Received().Present(vSyncEnabled);
+        Assert.That(context.RenderingSystem.VSyncEnabled, Is.EqualTo(vSyncEnabled));
+        Assert.That(RenderingBackend.VSyncEnabled, Is.EqualTo(vSyncEnabled));
     }
 
     [Test]

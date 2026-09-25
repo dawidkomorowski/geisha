@@ -26,6 +26,9 @@ public interface IRenderingBackend
     /// </summary>
     RenderingBackendInfo Info { get; }
 
+    // TODO: Add documentation.
+    bool VSyncEnabled { get; set; }
+
     /// <summary>
     ///     Presents a rendered image to the user.
     /// </summary>

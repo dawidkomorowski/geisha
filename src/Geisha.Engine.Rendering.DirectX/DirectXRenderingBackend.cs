@@ -85,6 +85,13 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public RenderingBackendInfo Info { get; }
 
     /// <inheritdoc />
+    public bool VSyncEnabled
+    {
+        get => _swapChainPipeline.VSyncEnabled;
+        set => _swapChainPipeline.VSyncEnabled = value;
+    }
+
+    /// <inheritdoc />
     public void Present(bool waitForVSync)
     {
         _swapChainPipeline.Present(waitForVSync);

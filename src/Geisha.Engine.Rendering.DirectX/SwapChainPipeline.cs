@@ -90,6 +90,8 @@ internal sealed class SwapChainPipeline : IDisposable
         Debug.Assert(_backBufferBitmap is not null);
     }
 
+    public bool VSyncEnabled { get; set; }
+
     public void Present(bool waitForVSync)
     {
         _deviceContext.D2D1DeviceContext.Target = null;
@@ -106,7 +108,7 @@ internal sealed class SwapChainPipeline : IDisposable
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 
-        if (waitForVSync)
+        if (VSyncEnabled)
         {
             _swapChain.Present(1, PresentFlags.None);
         }
