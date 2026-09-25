@@ -92,9 +92,9 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     }
 
     /// <inheritdoc />
-    public void Present(bool waitForVSync)
+    public void Present()
     {
-        _swapChainPipeline.Present(waitForVSync);
+        _swapChainPipeline.Present();
         _statistics.UpdateLastFrameStats();
     }
 

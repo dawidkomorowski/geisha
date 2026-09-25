@@ -51,7 +51,7 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     public void RenderScene()
     {
         _renderer.RenderScene();
-        _renderingBackend.Present(VSyncEnabled);
+        _renderingBackend.Present();
     }
 
     #endregion

@@ -55,7 +55,7 @@ public class CommonTests : RenderingSystemTestsBase
             RenderingContext2D.BeginDraw();
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.EndDraw();
-            RenderingBackend.Present(false);
+            RenderingBackend.Present();
         });
     }
 
@@ -77,7 +77,7 @@ public class CommonTests : RenderingSystemTestsBase
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
             RenderingContext2D.EndDraw();
-            RenderingBackend.Present(false);
+            RenderingBackend.Present();
         });
     }
 

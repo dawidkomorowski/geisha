@@ -29,6 +29,7 @@ public interface IRenderingBackend
     // TODO: Add documentation.
     bool VSyncEnabled { get; set; }
 
+    // TODO: Update documentation after removed waitForVSync parameter and move of vsync control to VSyncEnabled property.
     /// <summary>
     ///     Presents a rendered image to the user.
     /// </summary>
@@ -38,7 +39,7 @@ public interface IRenderingBackend
     ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
     ///     frame is presented.
     /// </remarks>
-    void Present(bool waitForVSync);
+    void Present();
 
     /// <summary>
     ///     Resizes the buffers used for rendering to the specified size.

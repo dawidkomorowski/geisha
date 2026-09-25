@@ -92,7 +92,7 @@ internal sealed class SwapChainPipeline : IDisposable
 
     public bool VSyncEnabled { get; set; }
 
-    public void Present(bool waitForVSync)
+    public void Present()
     {
         _deviceContext.D2D1DeviceContext.Target = null;
 
