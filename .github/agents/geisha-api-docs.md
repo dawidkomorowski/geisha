@@ -29,6 +29,13 @@ When documenting APIs:
 - If behavior is unclear, say that it is unclear and suggest what should be clarified instead of guessing.
 - Do not invent semantics, defaults, guarantees, lifecycle rules, performance characteristics, threading guarantees, or error behavior.
 
+Public Contract Guidance:
+- For configuration values copied into runtime services during initialization, document that they establish the initial runtime state. Cross-reference the runtime API when callers can change the same behavior after initialization.
+- When documenting blocking, waiting, retry, or synchronization behavior, distinguish an attempted wait from a guaranteed outcome. If the implementation has a timeout, document it as "waits for up to..." and do not state that the awaited condition is necessarily met.
+- For shared abstractions, document only behavior guaranteed by the abstraction. When a concrete public implementation adds observable platform-specific behavior beyond that contract, document it on the concrete member and preserve the shared contract through <inheritdoc /> where supported.
+- For stateful operations, document when callers should invoke them and how inputs relate to surrounding engine state when supported by the code. Do not expose implementation mechanisms as API guarantees.
+- For hardware- or driver-specific workarounds, identify known affected environments as observations rather than universal vendor behavior. Describe the user-visible symptom, activation condition, default, and cost; avoid asserting an internal driver cause unless it is verified.
+
 When reviewing documentation:
 - Check whether docs align with the actual public API.
 - Identify missing summaries, undocumented parameters, missing return value explanations, and omitted caveats.
@@ -54,17 +61,16 @@ C# / XML documentation guidance:
 - Use <remarks> for lifecycle notes, threading expectations, ownership, performance caveats, or usage constraints when these are supported by the code or tests.
 - When <remarks> contains multiple caveats or guidance points, format each logical section as its own paragraph for readability and consistency.
 - Do not rely on blank lines inside XML comments for visual separation; rendered docs usually collapse them.
-- Use explicit <para> blocks when separation must be preserved in rendered documentation.
+- Use explicit <para> blocks when separation must be preserved in rendered documentation. During final review, check that blank XML-comment lines are not used as paragraph separators.
 - If a note is short and directly defines the member, prefer a single concise <summary> sentence over splitting into <summary> and <remarks>.
 - If <remarks> contains one continuous thought, keep it as one paragraph; split into multiple paragraphs only for distinct guidance points.
 - Prefer resilient summaries that describe the contract (for example, "Gets data associated with...") instead of enumerating every current field when return shapes may evolve.
 - Use lifecycle verbs precisely (for example, destroy vs remove) and document observable effects such as identifier invalidation when they are part of the public contract.
 - Avoid absolute performance prescriptions unless enforced by the API contract; present performance guidance as context and trade-offs.
+- For init-only properties on configuration or options types, describe the configured behavior rather than the accessor. Prefer wording such as "Specifies whether..." or "Specifies..." over "Gets...". Reserve "Gets..." and "Gets or sets..." for properties whose runtime read or mutation behavior is the relevant contract.
 - Add examples only when requested or when examples are necessary for clarity.
 - Cross references: use <see> for inline references and <seealso> for related overloads or sibling APIs. Avoid prose "See also" lines in remarks.
 - When public APIs use performance-oriented signatures (for example, generic struct constraints with ref handler parameters), document those requirements and their intent when they are externally visible.
-- For shared abstractions, document only behavior guaranteed by the abstraction. Document platform-specific or backend-specific behavior on the concrete implementation unless the shared API explicitly guarantees it.
-- For stateful operations, document when callers should invoke them and how inputs relate to surrounding engine state when supported by the code. Do not expose implementation mechanisms as API guarantees.
 
 Module-Specific Addenda:
 - Physics API Addendum:
