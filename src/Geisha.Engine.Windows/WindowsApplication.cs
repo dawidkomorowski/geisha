@@ -33,7 +33,16 @@ public static class WindowsApplication
     /// <param name="game"><see cref="Game" /> instance providing custom game functionality.</param>
     public static void Run(Game game) => Run(game, new WindowsApplicationOptions());
 
-    // TODO: Add documentation and possibly update surrounding documentation about options capability.
+    /// <summary>
+    ///     Initializes Geisha Engine for specified <paramref name="game" /> with the specified platform options and starts
+    ///     the game loop.
+    /// </summary>
+    /// <param name="game"><see cref="Game" /> instance providing custom game functionality.</param>
+    /// <param name="options">Options that configure Windows- and DirectX-specific engine behavior.</param>
+    /// <remarks>
+    ///     Use this overload to configure platform-specific behavior that is not represented by <see cref="Configuration" />.
+    ///     Passing a new <see cref="WindowsApplicationOptions" /> uses the default behavior.
+    /// </remarks>
     public static void Run(Game game, WindowsApplicationOptions options)
     {
         AppDomain.CurrentDomain.UnhandledException += InternalUnhandledExceptionHandler;

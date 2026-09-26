@@ -115,7 +115,14 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
     #endregion
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Gets or sets whether rendering buffers are resized after VSync is changed at runtime. Default is <c>false</c>.
+    /// </summary>
+    /// <remarks>
+    ///     Enable this option only on systems affected by GPU driver issues where changing VSync at runtime does not apply
+    ///     synchronization correctly or produces visual artifacts. This has been observed on Windows systems using Qualcomm
+    ///     Adreno GPUs. Resizing buffers after a VSync change adds work to the transition.
+    /// </remarks>
     public bool ResizeBuffersAfterVSyncChange
     {
         get => _swapChainPipeline.ResizeBuffersAfterVSyncChange;
