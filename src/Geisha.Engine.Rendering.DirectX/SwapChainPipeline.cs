@@ -108,6 +108,8 @@ internal sealed class SwapChainPipeline : IDisposable
         }
     }
 
+    public bool ResizeBuffersAfterVSyncChange { get; set; }
+
     public void Present()
     {
         _deviceContext.D2D1DeviceContext.Target = null;
@@ -133,6 +135,13 @@ internal sealed class SwapChainPipeline : IDisposable
         }
 
         _swapChain.Present(syncInterval, presentFlags);
+
+        if (_vSyncTransitionPending && ResizeBuffersAfterVSyncChange)
+        {
+            var swapChainDescription = _swapChain.Description1;
+            var size = new Size(swapChainDescription.Width, swapChainDescription.Height);
+            ResizeBuffers(size);
+        }
 
         _vSyncTransitionPending = false;
 
