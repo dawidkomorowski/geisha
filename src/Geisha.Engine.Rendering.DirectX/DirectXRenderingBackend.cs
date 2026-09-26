@@ -75,6 +75,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
     }
 
+    #region Implementation of IRenderingBackend
+
     /// <inheritdoc />
     public IRenderingContext2D Context2D => _renderingContext2D;
 
@@ -90,6 +92,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         get => _swapChainPipeline.VSyncEnabled;
         set => _swapChainPipeline.VSyncEnabled = value;
     }
+
 
     /// <inheritdoc />
     public void Present()
@@ -108,6 +111,15 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         _swapChainPipeline.ResizeBuffers(size);
         _renderingContext2D.UpdateRenderTargetSize(size);
+    }
+
+    #endregion
+
+    // TODO: Add documentation.
+    public bool ResizeBuffersAfterVSyncChange
+    {
+        get => _swapChainPipeline.ResizeBuffersAfterVSyncChange;
+        set => _swapChainPipeline.ResizeBuffersAfterVSyncChange = value;
     }
 
     /// <summary>

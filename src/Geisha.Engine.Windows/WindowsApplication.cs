@@ -64,6 +64,8 @@ namespace Geisha.Engine.Windows
             using var audioBackend = new NAudioAudioBackend();
             var inputBackend = new WindowsInputBackend(windowingBackend.Window);
 
+            renderingBackend.ResizeBuffersAfterVSyncChange = true;
+
             using var engine = new Engine(
                 configuration,
                 audioBackend,
