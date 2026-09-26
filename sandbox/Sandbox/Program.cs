@@ -11,7 +11,15 @@ namespace Sandbox
         [STAThread]
         private static void Main()
         {
-            WindowsApplication.Run(new SandboxApp());
+            var options = new WindowsApplicationOptions
+            {
+                DirectX = new DirectXOptions
+                {
+                    ResizeBuffersAfterVSyncChange = true
+                }
+            };
+
+            WindowsApplication.Run(new SandboxApp(), options);
         }
     }
 }

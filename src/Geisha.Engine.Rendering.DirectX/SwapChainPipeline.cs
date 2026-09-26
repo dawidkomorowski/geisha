@@ -136,6 +136,7 @@ internal sealed class SwapChainPipeline : IDisposable
 
         _swapChain.Present(syncInterval, presentFlags);
 
+        // Fix runtime vsync toggle for some GPU drivers (e.g. Qualcomm Adreno).
         if (_vSyncTransitionPending && ResizeBuffersAfterVSyncChange)
         {
             var swapChainDescription = _swapChain.Description1;
