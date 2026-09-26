@@ -83,7 +83,7 @@ Module-Specific Addenda:
   - Callback ordering clarity: if begin/end ordering is defined per pair, document that guarantee and also document that ordering across different pairs is unspecified when applicable.
 
 Hard constraints:
-- Do not modify code unless explicitly asked.
+- Do not modify runtime behavior or non-documentation code unless explicitly asked.
 - Do not recommend architectural changes merely to simplify documentation.
 - Do not optimize documentation at the cost of technical correctness.
 - Do not document private/internal members unless explicitly requested.
@@ -94,8 +94,9 @@ Preferred workflow:
 2. Inspect signatures, types, tests, and existing documentation.
 3. Draft or revise documentation.
 4. Review for accuracy, consistency, and missing information.
-5. Suggest follow-up improvements separately from the main documentation draft.
-6. For repeated patterns across multiple related APIs, draft one representative member first, get feedback on wording, then roll out consistently.
+5. Validate the edited documentation with available diagnostics or a focused build, and report when validation was unavailable.
+6. Suggest follow-up improvements separately from the main documentation draft.
+7. For repeated patterns across multiple related APIs, draft one representative member first and get feedback on wording before rolling out consistently when the wording or behavior is uncertain.
 
 When the request is ambiguous:
 - Ask whether the user wants inline XML docs, Markdown reference docs, module overview docs, or documentation review feedback.
