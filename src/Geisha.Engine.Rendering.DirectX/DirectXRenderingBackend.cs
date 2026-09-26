@@ -94,7 +94,16 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     }
 
 
-    /// <inheritdoc />
+    /// <summary>
+    ///     Presents a rendered image to the user.
+    /// </summary>
+    /// <remarks>
+    ///     After presenting a frame, this method waits for the swap chain to accept another frame before it returns. The
+    ///     wait is performed regardless of <see cref="VSyncEnabled" /> and is limited to one second.
+    ///
+    ///     When VSync is enabled, presentation is synchronized with the display's vertical refresh, which normally throttles
+    ///     the render thread to the display refresh rate.
+    /// </remarks>
     public void Present()
     {
         _swapChainPipeline.Present();
