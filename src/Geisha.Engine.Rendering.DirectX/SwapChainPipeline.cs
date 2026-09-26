@@ -32,6 +32,9 @@ internal sealed class SwapChainPipeline : IDisposable
 
     private Bitmap1 _backBufferBitmap;
 
+    private bool _vSyncEnabled;
+    private bool _vSyncTransitionPending;
+
     public SwapChainPipeline(DeviceContext deviceContext, Size resolution, IntPtr windowHandle)
     {
         _deviceContext = deviceContext;
@@ -90,7 +93,20 @@ internal sealed class SwapChainPipeline : IDisposable
         Debug.Assert(_backBufferBitmap is not null);
     }
 
-    public bool VSyncEnabled { get; set; }
+    public bool VSyncEnabled
+    {
+        get => _vSyncEnabled;
+        set
+        {
+            if (_vSyncEnabled == value)
+            {
+                return;
+            }
+
+            _vSyncEnabled = value;
+            _vSyncTransitionPending = true;
+        }
+    }
 
     public void Present()
     {
@@ -108,14 +124,17 @@ internal sealed class SwapChainPipeline : IDisposable
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
 
-        if (VSyncEnabled)
+        var syncInterval = _vSyncEnabled ? 1 : 0;
+        var presentFlags = _vSyncEnabled ? PresentFlags.None : PresentFlags.AllowTearing;
+
+        if (_vSyncTransitionPending)
         {
-            _swapChain.Present(1, PresentFlags.None);
+            presentFlags |= PresentFlags.Restart;
         }
-        else
-        {
-            _swapChain.Present(0, PresentFlags.AllowTearing);
-        }
+
+        _swapChain.Present(syncInterval, presentFlags);
+
+        _vSyncTransitionPending = false;
 
         // Wait for the presentation to complete before working on next frame.
         _frameLatencyWaitEvent.WaitOne(1000);
