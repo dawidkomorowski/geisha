@@ -27,15 +27,22 @@ public interface IRenderingBackend
     RenderingBackendInfo Info { get; }
 
     /// <summary>
+    ///     Gets or sets whether rendered frames are synchronized with the display's vertical refresh during
+    ///     <see cref="Present" />.
+    /// </summary>
+    /// <remarks>
+    ///     This value can be changed at runtime. Set it to <c>true</c> to wait for vertical synchronization while
+    ///     presenting frames, or to <c>false</c> to present without waiting for vertical synchronization.
+    /// </remarks>
+    bool VSyncEnabled { get; set; }
+
+    /// <summary>
     ///     Presents a rendered image to the user.
     /// </summary>
-    /// <param name="waitForVSync">If true, completed frame waits for vertical synchronization in order to be presented.</param>
     /// <remarks>
-    ///     This method can be invoked with <paramref name="waitForVSync" /> set to <c>true</c> to wait for vertical
-    ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
-    ///     frame is presented.
+    ///     Set <see cref="VSyncEnabled" /> to control whether presentation waits for vertical synchronization.
     /// </remarks>
-    void Present(bool waitForVSync);
+    void Present();
 
     /// <summary>
     ///     Resizes the buffers used for rendering to the specified size.

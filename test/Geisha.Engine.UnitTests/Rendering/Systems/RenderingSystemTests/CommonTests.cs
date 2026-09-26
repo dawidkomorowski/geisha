@@ -11,6 +11,35 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 [TestFixture]
 public class CommonTests : RenderingSystemTestsBase
 {
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Constructor_ShouldInitialize_VSyncEnabled_FromConfiguration(bool enableVSync)
+    {
+        // Arrange
+        var renderingConfiguration = new RenderingConfiguration { EnableVSync = enableVSync };
+
+        // Act
+        var context = CreateRenderingTestContext(renderingConfiguration);
+
+        // Assert
+        Assert.That(context.RenderingSystem.VSyncEnabled, Is.EqualTo(enableVSync));
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void VSyncEnabled_Should_Configure_VSyncEnabled_OnRenderingBackend(bool vSyncEnabled)
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+
+        // Act
+        context.RenderingSystem.VSyncEnabled = vSyncEnabled;
+
+        // Assert
+        Assert.That(context.RenderingSystem.VSyncEnabled, Is.EqualTo(vSyncEnabled));
+        Assert.That(RenderingBackend.VSyncEnabled, Is.EqualTo(vSyncEnabled));
+    }
+
     [Test]
     public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_EndDraw_Present_GivenAnEmptyScene()
     {
@@ -26,7 +55,7 @@ public class CommonTests : RenderingSystemTestsBase
             RenderingContext2D.BeginDraw();
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.EndDraw();
-            RenderingBackend.Present(false);
+            RenderingBackend.Present();
         });
     }
 
@@ -48,22 +77,8 @@ public class CommonTests : RenderingSystemTestsBase
             RenderingContext2D.Clear(Color.White);
             RenderingContext2D.DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
             RenderingContext2D.EndDraw();
-            RenderingBackend.Present(false);
+            RenderingBackend.Present();
         });
-    }
-
-    [TestCase(true)]
-    [TestCase(false)]
-    public void RenderScene_Should_Present_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
-    {
-        // Arrange
-        var context = CreateRenderingTestContext(new RenderingConfiguration { EnableVSync = enableVSync });
-
-        // Act
-        context.RenderingSystem.RenderScene();
-
-        // Assert
-        RenderingBackend.Received().Present(enableVSync);
     }
 
     [Test]

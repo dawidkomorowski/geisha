@@ -6,13 +6,73 @@ using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Physics.Systems;
+using Geisha.Engine.Rendering.Systems;
 
-namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
+namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode;
+
+internal sealed class TestSceneBehaviorFactory : ISceneBehaviorFactory
 {
-    internal sealed class TestSceneBehaviorFactory : ISceneBehaviorFactory
-    {
-        private const string SceneBehaviorName = "EngineApiCanBeInjectedToCustomGameCode";
+    private const string SceneBehaviorName = "EngineApiCanBeInjectedToCustomGameCode";
 
+    private readonly IAudioBackend _audioBackend;
+    private readonly IEngineManager _engineManager;
+    private readonly IAssetStore _assetStore;
+    private readonly IDebugRenderer _debugRenderer;
+    private readonly ISceneLoader _sceneLoader;
+    private readonly ISceneManager _sceneManager;
+    private readonly ISceneSerializer _sceneSerializer;
+    private readonly ICoroutineSystem _coroutineSystem;
+    private readonly IPhysicsSystem _physicsSystem;
+    private readonly ITimeSystem _timeSystem;
+    private readonly IRenderingSystem _renderingSystem;
+
+    public TestSceneBehaviorFactory
+    (
+        IAudioBackend audioBackend,
+        IEngineManager engineManager,
+        IAssetStore assetStore,
+        IDebugRenderer debugRenderer,
+        ISceneLoader sceneLoader,
+        ISceneManager sceneManager,
+        ISceneSerializer sceneSerializer,
+        ICoroutineSystem coroutineSystem,
+        IPhysicsSystem physicsSystem,
+        ITimeSystem timeSystem,
+        IRenderingSystem renderingSystem)
+    {
+        _audioBackend = audioBackend;
+        _engineManager = engineManager;
+        _assetStore = assetStore;
+        _debugRenderer = debugRenderer;
+        _sceneLoader = sceneLoader;
+        _sceneManager = sceneManager;
+        _sceneSerializer = sceneSerializer;
+        _coroutineSystem = coroutineSystem;
+        _physicsSystem = physicsSystem;
+        _timeSystem = timeSystem;
+        _renderingSystem = renderingSystem;
+    }
+
+    public string BehaviorName => SceneBehaviorName;
+
+    public SceneBehavior Create(Scene scene) =>
+        new TestSceneBehavior(
+            scene,
+            _audioBackend,
+            _engineManager,
+            _assetStore,
+            _debugRenderer,
+            _sceneLoader,
+            _sceneManager,
+            _sceneSerializer,
+            _coroutineSystem,
+            _physicsSystem,
+            _timeSystem,
+            _renderingSystem
+        );
+
+    private sealed class TestSceneBehavior : SceneBehavior
+    {
         private readonly IAudioBackend _audioBackend;
         private readonly IEngineManager _engineManager;
         private readonly IAssetStore _assetStore;
@@ -23,9 +83,11 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ICoroutineSystem _coroutineSystem;
         private readonly IPhysicsSystem _physicsSystem;
         private readonly ITimeSystem _timeSystem;
+        private readonly IRenderingSystem _renderingSystem;
 
-        public TestSceneBehaviorFactory
+        public TestSceneBehavior
         (
+            Scene scene,
             IAudioBackend audioBackend,
             IEngineManager engineManager,
             IAssetStore assetStore,
@@ -35,8 +97,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             ISceneSerializer sceneSerializer,
             ICoroutineSystem coroutineSystem,
             IPhysicsSystem physicsSystem,
-            ITimeSystem timeSystem
-        )
+            ITimeSystem timeSystem,
+            IRenderingSystem renderingSystem) : base(scene)
         {
             _audioBackend = audioBackend;
             _engineManager = engineManager;
@@ -48,95 +110,40 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _coroutineSystem = coroutineSystem;
             _physicsSystem = physicsSystem;
             _timeSystem = timeSystem;
+            _renderingSystem = renderingSystem;
         }
 
-        public string BehaviorName => SceneBehaviorName;
+        public override string Name => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene) =>
-            new TestSceneBehavior(
-                scene,
-                _audioBackend,
-                _engineManager,
-                _assetStore,
-                _debugRenderer,
-                _sceneLoader,
-                _sceneManager,
-                _sceneSerializer,
-                _coroutineSystem,
-                _physicsSystem,
-                _timeSystem
-            );
-
-        private sealed class TestSceneBehavior : SceneBehavior
+        protected override void OnLoaded()
         {
-            private readonly IAudioBackend _audioBackend;
-            private readonly IEngineManager _engineManager;
-            private readonly IAssetStore _assetStore;
-            private readonly IDebugRenderer _debugRenderer;
-            private readonly ISceneLoader _sceneLoader;
-            private readonly ISceneManager _sceneManager;
-            private readonly ISceneSerializer _sceneSerializer;
-            private readonly ICoroutineSystem _coroutineSystem;
-            private readonly IPhysicsSystem _physicsSystem;
-            private readonly ITimeSystem _timeSystem;
+            var exitTestAppComponent = Scene.CreateEntity().CreateComponent<ExitTestAppComponent>();
+            exitTestAppComponent.ExitOnFrame = 1;
 
-            public TestSceneBehavior
-            (
-                Scene scene,
-                IAudioBackend audioBackend,
-                IEngineManager engineManager,
-                IAssetStore assetStore,
-                IDebugRenderer debugRenderer,
-                ISceneLoader sceneLoader,
-                ISceneManager sceneManager,
-                ISceneSerializer sceneSerializer,
-                ICoroutineSystem coroutineSystem,
-                IPhysicsSystem physicsSystem,
-                ITimeSystem timeSystem
-            ) : base(scene)
-            {
-                _audioBackend = audioBackend;
-                _engineManager = engineManager;
-                _assetStore = assetStore;
-                _debugRenderer = debugRenderer;
-                _sceneLoader = sceneLoader;
-                _sceneManager = sceneManager;
-                _sceneSerializer = sceneSerializer;
-                _coroutineSystem = coroutineSystem;
-                _physicsSystem = physicsSystem;
-                _timeSystem = timeSystem;
-            }
+            E2ETestApi.PublishMessage("3211DA7A-5A4C-409D-B8F6-D82816D7CFA2",
+                "Engine API Injected Into SceneBehavior", _audioBackend.GetType().ToString());
+            E2ETestApi.PublishMessage("C7897578-6670-4DEA-A32F-689629FE651E",
+                "Engine API Injected Into SceneBehavior", _engineManager.GetType().ToString());
+            E2ETestApi.PublishMessage("B94536CE-5369-4105-B901-EC878E20E71F",
+                "Engine API Injected Into SceneBehavior", _assetStore.GetType().ToString());
+            E2ETestApi.PublishMessage("2F59C6C4-5183-4B33-9433-9AD9995F0923",
+                "Engine API Injected Into SceneBehavior", _debugRenderer.GetType().ToString());
+            E2ETestApi.PublishMessage("A3DB27E0-2A71-4728-9BE8-5C060F406EC8",
+                "Engine API Injected Into SceneBehavior", _sceneLoader.GetType().ToString());
+            E2ETestApi.PublishMessage("5C9C1856-8DF1-4E2D-BEF3-BB524FC62544",
+                "Engine API Injected Into SceneBehavior", _sceneManager.GetType().ToString());
+            E2ETestApi.PublishMessage("56048FE9-5C59-44F5-8C4C-D96615B62D8C",
+                "Engine API Injected Into SceneBehavior", _sceneSerializer.GetType().ToString());
+            E2ETestApi.PublishMessage("8DC6B886-CC5C-431E-821A-900D3671CB70",
+                "Engine API Injected Into SceneBehavior", _coroutineSystem.GetType().ToString());
+            E2ETestApi.PublishMessage("59797ECF-0B77-4CA2-B389-020B884B9E8F",
+                "Engine API Injected Into SceneBehavior", _physicsSystem.GetType().ToString());
+            E2ETestApi.PublishMessage("3AE47823-EBE5-4E2D-BCE1-926431D09C55",
+                "Engine API Injected Into SceneBehavior", _timeSystem.GetType().ToString());
+            E2ETestApi.PublishMessage("CAEACD21-47B1-4A13-AC3B-60996483D771",
+                "Engine API Injected Into SceneBehavior", _renderingSystem.GetType().ToString());
 
-            public override string Name => SceneBehaviorName;
-
-            protected override void OnLoaded()
-            {
-                var exitTestAppComponent = Scene.CreateEntity().CreateComponent<ExitTestAppComponent>();
-                exitTestAppComponent.ExitOnFrame = 1;
-
-                E2ETestApi.PublishMessage("3211DA7A-5A4C-409D-B8F6-D82816D7CFA2",
-                    "Engine API Injected Into SceneBehavior", _audioBackend.GetType().ToString());
-                E2ETestApi.PublishMessage("C7897578-6670-4DEA-A32F-689629FE651E",
-                    "Engine API Injected Into SceneBehavior", _engineManager.GetType().ToString());
-                E2ETestApi.PublishMessage("B94536CE-5369-4105-B901-EC878E20E71F",
-                    "Engine API Injected Into SceneBehavior", _assetStore.GetType().ToString());
-                E2ETestApi.PublishMessage("2F59C6C4-5183-4B33-9433-9AD9995F0923",
-                    "Engine API Injected Into SceneBehavior", _debugRenderer.GetType().ToString());
-                E2ETestApi.PublishMessage("A3DB27E0-2A71-4728-9BE8-5C060F406EC8",
-                    "Engine API Injected Into SceneBehavior", _sceneLoader.GetType().ToString());
-                E2ETestApi.PublishMessage("5C9C1856-8DF1-4E2D-BEF3-BB524FC62544",
-                    "Engine API Injected Into SceneBehavior", _sceneManager.GetType().ToString());
-                E2ETestApi.PublishMessage("56048FE9-5C59-44F5-8C4C-D96615B62D8C",
-                    "Engine API Injected Into SceneBehavior", _sceneSerializer.GetType().ToString());
-                E2ETestApi.PublishMessage("8DC6B886-CC5C-431E-821A-900D3671CB70",
-                    "Engine API Injected Into SceneBehavior", _coroutineSystem.GetType().ToString());
-                E2ETestApi.PublishMessage("59797ECF-0B77-4CA2-B389-020B884B9E8F",
-                    "Engine API Injected Into SceneBehavior", _physicsSystem.GetType().ToString());
-                E2ETestApi.PublishMessage("3AE47823-EBE5-4E2D-BCE1-926431D09C55",
-                    "Engine API Injected Into SceneBehavior", _timeSystem.GetType().ToString());
-
-                Scene.CreateEntity().CreateComponent<TestComponent>();
-            }
+            Scene.CreateEntity().CreateComponent<TestComponent>();
         }
     }
 }

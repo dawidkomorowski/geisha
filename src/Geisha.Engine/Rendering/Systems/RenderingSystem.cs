@@ -6,93 +6,101 @@ using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Diagnostics;
 
-namespace Geisha.Engine.Rendering.Systems
+namespace Geisha.Engine.Rendering.Systems;
+
+internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep, ISceneObserver
 {
-    internal sealed class RenderingSystem : IRenderingGameLoopStep, ISceneObserver
+    private readonly RenderingState _renderingState;
+    private readonly Renderer _renderer;
+    private readonly IRenderingBackend _renderingBackend;
+
+    public RenderingSystem(
+        IRenderingBackend renderingBackend,
+        RenderingConfiguration renderingConfiguration,
+        IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider,
+        IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
+        IRenderingDiagnosticInfoProvider renderingDiagnosticInfoProvider
+    )
     {
-        private readonly RenderingState _renderingState;
-        private readonly Renderer _renderer;
-        private readonly IRenderingBackend _renderingBackend;
-        private readonly RenderingConfiguration _renderingConfiguration;
+        _renderingBackend = renderingBackend;
+        VSyncEnabled = renderingConfiguration.EnableVSync;
 
-        public RenderingSystem(
-            IRenderingBackend renderingBackend,
-            RenderingConfiguration renderingConfiguration,
-            IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider,
-            IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
-            IRenderingDiagnosticInfoProvider renderingDiagnosticInfoProvider
-        )
-        {
-            _renderingBackend = renderingBackend;
-            _renderingConfiguration = renderingConfiguration;
+        _renderingState = new RenderingState(renderingBackend.Context2D, renderingConfiguration);
 
-            _renderingState = new RenderingState(renderingBackend.Context2D, renderingConfiguration);
-
-            _renderer = new Renderer(
-                renderingBackend,
-                aggregatedDiagnosticInfoProvider,
-                debugRendererForRenderingSystem,
-                renderingDiagnosticInfoProvider,
-                _renderingState
-            );
-        }
-
-        #region Implementation of IRenderingGameLoopStep
-
-        public void RenderScene()
-        {
-            _renderer.RenderScene();
-            _renderingBackend.Present(_renderingConfiguration.EnableVSync);
-        }
-
-        #endregion
-
-        #region Implementation of ISceneObserver
-
-        public void OnEntityCreated(Entity entity)
-        {
-        }
-
-        public void OnEntityRemoved(Entity entity)
-        {
-        }
-
-        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
-        {
-        }
-
-        public void OnComponentCreated(Component component)
-        {
-            switch (component)
-            {
-                case Transform2DComponent transform2DComponent:
-                    _renderingState.CreateStateFor(transform2DComponent);
-                    break;
-                case Renderer2DComponent renderer2DComponent:
-                    _renderingState.CreateStateFor(renderer2DComponent);
-                    break;
-                case CameraComponent cameraComponent:
-                    _renderingState.CreateStateFor(cameraComponent);
-                    break;
-            }
-        }
-
-        public void OnComponentRemoved(Component component)
-        {
-            switch (component)
-            {
-                case Transform2DComponent transform2DComponent:
-                    _renderingState.RemoveStateFor(transform2DComponent);
-                    break;
-                case Renderer2DComponent renderer2DComponent:
-                    _renderingState.RemoveStateFor(renderer2DComponent);
-                    break;
-                case CameraComponent cameraComponent:
-                    _renderingState.RemoveStateFor(cameraComponent);
-                    break;
-            }
-        }
-
-        #endregion
+        _renderer = new Renderer(
+            renderingBackend,
+            aggregatedDiagnosticInfoProvider,
+            debugRendererForRenderingSystem,
+            renderingDiagnosticInfoProvider,
+            _renderingState
+        );
     }
+
+    #region Implementation of IRenderingSystem
+
+    public bool VSyncEnabled
+    {
+        get => _renderingBackend.VSyncEnabled;
+        set => _renderingBackend.VSyncEnabled = value;
+    }
+
+    #endregion
+
+    #region Implementation of IRenderingGameLoopStep
+
+    public void RenderScene()
+    {
+        _renderer.RenderScene();
+        _renderingBackend.Present();
+    }
+
+    #endregion
+
+    #region Implementation of ISceneObserver
+
+    public void OnEntityCreated(Entity entity)
+    {
+    }
+
+    public void OnEntityRemoved(Entity entity)
+    {
+    }
+
+    public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+    {
+    }
+
+    public void OnComponentCreated(Component component)
+    {
+        switch (component)
+        {
+            case Transform2DComponent transform2DComponent:
+                _renderingState.CreateStateFor(transform2DComponent);
+                break;
+            case Renderer2DComponent renderer2DComponent:
+                _renderingState.CreateStateFor(renderer2DComponent);
+                break;
+            case CameraComponent cameraComponent:
+                _renderingState.CreateStateFor(cameraComponent);
+                break;
+        }
+    }
+
+    public void OnComponentRemoved(Component component)
+    {
+        switch (component)
+        {
+            case Transform2DComponent transform2DComponent:
+                _renderingState.RemoveStateFor(transform2DComponent);
+                break;
+            case Renderer2DComponent renderer2DComponent:
+                _renderingState.RemoveStateFor(renderer2DComponent);
+                break;
+            case CameraComponent cameraComponent:
+                _renderingState.RemoveStateFor(cameraComponent);
+                break;
+        }
+    }
+
+    #endregion
 }

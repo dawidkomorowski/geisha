@@ -31,6 +31,8 @@ public class Tests
             "Engine API Injected Into SceneBehavior", "Geisha.Engine.Physics.Systems.PhysicsSystem");
         E2EAssert.MessagePublished(output, "3AE47823-EBE5-4E2D-BCE1-926431D09C55",
             "Engine API Injected Into SceneBehavior", "Geisha.Engine.Core.TimeSystem");
+        E2EAssert.MessagePublished(output, "CAEACD21-47B1-4A13-AC3B-60996483D771",
+            "Engine API Injected Into SceneBehavior", "Geisha.Engine.Rendering.Systems.RenderingSystem");
 
         // Engine API Injected Into Component
         E2EAssert.MessagePublished(output, "484E1AFA-EEFE-4E3A-9D8E-A304847C8C16",
@@ -53,6 +55,8 @@ public class Tests
             "Engine API Injected Into Component", "Geisha.Engine.Physics.Systems.PhysicsSystem");
         E2EAssert.MessagePublished(output, "A2463B8D-8AED-44E7-851A-2E4BC750CD7B",
             "Engine API Injected Into Component", "Geisha.Engine.Core.TimeSystem");
+        E2EAssert.MessagePublished(output, "D469C835-DDEC-4920-9E78-0B8F5D2DB7C0",
+            "Engine API Injected Into Component", "Geisha.Engine.Rendering.Systems.RenderingSystem");
 
         // Engine API Injected Into System
         E2EAssert.MessagePublished(output, "E7691D98-AF87-4268-9C39-43822A790377",
@@ -75,5 +79,7 @@ public class Tests
             "Engine API Injected Into System", "Geisha.Engine.Physics.Systems.PhysicsSystem");
         E2EAssert.MessagePublished(output, "8AEB6833-DA48-48D7-ADCA-24DF92F4FB80",
             "Engine API Injected Into System", "Geisha.Engine.Core.TimeSystem");
+        E2EAssert.MessagePublished(output, "0A9DCF17-1510-456D-8551-78CCD61196EE",
+            "Engine API Injected Into System", "Geisha.Engine.Rendering.Systems.RenderingSystem");
     }
 }

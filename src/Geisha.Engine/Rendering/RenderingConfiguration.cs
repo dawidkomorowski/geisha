@@ -13,9 +13,13 @@ public sealed record RenderingConfiguration
     public const string DefaultSortingLayerName = "Default";
 
     /// <summary>
-    ///     Specifies whether VSync is enabled. When enabled, rendered frames wait for vertical synchronization in order to be
-    ///     presented, therefore frame rate is limited to refresh rate of display. Default is <c>false</c>.
+    ///     Specifies whether VSync is enabled when the rendering system is initialized. When enabled, rendered frames wait
+    ///     for vertical synchronization before presentation, limiting the presentation rate to at most the display refresh
+    ///     rate. Default is <c>false</c>.
     /// </summary>
+    /// <remarks>
+    ///     To change VSync at runtime, use <see cref="Systems.IRenderingSystem.VSyncEnabled" />.
+    /// </remarks>
     public bool EnableVSync { get; init; } = false;
 
     /// <summary>

@@ -7,6 +7,7 @@ using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Engine.Rendering.Systems;
 using Geisha.Engine.Windowing;
 
 namespace Sandbox.Common;
@@ -15,11 +16,13 @@ public sealed class CommonEntityFactory
 {
     private readonly IEngineManager _engineManager;
     private readonly IWindowingSystem _windowingSystem;
+    private readonly IRenderingSystem _renderingSystem;
 
-    public CommonEntityFactory(IEngineManager engineManager, IWindowingSystem windowingSystem)
+    public CommonEntityFactory(IEngineManager engineManager, IWindowingSystem windowingSystem, IRenderingSystem renderingSystem)
     {
         _engineManager = engineManager;
         _windowingSystem = windowingSystem;
+        _renderingSystem = renderingSystem;
     }
 
     public Entity CreateCamera(Scene scene)
@@ -43,6 +46,7 @@ public sealed class CommonEntityFactory
             .MapAction("Exit", Key.Escape)
             .MapAction("ToggleFullscreen", Key.F)
             .MapAction("ToggleCursorVisible", Key.C)
+            .MapAction("ToggleVSync", Key.V)
             .Build();
 
         inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);
@@ -56,6 +60,7 @@ public sealed class CommonEntityFactory
             };
         });
         inputComponent.BindAction("ToggleCursorVisible", () => { _windowingSystem.CursorVisible = !_windowingSystem.CursorVisible; });
+        inputComponent.BindAction("ToggleVSync", () => { _renderingSystem.VSyncEnabled = !_renderingSystem.VSyncEnabled; });
 
         return entity;
     }

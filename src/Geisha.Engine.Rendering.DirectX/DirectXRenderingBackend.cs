@@ -75,6 +75,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
     }
 
+    #region Implementation of IRenderingBackend
+
     /// <inheritdoc />
     public IRenderingContext2D Context2D => _renderingContext2D;
 
@@ -85,9 +87,26 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public RenderingBackendInfo Info { get; }
 
     /// <inheritdoc />
-    public void Present(bool waitForVSync)
+    public bool VSyncEnabled
     {
-        _swapChainPipeline.Present(waitForVSync);
+        get => _swapChainPipeline.VSyncEnabled;
+        set => _swapChainPipeline.VSyncEnabled = value;
+    }
+
+
+    /// <summary>
+    ///     Presents a rendered image to the user.
+    /// </summary>
+    /// <remarks>
+    ///     After presenting a frame, this method waits for the swap chain to accept another frame before it returns. The
+    ///     wait is performed regardless of <see cref="VSyncEnabled" /> and is limited to one second.
+    ///
+    ///     When VSync is enabled, presentation is synchronized with the display's vertical refresh, which normally throttles
+    ///     the render thread to the display refresh rate.
+    /// </remarks>
+    public void Present()
+    {
+        _swapChainPipeline.Present();
         _statistics.UpdateLastFrameStats();
     }
 
@@ -101,6 +120,22 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         _swapChainPipeline.ResizeBuffers(size);
         _renderingContext2D.UpdateRenderTargetSize(size);
+    }
+
+    #endregion
+
+    /// <summary>
+    ///     Gets or sets whether rendering buffers are resized after VSync is changed at runtime. Default is <c>false</c>.
+    /// </summary>
+    /// <remarks>
+    ///     Enable this option only on systems affected by GPU driver issues where changing VSync at runtime does not apply
+    ///     synchronization correctly or produces visual artifacts. This has been observed on Windows systems using Qualcomm
+    ///     Adreno GPUs. Resizing buffers after a VSync change adds work to the transition.
+    /// </remarks>
+    public bool ResizeBuffersAfterVSyncChange
+    {
+        get => _swapChainPipeline.ResizeBuffersAfterVSyncChange;
+        set => _swapChainPipeline.ResizeBuffersAfterVSyncChange = value;
     }
 
     /// <summary>
