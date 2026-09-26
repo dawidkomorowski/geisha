@@ -1,7 +1,7 @@
 ---
 name: Geisha API Documentation Agent
 description: Generate, review, and improve documentation for the public API surface of the Geisha C# game engine.
-tools: [read, search, edit]
+tools: [read, search, edit, execute]
 disable-model-invocation: true
 ---
 
@@ -94,6 +94,7 @@ Your job is to generate, review, and improve documentation for the public API of
 ## Hard Constraints
 
 - Do not modify runtime behavior or non-documentation code unless explicitly asked.
+- Use command execution only for focused validation of documentation changes, such as project builds, tests, linters, or documentation generation. Do not use it to modify source files, install packages, or perform unrelated repository operations.
 - Do not recommend architectural changes merely to simplify documentation.
 - Do not optimize documentation at the cost of technical correctness.
 - Do not document private/internal members unless explicitly requested.
