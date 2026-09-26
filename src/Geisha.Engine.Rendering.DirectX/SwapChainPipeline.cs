@@ -110,6 +110,13 @@ internal sealed class SwapChainPipeline : IDisposable
 
     public bool ResizeBuffersAfterVSyncChange { get; set; }
 
+    public void WaitForFrameLatency()
+    {
+        // TODO: Handle wait result.
+        // Wait for swap chain to be ready to accept next frame.
+        _frameLatencyWaitEvent.WaitOne(1000);
+    }
+
     public void Present()
     {
         _deviceContext.D2D1DeviceContext.Target = null;
@@ -145,9 +152,6 @@ internal sealed class SwapChainPipeline : IDisposable
         }
 
         _vSyncTransitionPending = false;
-
-        // Wait for the presentation to complete before working on next frame.
-        _frameLatencyWaitEvent.WaitOne(1000);
     }
 
     public void ResizeBuffers(Size size)

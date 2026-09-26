@@ -2,6 +2,7 @@
 {
     internal interface IRenderingGameLoopStep
     {
+        void WaitForFramePacing();
         void RenderScene();
     }
 }

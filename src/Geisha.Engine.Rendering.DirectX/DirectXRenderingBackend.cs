@@ -94,6 +94,12 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     }
 
 
+    /// <inheritdoc />
+    public void WaitForFramePacing()
+    {
+        _swapChainPipeline.WaitForFrameLatency();
+    }
+
     /// <summary>
     ///     Presents a rendered image to the user.
     /// </summary>

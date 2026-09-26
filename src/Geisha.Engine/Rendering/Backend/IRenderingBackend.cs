@@ -36,6 +36,9 @@ public interface IRenderingBackend
     /// </remarks>
     bool VSyncEnabled { get; set; }
 
+    // TODO: Add documentation.
+    void WaitForFramePacing();
+
     /// <summary>
     ///     Presents a rendered image to the user.
     /// </summary>
