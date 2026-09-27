@@ -44,6 +44,7 @@ public class GameLoopTests
     private const string RenderingStepName = "RenderingStep";
     private const string TransformInterpolationStepName = "TransformInterpolationStep";
     private const string WindowingStepName = "WindowingStep";
+    private const string FramePacingWaitStepName = "FramePacingWaitStep";
     private const string CustomStep1Name = "CustomStep1";
     private const string CustomStep2Name = "CustomStep2";
     private const string CustomStep3Name = "CustomStep3";
@@ -98,6 +99,8 @@ public class GameLoopTests
         _windowingStep = Substitute.For<IWindowingGameLoopStep>();
         _gameLoopSteps.WindowingStep.Returns(_windowingStep);
         _gameLoopSteps.WindowingStepName.Returns(WindowingStepName);
+
+        _gameLoopSteps.FramePacingWaitStepName.Returns(FramePacingWaitStepName);
 
         _customStep1 = Substitute.For<ICustomGameLoopStep>();
         _customStep1.Name.Returns(CustomStep1Name);
@@ -321,7 +324,8 @@ public class GameLoopTests
         {
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(WindowingStepName);
-            // TODO: Measure wait for frame pacing?
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _performanceStatisticsRecorder.EndStepDuration(FramePacingWaitStepName);
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(InputStepName);
             _performanceStatisticsRecorder.BeginStepDuration();
