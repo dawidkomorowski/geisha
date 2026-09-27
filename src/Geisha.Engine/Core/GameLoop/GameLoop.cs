@@ -53,6 +53,10 @@ internal sealed class GameLoop : IGameLoop
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.WindowingStepName);
 
         _performanceStatisticsRecorder.BeginStepDuration();
+        _gameLoopSteps.RenderingStep.WaitForFramePacing();
+        _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.FramePacingWaitStepName);
+
+        _performanceStatisticsRecorder.BeginStepDuration();
         _gameLoopSteps.InputStep.ProcessInput();
         _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.InputStepName);
 

@@ -93,17 +93,24 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         set => _swapChainPipeline.VSyncEnabled = value;
     }
 
-
     /// <summary>
-    ///     Presents a rendered image to the user.
+    ///     Waits for the swap chain to accept the next frame.
     /// </summary>
     /// <remarks>
-    ///     After presenting a frame, this method waits for the swap chain to accept another frame before it returns. The
-    ///     wait is performed regardless of <see cref="VSyncEnabled" /> and is limited to one second.
-    ///
-    ///     When VSync is enabled, presentation is synchronized with the display's vertical refresh, which normally throttles
-    ///     the render thread to the display refresh rate.
+    ///     <para>
+    ///         This wait is performed regardless of <see cref="VSyncEnabled" />. It waits for up to one second and may
+    ///         return before the swap chain is ready when the wait times out.
+    ///     </para>
+    ///     <para>
+    ///         When VSync is enabled, this wait normally throttles the caller to the display refresh rate.
+    ///     </para>
     /// </remarks>
+    public void WaitForFramePacing()
+    {
+        _swapChainPipeline.WaitForFrameLatency();
+    }
+
+    /// <inheritdoc />
     public void Present()
     {
         _swapChainPipeline.Present();

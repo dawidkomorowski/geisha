@@ -41,6 +41,19 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void WaitForFramePacing_ShouldCallBackend_WaitForFramePacing()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+
+        // Act
+        context.RenderingSystem.WaitForFramePacing();
+
+        // Assert
+        RenderingBackend.Received(1).WaitForFramePacing();
+    }
+
+    [Test]
     public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_EndDraw_Present_GivenAnEmptyScene()
     {
         // Arrange

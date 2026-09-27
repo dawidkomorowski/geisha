@@ -44,6 +44,7 @@ public class GameLoopTests
     private const string RenderingStepName = "RenderingStep";
     private const string TransformInterpolationStepName = "TransformInterpolationStep";
     private const string WindowingStepName = "WindowingStep";
+    private const string FramePacingWaitStepName = "FramePacingWaitStep";
     private const string CustomStep1Name = "CustomStep1";
     private const string CustomStep2Name = "CustomStep2";
     private const string CustomStep3Name = "CustomStep3";
@@ -99,6 +100,8 @@ public class GameLoopTests
         _gameLoopSteps.WindowingStep.Returns(_windowingStep);
         _gameLoopSteps.WindowingStepName.Returns(WindowingStepName);
 
+        _gameLoopSteps.FramePacingWaitStepName.Returns(FramePacingWaitStepName);
+
         _customStep1 = Substitute.For<ICustomGameLoopStep>();
         _customStep1.Name.Returns(CustomStep1Name);
         _customStep2 = Substitute.For<ICustomGameLoopStep>();
@@ -139,6 +142,7 @@ public class GameLoopTests
         Received.InOrder(() =>
         {
             _windowingStep.Received(1).HandleWindowState();
+            _renderingStep.Received(1).WaitForFramePacing();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -193,6 +197,7 @@ public class GameLoopTests
         {
             // Handle window and input at beginning of frame.
             _windowingStep.Received(1).HandleWindowState();
+            _renderingStep.Received(1).WaitForFramePacing();
             _inputStep.Received(1).ProcessInput();
 
             // Process fixed time step game loop steps expected number of times.
@@ -273,6 +278,7 @@ public class GameLoopTests
         Received.InOrder(() =>
         {
             _windowingStep.Received(1).HandleWindowState();
+            _renderingStep.Received(1).WaitForFramePacing();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -318,6 +324,8 @@ public class GameLoopTests
         {
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(WindowingStepName);
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _performanceStatisticsRecorder.EndStepDuration(FramePacingWaitStepName);
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(InputStepName);
             _performanceStatisticsRecorder.BeginStepDuration();

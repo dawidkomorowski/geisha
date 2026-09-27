@@ -31,29 +31,23 @@ namespace Geisha.Engine.Core.Diagnostics
     internal sealed class PerformanceStatisticsStorage : IPerformanceStatisticsStorage
     {
         private const int CircularBufferSize = 100;
-        private readonly CircularBuffer<Frame> _frames = new CircularBuffer<Frame>(CircularBufferSize);
-        private readonly Dictionary<string, CircularBuffer<Frame>> _stepsFrames;
-        private readonly Dictionary<string, TimeSpan> _currentStepsFrameTimes;
+        private readonly CircularBuffer<Frame> _frames = new(CircularBufferSize);
+        private readonly Dictionary<string, CircularBuffer<Frame>> _stepsFrames = new();
+        private readonly Dictionary<string, TimeSpan> _currentStepsFrameTimes = new();
         private readonly IReadOnlyCollection<string> _stepsNames;
 
         public PerformanceStatisticsStorage(IGameLoopSteps gameLoopSteps)
         {
-            var stepsFramesField = new Dictionary<string, CircularBuffer<Frame>>();
-            _stepsFrames = stepsFramesField;
-
             var stepsFramesProperty = new Dictionary<string, IReadOnlyCollection<Frame>>();
             StepsFrames = stepsFramesProperty;
-
-            var currentStepsFrames = new Dictionary<string, TimeSpan>();
-            _currentStepsFrameTimes = currentStepsFrames;
 
             _stepsNames = gameLoopSteps.StepsNames;
             foreach (var stepName in _stepsNames)
             {
                 var circularBuffer = new CircularBuffer<Frame>(CircularBufferSize);
-                stepsFramesField.Add(stepName, circularBuffer);
+                _stepsFrames.Add(stepName, circularBuffer);
                 stepsFramesProperty.Add(stepName, circularBuffer);
-                currentStepsFrames.Add(stepName, TimeSpan.Zero);
+                _currentStepsFrameTimes.Add(stepName, TimeSpan.Zero);
             }
         }
 

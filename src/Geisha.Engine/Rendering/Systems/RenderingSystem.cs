@@ -48,6 +48,11 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
 
     #region Implementation of IRenderingGameLoopStep
 
+    public void WaitForFramePacing()
+    {
+        _renderingBackend.WaitForFramePacing();
+    }
+
     public void RenderScene()
     {
         _renderer.RenderScene();

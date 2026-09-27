@@ -37,6 +37,14 @@ public interface IRenderingBackend
     bool VSyncEnabled { get; set; }
 
     /// <summary>
+    ///     Waits for the rendering backend to accept the next frame.
+    /// </summary>
+    /// <remarks>
+    ///     Call this method before processing the next frame to pace rendering.
+    /// </remarks>
+    void WaitForFramePacing();
+
+    /// <summary>
     ///     Presents a rendered image to the user.
     /// </summary>
     /// <remarks>
