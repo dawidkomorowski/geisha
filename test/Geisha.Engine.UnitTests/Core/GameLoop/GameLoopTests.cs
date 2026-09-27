@@ -139,6 +139,7 @@ public class GameLoopTests
         Received.InOrder(() =>
         {
             _windowingStep.Received(1).HandleWindowState();
+            _renderingStep.Received(1).WaitForFramePacing();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -193,6 +194,7 @@ public class GameLoopTests
         {
             // Handle window and input at beginning of frame.
             _windowingStep.Received(1).HandleWindowState();
+            _renderingStep.Received(1).WaitForFramePacing();
             _inputStep.Received(1).ProcessInput();
 
             // Process fixed time step game loop steps expected number of times.
@@ -273,6 +275,7 @@ public class GameLoopTests
         Received.InOrder(() =>
         {
             _windowingStep.Received(1).HandleWindowState();
+            _renderingStep.Received(1).WaitForFramePacing();
             _inputStep.Received(1).ProcessInput();
             _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
             _coroutineStep.Received(1).ProcessCoroutines();
@@ -318,6 +321,7 @@ public class GameLoopTests
         {
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(WindowingStepName);
+            // TODO: Measure wait for frame pacing?
             _performanceStatisticsRecorder.BeginStepDuration();
             _performanceStatisticsRecorder.EndStepDuration(InputStepName);
             _performanceStatisticsRecorder.BeginStepDuration();
