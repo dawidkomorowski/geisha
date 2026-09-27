@@ -40,8 +40,7 @@ public interface IRenderingBackend
     ///     Waits for the rendering backend to accept the next frame.
     /// </summary>
     /// <remarks>
-    ///     Call this method before processing the next frame to pace rendering. The wait times out after one second, so
-    ///     the method may return before the backend is ready.
+    ///     Call this method before processing the next frame to pace rendering.
     /// </remarks>
     void WaitForFramePacing();
 
