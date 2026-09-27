@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using Geisha.Engine.Core.Math;
 using Microsoft.Win32.SafeHandles;
+using NLog;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -14,6 +15,8 @@ namespace Geisha.Engine.Rendering.DirectX;
 
 internal sealed class SwapChainPipeline : IDisposable
 {
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
     private const int BufferCount = 2;
     private const Format PixelFormat = Format.B8G8R8A8_UNorm;
     private const SwapChainFlags SwapChainFlags = SharpDX.DXGI.SwapChainFlags.AllowTearing | SharpDX.DXGI.SwapChainFlags.FrameLatencyWaitAbleObject;
@@ -112,9 +115,13 @@ internal sealed class SwapChainPipeline : IDisposable
 
     public void WaitForFrameLatency()
     {
-        // TODO: Handle wait result.
         // Wait for swap chain to be ready to accept next frame.
-        _frameLatencyWaitEvent.WaitOne(1000);
+        var signaled = _frameLatencyWaitEvent.WaitOne(1000);
+
+        if (!signaled)
+        {
+            Logger.Warn("Frame latency wait timed out.");
+        }
     }
 
     public void Present()
