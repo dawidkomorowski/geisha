@@ -25,6 +25,20 @@ public class CommonTests : RenderingSystemTestsBase
         Assert.That(context.RenderingSystem.VSyncEnabled, Is.EqualTo(enableVSync));
     }
 
+    [TestCase(BufferingMode.DoubleBuffering)]
+    [TestCase(BufferingMode.TripleBuffering)]
+    public void Constructor_ShouldInitialize_BufferingMode_FromConfiguration(BufferingMode bufferingMode)
+    {
+        // Arrange
+        var renderingConfiguration = new RenderingConfiguration { BufferingMode = bufferingMode };
+
+        // Act
+        var context = CreateRenderingTestContext(renderingConfiguration);
+
+        // Assert
+        Assert.That(context.RenderingSystem.BufferingMode, Is.EqualTo(bufferingMode));
+    }
+
     [TestCase(true)]
     [TestCase(false)]
     public void VSyncEnabled_ShouldConfigure_VSyncEnabled_OnRenderingBackend(bool vSyncEnabled)

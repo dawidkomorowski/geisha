@@ -22,6 +22,9 @@ public sealed record RenderingConfiguration
     /// </remarks>
     public bool EnableVSync { get; init; } = false;
 
+    // TODO: Add documentation.
+    public BufferingMode BufferingMode { get; init; } = BufferingMode.DoubleBuffering;
+
     /// <summary>
     ///     Specifies whether to display rendering statistics. Default is <c>false</c>.
     /// </summary>

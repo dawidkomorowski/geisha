@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Windowing;
 using NUnit.Framework;
 
@@ -47,6 +48,7 @@ public class ConfigurationTests
         Assert.That(actual.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(actual.Rendering.EnableVSync, Is.True);
+        Assert.That(actual.Rendering.BufferingMode, Is.EqualTo(BufferingMode.TripleBuffering));
         Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
 
@@ -96,6 +98,7 @@ public class ConfigurationTests
             Rendering = configuration.Rendering with
             {
                 EnableVSync = true,
+                BufferingMode = BufferingMode.TripleBuffering,
                 ShowRenderingStatistics = true,
                 SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
             },

@@ -23,7 +23,9 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     )
     {
         _renderingBackend = renderingBackend;
+
         VSyncEnabled = renderingConfiguration.EnableVSync;
+        BufferingMode = renderingConfiguration.BufferingMode;
 
         _renderingState = new RenderingState(renderingBackend.Context2D, renderingConfiguration);
 
