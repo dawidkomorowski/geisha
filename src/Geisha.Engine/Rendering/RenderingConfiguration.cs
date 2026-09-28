@@ -22,7 +22,13 @@ public sealed record RenderingConfiguration
     /// </remarks>
     public bool EnableVSync { get; init; } = false;
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Specifies the buffering mode used to initialize the rendering system. Default is
+    ///     <see cref="BufferingMode.DoubleBuffering" />.
+    /// </summary>
+    /// <remarks>
+    ///     To change the buffering mode at runtime, use <see cref="Systems.IRenderingSystem.BufferingMode" />.
+    /// </remarks>
     public BufferingMode BufferingMode { get; init; } = BufferingMode.DoubleBuffering;
 
     /// <summary>
