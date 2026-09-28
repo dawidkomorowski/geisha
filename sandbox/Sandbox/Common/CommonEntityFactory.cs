@@ -6,6 +6,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Systems;
 using Geisha.Engine.Windowing;
@@ -47,6 +48,7 @@ public sealed class CommonEntityFactory
             .MapAction("ToggleFullscreen", Key.F)
             .MapAction("ToggleCursorVisible", Key.C)
             .MapAction("ToggleVSync", Key.V)
+            .MapAction("ToggleTripleBuffering", Key.B)
             .Build();
 
         inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);
@@ -61,6 +63,15 @@ public sealed class CommonEntityFactory
         });
         inputComponent.BindAction("ToggleCursorVisible", () => { _windowingSystem.CursorVisible = !_windowingSystem.CursorVisible; });
         inputComponent.BindAction("ToggleVSync", () => { _renderingSystem.VSyncEnabled = !_renderingSystem.VSyncEnabled; });
+        inputComponent.BindAction("ToggleTripleBuffering", () =>
+        {
+            _renderingSystem.BufferingMode = _renderingSystem.BufferingMode switch
+            {
+                BufferingMode.DoubleBuffering => BufferingMode.TripleBuffering,
+                BufferingMode.TripleBuffering => BufferingMode.DoubleBuffering,
+                _ => throw new InvalidOperationException("Unsupported buffering mode.")
+            };
+        });
 
         return entity;
     }
