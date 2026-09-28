@@ -36,6 +36,9 @@ public interface IRenderingBackend
     /// </remarks>
     bool VSyncEnabled { get; set; }
 
+    // TODO: Add documentation.
+    public BufferingMode BufferingMode { get; set; }
+
     /// <summary>
     ///     Waits for the rendering backend to accept the next frame.
     /// </summary>

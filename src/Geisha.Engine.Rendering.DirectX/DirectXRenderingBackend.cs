@@ -93,6 +93,9 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
         set => _swapChainPipeline.VSyncEnabled = value;
     }
 
+    /// <inheritdoc />
+    public BufferingMode BufferingMode { get; set; }
+
     /// <summary>
     ///     Waits for the swap chain to accept the next frame.
     /// </summary>
