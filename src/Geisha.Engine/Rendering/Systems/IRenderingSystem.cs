@@ -13,4 +13,7 @@ public interface IRenderingSystem
     ///     behavior used when the rendering system presents a frame.
     /// </remarks>
     bool VSyncEnabled { get; set; }
+
+    // TODO: Add documentation.
+    BufferingMode BufferingMode { get; set; }
 }
