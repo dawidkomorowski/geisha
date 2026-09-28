@@ -50,6 +50,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.EnableDebugRendering, Is.False);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
+        Assert.That(configuration.Rendering.BufferingMode, Is.EqualTo(BufferingMode.DoubleBuffering));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.False);
         Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] { RenderingConfiguration.DefaultSortingLayerName }));
 
@@ -97,6 +98,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.EnableDebugRendering, Is.True);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.True);
+        Assert.That(configuration.Rendering.BufferingMode, Is.EqualTo(BufferingMode.TripleBuffering));
         Assert.That(configuration.Rendering.ShowRenderingStatistics, Is.True);
         Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
 

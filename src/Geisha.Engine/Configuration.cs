@@ -131,6 +131,8 @@ public sealed record Configuration
         var renderingConfiguration = new RenderingConfiguration();
         if (fileContent.Rendering?.EnableVSync is not null)
             renderingConfiguration = renderingConfiguration with { EnableVSync = fileContent.Rendering.EnableVSync.Value };
+        if (fileContent.Rendering?.BufferingMode is not null)
+            renderingConfiguration = renderingConfiguration with { BufferingMode = fileContent.Rendering.BufferingMode.Value };
         if (fileContent.Rendering?.ShowRenderingStatistics is not null)
             renderingConfiguration = renderingConfiguration with { ShowRenderingStatistics = fileContent.Rendering.ShowRenderingStatistics.Value };
         if (fileContent.Rendering?.SortingLayersOrder is not null)
@@ -226,6 +228,10 @@ public sealed record Configuration
     private sealed record RenderingSection
     {
         public bool? EnableVSync { get; init; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public BufferingMode? BufferingMode { get; init; }
+
         public bool? ShowRenderingStatistics { get; init; }
         public string[]? SortingLayersOrder { get; init; }
     }

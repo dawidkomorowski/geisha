@@ -36,6 +36,7 @@
   },
   "Rendering": {
     "EnableVSync": true,
+    "BufferingMode": "TripleBuffering",
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "BackgroundGrid",

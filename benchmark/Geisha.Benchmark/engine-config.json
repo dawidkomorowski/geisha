@@ -38,6 +38,7 @@
   },
   "Rendering": {
     "EnableVSync": false,
+    "BufferingMode": "TripleBuffering",
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "Default",

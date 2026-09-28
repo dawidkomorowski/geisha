@@ -23,7 +23,9 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     )
     {
         _renderingBackend = renderingBackend;
+
         VSyncEnabled = renderingConfiguration.EnableVSync;
+        BufferingMode = renderingConfiguration.BufferingMode;
 
         _renderingState = new RenderingState(renderingBackend.Context2D, renderingConfiguration);
 
@@ -42,6 +44,12 @@ internal sealed class RenderingSystem : IRenderingSystem, IRenderingGameLoopStep
     {
         get => _renderingBackend.VSyncEnabled;
         set => _renderingBackend.VSyncEnabled = value;
+    }
+
+    public BufferingMode BufferingMode
+    {
+        get => _renderingBackend.BufferingMode;
+        set => _renderingBackend.BufferingMode = value;
     }
 
     #endregion

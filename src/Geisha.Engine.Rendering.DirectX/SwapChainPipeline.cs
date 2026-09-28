@@ -17,7 +17,6 @@ internal sealed class SwapChainPipeline : IDisposable
 {
     private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    private const int BufferCount = 2;
     private const Format PixelFormat = Format.B8G8R8A8_UNorm;
     private const SwapChainFlags SwapChainFlags = SharpDX.DXGI.SwapChainFlags.AllowTearing | SharpDX.DXGI.SwapChainFlags.FrameLatencyWaitAbleObject;
     private const int SampleCount = 4;
@@ -37,6 +36,22 @@ internal sealed class SwapChainPipeline : IDisposable
 
     private bool _vSyncEnabled;
     private bool _vSyncTransitionPending;
+    private BufferingMode _bufferingMode = BufferingMode.DoubleBuffering;
+    private bool _bufferingModeTransitionPending;
+
+    private int BufferCount => _bufferingMode switch
+    {
+        BufferingMode.DoubleBuffering => 2,
+        BufferingMode.TripleBuffering => 3,
+        _ => throw new InvalidOperationException("Unsupported buffering mode.")
+    };
+
+    private int MaximumFrameLatency => _bufferingMode switch
+    {
+        BufferingMode.DoubleBuffering => 1,
+        BufferingMode.TripleBuffering => 2,
+        _ => throw new InvalidOperationException("Unsupported buffering mode.")
+    };
 
     public SwapChainPipeline(DeviceContext deviceContext, Size resolution, IntPtr windowHandle)
     {
@@ -83,7 +98,7 @@ internal sealed class SwapChainPipeline : IDisposable
         _frameLatencyWaitHandle = new SafeWaitHandle(waitableObject, false);
         _frameLatencyWaitEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
         _frameLatencyWaitEvent.SafeWaitHandle = _frameLatencyWaitHandle;
-        swapChain2.MaximumFrameLatency = 1;
+        swapChain2.MaximumFrameLatency = MaximumFrameLatency;
 
         CreateBitmaps(resolution);
 
@@ -112,6 +127,21 @@ internal sealed class SwapChainPipeline : IDisposable
     }
 
     public bool ResizeBuffersAfterVSyncChange { get; set; }
+
+    public BufferingMode BufferingMode
+    {
+        get => _bufferingMode;
+        set
+        {
+            if (_bufferingMode == value)
+            {
+                return;
+            }
+
+            _bufferingMode = value;
+            _bufferingModeTransitionPending = true;
+        }
+    }
 
     public void WaitForFrameLatency()
     {
@@ -153,12 +183,18 @@ internal sealed class SwapChainPipeline : IDisposable
         // Fix runtime vsync toggle for some GPU drivers (e.g. Qualcomm Adreno).
         if (_vSyncTransitionPending && ResizeBuffersAfterVSyncChange)
         {
-            var swapChainDescription = _swapChain.Description1;
-            var size = new Size(swapChainDescription.Width, swapChainDescription.Height);
-            ResizeBuffers(size);
+            ResizeBuffers();
+        }
+
+        if (_bufferingModeTransitionPending)
+        {
+            ResizeBuffers();
+            using var swapChain2 = _swapChain.QueryInterface<SwapChain2>();
+            swapChain2.MaximumFrameLatency = MaximumFrameLatency;
         }
 
         _vSyncTransitionPending = false;
+        _bufferingModeTransitionPending = false;
     }
 
     public void ResizeBuffers(Size size)
@@ -170,6 +206,13 @@ internal sealed class SwapChainPipeline : IDisposable
         CreateBitmaps(size);
 
         _deviceContext.D2D1DeviceContext.Target = _msaaTargetBitmap;
+    }
+
+    private void ResizeBuffers()
+    {
+        var swapChainDescription = _swapChain.Description1;
+        var size = new Size(swapChainDescription.Width, swapChainDescription.Height);
+        ResizeBuffers(size);
     }
 
     public void Dispose()

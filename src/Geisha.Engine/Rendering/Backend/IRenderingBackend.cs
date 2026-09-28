@@ -37,6 +37,14 @@ public interface IRenderingBackend
     bool VSyncEnabled { get; set; }
 
     /// <summary>
+    ///     Gets or sets the buffering mode used for rendering and presentation.
+    /// </summary>
+    /// <remarks>
+    ///     This value can be changed at runtime.
+    /// </remarks>
+    public BufferingMode BufferingMode { get; set; }
+
+    /// <summary>
     ///     Waits for the rendering backend to accept the next frame.
     /// </summary>
     /// <remarks>
