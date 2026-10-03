@@ -81,7 +81,7 @@ public sealed class SpriteAnimationComponent : Component
     ///     Gets or sets a value indicating whether the animation ignores <see cref="ITimeSystem.TimeScale" /> and always
     ///     advances in real time.
     /// </summary>
-    /// <value><c>true</c> if the animation ignores time scale; <c>false</c> otherwise. The default is <c>false</c>.</value>
+    /// <value><c>true</c> if the animation ignores timescale; <c>false</c> otherwise. The default is <c>false</c>.</value>
     /// <remarks>
     ///     When <c>false</c>, the animation advances using game time (<see cref="TimeStep.DeltaTime" />) which is affected
     ///     by <see cref="ITimeSystem.TimeScale" />. Setting <see cref="ITimeSystem.TimeScale" /> to <c>0.0</c> will pause
@@ -250,7 +250,12 @@ public sealed class SpriteAnimationComponent : Component
         if (reachedTheEnd)
         {
             var currentAnimationName = CurrentAnimation.Value.Name;
-            OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
+
+            if (AnimationCompleted is not null)
+            {
+                var eventArgs = new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation);
+                AnimationCompleted(this, eventArgs);
+            }
         }
     }
 
@@ -276,11 +281,6 @@ public sealed class SpriteAnimationComponent : Component
         }
 
         return animationFrames[^1].Sprite;
-    }
-
-    private void OnAnimationCompleted(SpriteAnimationCompletedEventArgs e)
-    {
-        AnimationCompleted?.Invoke(this, e);
     }
 
     private void ThrowIfThereIsNoCurrentAnimation()
@@ -321,5 +321,5 @@ public sealed class SpriteAnimationCompletedEventArgs : EventArgs
 
 internal sealed class SpriteAnimationComponentFactory : ComponentFactory<SpriteAnimationComponent>
 {
-    protected override SpriteAnimationComponent CreateComponent(Entity entity) => new SpriteAnimationComponent(entity);
+    protected override SpriteAnimationComponent CreateComponent(Entity entity) => new(entity);
 }
