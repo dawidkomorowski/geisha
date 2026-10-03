@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
@@ -95,7 +96,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
         {
             var texture = Substitute.For<ITexture>();
             var sprite = new Sprite(texture, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
-            var frames = new[] { new SpriteAnimationFrame(sprite, 1) };
+            var frames = ImmutableArray.Create(new SpriteAnimationFrame(sprite, 1));
             return new SpriteAnimation(frames, TimeSpan.FromSeconds(1));
         }
     }

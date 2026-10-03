@@ -74,7 +74,7 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
 
             // Assert
             Assert.That(actual.Duration, Is.EqualTo(TimeSpan.FromSeconds(duration)));
-            Assert.That(actual.Frames, Has.Count.EqualTo(3));
+            Assert.That(actual.Frames, Has.Length.EqualTo(3));
             Assert.That(actual.Frames[0].Duration, Is.EqualTo(1));
             Assert.That(actual.Frames[0].Sprite, Is.EqualTo(sprite1));
             Assert.That(actual.Frames[1].Duration, Is.EqualTo(1.5));

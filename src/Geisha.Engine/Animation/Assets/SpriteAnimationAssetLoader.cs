@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Immutable;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.FileSystem;
@@ -28,13 +28,15 @@ namespace Geisha.Engine.Animation.Assets
             if (spriteAnimationAssetContent.Frames == null)
                 throw new InvalidOperationException($"{nameof(SpriteAnimationAssetContent)}.{nameof(SpriteAnimationAssetContent.Frames)} cannot be null.");
 
-            var frames = spriteAnimationAssetContent.Frames.Select(f =>
-            {
-                var sprite = assetStore.GetAsset<Sprite>(new AssetId(f.SpriteAssetId));
-                return new SpriteAnimationFrame(sprite, f.Duration);
-            }).ToArray();
+            var frames = ImmutableArray.CreateBuilder<SpriteAnimationFrame>();
 
-            return new SpriteAnimation(frames, TimeSpan.FromTicks(spriteAnimationAssetContent.DurationTicks));
+            foreach (var frame in spriteAnimationAssetContent.Frames)
+            {
+                var sprite = assetStore.GetAsset<Sprite>(new AssetId(frame.SpriteAssetId));
+                frames.Add(new SpriteAnimationFrame(sprite, frame.Duration));
+            }
+
+            return new SpriteAnimation(frames.ToImmutable(), TimeSpan.FromTicks(spriteAnimationAssetContent.DurationTicks));
         }
 
         public void UnloadAsset(object asset)
