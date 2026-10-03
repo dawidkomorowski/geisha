@@ -60,8 +60,8 @@ public class InputSystemBenchmarks
     private void CleanupInputSystem()
     {
         _scene.RemoveObserver(_inputSystem);
-        _inputSystem = null!;
         _scene = null!;
+        _inputSystem = null!;
     }
 
     private void SetupEntities()
