@@ -16,7 +16,7 @@ public sealed class SpriteAnimation
     /// <param name="duration">Total duration of animation. Duration must be greater than zero.</param>
     public SpriteAnimation(ImmutableArray<SpriteAnimationFrame> frames, TimeSpan duration)
     {
-        if (frames.Length == 0) throw new ArgumentException($"{nameof(SpriteAnimation)} must consist of at least one frame.", nameof(frames));
+        if (frames.IsDefaultOrEmpty) throw new ArgumentException($"{nameof(SpriteAnimation)} must consist of at least one frame.", nameof(frames));
         if (duration.Ticks <= 0) throw new ArgumentOutOfRangeException(nameof(duration), "Value must be greater than zero.");
 
         Duration = duration;
