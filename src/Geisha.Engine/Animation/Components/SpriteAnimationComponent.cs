@@ -260,7 +260,12 @@ public sealed class SpriteAnimationComponent : Component
 
         var animationFrames = CurrentAnimation.Value.Animation.Frames;
 
-        var totalFramesDuration = animationFrames.Sum(animationFrame => animationFrame.Duration);
+        var totalFramesDuration = 0d;
+        foreach (var animationFrame in animationFrames)
+        {
+            totalFramesDuration += animationFrame.Duration;
+        }
+
         var positionInTotalDuration = totalFramesDuration * Position;
 
         var currentFrameEndPosition = 0.0;
