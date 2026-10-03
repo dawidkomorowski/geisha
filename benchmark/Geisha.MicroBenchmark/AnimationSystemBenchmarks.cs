@@ -103,8 +103,8 @@ public class AnimationSystemBenchmarks
 
     private sealed class FakeTexture : ITexture
     {
-        public Vector2 Dimensions { get; }
-        public RuntimeId RuntimeId { get; }
+        public Vector2 Dimensions { get; } = new(64, 64);
+        public RuntimeId RuntimeId { get; } = RuntimeId.Next();
 
         public void Dispose()
         {
