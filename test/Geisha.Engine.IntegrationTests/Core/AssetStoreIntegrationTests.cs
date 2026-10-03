@@ -177,7 +177,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         // Assert
         Assert.That(spriteAnimation, Is.Not.Null);
         Assert.That(spriteAnimation.Duration, Is.EqualTo(TimeSpan.FromSeconds(2)));
-        Assert.That(spriteAnimation.Frames, Has.Count.EqualTo(3));
+        Assert.That(spriteAnimation.Frames, Has.Length.EqualTo(3));
         Assert.That(spriteAnimation.Frames[0].Duration, Is.EqualTo(1));
         Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[0].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1));
         Assert.That(spriteAnimation.Frames[1].Duration, Is.EqualTo(1.5));

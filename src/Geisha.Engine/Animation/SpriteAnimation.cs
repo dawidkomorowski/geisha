@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine.Animation;
@@ -15,20 +14,20 @@ public sealed class SpriteAnimation
     /// </summary>
     /// <param name="frames">Subsequent frames of animation in order of specification. There must be at least one frame.</param>
     /// <param name="duration">Total duration of animation. Duration must be greater than zero.</param>
-    public SpriteAnimation(IReadOnlyCollection<SpriteAnimationFrame> frames, TimeSpan duration)
+    public SpriteAnimation(ImmutableArray<SpriteAnimationFrame> frames, TimeSpan duration)
     {
-        if (frames.Count == 0) throw new ArgumentException($"{nameof(SpriteAnimation)} must consist of at least one frame.", nameof(frames));
+        if (frames.Length == 0) throw new ArgumentException($"{nameof(SpriteAnimation)} must consist of at least one frame.", nameof(frames));
         if (duration.Ticks <= 0) throw new ArgumentOutOfRangeException(nameof(duration), "Value must be greater than zero.");
 
         Duration = duration;
-        Frames = frames.ToList().AsReadOnly();
+        Frames = frames;
     }
 
     /// <summary>
     ///     List of subsequent animation frames.
     /// </summary>
     /// <remarks>Animation is played according to order of frames in this list.</remarks>
-    public IReadOnlyList<SpriteAnimationFrame> Frames { get; }
+    public ImmutableArray<SpriteAnimationFrame> Frames { get; }
 
     /// <summary>
     ///     Total duration of animation.

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
@@ -79,14 +80,14 @@ public class AnimationSystemBenchmarks
 
     private SpriteAnimation CreateAnimation()
     {
-        var frames = new List<SpriteAnimationFrame>();
+        var frames = ImmutableArray.CreateBuilder<SpriteAnimationFrame>();
 
         for (var i = 0; i < 10; i++)
         {
             frames.Add(new SpriteAnimationFrame(CreateSprite(), 1));
         }
 
-        return new SpriteAnimation(frames, TimeSpan.FromSeconds(1));
+        return new SpriteAnimation(frames.ToImmutable(), TimeSpan.FromSeconds(1));
     }
 
     private Sprite CreateSprite()

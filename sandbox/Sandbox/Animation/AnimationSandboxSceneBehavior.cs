@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core;
@@ -146,7 +147,7 @@ public sealed class AnimationSandboxSceneBehaviorFactory : ISceneBehaviorFactory
             // Sprite texture is null since no SpriteRendererComponent is attached — only Position tracking is needed.
             var dummySprite = new Sprite(null!, Vector2.Zero, new Vector2(1, 1), Vector2.Zero, 1);
             var frame = new SpriteAnimationFrame(dummySprite, 1.0);
-            return new SpriteAnimation(new[] { frame }, duration);
+            return new SpriteAnimation(ImmutableArray.Create(frame), duration);
         }
     }
 }
