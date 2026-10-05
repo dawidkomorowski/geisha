@@ -81,7 +81,7 @@ public sealed class SpriteAnimationComponent : Component
     ///     Gets or sets a value indicating whether the animation ignores <see cref="ITimeSystem.TimeScale" /> and always
     ///     advances in real time.
     /// </summary>
-    /// <value><c>true</c> if the animation ignores timescale; <c>false</c> otherwise. The default is <c>false</c>.</value>
+    /// <value><c>true</c> if the animation ignores time scale; <c>false</c> otherwise. The default is <c>false</c>.</value>
     /// <remarks>
     ///     When <c>false</c>, the animation advances using game time (<see cref="TimeStep.DeltaTime" />) which is affected
     ///     by <see cref="ITimeSystem.TimeScale" />. Setting <see cref="ITimeSystem.TimeScale" /> to <c>0.0</c> will pause
