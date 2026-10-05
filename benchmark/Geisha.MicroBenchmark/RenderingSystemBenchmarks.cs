@@ -1,13 +1,16 @@
 using System.IO;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Diagnostics;
 using Geisha.Engine.Rendering.Systems;
+using Geisha.MicroBenchmark.Common;
 using Geisha.TestUtils;
 
 namespace Geisha.MicroBenchmark;
@@ -17,10 +20,12 @@ public class RenderingSystemBenchmarks
 {
     private Scene _scene = null!;
     private RenderingSystem _renderingSystem = null!;
-    private StubRenderingBackend _stubRenderingBackend = new();
+    private StubRenderingBackend _stubRenderingBackend = null!;
 
     private void InitializeRenderingSystem()
     {
+        _stubRenderingBackend = new StubRenderingBackend();
+
         var renderingConfiguration = new RenderingConfiguration();
         var aggregatedDiagnosticInfoProvider = new AggregatedDiagnosticInfoProvider();
         aggregatedDiagnosticInfoProvider.Initialize(Enumerable.Empty<IDiagnosticInfoProvider>());
@@ -44,18 +49,35 @@ public class RenderingSystemBenchmarks
         _scene.RemoveObserver(_renderingSystem);
         _scene = null!;
         _renderingSystem = null!;
+        _stubRenderingBackend = null!;
+    }
+
+    private void CreateSprites()
+    {
+        _stubRenderingBackend.StubContext2D.ExpectedSpriteBatchSize = 10_000;
+
+        for (var i = 0; i < 10_000; i++)
+        {
+            CreateSprite();
+        }
     }
 
     [IterationSetup]
     public void IterationSetup()
     {
         InitializeRenderingSystem();
-        //CreateAnimations();
+        CreateCamera();
+        CreateSprites();
     }
 
     [IterationCleanup]
     public void IterationCleanup()
     {
+        if (_stubRenderingBackend.StubContext2D.DrawSpriteBatchCalls != 600)
+        {
+            BenchKit.ThrowExpectationFailed();
+        }
+
         CleanupRenderingSystem();
     }
 
@@ -69,9 +91,27 @@ public class RenderingSystemBenchmarks
         }
     }
 
+    private void CreateCamera()
+    {
+        var entity = _scene.CreateEntity();
+        entity.CreateComponent<Transform2DComponent>();
+        entity.CreateComponent<CameraComponent>();
+    }
+
+    private void CreateSprite()
+    {
+        var entity = _scene.CreateEntity();
+        entity.CreateComponent<Transform2DComponent>();
+        var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
+        spriteRendererComponent.Sprite = BenchKit.CreateSprite();
+    }
+
     private sealed class StubRenderingBackend : IRenderingBackend
     {
-        public IRenderingContext2D Context2D { get; } = new StubRenderingContext2D();
+        public StubRenderingContext2D StubContext2D { get; } = new();
+
+        // IRenderingBackend implementation
+        public IRenderingContext2D Context2D => StubContext2D;
         public RenderingStatistics Statistics { get; }
         public RenderingBackendInfo Info { get; }
         public bool VSyncEnabled { get; set; }
@@ -94,7 +134,11 @@ public class RenderingSystemBenchmarks
 
     private sealed class StubRenderingContext2D : IRenderingContext2D
     {
-        public Size RenderTargetSize { get; }
+        public int ExpectedSpriteBatchSize { get; set; }
+        public int DrawSpriteBatchCalls { get; set; }
+
+        // IRenderingContext2D implementation
+        public Size RenderTargetSize { get; } = new(1280, 720);
         public ITexture CreateTexture(Stream stream) => throw new System.NotImplementedException();
 
         public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight) =>
@@ -125,7 +169,12 @@ public class RenderingSystemBenchmarks
 
         public void DrawSpriteBatch(SpriteBatch spriteBatch)
         {
-            throw new System.NotImplementedException();
+            if (spriteBatch.Count != ExpectedSpriteBatchSize)
+            {
+                BenchKit.ThrowExpectationFailed();
+            }
+
+            DrawSpriteBatchCalls++;
         }
 
         public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
