@@ -251,10 +251,11 @@ public sealed class SpriteAnimationComponent : Component
         {
             var currentAnimationName = CurrentAnimation.Value.Name;
 
-            if (AnimationCompleted is not null)
+            var animationCompleted = AnimationCompleted;
+            if (animationCompleted is not null)
             {
                 var eventArgs = new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation);
-                AnimationCompleted(this, eventArgs);
+                animationCompleted(this, eventArgs);
             }
         }
     }
