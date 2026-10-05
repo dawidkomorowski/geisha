@@ -250,7 +250,13 @@ public sealed class SpriteAnimationComponent : Component
         if (reachedTheEnd)
         {
             var currentAnimationName = CurrentAnimation.Value.Name;
-            OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
+
+            var animationCompleted = AnimationCompleted;
+            if (animationCompleted is not null)
+            {
+                var eventArgs = new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation);
+                animationCompleted(this, eventArgs);
+            }
         }
     }
 
@@ -260,7 +266,12 @@ public sealed class SpriteAnimationComponent : Component
 
         var animationFrames = CurrentAnimation.Value.Animation.Frames;
 
-        var totalFramesDuration = animationFrames.Sum(animationFrame => animationFrame.Duration);
+        var totalFramesDuration = 0d;
+        foreach (var animationFrame in animationFrames)
+        {
+            totalFramesDuration += animationFrame.Duration;
+        }
+
         var positionInTotalDuration = totalFramesDuration * Position;
 
         var currentFrameEndPosition = 0.0;
@@ -271,11 +282,6 @@ public sealed class SpriteAnimationComponent : Component
         }
 
         return animationFrames[^1].Sprite;
-    }
-
-    private void OnAnimationCompleted(SpriteAnimationCompletedEventArgs e)
-    {
-        AnimationCompleted?.Invoke(this, e);
     }
 
     private void ThrowIfThereIsNoCurrentAnimation()
@@ -316,5 +322,5 @@ public sealed class SpriteAnimationCompletedEventArgs : EventArgs
 
 internal sealed class SpriteAnimationComponentFactory : ComponentFactory<SpriteAnimationComponent>
 {
-    protected override SpriteAnimationComponent CreateComponent(Entity entity) => new SpriteAnimationComponent(entity);
+    protected override SpriteAnimationComponent CreateComponent(Entity entity) => new(entity);
 }

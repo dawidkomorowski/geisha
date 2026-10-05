@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Animation;
@@ -335,7 +336,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
                 var texture = Substitute.For<ITexture>();
                 var sprite = new Sprite(texture, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
                 return new SpriteAnimationFrame(sprite, frameDuration);
-            }).ToList();
+            }).ToImmutableArray();
 
             return new SpriteAnimation(frames, duration);
         }
