@@ -163,7 +163,7 @@ internal sealed class Renderer : IRenderNodeVisitor
             foreach (var renderNode in sortingLayer.GetRenderNodesSpan())
             {
                 if (renderNode.ShouldSkipRendering()) continue;
-                if (!boundingRectangleOfView.Overlaps(renderNode.GetCachedBoundingRectangle())) continue;
+                if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
 
                 _sortingBuffer.Add(renderNode);
             }
@@ -207,6 +207,6 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     private Matrix3x3 ComputeNodeTransform(RenderNode node)
     {
-        return _cameraTransformationMatrix * node.GetCachedWorldTransform();
+        return _cameraTransformationMatrix * node.GetWorldTransform();
     }
 }

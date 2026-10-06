@@ -38,7 +38,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public override BatchId BatchId => _batchId;
 
-        public override AxisAlignedRectangle GetBoundingRectangle()
+        protected override AxisAlignedRectangle ComputeBoundingRectangle()
         {
             if (_spriteRendererComponent.Sprite == null)
             {

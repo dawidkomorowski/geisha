@@ -2,80 +2,79 @@
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Engine.Rendering.Systems
+namespace Geisha.Engine.Rendering.Systems;
+
+internal interface IEllipseNode : IRenderNode
 {
-    internal interface IEllipseNode : IRenderNode
+    double RadiusX { get; set; }
+    double RadiusY { get; set; }
+    Color Color { get; set; }
+    bool FillInterior { get; set; }
+}
+
+internal sealed class DetachedEllipseNode : DetachedRenderNode, IEllipseNode
+{
+    public double RadiusX { get; set; }
+    public double RadiusY { get; set; }
+    public Color Color { get; set; }
+    public bool FillInterior { get; set; }
+}
+
+internal sealed class EllipseNode : RenderNode, IEllipseNode
+{
+    private readonly EllipseRendererComponent _ellipseRendererComponent;
+
+    public EllipseNode(Transform2DComponent transform, EllipseRendererComponent ellipseRendererComponent)
+        : base(transform, ellipseRendererComponent)
     {
-        double RadiusX { get; set; }
-        double RadiusY { get; set; }
-        Color Color { get; set; }
-        bool FillInterior { get; set; }
+        _ellipseRendererComponent = ellipseRendererComponent;
+        CopyData(_ellipseRendererComponent.EllipseNode, this);
+        _ellipseRendererComponent.EllipseNode = this;
     }
 
-    internal sealed class DetachedEllipseNode : DetachedRenderNode, IEllipseNode
+    protected override AxisAlignedRectangle ComputeBoundingRectangle()
     {
-        public double RadiusX { get; set; }
-        public double RadiusY { get; set; }
-        public Color Color { get; set; }
-        public bool FillInterior { get; set; }
+        var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
+        var quad = new Ellipse(_ellipseRendererComponent.RadiusX, _ellipseRendererComponent.RadiusY).GetBoundingRectangle().ToQuad();
+        return quad.Transform(transform).GetBoundingRectangle();
     }
 
-    internal sealed class EllipseNode : RenderNode, IEllipseNode
+    public override void Accept(IRenderNodeVisitor visitor)
     {
-        private readonly EllipseRendererComponent _ellipseRendererComponent;
+        visitor.Visit(this);
+    }
 
-        public EllipseNode(Transform2DComponent transform, EllipseRendererComponent ellipseRendererComponent)
-            : base(transform, ellipseRendererComponent)
+    #region Implementation of IEllipseNode
+
+    public double RadiusX { get; set; }
+    public double RadiusY { get; set; }
+    public Color Color { get; set; }
+    public bool FillInterior { get; set; }
+
+    #endregion
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (disposing)
         {
-            _ellipseRendererComponent = ellipseRendererComponent;
-            CopyData(_ellipseRendererComponent.EllipseNode, this);
-            _ellipseRendererComponent.EllipseNode = this;
+            var detachedEllipseNode = new DetachedEllipseNode();
+            CopyData(this, detachedEllipseNode);
+            _ellipseRendererComponent.EllipseNode = detachedEllipseNode;
         }
+    }
 
-        public override AxisAlignedRectangle GetBoundingRectangle()
-        {
-            var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
-            var quad = new Ellipse(_ellipseRendererComponent.RadiusX, _ellipseRendererComponent.RadiusY).GetBoundingRectangle().ToQuad();
-            return quad.Transform(transform).GetBoundingRectangle();
-        }
+    protected override void CopyData(IRenderNode source, IRenderNode target)
+    {
+        base.CopyData(source, target);
 
-        public override void Accept(IRenderNodeVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        var sourceEllipseNode = (IEllipseNode)source;
+        var targetEllipseNode = (IEllipseNode)target;
 
-        #region Implementation of IEllipseNode
-
-        public double RadiusX { get; set; }
-        public double RadiusY { get; set; }
-        public Color Color { get; set; }
-        public bool FillInterior { get; set; }
-
-        #endregion
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-                var detachedEllipseNode = new DetachedEllipseNode();
-                CopyData(this, detachedEllipseNode);
-                _ellipseRendererComponent.EllipseNode = detachedEllipseNode;
-            }
-        }
-
-        protected override void CopyData(IRenderNode source, IRenderNode target)
-        {
-            base.CopyData(source, target);
-
-            var sourceEllipseNode = (IEllipseNode)source;
-            var targetEllipseNode = (IEllipseNode)target;
-
-            targetEllipseNode.RadiusX = sourceEllipseNode.RadiusX;
-            targetEllipseNode.RadiusY = sourceEllipseNode.RadiusY;
-            targetEllipseNode.Color = sourceEllipseNode.Color;
-            targetEllipseNode.FillInterior = sourceEllipseNode.FillInterior;
-        }
+        targetEllipseNode.RadiusX = sourceEllipseNode.RadiusX;
+        targetEllipseNode.RadiusY = sourceEllipseNode.RadiusY;
+        targetEllipseNode.Color = sourceEllipseNode.Color;
+        targetEllipseNode.FillInterior = sourceEllipseNode.FillInterior;
     }
 }
