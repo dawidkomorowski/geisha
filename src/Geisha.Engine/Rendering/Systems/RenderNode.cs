@@ -28,6 +28,12 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private string _sortingLayerName = string.Empty;
 
+        // TODO: This needs to be exposed to user code.
+        private bool _allowCaching = true;
+        private bool _isCached;
+        private AxisAlignedRectangle _cachedBoundingRectangle;
+        private Matrix3x3 _cachedMatrix;
+
         protected RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
         {
             Transform = transform;
@@ -64,6 +70,45 @@ namespace Geisha.Engine.Rendering.Systems
 
         public abstract void Accept(IRenderNodeVisitor visitor);
         public virtual bool ShouldSkipRendering() => !Renderer2DComponent.Visible;
+
+        // TODO: GetCached* is not the best name. Figure out some alternatives.
+        public AxisAlignedRectangle GetCachedBoundingRectangle()
+        {
+            if (!_allowCaching)
+            {
+                return GetBoundingRectangle();
+            }
+
+            if (_isCached)
+            {
+                return _cachedBoundingRectangle;
+            }
+
+            _cachedMatrix = Transform.ComputeInterpolatedWorldTransformMatrix();
+            _cachedBoundingRectangle = GetBoundingRectangle();
+            _isCached = true;
+
+            return _cachedBoundingRectangle;
+        }
+
+        public Matrix3x3 GetCachedWorldTransform()
+        {
+            if (!_allowCaching)
+            {
+                return Transform.ComputeInterpolatedWorldTransformMatrix();
+            }
+
+            if (_isCached)
+            {
+                return _cachedMatrix;
+            }
+
+            _cachedMatrix = Transform.ComputeInterpolatedWorldTransformMatrix();
+            _cachedBoundingRectangle = GetBoundingRectangle();
+            _isCached = true;
+
+            return _cachedMatrix;
+        }
 
         public void Dispose()
         {
