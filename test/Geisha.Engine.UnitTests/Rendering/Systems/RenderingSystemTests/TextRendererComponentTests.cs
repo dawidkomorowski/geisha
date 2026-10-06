@@ -1,6 +1,5 @@
 ﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using NSubstitute;
