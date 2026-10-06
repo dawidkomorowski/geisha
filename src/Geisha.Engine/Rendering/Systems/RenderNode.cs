@@ -100,11 +100,11 @@ internal abstract class RenderNode : IRenderNode, IDisposable
         SortingLayerNameChangedCallback = null;
     }
 
-    // TODO: Include IsStatic.
     protected virtual void CopyData(IRenderNode source, IRenderNode target)
     {
         target.Visible = source.Visible;
         target.SortingLayerName = source.SortingLayerName;
         target.OrderInLayer = source.OrderInLayer;
+        target.IsStatic = source.IsStatic;
     }
 }

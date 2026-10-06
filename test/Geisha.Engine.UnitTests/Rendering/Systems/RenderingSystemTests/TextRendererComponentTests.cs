@@ -20,6 +20,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // TextRendererComponent
         const string text = "Sample text";
         const string fontFamilyName = "Calibri";
@@ -42,6 +43,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Visible = visible;
         textRendererComponent.SortingLayerName = sortingLayerName;
         textRendererComponent.OrderInLayer = orderInLayer;
+        textRendererComponent.IsStatic = isStatic;
         // TextRendererComponent
         textRendererComponent.Text = text;
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -66,6 +68,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         Assert.That(textRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(textRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(textRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(textRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // TextRendererComponent
         Assert.That(textRendererComponent.Text, Is.EqualTo(text));
         Assert.That(textRendererComponent.FontFamilyName, Is.EqualTo(fontFamilyName));
@@ -87,6 +90,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // TextRendererComponent
         const string text = "Sample text";
         const string fontFamilyName = "Calibri";
@@ -111,6 +115,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Visible = visible;
         textRendererComponent.SortingLayerName = sortingLayerName;
         textRendererComponent.OrderInLayer = orderInLayer;
+        textRendererComponent.IsStatic = isStatic;
         // TextRendererComponent
         textRendererComponent.Text = text;
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -135,6 +140,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         Assert.That(textRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(textRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(textRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(textRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // TextRendererComponent
         Assert.That(textRendererComponent.Text, Is.EqualTo(text));
         Assert.That(textRendererComponent.FontFamilyName, Is.EqualTo(fontFamilyName));

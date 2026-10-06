@@ -18,6 +18,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // RectangleRendererComponent
         var dimensions = new Vector2(1, 2);
         var color = Color.Red;
@@ -33,6 +34,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.Visible = visible;
         rectangleRendererComponent.SortingLayerName = sortingLayerName;
         rectangleRendererComponent.OrderInLayer = orderInLayer;
+        rectangleRendererComponent.IsStatic = isStatic;
         // RectangleRendererComponent
         rectangleRendererComponent.Dimensions = dimensions;
         rectangleRendererComponent.Color = color;
@@ -50,6 +52,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(rectangleRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(rectangleRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(rectangleRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // RectangleRendererComponent
         Assert.That(rectangleRendererComponent.Dimensions, Is.EqualTo(dimensions));
         Assert.That(rectangleRendererComponent.Color, Is.EqualTo(color));
@@ -64,6 +67,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // RectangleRendererComponent
         var dimensions = new Vector2(1, 2);
         var color = Color.Red;
@@ -80,6 +84,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.Visible = visible;
         rectangleRendererComponent.SortingLayerName = sortingLayerName;
         rectangleRendererComponent.OrderInLayer = orderInLayer;
+        rectangleRendererComponent.IsStatic = isStatic;
         // RectangleRendererComponent
         rectangleRendererComponent.Dimensions = dimensions;
         rectangleRendererComponent.Color = color;
@@ -97,6 +102,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(rectangleRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(rectangleRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(rectangleRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // RectangleRendererComponent
         Assert.That(rectangleRendererComponent.Dimensions, Is.EqualTo(dimensions));
         Assert.That(rectangleRendererComponent.Color, Is.EqualTo(color));

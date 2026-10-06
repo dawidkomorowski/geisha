@@ -97,7 +97,6 @@ namespace Geisha.Engine.Rendering.Components
         // TODO: Add functional tests.
         // TODO: No test failed with forced caching.
         // TODO: Add serialization tests.
-        // TODO: Add synchronization tests.
         public bool IsStatic
         {
             get => RenderNode.IsStatic;

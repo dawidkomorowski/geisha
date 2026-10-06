@@ -18,6 +18,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // EllipseRendererComponent
         const double radiusX = 10;
         const double radiusY = 20;
@@ -34,6 +35,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         ellipseRendererComponent.Visible = visible;
         ellipseRendererComponent.SortingLayerName = sortingLayerName;
         ellipseRendererComponent.OrderInLayer = orderInLayer;
+        ellipseRendererComponent.IsStatic = isStatic;
         // EllipseRendererComponent
         ellipseRendererComponent.RadiusX = radiusX;
         ellipseRendererComponent.RadiusY = radiusY;
@@ -52,6 +54,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         Assert.That(ellipseRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(ellipseRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(ellipseRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(ellipseRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // EllipseRendererComponent
         Assert.That(ellipseRendererComponent.RadiusX, Is.EqualTo(radiusX));
         Assert.That(ellipseRendererComponent.RadiusY, Is.EqualTo(radiusY));
@@ -67,6 +70,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // EllipseRendererComponent
         const double radiusX = 10;
         const double radiusY = 20;
@@ -84,6 +88,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         ellipseRendererComponent.Visible = visible;
         ellipseRendererComponent.SortingLayerName = sortingLayerName;
         ellipseRendererComponent.OrderInLayer = orderInLayer;
+        ellipseRendererComponent.IsStatic = isStatic;
         // EllipseRendererComponent
         ellipseRendererComponent.RadiusX = radiusX;
         ellipseRendererComponent.RadiusY = radiusY;
@@ -102,6 +107,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         Assert.That(ellipseRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(ellipseRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(ellipseRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(ellipseRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // EllipseRendererComponent
         Assert.That(ellipseRendererComponent.RadiusX, Is.EqualTo(radiusX));
         Assert.That(ellipseRendererComponent.RadiusY, Is.EqualTo(radiusY));
