@@ -633,6 +633,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         textRendererComponent1.Visible = true;
         textRendererComponent1.SortingLayerName = "Layer1";
         textRendererComponent1.OrderInLayer = 1;
+        textRendererComponent1.IsStatic = true;
 
         var entity2 = CreateEntity(scene, "Entity2");
         var textRendererComponent2 = entity2.CreateComponent<TextRendererComponent>();
@@ -649,6 +650,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         textRendererComponent2.Visible = false;
         textRendererComponent2.SortingLayerName = "Layer2";
         textRendererComponent2.OrderInLayer = -5;
+        textRendererComponent2.IsStatic = false;
 
         // Act
         SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -673,6 +675,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent1.Visible, Is.EqualTo(textRendererComponent1.Visible));
         Assert.That(loadedComponent1.SortingLayerName, Is.EqualTo(textRendererComponent1.SortingLayerName));
         Assert.That(loadedComponent1.OrderInLayer, Is.EqualTo(textRendererComponent1.OrderInLayer));
+        Assert.That(loadedComponent1.IsStatic, Is.EqualTo(textRendererComponent1.IsStatic));
 
         var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
         AssertEntitiesAreEqual(loadedEntity2, entity2);
@@ -690,6 +693,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent2.Visible, Is.EqualTo(textRendererComponent2.Visible));
         Assert.That(loadedComponent2.SortingLayerName, Is.EqualTo(textRendererComponent2.SortingLayerName));
         Assert.That(loadedComponent2.OrderInLayer, Is.EqualTo(textRendererComponent2.OrderInLayer));
+        Assert.That(loadedComponent2.IsStatic, Is.EqualTo(textRendererComponent2.IsStatic));
     }
 
     [Test]
@@ -706,6 +710,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         spriteRendererComponent1.Visible = true;
         spriteRendererComponent1.SortingLayerName = "Layer1";
         spriteRendererComponent1.OrderInLayer = 1;
+        spriteRendererComponent1.IsStatic = true;
 
         var entity2 = CreateEntity(scene, "Entity2");
         var spriteRendererComponent2 = entity2.CreateComponent<SpriteRendererComponent>();
@@ -715,6 +720,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         spriteRendererComponent2.Visible = false;
         spriteRendererComponent2.SortingLayerName = "Layer2";
         spriteRendererComponent2.OrderInLayer = -5;
+        spriteRendererComponent2.IsStatic = false;
 
         // Act
         SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -733,6 +739,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent1.Visible, Is.EqualTo(spriteRendererComponent1.Visible));
         Assert.That(loadedComponent1.SortingLayerName, Is.EqualTo(spriteRendererComponent1.SortingLayerName));
         Assert.That(loadedComponent1.OrderInLayer, Is.EqualTo(spriteRendererComponent1.OrderInLayer));
+        Assert.That(loadedComponent1.IsStatic, Is.EqualTo(spriteRendererComponent1.IsStatic));
 
         var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
         AssertEntitiesAreEqual(loadedEntity2, entity2);
@@ -744,6 +751,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent2.Visible, Is.EqualTo(spriteRendererComponent2.Visible));
         Assert.That(loadedComponent2.SortingLayerName, Is.EqualTo(spriteRendererComponent2.SortingLayerName));
         Assert.That(loadedComponent2.OrderInLayer, Is.EqualTo(spriteRendererComponent2.OrderInLayer));
+        Assert.That(loadedComponent2.IsStatic, Is.EqualTo(spriteRendererComponent2.IsStatic));
     }
 
     [Test]
@@ -760,6 +768,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         rectangleRendererComponent1.Visible = true;
         rectangleRendererComponent1.SortingLayerName = "Layer1";
         rectangleRendererComponent1.OrderInLayer = 1;
+        rectangleRendererComponent1.IsStatic = true;
 
         var entity2 = CreateEntity(scene, "Entity2");
         var rectangleRendererComponent2 = entity2.CreateComponent<RectangleRendererComponent>();
@@ -769,6 +778,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         rectangleRendererComponent2.Visible = false;
         rectangleRendererComponent2.SortingLayerName = "Layer2";
         rectangleRendererComponent2.OrderInLayer = -5;
+        rectangleRendererComponent2.IsStatic = false;
 
         // Act
         SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -786,6 +796,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent1.Visible, Is.EqualTo(rectangleRendererComponent1.Visible));
         Assert.That(loadedComponent1.SortingLayerName, Is.EqualTo(rectangleRendererComponent1.SortingLayerName));
         Assert.That(loadedComponent1.OrderInLayer, Is.EqualTo(rectangleRendererComponent1.OrderInLayer));
+        Assert.That(loadedComponent1.IsStatic, Is.EqualTo(rectangleRendererComponent1.IsStatic));
 
         var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
         AssertEntitiesAreEqual(loadedEntity2, entity2);
@@ -796,6 +807,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent2.Visible, Is.EqualTo(rectangleRendererComponent2.Visible));
         Assert.That(loadedComponent2.SortingLayerName, Is.EqualTo(rectangleRendererComponent2.SortingLayerName));
         Assert.That(loadedComponent2.OrderInLayer, Is.EqualTo(rectangleRendererComponent2.OrderInLayer));
+        Assert.That(loadedComponent2.IsStatic, Is.EqualTo(rectangleRendererComponent2.IsStatic));
     }
 
     [Test]
@@ -813,6 +825,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         ellipseRendererComponent1.Visible = true;
         ellipseRendererComponent1.SortingLayerName = "Layer1";
         ellipseRendererComponent1.OrderInLayer = 1;
+        ellipseRendererComponent1.IsStatic = true;
 
         var entity2 = CreateEntity(scene, "Entity2");
         var ellipseRendererComponent2 = entity2.CreateComponent<EllipseRendererComponent>();
@@ -823,6 +836,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         ellipseRendererComponent2.Visible = false;
         ellipseRendererComponent2.SortingLayerName = "Layer2";
         ellipseRendererComponent2.OrderInLayer = -5;
+        ellipseRendererComponent2.IsStatic = false;
 
         // Act
         SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -841,6 +855,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent1.Visible, Is.EqualTo(ellipseRendererComponent1.Visible));
         Assert.That(loadedComponent1.SortingLayerName, Is.EqualTo(ellipseRendererComponent1.SortingLayerName));
         Assert.That(loadedComponent1.OrderInLayer, Is.EqualTo(ellipseRendererComponent1.OrderInLayer));
+        Assert.That(loadedComponent1.IsStatic, Is.EqualTo(ellipseRendererComponent1.IsStatic));
 
         var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
         AssertEntitiesAreEqual(loadedEntity2, entity2);
@@ -852,6 +867,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent2.Visible, Is.EqualTo(ellipseRendererComponent2.Visible));
         Assert.That(loadedComponent2.SortingLayerName, Is.EqualTo(ellipseRendererComponent2.SortingLayerName));
         Assert.That(loadedComponent2.OrderInLayer, Is.EqualTo(ellipseRendererComponent2.OrderInLayer));
+        Assert.That(loadedComponent2.IsStatic, Is.EqualTo(ellipseRendererComponent2.IsStatic));
     }
 
     #endregion
