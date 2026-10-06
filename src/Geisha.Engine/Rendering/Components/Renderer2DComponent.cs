@@ -94,7 +94,6 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         // TODO: Add documentation.
-        // TODO: No test failed with forced caching.
         public bool IsStatic
         {
             get => RenderNode.IsStatic;
