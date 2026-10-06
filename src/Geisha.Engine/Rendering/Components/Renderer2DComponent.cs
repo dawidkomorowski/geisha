@@ -93,7 +93,20 @@ namespace Geisha.Engine.Rendering.Components
             set => RenderNode.OrderInLayer = value;
         }
 
-        // TODO: Add documentation.
+        /// <summary>
+        ///     Gets or sets whether this renderer uses a cached world transform and bounding rectangle.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This is a performance tuning option intended for renderers whose entities do not move. Caching can avoid
+        ///         repeatedly computing the world transform and bounding rectangle.
+        ///     </para>
+        ///     <para>
+        ///         While <c>true</c>, changes to the entity's transform are not reflected by this renderer. Set this property
+        ///         to <c>false</c> to use the current transform and bounding rectangle; set it to <c>true</c> again to cache
+        ///         their current values.
+        ///     </para>
+        /// </remarks>
         public bool IsStatic
         {
             get => RenderNode.IsStatic;
