@@ -16,6 +16,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const bool visible = false;
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
+            const bool isStatic = true;
             const string text = "some text";
             const string fontFamilyName = "Arial";
             var fontSize = FontSize.FromDips(12.34);
@@ -33,6 +34,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.Visible = visible;
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
+                component.IsStatic = isStatic;
                 component.Text = text;
                 component.FontFamilyName = fontFamilyName;
                 component.FontSize = fontSize;
@@ -49,6 +51,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.Visible, Is.EqualTo(visible));
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
+            Assert.That(actual.IsStatic, Is.EqualTo(isStatic));
             Assert.That(actual.Text, Is.EqualTo(text));
             Assert.That(actual.FontFamilyName, Is.EqualTo(fontFamilyName));
             Assert.That(actual.FontSize, Is.EqualTo(fontSize));

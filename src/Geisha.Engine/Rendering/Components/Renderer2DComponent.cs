@@ -93,15 +93,12 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         // TODO: Add documentation.
-        // TODO: Add to serialization.
         // TODO: No test failed with forced caching.
-        // TODO: Add serialization tests.
         public bool IsStatic
         {
             get => RenderNode.IsStatic;
             set => RenderNode.IsStatic = value;
         }
-
 
         /// <summary>
         ///     Gets axis aligned bounding rectangle in global coordinates.
@@ -126,6 +123,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteBool("Visible", Visible);
             writer.WriteString("SortingLayerName", SortingLayerName);
             writer.WriteInt("OrderInLayer", OrderInLayer);
+            writer.WriteBool("IsStatic", IsStatic);
         }
 
         /// <inheritdoc />
@@ -136,6 +134,7 @@ namespace Geisha.Engine.Rendering.Components
             SortingLayerName = reader.ReadString("SortingLayerName") ??
                                throw new InvalidOperationException("SortingLayerName cannot be null.");
             OrderInLayer = reader.ReadInt("OrderInLayer");
+            IsStatic = reader.ReadBool("IsStatic");
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const bool visible = false;
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
+            const bool isStatic = true;
             const double radiusX = 1.23;
             const double radiusY = 4.56;
             var color = Color.FromArgb(1, 2, 3, 4);
@@ -26,6 +27,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.Visible = visible;
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
+                component.IsStatic = isStatic;
                 component.RadiusX = radiusX;
                 component.RadiusY = radiusY;
                 component.Color = color;
@@ -36,6 +38,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.Visible, Is.EqualTo(visible));
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
+            Assert.That(actual.IsStatic, Is.EqualTo(isStatic));
             Assert.That(actual.RadiusX, Is.EqualTo(radiusX));
             Assert.That(actual.RadiusY, Is.EqualTo(radiusY));
             Assert.That(actual.Color, Is.EqualTo(color));

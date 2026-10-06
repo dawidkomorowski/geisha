@@ -19,6 +19,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
             const double opacity = 0.5;
+            const bool isStatic = true;
             const BitmapInterpolationMode bitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
 
             var texture = Substitute.For<ITexture>();
@@ -34,6 +35,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.Visible = visible;
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
+                component.IsStatic = isStatic;
                 component.Sprite = sprite;
                 component.Opacity = opacity;
                 component.BitmapInterpolationMode = bitmapInterpolationMode;
@@ -43,6 +45,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.Visible, Is.EqualTo(visible));
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
+            Assert.That(actual.IsStatic, Is.EqualTo(isStatic));
             Assert.That(actual.Sprite, Is.EqualTo(sprite));
             Assert.That(actual.Opacity, Is.EqualTo(opacity));
             Assert.That(actual.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode));
@@ -55,6 +58,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const bool visible = false;
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
+            const bool isStatic = true;
             const double opacity = 0.5;
             const BitmapInterpolationMode bitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
 
@@ -64,6 +68,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.Visible = visible;
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
+                component.IsStatic = isStatic;
                 component.Sprite = null;
                 component.Opacity = opacity;
                 component.BitmapInterpolationMode = bitmapInterpolationMode;
@@ -73,6 +78,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.Visible, Is.EqualTo(visible));
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
+            Assert.That(actual.IsStatic, Is.EqualTo(isStatic));
             Assert.That(actual.Sprite, Is.Null);
             Assert.That(actual.Opacity, Is.EqualTo(opacity));
             Assert.That(actual.BitmapInterpolationMode, Is.EqualTo(bitmapInterpolationMode));
