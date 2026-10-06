@@ -26,6 +26,7 @@ namespace Geisha.Engine.Rendering.Components
             Visible = true;
             SortingLayerName = RenderingConfiguration.DefaultSortingLayerName;
             OrderInLayer = 0;
+            IsStatic = false;
         }
 
         private protected IRenderNode RenderNode { get; set; }
