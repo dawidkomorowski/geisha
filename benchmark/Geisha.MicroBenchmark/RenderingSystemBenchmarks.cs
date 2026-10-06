@@ -52,13 +52,13 @@ public class RenderingSystemBenchmarks
         _stubRenderingBackend = null!;
     }
 
-    private void CreateSprites()
+    private void CreateStaticSprites()
     {
         _stubRenderingBackend.StubContext2D.ExpectedSpriteBatchSize = 10_000;
 
         for (var i = 0; i < 10_000; i++)
         {
-            CreateSprite();
+            CreateStaticSprite();
         }
     }
 
@@ -67,7 +67,7 @@ public class RenderingSystemBenchmarks
     {
         InitializeRenderingSystem();
         CreateCamera();
-        CreateSprites();
+        CreateStaticSprites();
     }
 
     [IterationCleanup]
@@ -98,12 +98,13 @@ public class RenderingSystemBenchmarks
         entity.CreateComponent<CameraComponent>();
     }
 
-    private void CreateSprite()
+    private void CreateStaticSprite()
     {
         var entity = _scene.CreateEntity();
         entity.CreateComponent<Transform2DComponent>();
         var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
         spriteRendererComponent.Sprite = BenchKit.CreateSprite();
+        spriteRendererComponent.IsStatic = true;
     }
 
     private sealed class StubRenderingBackend : IRenderingBackend
