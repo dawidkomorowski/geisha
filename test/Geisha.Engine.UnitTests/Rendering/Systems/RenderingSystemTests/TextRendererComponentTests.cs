@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using NSubstitute;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -437,6 +438,54 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawTextLayout_WithCachedTransform_WhenTextRendererIsStatic()
+    {
+        // Arrange
+        const string text = "Sample text";
+        const string fontFamilyName = "Calibri";
+        var fontSize = FontSize.FromDips(20);
+        var color = Color.Red;
+        const double maxWidth = 200;
+        const double maxHeight = 400;
+        const TextAlignment textAlignment = TextAlignment.Center;
+        const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+        var pivot = new Vector2(100, 200);
+        const bool clipToLayoutBox = true;
+
+        var getTextLayout = MockCreateTextLayout();
+
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var (entity, textRendererComponent) = context.AddText();
+
+        textRendererComponent.FontFamilyName = fontFamilyName;
+        textRendererComponent.FontSize = fontSize;
+        textRendererComponent.Color = color;
+        textRendererComponent.MaxWidth = maxWidth;
+        textRendererComponent.MaxHeight = maxHeight;
+        textRendererComponent.TextAlignment = textAlignment;
+        textRendererComponent.ParagraphAlignment = paragraphAlignment;
+        textRendererComponent.Pivot = pivot;
+        textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
+        // Force recreation of ITextLayout
+        textRendererComponent.Text = text;
+
+        var transformMatrix = entity.GetTransformMatrix();
+
+        textRendererComponent.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        var textLayout = getTextLayout();
+        textLayout.Received(1).TextAlignment = textAlignment;
+        textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
+        RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, transformMatrix, clipToLayoutBox);
+    }
+
+    [Test]
     public void TextRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
@@ -552,6 +601,43 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
+    }
+
+    [Test]
+    public void TextRendererComponent_BoundingRectangle_ShouldReturnCachedValue_WhenTextRendererIsStatic()
+    {
+        // Arrange
+        var textMetrics = new TextMetrics
+        {
+            Left = 0,
+            Top = 0,
+            Width = 100,
+            Height = 200,
+            LayoutWidth = 150,
+            LayoutHeight = 250,
+            LineCount = 10
+        };
+        var textLayout = Substitute.For<ITextLayout>();
+        textLayout.Metrics.Returns(textMetrics);
+
+        RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+            .Returns(textLayout);
+
+        var context = CreateRenderingTestContext();
+        var (entity, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        textRendererComponent.MaxWidth = 150;
+        textRendererComponent.MaxHeight = 250;
+        textRendererComponent.Pivot = new Vector2(50, 100);
+
+        textRendererComponent.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        var actual = textRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
     }
 
     [Test]

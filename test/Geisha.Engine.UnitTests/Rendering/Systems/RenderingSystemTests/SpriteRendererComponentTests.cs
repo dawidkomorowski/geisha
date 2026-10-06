@@ -263,6 +263,25 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawSprite_WithCachedTransform_WhenSpriteRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddSprite();
+        var transformMatrix = entity.GetTransformMatrix();
+
+        entity.GetComponent<SpriteRendererComponent>().IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), transformMatrix, entity.GetOpacity());
+    }
+
+    [Test]
     public void RenderScene_ShouldDrawSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTexture()
     {
         // Arrange
@@ -747,5 +766,24 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
+    }
+
+    [Test]
+    public void SpriteRendererComponent_BoundingRectangle_ShouldReturnCachedValue_WhenSpriteRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddSprite(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+
+        entity.GetComponent<SpriteRendererComponent>().IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        var actual = spriteRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
     }
 }

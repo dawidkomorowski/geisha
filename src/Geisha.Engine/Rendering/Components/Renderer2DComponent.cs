@@ -94,7 +94,6 @@ namespace Geisha.Engine.Rendering.Components
 
         // TODO: Add documentation.
         // TODO: Add to serialization.
-        // TODO: Add functional tests.
         // TODO: No test failed with forced caching.
         // TODO: Add serialization tests.
         public bool IsStatic

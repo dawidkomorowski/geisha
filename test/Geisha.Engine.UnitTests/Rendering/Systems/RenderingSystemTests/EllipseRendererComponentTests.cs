@@ -240,6 +240,27 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawEllipse_WithCachedTransform_WhenEllipseRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddEllipse();
+        var transformMatrix = entity.GetTransformMatrix();
+
+        entity.GetComponent<EllipseRendererComponent>().IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
+        RenderingContext2D.Received(1).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
+            ellipseRenderer.FillInterior, transformMatrix);
+    }
+
+    [Test]
     public void EllipseRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
@@ -301,5 +322,24 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
+    }
+
+    [Test]
+    public void EllipseRendererComponent_BoundingRectangle_ShouldReturnCachedValue_WhenEllipseRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddEllipse(50, 100, new Vector2(10, 20), 0, new Vector2(2, 2));
+        var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
+
+        entity.GetComponent<EllipseRendererComponent>().IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        var actual = ellipseRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
     }
 }
