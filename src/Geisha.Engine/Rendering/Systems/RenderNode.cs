@@ -29,6 +29,7 @@ namespace Geisha.Engine.Rendering.Systems
         private string _sortingLayerName = string.Empty;
 
         // TODO: This needs to be exposed to user code.
+        // TODO: No test failed with forced caching.
         private bool _allowCaching = true;
         private bool _isCached;
         private AxisAlignedRectangle _cachedBoundingRectangle;
