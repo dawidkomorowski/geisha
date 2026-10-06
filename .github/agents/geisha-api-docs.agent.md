@@ -39,6 +39,7 @@ Your job is to generate, review, and improve documentation for the public API of
 - For shared abstractions, document only behavior guaranteed by the abstraction. Do not promote implementation details to the abstraction contract solely because they are present in one implementation. When a concrete public implementation adds observable platform-specific behavior beyond that contract, document it on the concrete member and preserve the shared contract through <inheritdoc /> where supported.
 - Keep summaries focused on normal behavior. Use <remarks> for uncommon caveats that are relevant to callers but do not define the member's primary purpose.
 - For stateful operations, document when callers should invoke them and how inputs relate to surrounding engine state when supported by the code. Do not expose implementation mechanisms as API guarantees.
+- For stateful performance toggles, document what each state does and distinguish disabling the optimization from refreshing or rebuilding its cached state. Clarify which transition makes current values observable and which captures them again; avoid implying callers must toggle off and on merely to use current values.
 - For hardware- or driver-specific workarounds, identify known affected environments as observations rather than universal vendor behavior. Describe the user-visible symptom, activation condition, default, and cost; avoid asserting an internal driver cause unless it is verified.
 
 ## Reviewing Documentation
