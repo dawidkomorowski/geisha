@@ -12,6 +12,7 @@ internal interface IRenderNode
     bool Visible { get; set; }
     string SortingLayerName { get; set; }
     int OrderInLayer { get; set; }
+    bool IsStatic { get; set; }
     AxisAlignedRectangle GetBoundingRectangle();
 }
 
@@ -21,6 +22,7 @@ internal abstract class DetachedRenderNode : IRenderNode
     public bool Visible { get; set; }
     public string SortingLayerName { get; set; } = string.Empty;
     public int OrderInLayer { get; set; }
+    public bool IsStatic { get; set; }
     public AxisAlignedRectangle GetBoundingRectangle() => default;
 }
 
@@ -28,8 +30,6 @@ internal abstract class RenderNode : IRenderNode, IDisposable
 {
     private string _sortingLayerName = string.Empty;
 
-    // TODO: This needs to be exposed to user code.
-    // TODO: No test failed with forced caching.
     private bool _isStatic;
     private Matrix3x3 _staticWorldTransform;
     private AxisAlignedRectangle _staticBoundingRectangle;
@@ -100,6 +100,7 @@ internal abstract class RenderNode : IRenderNode, IDisposable
         SortingLayerNameChangedCallback = null;
     }
 
+    // TODO: Include IsStatic.
     protected virtual void CopyData(IRenderNode source, IRenderNode target)
     {
         target.Visible = source.Visible;

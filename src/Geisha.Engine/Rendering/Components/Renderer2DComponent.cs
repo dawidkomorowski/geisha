@@ -92,6 +92,18 @@ namespace Geisha.Engine.Rendering.Components
             set => RenderNode.OrderInLayer = value;
         }
 
+        // TODO: Add documentation.
+        // TODO: Add to serialization.
+        // TODO: Add functional tests.
+        // TODO: No test failed with forced caching.
+        // TODO: Add serialization tests.
+        // TODO: Add synchronization tests.
+        public bool IsStatic
+        {
+            get => RenderNode.IsStatic;
+            set => RenderNode.IsStatic = value;
+        }
+
 
         /// <summary>
         ///     Gets axis aligned bounding rectangle in global coordinates.
