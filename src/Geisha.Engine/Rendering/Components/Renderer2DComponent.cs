@@ -106,6 +106,12 @@ namespace Geisha.Engine.Rendering.Components
         ///         to <c>false</c> to use the current transform and bounding rectangle; set it to <c>true</c> again to cache
         ///         their current values.
         ///     </para>
+        ///     <para>
+        ///         While <c>true</c>, changing a property of the renderer that affects its geometry, for example the size of a
+        ///         shape, the sprite or the text layout, also caches the current world transform and bounding rectangle again.
+        ///         As a result, the entity's transform changes made before such a modification become reflected by this
+        ///         renderer.
+        ///     </para>
         /// </remarks>
         public bool IsStatic
         {
