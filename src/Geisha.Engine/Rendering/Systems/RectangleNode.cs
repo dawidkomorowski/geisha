@@ -33,7 +33,7 @@ internal sealed class RectangleNode : RenderNode, IRectangleNode
     protected override AxisAlignedRectangle ComputeBoundingRectangle()
     {
         var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
-        var quad = new AxisAlignedRectangle(_rectangleRendererComponent.Dimensions).ToQuad();
+        var quad = new AxisAlignedRectangle(Dimensions).ToQuad();
         return quad.Transform(transform).GetBoundingRectangle();
     }
 

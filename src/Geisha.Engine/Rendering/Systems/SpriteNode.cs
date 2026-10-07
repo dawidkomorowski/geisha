@@ -40,13 +40,13 @@ namespace Geisha.Engine.Rendering.Systems
 
         protected override AxisAlignedRectangle ComputeBoundingRectangle()
         {
-            if (_spriteRendererComponent.Sprite == null)
+            if (Sprite == null)
             {
                 return new AxisAlignedRectangle();
             }
 
             var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
-            var quad = _spriteRendererComponent.Sprite.Rectangle.ToQuad();
+            var quad = Sprite.Rectangle.ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }
 

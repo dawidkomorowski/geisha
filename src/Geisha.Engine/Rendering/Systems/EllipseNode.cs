@@ -35,7 +35,7 @@ internal sealed class EllipseNode : RenderNode, IEllipseNode
     protected override AxisAlignedRectangle ComputeBoundingRectangle()
     {
         var transform = Transform.ComputeInterpolatedWorldTransformMatrix();
-        var quad = new Ellipse(_ellipseRendererComponent.RadiusX, _ellipseRendererComponent.RadiusY).GetBoundingRectangle().ToQuad();
+        var quad = new Ellipse(RadiusX, RadiusY).GetBoundingRectangle().ToQuad();
         return quad.Transform(transform).GetBoundingRectangle();
     }
 
