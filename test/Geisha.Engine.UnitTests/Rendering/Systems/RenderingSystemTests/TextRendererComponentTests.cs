@@ -1,11 +1,11 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System;
+using System.Collections.Generic;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -637,6 +637,106 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void TextRendererComponent_BoundingRectangle_ShouldRefreshCachedValue_WhenTextRendererIsChanged()
+    {
+        // Arrange
+        var textMetrics1 = new TextMetrics
+        {
+            Left = 0,
+            Top = 0,
+            Width = 100,
+            Height = 200,
+            LayoutWidth = 150,
+            LayoutHeight = 250,
+            LineCount = 10
+        };
+
+        var textMetrics2 = new TextMetrics
+        {
+            Left = 0,
+            Top = 0,
+            Width = 110,
+            Height = 220,
+            LayoutWidth = 150,
+            LayoutHeight = 250,
+            LineCount = 10
+        };
+
+        var textLayout = Substitute.For<ITextLayout>();
+        textLayout.Metrics.Returns(textMetrics1);
+
+        RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+            .Returns(textLayout);
+
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        textRendererComponent.MaxWidth = 150;
+        textRendererComponent.MaxHeight = 250;
+        textRendererComponent.Pivot = new Vector2(50, 100);
+
+        textRendererComponent.IsStatic = true;
+
+        // Assume
+        Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
+
+        // Act 1
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.Text = "New Text";
+
+        // Assert 1
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 2
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.FontFamilyName = "New Font Family";
+
+        // Assert 2
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+
+        // Act 3
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.FontSize = FontSize.FromDips(32);
+
+        // Assert 3
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 4
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.MaxWidth = 200;
+
+        // Assert 4
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+
+        // Act 5
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.MaxHeight = 300;
+
+        // Assert 5
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 6
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.TextAlignment = TextAlignment.Trailing;
+
+        // Assert 6
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+
+        // Act 7
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.ParagraphAlignment = ParagraphAlignment.Far;
+
+        // Assert 7
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 8
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.Pivot = new Vector2(0, 0);
+
+        // Assert 8
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(110, -180, 200, 400)));
     }
 
     [Test]

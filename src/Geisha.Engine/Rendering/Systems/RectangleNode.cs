@@ -21,6 +21,7 @@ internal sealed class DetachedRectangleNode : DetachedRenderNode, IRectangleNode
 internal sealed class RectangleNode : RenderNode, IRectangleNode
 {
     private readonly RectangleRendererComponent _rectangleRendererComponent;
+    private Vector2 _dimensions;
 
     public RectangleNode(Transform2DComponent transform, RectangleRendererComponent rectangleRendererComponent)
         : base(transform, rectangleRendererComponent)
@@ -44,7 +45,16 @@ internal sealed class RectangleNode : RenderNode, IRectangleNode
 
     #region Implementation of IRectangleNode
 
-    public Vector2 Dimensions { get; set; }
+    public Vector2 Dimensions
+    {
+        get => _dimensions;
+        set
+        {
+            _dimensions = value;
+            CacheStaticGeometry();
+        }
+    }
+
     public Color Color { get; set; }
     public bool FillInterior { get; set; }
 

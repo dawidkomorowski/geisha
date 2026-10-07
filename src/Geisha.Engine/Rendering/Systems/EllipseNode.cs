@@ -23,6 +23,8 @@ internal sealed class DetachedEllipseNode : DetachedRenderNode, IEllipseNode
 internal sealed class EllipseNode : RenderNode, IEllipseNode
 {
     private readonly EllipseRendererComponent _ellipseRendererComponent;
+    private double _radiusX;
+    private double _radiusY;
 
     public EllipseNode(Transform2DComponent transform, EllipseRendererComponent ellipseRendererComponent)
         : base(transform, ellipseRendererComponent)
@@ -46,8 +48,26 @@ internal sealed class EllipseNode : RenderNode, IEllipseNode
 
     #region Implementation of IEllipseNode
 
-    public double RadiusX { get; set; }
-    public double RadiusY { get; set; }
+    public double RadiusX
+    {
+        get => _radiusX;
+        set
+        {
+            _radiusX = value;
+            CacheStaticGeometry();
+        }
+    }
+
+    public double RadiusY
+    {
+        get => _radiusY;
+        set
+        {
+            _radiusY = value;
+            CacheStaticGeometry();
+        }
+    }
+
     public Color Color { get; set; }
     public bool FillInterior { get; set; }
 

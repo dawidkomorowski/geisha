@@ -43,6 +43,7 @@ internal sealed class TextNode : RenderNode, ITextNode
 {
     private readonly TextRendererComponent _textRendererComponent;
     private readonly IRenderingContext2D _renderingContext2D;
+    private Vector2 _pivot;
 
     public TextNode(Transform2DComponent transform, TextRendererComponent textRendererComponent, IRenderingContext2D renderingContext2D)
         : base(transform, textRendererComponent)
@@ -74,47 +75,83 @@ internal sealed class TextNode : RenderNode, ITextNode
             newTextLayout.ParagraphAlignment = ParagraphAlignment;
             TextLayout.Dispose();
             TextLayout = newTextLayout;
+
+            CacheStaticGeometry();
         }
     }
 
     public string FontFamilyName
     {
         get => TextLayout.FontFamilyName;
-        set => TextLayout.FontFamilyName = value;
+        set
+        {
+            TextLayout.FontFamilyName = value;
+            CacheStaticGeometry();
+        }
     }
 
     public FontSize FontSize
     {
         get => TextLayout.FontSize;
-        set => TextLayout.FontSize = value;
+        set
+        {
+            TextLayout.FontSize = value;
+            CacheStaticGeometry();
+        }
     }
 
     public double MaxWidth
     {
         get => TextLayout.MaxWidth;
-        set => TextLayout.MaxWidth = value;
+        set
+        {
+            TextLayout.MaxWidth = value;
+            CacheStaticGeometry();
+        }
     }
 
     public double MaxHeight
     {
         get => TextLayout.MaxHeight;
-        set => TextLayout.MaxHeight = value;
+        set
+        {
+            TextLayout.MaxHeight = value;
+            CacheStaticGeometry();
+        }
     }
 
     public TextAlignment TextAlignment
     {
         get => TextLayout.TextAlignment;
-        set => TextLayout.TextAlignment = value;
+        set
+        {
+            TextLayout.TextAlignment = value;
+            CacheStaticGeometry();
+        }
     }
 
     public ParagraphAlignment ParagraphAlignment
     {
         get => TextLayout.ParagraphAlignment;
-        set => TextLayout.ParagraphAlignment = value;
+        set
+        {
+            TextLayout.ParagraphAlignment = value;
+            CacheStaticGeometry();
+        }
     }
 
     public Color Color { set; get; }
-    public Vector2 Pivot { get; set; }
+
+    public Vector2 Pivot
+    {
+        get => _pivot;
+        set
+        {
+            _pivot = value;
+            CacheStaticGeometry();
+        }
+    }
+
     public bool ClipToLayoutBox { get; set; }
     public TextMetrics Metrics => TextLayout.Metrics;
     public AxisAlignedRectangle LayoutRectangle => new((MaxWidth / 2d) - Pivot.X, Pivot.Y - (MaxHeight / 2d), MaxWidth, MaxHeight);

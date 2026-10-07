@@ -70,6 +70,8 @@ namespace Geisha.Engine.Rendering.Systems
                 {
                     ResourceId = value is not null ? value.SourceTexture.RuntimeId : RuntimeId.Invalid
                 };
+
+                CacheStaticGeometry();
             }
         }
 

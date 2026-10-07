@@ -71,12 +71,7 @@ internal abstract class RenderNode : IRenderNode, IDisposable
         set
         {
             _isStatic = value;
-
-            if (_isStatic)
-            {
-                _staticWorldTransform = Transform.ComputeInterpolatedWorldTransformMatrix();
-                _staticBoundingRectangle = ComputeBoundingRectangle();
-            }
+            CacheStaticGeometry();
         }
     }
 
@@ -89,6 +84,14 @@ internal abstract class RenderNode : IRenderNode, IDisposable
     public Matrix3x3 GetWorldTransform() => IsStatic ? _staticWorldTransform : Transform.ComputeInterpolatedWorldTransformMatrix();
 
     protected abstract AxisAlignedRectangle ComputeBoundingRectangle();
+
+    protected void CacheStaticGeometry()
+    {
+        if (!IsStatic) return;
+
+        _staticWorldTransform = Transform.ComputeInterpolatedWorldTransformMatrix();
+        _staticBoundingRectangle = ComputeBoundingRectangle();
+    }
 
     public void Dispose()
     {

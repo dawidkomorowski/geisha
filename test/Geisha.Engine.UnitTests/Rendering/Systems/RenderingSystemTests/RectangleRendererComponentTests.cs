@@ -241,15 +241,15 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         context.AddCamera();
         var entity = context.AddRectangle();
         var transformMatrix = entity.GetTransformMatrix();
+        var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
 
-        entity.GetComponent<RectangleRendererComponent>().IsStatic = true;
+        rectangleRenderer.IsStatic = true;
         entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
 
         // Act
         context.RenderingSystem.RenderScene();
 
         // Assert
-        var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
         RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
             rectangleRenderer.FillInterior, transformMatrix);
     }
@@ -326,7 +326,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         var entity = context.AddRectangle(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
         var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
 
-        entity.GetComponent<RectangleRendererComponent>().IsStatic = true;
+        rectangleRendererComponent.IsStatic = true;
         entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
 
         // Act
@@ -335,5 +335,24 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void RectangleRendererComponent_BoundingRectangle_ShouldRefreshCachedValue_WhenRectangleSizeIsChanged()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddRectangle(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
+
+        rectangleRendererComponent.IsStatic = true;
+
+        // Act
+        rectangleRendererComponent.Dimensions = new Vector2(110, 220);
+        var actual = rectangleRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 220, 440)));
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core;
+﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -13,6 +12,8 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
+using SixLabors.Fonts;
+using System;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -70,9 +71,12 @@ public abstract class RenderingSystemTestsBase
         return texture;
     }
 
-    private protected static Sprite CreateSprite(ITexture texture)
+    private protected static Sprite CreateSprite(ITexture texture) => CreateSprite(texture, new Vector2(10, 10));
+    private protected static Sprite CreateSprite(double width, double height) => CreateSprite(CreateTexture(), new Vector2(width, height));
+
+    private protected static Sprite CreateSprite(ITexture texture, Vector2 dimensions)
     {
-        return new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
+        return new Sprite(texture, Vector2.Zero, dimensions, dimensions / 2d, 1);
     }
 
     private protected sealed class RenderingTestContext

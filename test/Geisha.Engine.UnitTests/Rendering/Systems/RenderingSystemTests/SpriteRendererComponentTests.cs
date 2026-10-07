@@ -1,11 +1,11 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System.Linq;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -776,7 +776,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var entity = context.AddSprite(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
         var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
 
-        entity.GetComponent<SpriteRendererComponent>().IsStatic = true;
+        spriteRendererComponent.IsStatic = true;
         entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
 
         // Act
@@ -785,5 +785,24 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void SpriteRendererComponent_BoundingRectangle_ShouldRefreshCachedValue_WhenSpriteIsChanged()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddSprite(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+
+        spriteRendererComponent.IsStatic = true;
+
+        // Act
+        spriteRendererComponent.Sprite = CreateSprite(110, 220);
+        var actual = spriteRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 220, 440)));
     }
 }
