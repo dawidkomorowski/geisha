@@ -379,4 +379,27 @@ public class CommonTests : RenderingSystemTestsBase
         // Assert
         RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.GetTransformMatrix(), spriteEntity.GetOpacity());
     }
+
+    [Test]
+    public void RenderingSystem_ShouldDrawRendererComponent_WithFreshTransform_WhenRendererComponentIsNotStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddSprite();
+
+        var transform1 = entity.GetTransformMatrix();
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+        var transform2 = entity.GetTransformMatrix();
+
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), transform1, entity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), transform2, entity.GetOpacity());
+    }
 }

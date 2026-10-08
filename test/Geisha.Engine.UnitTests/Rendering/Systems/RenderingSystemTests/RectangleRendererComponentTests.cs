@@ -18,6 +18,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // RectangleRendererComponent
         var dimensions = new Vector2(1, 2);
         var color = Color.Red;
@@ -33,6 +34,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.Visible = visible;
         rectangleRendererComponent.SortingLayerName = sortingLayerName;
         rectangleRendererComponent.OrderInLayer = orderInLayer;
+        rectangleRendererComponent.IsStatic = isStatic;
         // RectangleRendererComponent
         rectangleRendererComponent.Dimensions = dimensions;
         rectangleRendererComponent.Color = color;
@@ -50,6 +52,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(rectangleRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(rectangleRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(rectangleRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // RectangleRendererComponent
         Assert.That(rectangleRendererComponent.Dimensions, Is.EqualTo(dimensions));
         Assert.That(rectangleRendererComponent.Color, Is.EqualTo(color));
@@ -64,6 +67,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // RectangleRendererComponent
         var dimensions = new Vector2(1, 2);
         var color = Color.Red;
@@ -80,6 +84,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.Visible = visible;
         rectangleRendererComponent.SortingLayerName = sortingLayerName;
         rectangleRendererComponent.OrderInLayer = orderInLayer;
+        rectangleRendererComponent.IsStatic = isStatic;
         // RectangleRendererComponent
         rectangleRendererComponent.Dimensions = dimensions;
         rectangleRendererComponent.Color = color;
@@ -97,6 +102,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(rectangleRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(rectangleRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(rectangleRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // RectangleRendererComponent
         Assert.That(rectangleRendererComponent.Dimensions, Is.EqualTo(dimensions));
         Assert.That(rectangleRendererComponent.Color, Is.EqualTo(color));
@@ -228,6 +234,27 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawRectangle_WithCachedTransform_WhenRectangleRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddRectangle();
+        var transformMatrix = entity.GetTransformMatrix();
+        var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
+
+        rectangleRenderer.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
+            rectangleRenderer.FillInterior, transformMatrix);
+    }
+
+    [Test]
     public void RectangleRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
@@ -289,5 +316,43 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
+    }
+
+    [Test]
+    public void RectangleRendererComponent_BoundingRectangle_ShouldReturnCachedValue_WhenRectangleRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddRectangle(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
+
+        rectangleRendererComponent.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        var actual = rectangleRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void RectangleRendererComponent_BoundingRectangle_ShouldRefreshCachedValue_WhenRectangleSizeIsChanged()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddRectangle(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
+
+        rectangleRendererComponent.IsStatic = true;
+
+        // Act
+        rectangleRendererComponent.Dimensions = new Vector2(110, 220);
+        var actual = rectangleRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 220, 440)));
     }
 }

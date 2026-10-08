@@ -4,82 +4,110 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Engine.Rendering.Systems
+namespace Geisha.Engine.Rendering.Systems;
+
+internal interface IRenderNode
 {
-    internal interface IRenderNode
+    bool IsManagedByRenderingSystem { get; }
+    bool Visible { get; set; }
+    string SortingLayerName { get; set; }
+    int OrderInLayer { get; set; }
+    bool IsStatic { get; set; }
+    AxisAlignedRectangle GetBoundingRectangle();
+}
+
+internal abstract class DetachedRenderNode : IRenderNode
+{
+    public bool IsManagedByRenderingSystem => false;
+    public bool Visible { get; set; }
+    public string SortingLayerName { get; set; } = string.Empty;
+    public int OrderInLayer { get; set; }
+    public bool IsStatic { get; set; }
+    public AxisAlignedRectangle GetBoundingRectangle() => default;
+}
+
+internal abstract class RenderNode : IRenderNode, IDisposable
+{
+    private string _sortingLayerName = string.Empty;
+
+    private bool _isStatic;
+    private Matrix3x3 _staticWorldTransform;
+    private AxisAlignedRectangle _staticBoundingRectangle;
+
+    protected RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
     {
-        bool IsManagedByRenderingSystem { get; }
-        bool Visible { get; set; }
-        string SortingLayerName { get; set; }
-        int OrderInLayer { get; set; }
-        AxisAlignedRectangle GetBoundingRectangle();
+        Transform = transform;
+        Renderer2DComponent = renderer2DComponent;
     }
 
-    internal abstract class DetachedRenderNode : IRenderNode
+    public delegate void SortingLayerNameChangedCallbackDelegate(RenderNode renderNode, string newLayerName, string oldLayerName);
+
+    public Entity Entity => Transform.Entity;
+    public Transform2DComponent Transform { get; }
+    public Renderer2DComponent Renderer2DComponent { get; }
+    public virtual BatchId BatchId => BatchId.Empty;
+    public SortingLayerNameChangedCallbackDelegate? SortingLayerNameChangedCallback { get; set; }
+
+    #region Implementation of IRenderNode
+
+    public bool IsManagedByRenderingSystem => true;
+    public bool Visible { get; set; }
+
+    public string SortingLayerName
     {
-        public bool IsManagedByRenderingSystem => false;
-        public bool Visible { get; set; }
-        public string SortingLayerName { get; set; } = string.Empty;
-        public int OrderInLayer { get; set; }
-        public AxisAlignedRectangle GetBoundingRectangle() => default;
+        get => _sortingLayerName;
+        set
+        {
+            SortingLayerNameChangedCallback?.Invoke(this, value, _sortingLayerName);
+            _sortingLayerName = value;
+        }
     }
 
-    internal abstract class RenderNode : IRenderNode, IDisposable
+    public int OrderInLayer { get; set; }
+
+    public bool IsStatic
     {
-        private string _sortingLayerName = string.Empty;
-
-        protected RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
+        get => _isStatic;
+        set
         {
-            Transform = transform;
-            Renderer2DComponent = renderer2DComponent;
+            _isStatic = value;
+            CacheStaticGeometry();
         }
+    }
 
-        public delegate void SortingLayerNameChangedCallbackDelegate(RenderNode renderNode, string newLayerName, string oldLayerName);
+    public AxisAlignedRectangle GetBoundingRectangle() => IsStatic ? _staticBoundingRectangle : ComputeBoundingRectangle();
 
-        public Entity Entity => Transform.Entity;
-        public Transform2DComponent Transform { get; }
-        public Renderer2DComponent Renderer2DComponent { get; }
-        public virtual BatchId BatchId => BatchId.Empty;
-        public SortingLayerNameChangedCallbackDelegate? SortingLayerNameChangedCallback { get; set; }
+    #endregion
 
-        #region Implementation of IRenderNode
+    public abstract void Accept(IRenderNodeVisitor visitor);
+    public virtual bool ShouldSkipRendering() => !Renderer2DComponent.Visible;
+    public Matrix3x3 GetWorldTransform() => IsStatic ? _staticWorldTransform : Transform.ComputeInterpolatedWorldTransformMatrix();
 
-        public bool IsManagedByRenderingSystem => true;
-        public bool Visible { get; set; }
+    protected abstract AxisAlignedRectangle ComputeBoundingRectangle();
 
-        public string SortingLayerName
-        {
-            get => _sortingLayerName;
-            set
-            {
-                SortingLayerNameChangedCallback?.Invoke(this, value, _sortingLayerName);
-                _sortingLayerName = value;
-            }
-        }
+    protected void CacheStaticGeometry()
+    {
+        if (!IsStatic) return;
 
-        public int OrderInLayer { get; set; }
-        public abstract AxisAlignedRectangle GetBoundingRectangle();
+        _staticWorldTransform = Transform.ComputeInterpolatedWorldTransformMatrix();
+        _staticBoundingRectangle = ComputeBoundingRectangle();
+    }
 
-        #endregion
+    public void Dispose()
+    {
+        Dispose(true);
+    }
 
-        public abstract void Accept(IRenderNodeVisitor visitor);
-        public virtual bool ShouldSkipRendering() => !Renderer2DComponent.Visible;
+    protected virtual void Dispose(bool disposing)
+    {
+        SortingLayerNameChangedCallback = null;
+    }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            SortingLayerNameChangedCallback = null;
-        }
-
-        protected virtual void CopyData(IRenderNode source, IRenderNode target)
-        {
-            target.Visible = source.Visible;
-            target.SortingLayerName = source.SortingLayerName;
-            target.OrderInLayer = source.OrderInLayer;
-        }
+    protected virtual void CopyData(IRenderNode source, IRenderNode target)
+    {
+        target.Visible = source.Visible;
+        target.SortingLayerName = source.SortingLayerName;
+        target.OrderInLayer = source.OrderInLayer;
+        target.IsStatic = source.IsStatic;
     }
 }

@@ -20,6 +20,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // TextRendererComponent
         const string text = "Sample text";
         const string fontFamilyName = "Calibri";
@@ -42,6 +43,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Visible = visible;
         textRendererComponent.SortingLayerName = sortingLayerName;
         textRendererComponent.OrderInLayer = orderInLayer;
+        textRendererComponent.IsStatic = isStatic;
         // TextRendererComponent
         textRendererComponent.Text = text;
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -66,6 +68,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         Assert.That(textRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(textRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(textRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(textRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // TextRendererComponent
         Assert.That(textRendererComponent.Text, Is.EqualTo(text));
         Assert.That(textRendererComponent.FontFamilyName, Is.EqualTo(fontFamilyName));
@@ -87,6 +90,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // TextRendererComponent
         const string text = "Sample text";
         const string fontFamilyName = "Calibri";
@@ -111,6 +115,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.Visible = visible;
         textRendererComponent.SortingLayerName = sortingLayerName;
         textRendererComponent.OrderInLayer = orderInLayer;
+        textRendererComponent.IsStatic = isStatic;
         // TextRendererComponent
         textRendererComponent.Text = text;
         textRendererComponent.FontFamilyName = fontFamilyName;
@@ -135,6 +140,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         Assert.That(textRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(textRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(textRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(textRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // TextRendererComponent
         Assert.That(textRendererComponent.Text, Is.EqualTo(text));
         Assert.That(textRendererComponent.FontFamilyName, Is.EqualTo(fontFamilyName));
@@ -431,6 +437,54 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawTextLayout_WithCachedTransform_WhenTextRendererIsStatic()
+    {
+        // Arrange
+        const string text = "Sample text";
+        const string fontFamilyName = "Calibri";
+        var fontSize = FontSize.FromDips(20);
+        var color = Color.Red;
+        const double maxWidth = 200;
+        const double maxHeight = 400;
+        const TextAlignment textAlignment = TextAlignment.Center;
+        const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+        var pivot = new Vector2(100, 200);
+        const bool clipToLayoutBox = true;
+
+        var getTextLayout = MockCreateTextLayout();
+
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var (entity, textRendererComponent) = context.AddText();
+
+        textRendererComponent.FontFamilyName = fontFamilyName;
+        textRendererComponent.FontSize = fontSize;
+        textRendererComponent.Color = color;
+        textRendererComponent.MaxWidth = maxWidth;
+        textRendererComponent.MaxHeight = maxHeight;
+        textRendererComponent.TextAlignment = textAlignment;
+        textRendererComponent.ParagraphAlignment = paragraphAlignment;
+        textRendererComponent.Pivot = pivot;
+        textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
+        // Force recreation of ITextLayout
+        textRendererComponent.Text = text;
+
+        var transformMatrix = entity.GetTransformMatrix();
+
+        textRendererComponent.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        var textLayout = getTextLayout();
+        textLayout.Received(1).TextAlignment = textAlignment;
+        textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
+        RenderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, transformMatrix, clipToLayoutBox);
+    }
+
+    [Test]
     public void TextRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
@@ -546,6 +600,143 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
+    }
+
+    [Test]
+    public void TextRendererComponent_BoundingRectangle_ShouldReturnCachedValue_WhenTextRendererIsStatic()
+    {
+        // Arrange
+        var textMetrics = new TextMetrics
+        {
+            Left = 0,
+            Top = 0,
+            Width = 100,
+            Height = 200,
+            LayoutWidth = 150,
+            LayoutHeight = 250,
+            LineCount = 10
+        };
+        var textLayout = Substitute.For<ITextLayout>();
+        textLayout.Metrics.Returns(textMetrics);
+
+        RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+            .Returns(textLayout);
+
+        var context = CreateRenderingTestContext();
+        var (entity, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        textRendererComponent.MaxWidth = 150;
+        textRendererComponent.MaxHeight = 250;
+        textRendererComponent.Pivot = new Vector2(50, 100);
+
+        textRendererComponent.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        var actual = textRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void TextRendererComponent_BoundingRectangle_ShouldRefreshCachedValue_WhenTextRendererIsChanged()
+    {
+        // Arrange
+        var textMetrics1 = new TextMetrics
+        {
+            Left = 0,
+            Top = 0,
+            Width = 100,
+            Height = 200,
+            LayoutWidth = 150,
+            LayoutHeight = 250,
+            LineCount = 10
+        };
+
+        var textMetrics2 = new TextMetrics
+        {
+            Left = 0,
+            Top = 0,
+            Width = 110,
+            Height = 220,
+            LayoutWidth = 150,
+            LayoutHeight = 250,
+            LineCount = 10
+        };
+
+        var textLayout = Substitute.For<ITextLayout>();
+        textLayout.Metrics.Returns(textMetrics1);
+
+        RenderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+            .Returns(textLayout);
+
+        var context = CreateRenderingTestContext();
+        var (_, textRendererComponent) = context.AddText(new Vector2(10, 20), 0, new Vector2(2, 2));
+        textRendererComponent.MaxWidth = 150;
+        textRendererComponent.MaxHeight = 250;
+        textRendererComponent.Pivot = new Vector2(50, 100);
+
+        textRendererComponent.IsStatic = true;
+
+        // Assume
+        Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
+
+        // Act 1
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.Text = "New Text";
+
+        // Assert 1
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 2
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.FontFamilyName = "New Font Family";
+
+        // Assert 2
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+
+        // Act 3
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.FontSize = FontSize.FromDips(32);
+
+        // Assert 3
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 4
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.MaxWidth = 200;
+
+        // Assert 4
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+
+        // Act 5
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.MaxHeight = 300;
+
+        // Assert 5
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 6
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.TextAlignment = TextAlignment.Trailing;
+
+        // Assert 6
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+
+        // Act 7
+        textLayout.Metrics.Returns(textMetrics2);
+        textRendererComponent.ParagraphAlignment = ParagraphAlignment.Far;
+
+        // Assert 7
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(20, 0, 220, 440)));
+
+        // Act 8
+        textLayout.Metrics.Returns(textMetrics1);
+        textRendererComponent.Pivot = new Vector2(0, 0);
+
+        // Assert 8
+        Assert.That(textRendererComponent.BoundingRectangle, Is.EqualTo(new AxisAlignedRectangle(110, -180, 200, 400)));
     }
 
     [Test]

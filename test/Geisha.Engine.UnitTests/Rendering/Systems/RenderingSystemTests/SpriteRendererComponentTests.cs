@@ -1,11 +1,11 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System.Linq;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
@@ -20,6 +20,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // SpriteRendererComponent
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
@@ -35,6 +36,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         spriteRendererComponent.Visible = visible;
         spriteRendererComponent.SortingLayerName = sortingLayerName;
         spriteRendererComponent.OrderInLayer = orderInLayer;
+        spriteRendererComponent.IsStatic = isStatic;
         // SpriteRendererComponent
         spriteRendererComponent.Sprite = sprite;
         spriteRendererComponent.Opacity = opacity;
@@ -52,6 +54,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         Assert.That(spriteRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(spriteRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(spriteRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(spriteRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // SpriteRendererComponent
         Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(sprite));
         Assert.That(spriteRendererComponent.Opacity, Is.EqualTo(opacity));
@@ -66,6 +69,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         const bool visible = false;
         const string sortingLayerName = "some sorting layer";
         const int orderInLayer = 12;
+        const bool isStatic = true;
         // SpriteRendererComponent
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
@@ -82,6 +86,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         spriteRendererComponent.Visible = visible;
         spriteRendererComponent.SortingLayerName = sortingLayerName;
         spriteRendererComponent.OrderInLayer = orderInLayer;
+        spriteRendererComponent.IsStatic = isStatic;
         // SpriteRendererComponent
         spriteRendererComponent.Sprite = sprite;
         spriteRendererComponent.Opacity = opacity;
@@ -99,6 +104,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         Assert.That(spriteRendererComponent.Visible, Is.EqualTo(visible));
         Assert.That(spriteRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(spriteRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
+        Assert.That(spriteRendererComponent.IsStatic, Is.EqualTo(isStatic));
         // SpriteRendererComponent
         Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(sprite));
         Assert.That(spriteRendererComponent.Opacity, Is.EqualTo(opacity));
@@ -254,6 +260,25 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(child.GetSprite(), expectedTransform);
+    }
+
+    [Test]
+    public void RenderScene_ShouldDrawSprite_WithCachedTransform_WhenSpriteRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        context.AddCamera();
+        var entity = context.AddSprite();
+        var transformMatrix = entity.GetTransformMatrix();
+
+        entity.GetComponent<SpriteRendererComponent>().IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        context.RenderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), transformMatrix, entity.GetOpacity());
     }
 
     [Test]
@@ -741,5 +766,43 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(15, 30, 300, 600)));
+    }
+
+    [Test]
+    public void SpriteRendererComponent_BoundingRectangle_ShouldReturnCachedValue_WhenSpriteRendererIsStatic()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddSprite(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+
+        spriteRendererComponent.IsStatic = true;
+        entity.GetComponent<Transform2DComponent>().Translation += new Vector2(10, 20);
+
+        // Act
+        var actual = spriteRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void SpriteRendererComponent_BoundingRectangle_ShouldRefreshCachedValue_WhenSpriteIsChanged()
+    {
+        // Arrange
+        var context = CreateRenderingTestContext();
+        var entity = context.AddSprite(new Vector2(100, 200), new Vector2(10, 20), 0, new Vector2(2, 2));
+        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+
+        spriteRendererComponent.IsStatic = true;
+
+        // Act
+        spriteRendererComponent.Sprite = CreateSprite(110, 220);
+        var actual = spriteRendererComponent.BoundingRectangle;
+
+        // Assert
+        Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 220, 440)));
     }
 }

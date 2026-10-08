@@ -26,6 +26,7 @@ namespace Geisha.Engine.Rendering.Components
             Visible = true;
             SortingLayerName = RenderingConfiguration.DefaultSortingLayerName;
             OrderInLayer = 0;
+            IsStatic = false;
         }
 
         private protected IRenderNode RenderNode { get; set; }
@@ -92,6 +93,31 @@ namespace Geisha.Engine.Rendering.Components
             set => RenderNode.OrderInLayer = value;
         }
 
+        /// <summary>
+        ///     Gets or sets whether this renderer uses a cached world transform and bounding rectangle.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This is a performance tuning option intended for renderers whose entities do not move. Caching can avoid
+        ///         repeatedly computing the world transform and bounding rectangle.
+        ///     </para>
+        ///     <para>
+        ///         While <c>true</c>, changes to the entity's transform are not reflected by this renderer. Set this property
+        ///         to <c>false</c> to use the current transform and bounding rectangle; set it to <c>true</c> again to cache
+        ///         their current values.
+        ///     </para>
+        ///     <para>
+        ///         While <c>true</c>, changing a property of the renderer that affects its geometry, for example the size of a
+        ///         shape, the sprite or the text layout, also caches the current world transform and bounding rectangle again.
+        ///         As a result, the entity's transform changes made before such a modification become reflected by this
+        ///         renderer.
+        ///     </para>
+        /// </remarks>
+        public bool IsStatic
+        {
+            get => RenderNode.IsStatic;
+            set => RenderNode.IsStatic = value;
+        }
 
         /// <summary>
         ///     Gets axis aligned bounding rectangle in global coordinates.
@@ -116,6 +142,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteBool("Visible", Visible);
             writer.WriteString("SortingLayerName", SortingLayerName);
             writer.WriteInt("OrderInLayer", OrderInLayer);
+            writer.WriteBool("IsStatic", IsStatic);
         }
 
         /// <inheritdoc />
@@ -126,6 +153,7 @@ namespace Geisha.Engine.Rendering.Components
             SortingLayerName = reader.ReadString("SortingLayerName") ??
                                throw new InvalidOperationException("SortingLayerName cannot be null.");
             OrderInLayer = reader.ReadInt("OrderInLayer");
+            IsStatic = reader.ReadBool("IsStatic");
         }
     }
 }

@@ -207,6 +207,6 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     private Matrix3x3 ComputeNodeTransform(RenderNode node)
     {
-        return _cameraTransformationMatrix * node.Transform.ComputeInterpolatedWorldTransformMatrix();
+        return _cameraTransformationMatrix * node.GetWorldTransform();
     }
 }
