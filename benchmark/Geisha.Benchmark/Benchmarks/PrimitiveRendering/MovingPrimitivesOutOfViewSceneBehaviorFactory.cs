@@ -45,11 +45,11 @@ namespace Geisha.Benchmark.Benchmarks.PrimitiveRendering
 
                     if (i % 2 == 0)
                     {
-                        _entityFactory.CreateMovingEllipse(Scene, x, y, random);
+                        _entityFactory.CreateMovingEllipse(Scene, x, y, i, random);
                     }
                     else
                     {
-                        _entityFactory.CreateMovingRectangle(Scene, x, y, random);
+                        _entityFactory.CreateMovingRectangle(Scene, x, y, i, random);
                     }
                 }
             }

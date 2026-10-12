@@ -44,7 +44,7 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
                     var x = width * random.NextDouble() - width / 2d;
                     var y = height * random.NextDouble() - height / 2d;
 
-                    _entityFactory.CreateMovingSprite(Scene, x, y, random);
+                    _entityFactory.CreateMovingSprite(Scene, x, y, i, random);
                 }
             }
         }
