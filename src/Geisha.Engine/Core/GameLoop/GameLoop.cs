@@ -39,13 +39,19 @@ internal sealed class GameLoop : IGameLoop
 
     public void Update()
     {
-        _sceneManager.OnNextFrame();
+        var sceneManagerEvents = _sceneManager.OnNextFrame();
 
         var scene = _sceneManager.CurrentScene;
         var timeStep = _timeSystem.NextTimeStep();
         var fixedDeltaTime = _timeSystem.FixedDeltaTime;
 
         _timeToSimulate += timeStep.DeltaTime;
+
+        if (sceneManagerEvents.NewSceneLoaded)
+        {
+            _timeToSimulate = TimeSpan.Zero;
+        }
+
         var fixedUpdatesPerFrame = 0;
 
         _performanceStatisticsRecorder.BeginStepDuration();

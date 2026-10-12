@@ -378,7 +378,9 @@ public class GameLoopTests
         var sceneAfterOnNextFrame = TestSceneFactory.Create();
         _sceneManager.CurrentScene.Returns(sceneBeforeOnNextFrame);
 
-        _sceneManager.When(sm => sm.OnNextFrame()).Do(_ => { _sceneManager.CurrentScene.Returns(sceneAfterOnNextFrame); });
+        _sceneManager.OnNextFrame()
+            .Returns(new SceneManagerEvents { NewSceneLoaded = true })
+            .AndDoes(_ => { _sceneManager.CurrentScene.Returns(sceneAfterOnNextFrame); });
 
         var gameLoop = GetGameLoop();
 
@@ -387,6 +389,32 @@ public class GameLoopTests
 
         // Assert
         _coreDiagnosticInfoProvider.Received().UpdateDiagnostics(sceneAfterOnNextFrame);
+    }
+
+    [TestCase(false, 1)]
+    [TestCase(true, 0)]
+    public void Update_ShouldResetAccumulatedSimulationTime_WhenNewSceneLoadedThisFrame(bool newSceneLoaded, int expectedFixedTimeSteps)
+    {
+        // Arrange
+        var timeStep = new TimeStep(TimeSpan.FromSeconds(0.15));
+        _timeSystem.Configure().NextTimeStep().Returns(timeStep);
+        _timeSystem.Configure().FixedDeltaTime.Returns(TimeSpan.FromSeconds(0.1));
+
+        var scene = TestSceneFactory.Create();
+        _sceneManager.CurrentScene.Returns(scene);
+
+        _sceneManager.OnNextFrame().Returns(new SceneManagerEvents
+        {
+            NewSceneLoaded = newSceneLoaded
+        });
+
+        var gameLoop = GetGameLoop();
+
+        // Act
+        gameLoop.Update();
+
+        // Assert
+        _behaviorStep.Received(expectedFixedTimeSteps).ProcessBehaviorFixedUpdate();
     }
 
     #region Entities removal
