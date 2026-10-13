@@ -68,9 +68,14 @@ namespace Geisha.Engine.Core.SceneModel
         PreserveAssets
     }
 
+    internal readonly record struct SceneManagerEvents
+    {
+        public bool NewSceneLoaded { get; init; }
+    }
+
     internal interface ISceneManagerInternal : ISceneManager
     {
-        void OnNextFrame();
+        SceneManagerEvents OnNextFrame();
     }
 
     internal class SceneManager : ISceneManagerInternal
@@ -142,14 +147,25 @@ namespace Geisha.Engine.Core.SceneModel
 
         #region Implementation of ISceneManagerInternal
 
-        public void OnNextFrame()
+        public SceneManagerEvents OnNextFrame()
         {
             Debug.Assert(_isInitialized, "_isInitialized");
 
-            if (_sceneLoadRequest.IsHandled) return;
+            if (_sceneLoadRequest.IsHandled)
+            {
+                return new SceneManagerEvents
+                {
+                    NewSceneLoaded = false
+                };
+            }
 
             LoadSceneInternal();
             _sceneLoadRequest.MarkAsHandled();
+
+            return new SceneManagerEvents
+            {
+                NewSceneLoaded = true
+            };
         }
 
         #endregion

@@ -32,7 +32,10 @@ namespace Geisha.Benchmark.Common
             return entity;
         }
 
-        public Entity CreateStaticEllipse(Scene scene, double x, double y, Random random)
+        public Entity CreateStaticEllipse(Scene scene, double x, double y, Random random) => CreateStaticEllipse(scene, x, y, 0, random);
+
+
+        public Entity CreateStaticEllipse(Scene scene, double x, double y, int orderInLayer, Random random)
         {
             var entity = scene.CreateEntity();
 
@@ -44,11 +47,14 @@ namespace Geisha.Benchmark.Common
             ellipseRenderer.FillInterior = true;
             ellipseRenderer.RadiusX = random.Next(5, 100);
             ellipseRenderer.RadiusY = random.Next(5, 100);
+            ellipseRenderer.OrderInLayer = orderInLayer;
 
             return entity;
         }
 
-        public Entity CreateStaticRectangle(Scene scene, double x, double y, Random random)
+        public Entity CreateStaticRectangle(Scene scene, double x, double y, Random random) => CreateStaticRectangle(scene, x, y, 0, random);
+
+        public Entity CreateStaticRectangle(Scene scene, double x, double y, int orderInLayer, Random random)
         {
             var entity = scene.CreateEntity();
 
@@ -59,27 +65,28 @@ namespace Geisha.Benchmark.Common
             rectangleRenderer.Color = GetRandomColor(random);
             rectangleRenderer.FillInterior = true;
             rectangleRenderer.Dimensions = new Vector2(random.Next(5, 100), random.Next(5, 100));
+            rectangleRenderer.OrderInLayer = orderInLayer;
 
             return entity;
         }
 
-        public Entity CreateMovingEllipse(Scene scene, double x, double y, Random random)
+        public Entity CreateMovingEllipse(Scene scene, double x, double y, int orderInLayer, Random random)
         {
-            var entity = CreateStaticEllipse(scene, x, y, random);
+            var entity = CreateStaticEllipse(scene, x, y, orderInLayer, random);
             AddMovementBehavior(entity, random);
             return entity;
         }
 
-        public Entity CreateMovingRectangle(Scene scene, double x, double y, Random random)
+        public Entity CreateMovingRectangle(Scene scene, double x, double y, int orderInLayer, Random random)
         {
-            var entity = CreateStaticRectangle(scene, x, y, random);
+            var entity = CreateStaticRectangle(scene, x, y, orderInLayer, random);
             AddMovementBehavior(entity, random);
             return entity;
         }
 
-        public Entity CreateStaticSprite(Scene scene, double x, double y)
+        public Entity CreateStaticSprite(Scene scene, double x, double y, int orderInLayer = 0)
         {
-            return CreateStaticSprite(scene, x, y, AssetsIds.PaintColorPalette);
+            return CreateStaticSprite(scene, x, y, AssetsIds.PaintColorPalette, orderInLayer);
         }
 
         public Entity CreateStaticSprite(Scene scene, double x, double y, AssetId spriteAssetId, int orderInLayer = 0)
@@ -96,9 +103,9 @@ namespace Geisha.Benchmark.Common
             return entity;
         }
 
-        public Entity CreateMovingSprite(Scene scene, double x, double y, Random random)
+        public Entity CreateMovingSprite(Scene scene, double x, double y, int orderInLayer, Random random)
         {
-            var entity = CreateStaticSprite(scene, x, y);
+            var entity = CreateStaticSprite(scene, x, y, orderInLayer);
             AddMovementBehavior(entity, random);
             return entity;
         }

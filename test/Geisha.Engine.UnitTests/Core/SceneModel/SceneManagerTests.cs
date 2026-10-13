@@ -210,7 +210,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneFactory.Create().Returns(scene1);
 
             _sceneManager.LoadEmptyScene(sceneBehaviorName);
-            _sceneManager.OnNextFrame();
+            var events1 = _sceneManager.OnNextFrame();
 
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
 
@@ -219,10 +219,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneFactory.Create().Returns(scene2);
 
             // Act
-            _sceneManager.OnNextFrame();
+            var events2 = _sceneManager.OnNextFrame();
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
+            Assert.That(events1.NewSceneLoaded, Is.True);
+            Assert.That(events2.NewSceneLoaded, Is.False);
         }
 
         [Test]
@@ -241,12 +243,13 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.LoadEmptyScene(sceneBehaviorName2);
 
             // Act
-            _sceneManager.OnNextFrame();
+            var events = _sceneManager.OnNextFrame();
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
             Assert.That(_sceneManager.CurrentScene.SceneBehavior, Is.EqualTo(sceneBehavior2));
             _sceneFactory.Received(1).Create();
+            Assert.That(events.NewSceneLoaded, Is.True);
         }
 
         #endregion
@@ -396,7 +399,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneLoader.Load(sceneFilePath).Returns(scene1);
 
             _sceneManager.LoadScene(sceneFilePath);
-            _sceneManager.OnNextFrame();
+            var events1 = _sceneManager.OnNextFrame();
 
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
 
@@ -404,10 +407,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneLoader.Load(sceneFilePath).Returns(scene2);
 
             // Act
-            _sceneManager.OnNextFrame();
+            var events2 = _sceneManager.OnNextFrame();
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
+            Assert.That(events1.NewSceneLoaded, Is.True);
+            Assert.That(events2.NewSceneLoaded, Is.False);
         }
 
         [Test]
@@ -427,11 +432,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.LoadScene(sceneFilePath2);
 
             // Act
-            _sceneManager.OnNextFrame();
+            var events = _sceneManager.OnNextFrame();
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene2));
             _sceneLoader.DidNotReceive().Load(sceneFilePath1);
+            Assert.That(events.NewSceneLoaded, Is.True);
         }
 
         #endregion
@@ -441,10 +447,11 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             // Act
-            _sceneManager.OnNextFrame();
+            var events = _sceneManager.OnNextFrame();
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(_initialScene));
+            Assert.That(events.NewSceneLoaded, Is.False);
         }
 
         #region Helpers
