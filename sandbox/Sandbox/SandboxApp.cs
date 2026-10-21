@@ -1,6 +1,7 @@
 ﻿using Geisha.Engine;
 using Sandbox.Animation;
 using Sandbox.Common;
+using Sandbox.CustomFont;
 using Sandbox.Physics;
 
 namespace Sandbox;
@@ -16,6 +17,9 @@ public sealed class SandboxApp : Game
         // Animation
         componentsRegistry.RegisterSceneBehaviorFactory<AnimationSandboxSceneBehaviorFactory>();
         componentsRegistry.RegisterComponentFactory<AnimationControllerComponentFactory>();
+
+        // CustomFont
+        componentsRegistry.RegisterSceneBehaviorFactory<CustomFontSandboxSceneBehaviorFactory>();
 
         // Physics
         componentsRegistry.RegisterSceneBehaviorFactory<PhysicsSandboxSceneBehaviorFactory>();
