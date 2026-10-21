@@ -1,48 +1,46 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using NLog;
+﻿using SharpDX;
+using SharpDX.DirectWrite;
 
 namespace Geisha.Engine.Rendering.DirectX;
 
-internal static class FontLoader
+internal sealed class FontLoader : CallbackBase, FontCollectionLoader
 {
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-    private const uint FR_PRIVATE = 0x10;
-    private const uint FR_NOT_ENUM = 0x20;
-
-    [DllImport("gdi32.dll", EntryPoint = "AddFontResourceExW", CharSet = CharSet.Unicode)]
-    private static extern int AddFontResourceExW(string name, uint fl, IntPtr res);
-
-    [DllImport("gdi32.dll", EntryPoint = "RemoveFontResourceExW", CharSet = CharSet.Unicode)]
-    private static extern bool RemoveFontResourceExW(string name, uint fl, IntPtr pdv);
-
-    public static void LoadCustomFont(string fontFilePath)
+    public FontLoader()
     {
-        if (!File.Exists(fontFilePath))
-        {
-            throw new FileNotFoundException("Font file not found.", fontFilePath);
-        }
-
-        var fontsAdded = AddFontResourceExW(fontFilePath, FR_PRIVATE | FR_NOT_ENUM, IntPtr.Zero);
-        if (fontsAdded == 0)
-        {
-            throw new InvalidOperationException($"Failed to load font from path: {fontFilePath}. The file may be corrupted, locked, or an unsupported format.");
-        }
+        Key = new DataStream(sizeof(int) * 1, true, true);
+        Key.Write(0);
+        Key.Position = 0;
     }
 
-    public static void UnloadCustomFont(string fontFilePath)
+    public DataStream Key { get; }
+
+    public FontFileEnumerator CreateEnumeratorFromKey(Factory factory, DataPointer collectionKey)
     {
-        if (string.IsNullOrEmpty(fontFilePath))
+        return new Enumerator(factory);
+    }
+
+    private sealed class Enumerator : CallbackBase, FontFileEnumerator
+    {
+        private readonly Factory _factory;
+        private bool _done;
+
+        public Enumerator(Factory factory)
         {
-            throw new ArgumentException("Font file path must be non empty.", nameof(fontFilePath));
+            _factory = factory;
+            CurrentFontFile = new FontFile(_factory, @"C:\Users\Dawid\Downloads\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf");
         }
 
-        var success = RemoveFontResourceExW(fontFilePath, FR_PRIVATE | FR_NOT_ENUM, IntPtr.Zero);
-        if (!success)
+        public bool MoveNext()
         {
-            Logger.Warn("RemoveFontResourceEx returned false for {fontFilePath}. It will be cleaned up automatically by the OS.", fontFilePath);
+            if (_done)
+            {
+                return false;
+            }
+
+            _done = true;
+            return true;
         }
+
+        public FontFile CurrentFontFile { get; }
     }
 }

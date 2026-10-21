@@ -25,10 +25,12 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private readonly Statistics _statistics;
 
     private readonly SharpDX.DirectWrite.Factory _dwFactory;
-    private readonly SolidColorBrush _d2D1SolidColorBrush;
-    private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
+    private readonly FontCollection _fontCollection;
     private TextFormat? _d2D1TextFormat;
     private string _currentFontFamilyName = string.Empty;
+
+    private readonly SolidColorBrush _d2D1SolidColorBrush;
+    private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
     private bool _clippingEnabled;
 
     public RenderingContext2D(DeviceContext deviceContext, Size renderTargetSize, Statistics statistics)
@@ -40,6 +42,11 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
         _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
         _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
+
+        var fontCollectionLoader = new FontLoader();
+        _dwFactory.RegisterFontCollectionLoader(fontCollectionLoader);
+        _fontCollection = new FontCollection(_dwFactory, fontCollectionLoader, fontCollectionLoader.Key);
+        //_fontCollection = _dwFactory.GetSystemFontCollection(true);
     }
 
     private Vector2 RenderTargetCenter => RenderTargetSize.ToVector2() / 2d;
@@ -98,7 +105,15 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
     {
-        var dwTextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+        var dwTextFormat = new TextFormat(
+            _dwFactory,
+            fontFamilyName,
+            _fontCollection,
+            FontWeight.Normal,
+            FontStyle.Normal,
+            FontStretch.Normal,
+            (float)fontSize.Dips
+        );
         var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
         return new TextLayout(dwTextFormat, dwTextLayout, text);
     }
@@ -245,7 +260,15 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
             Math.Abs(_d2D1TextFormat.FontSize - (float)fontSize.Dips) > float.Epsilon)
         {
             _d2D1TextFormat?.Dispose();
-            _d2D1TextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            _d2D1TextFormat = new TextFormat(
+                _dwFactory,
+                fontFamilyName,
+                _fontCollection,
+                FontWeight.Normal,
+                FontStyle.Normal,
+                FontStretch.Normal,
+                (float)fontSize.Dips
+            );
             _currentFontFamilyName = fontFamilyName;
         }
 
