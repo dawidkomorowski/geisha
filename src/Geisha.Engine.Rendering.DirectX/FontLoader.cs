@@ -5,14 +5,7 @@ namespace Geisha.Engine.Rendering.DirectX;
 
 internal sealed class FontLoader : CallbackBase, FontCollectionLoader
 {
-    public FontLoader()
-    {
-        Key = new DataStream(sizeof(int) * 1, true, true);
-        Key.Write(0);
-        Key.Position = 0;
-    }
-
-    public DataStream Key { get; }
+    public DataStream Key { get; } = new(4, false, false);
 
     public FontFileEnumerator CreateEnumeratorFromKey(Factory factory, DataPointer collectionKey)
     {
