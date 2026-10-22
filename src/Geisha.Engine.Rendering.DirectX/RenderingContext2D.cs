@@ -46,7 +46,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         var fontCollectionLoader = new FontLoader();
         _dwFactory.RegisterFontCollectionLoader(fontCollectionLoader);
         _fontCollection = new FontCollection(_dwFactory, fontCollectionLoader, fontCollectionLoader.Key);
-        //_fontCollection = _dwFactory.GetSystemFontCollection(true);
     }
 
     private Vector2 RenderTargetCenter => RenderTargetSize.ToVector2() / 2d;
@@ -108,7 +107,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         var dwTextFormat = new TextFormat(
             _dwFactory,
             fontFamilyName,
-            _fontCollection,
+            _fontCollection, // TODO: Font family for text layout can be changed after text format is created. So the font collection cannot be decided at this point only.
             FontWeight.Normal,
             FontStyle.Normal,
             FontStretch.Normal,
@@ -263,7 +262,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
             _d2D1TextFormat = new TextFormat(
                 _dwFactory,
                 fontFamilyName,
-                _fontCollection,
+                _fontCollection.FindFamilyName(fontFamilyName, out _) ? _fontCollection : _dwFactory.GetSystemFontCollection(false),
                 FontWeight.Normal,
                 FontStyle.Normal,
                 FontStretch.Normal,
