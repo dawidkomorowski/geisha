@@ -3,7 +3,7 @@ using SharpDX.DirectWrite;
 
 namespace Geisha.Engine.Rendering.DirectX;
 
-internal sealed class FontLoader : CallbackBase, FontCollectionLoader
+internal sealed class CustomFontCollectionLoader : CallbackBase, FontCollectionLoader
 {
     public DataStream Key { get; } = new(4, false, false);
 

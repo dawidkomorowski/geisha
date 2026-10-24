@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Rendering.DirectX.Text;
 using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
@@ -17,6 +18,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     private readonly Device _d3D11Device;
     private readonly DeviceContext _deviceContext;
     private readonly SwapChainPipeline _swapChainPipeline;
+    private readonly DirectWriteContext _directWriteContext;
     private readonly RenderingContext2D _renderingContext2D;
 
     /// <summary>
@@ -53,7 +55,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         _deviceContext = new DeviceContext(_d3D11Device);
         _swapChainPipeline = new SwapChainPipeline(_deviceContext, windowClientSize, form.Handle);
-        _renderingContext2D = new RenderingContext2D(_deviceContext, windowClientSize, _statistics);
+        _directWriteContext = new DirectWriteContext();
+        _renderingContext2D = new RenderingContext2D(_deviceContext, _directWriteContext, windowClientSize, _statistics);
 
         using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
         using var dxgiAdapter = dxgiDevice.Adapter;
@@ -158,6 +161,7 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     public void Dispose()
     {
         _renderingContext2D.Dispose();
+        _directWriteContext.Dispose();
         _swapChainPipeline.Dispose();
         _deviceContext.Dispose();
         _d3D11Device.Dispose();

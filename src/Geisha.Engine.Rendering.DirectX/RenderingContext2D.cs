@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Rendering.DirectX.Text;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
@@ -22,6 +23,7 @@ namespace Geisha.Engine.Rendering.DirectX;
 internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 {
     private readonly DeviceContext _deviceContext;
+    private readonly DirectWriteContext _directWriteContext;
     private readonly Statistics _statistics;
 
     private readonly SharpDX.DirectWrite.Factory _dwFactory;
@@ -33,9 +35,10 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
     private bool _clippingEnabled;
 
-    public RenderingContext2D(DeviceContext deviceContext, Size renderTargetSize, Statistics statistics)
+    public RenderingContext2D(DeviceContext deviceContext, DirectWriteContext directWriteContext, Size renderTargetSize, Statistics statistics)
     {
         _deviceContext = deviceContext;
+        _directWriteContext = directWriteContext;
         RenderTargetSize = renderTargetSize;
         _statistics = statistics;
 
@@ -43,7 +46,7 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
         _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
 
-        var fontCollectionLoader = new FontLoader();
+        var fontCollectionLoader = new CustomFontCollectionLoader();
         _dwFactory.RegisterFontCollectionLoader(fontCollectionLoader);
         _fontCollection = new FontCollection(_dwFactory, fontCollectionLoader, fontCollectionLoader.Key);
     }
