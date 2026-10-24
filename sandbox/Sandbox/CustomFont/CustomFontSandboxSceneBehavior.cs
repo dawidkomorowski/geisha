@@ -38,9 +38,10 @@ public sealed class CustomFontSandboxSceneBehaviorFactory : ISceneBehaviorFactor
             _commonEntityFactory.CreateCamera(Scene);
             _commonEntityFactory.CreateBasicControls(Scene);
 
-            CreateText(Scene, new Vector2(0, 70), "Font: Consolas", 60, "Consolas");
-            CreateText(Scene, new Vector2(0, 0), "Font: Algerian", 60, "Algerian");
-            CreateText(Scene, new Vector2(0, -70), "Font: Kenney Pixel", 60, "Kenney Pixel");
+            CreateText(Scene, new Vector2(0, 105), "Font: Consolas", 60, "Consolas");
+            CreateText(Scene, new Vector2(0, 35), "Font: Algerian", 60, "Algerian");
+            CreateText(Scene, new Vector2(0, -35), "Font: Kenney Pixel", 60, "Kenney Pixel");
+            CreateText(Scene, new Vector2(0, -105), "Font: Kenney Blocks", 60, "Kenney Blocks");
         }
 
         private static Entity CreateText(Scene scene, Vector2 position, string text, int fontSize, string fontFamilyName)
