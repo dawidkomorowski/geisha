@@ -195,6 +195,15 @@ public static class AssetTool
         var fontAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(fontFilePath));
         var fontAssetFilePath = Path.Combine(directoryPath, fontAssetFileName);
 
+        var fontAssetContent = new FontAssetContent
+        {
+            FontFilePath = fontFilePath
+        };
+
+        var assetId = GetAssetId(keepAssetId, fontAssetFilePath);
+        var assetData = AssetData.CreateWithJsonContent(assetId, RenderingAssetTypes.Font, fontAssetContent);
+        assetData.Save(fontAssetFilePath);
+
         return fontAssetFilePath;
     }
 

@@ -1214,6 +1214,9 @@ public class AssetToolIntegrationTests
         // Assert
         var fontAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("Kenney Blocks"));
         Assert.That(actual, Is.EqualTo(fontAssetFilePath));
+        Assert.That(File.Exists(fontAssetFilePath), Is.True, "Font asset file was not created.");
+
+        // TODO: Assert file content.
     }
 
     #endregion
