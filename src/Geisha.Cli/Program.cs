@@ -26,12 +26,12 @@ internal static class Program
         var assetCommand = new Command("asset", "Create asset files.");
 
         var createCommand = new Command("create", "Create asset files.");
+        createCommand.AddCommand(CreateCommand_Asset_Create_Font());
         createCommand.AddCommand(CreateCommand_Asset_Create_InputMapping());
         createCommand.AddCommand(CreateCommand_Asset_Create_Sound());
         createCommand.AddCommand(CreateCommand_Asset_Create_Sprite());
         createCommand.AddCommand(CreateCommand_Asset_Create_SpriteAnimation());
         createCommand.AddCommand(CreateCommand_Asset_Create_Texture());
-        createCommand.AddCommand(CreateCommand_Asset_Create_Font());
 
         assetCommand.AddCommand(createCommand);
 
