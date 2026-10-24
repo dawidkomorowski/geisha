@@ -1216,7 +1216,38 @@ public class AssetToolIntegrationTests
         Assert.That(actual, Is.EqualTo(fontAssetFilePath));
         Assert.That(File.Exists(fontAssetFilePath), Is.True, "Font asset file was not created.");
 
-        // TODO: Assert file content.
+        var assetData = AssetData.Load(fontAssetFilePath);
+        Assert.That(assetData.AssetId, Is.Not.EqualTo(AssetId.Empty));
+        Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Font));
+
+        var fontAssetContent = assetData.ReadJsonContent<FontAssetContent>();
+        Assert.That(fontAssetContent.FontFilePath, Is.EqualTo("Kenney Blocks.ttf"));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void CreateFontAsset_ShouldRecreateFontAssetFileWithTheSameAssetId_WhenFontAssetFileAlreadyExists_GivenKeepAssetId(bool keepAssetId)
+    {
+        // Arrange
+        var ttfFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\Fonts\Kenney Blocks.ttf");
+        var ttfFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "Kenney Blocks.ttf");
+        File.Copy(ttfFilePathToCopy, ttfFilePathInTempDir);
+
+        var originalAssetFilePath = AssetTool.CreateFontAsset(ttfFilePathInTempDir);
+
+        var originalAssetData = AssetData.Load(originalAssetFilePath);
+        var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new FontAssetContent());
+        modifiedAssetData.Save(originalAssetFilePath);
+
+        // Act
+        var actualAssetFilePath = AssetTool.CreateFontAsset(ttfFilePathInTempDir, keepAssetId);
+
+        // Assert
+        var actualAssetData = AssetData.Load(actualAssetFilePath);
+
+        Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
+        Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
+        Assert.That(actualAssetData.ReadJsonContent<FontAssetContent>().FontFilePath, Is.EqualTo("Kenney Blocks.ttf"));
     }
 
     #endregion

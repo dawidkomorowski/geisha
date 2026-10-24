@@ -197,7 +197,7 @@ public static class AssetTool
 
         var fontAssetContent = new FontAssetContent
         {
-            FontFilePath = fontFilePath
+            FontFilePath = Path.GetFileName(fontFilePath)
         };
 
         var assetId = GetAssetId(keepAssetId, fontAssetFilePath);
