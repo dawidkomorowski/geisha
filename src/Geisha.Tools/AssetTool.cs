@@ -179,9 +179,7 @@ public static class AssetTool
     {
         return fileExtension switch
         {
-            //".bmp" => true,
-            //".png" => true,
-            //".jpg" => true,
+            ".ttf" => true,
             _ => false
         };
     }

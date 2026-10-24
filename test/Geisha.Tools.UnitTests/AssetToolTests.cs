@@ -32,4 +32,16 @@ public class AssetToolTests
         // Assert
         Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
     }
+
+    [TestCase(".unsupported", false)]
+    [TestCase(".ttf", true)]
+    public void IsSupportedFontFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedFontFileFormat(string fileExtension, bool expectedIsSupported)
+    {
+        // Arrange
+        // Act
+        var isSupported = AssetTool.IsSupportedFontFileFormat(fileExtension);
+
+        // Assert
+        Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
+    }
 }
