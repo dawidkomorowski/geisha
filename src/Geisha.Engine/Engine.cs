@@ -165,11 +165,13 @@ namespace Geisha.Engine
 
         private void RegisterCustomFonts()
         {
-            _renderingBackend.RegisterCustomFonts(new[]
-            {
-                @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf",
-                @"Assets\kenney_kenney-fonts\Fonts\Kenney Blocks.ttf"
-            });
+            // TODO: Do proper implementation once font asset discovery is in place.
+
+            //_renderingBackend.RegisterCustomFonts(new[]
+            //{
+            //    @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf",
+            //    @"Assets\kenney_kenney-fonts\Fonts\Kenney Blocks.ttf"
+            //});
         }
 
         private void LoadStartUpScene()

@@ -175,6 +175,26 @@ namespace Geisha.Tools
             return spriteAnimationAssetFilePath;
         }
 
+        public static bool IsSupportedFontFileFormat(string fileExtension)
+        {
+            return fileExtension switch
+            {
+                //".bmp" => true,
+                //".png" => true,
+                //".jpg" => true,
+                _ => false
+            };
+        }
+
+        public static string CreateFontAsset(string fontFilePath, bool keepAssetId = false)
+        {
+            var fontFileExtension = Path.GetExtension(fontFilePath);
+            if (!IsSupportedFontFileFormat(fontFileExtension))
+                throw new ArgumentException($"Font file format {fontFileExtension} is not supported.", nameof(fontFilePath));
+
+            return "";
+        }
+
         private static AssetId GetAssetId(bool keepAssetId, string assetFilePath)
         {
             if (keepAssetId && File.Exists(assetFilePath))

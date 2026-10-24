@@ -1185,6 +1185,22 @@ namespace Geisha.Tools.IntegrationTests
 
         #endregion
 
+        #region CreateFontAsset
+
+        [Test]
+        public void CreateFontAsset_ShouldThrowException_GivenFilePathToUnsupportedFontFile()
+        {
+            // Arrange
+            var unsupportedFilePath = Path.Combine(_temporaryDirectory.Path, "TestFont.unsupported");
+            File.WriteAllText(unsupportedFilePath, string.Empty);
+
+            // Act
+            // Assert
+            Assert.That(() => AssetTool.CreateFontAsset(unsupportedFilePath), Throws.ArgumentException);
+        }
+
+        #endregion
+
         #region Helpers
 
         private void CopyAnimationFiles()
