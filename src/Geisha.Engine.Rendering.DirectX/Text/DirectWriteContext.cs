@@ -7,15 +7,13 @@ namespace Geisha.Engine.Rendering.DirectX.Text;
 internal sealed class DirectWriteContext : IDisposable
 {
     private readonly Factory _dwFactory;
+    private readonly FontManager _fontManager;
     private CachedTextFormat _cachedTextFormat;
 
     public DirectWriteContext()
     {
         _dwFactory = new Factory(FactoryType.Shared);
-
-        //var fontCollectionLoader = new CustomFontCollectionLoader();
-        //_dwFactory.RegisterFontCollectionLoader(fontCollectionLoader);
-        //_fontCollection = new FontCollection(_dwFactory, fontCollectionLoader, fontCollectionLoader.Key);
+        _fontManager = new FontManager(_dwFactory);
     }
 
     public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
@@ -23,7 +21,7 @@ internal sealed class DirectWriteContext : IDisposable
         var dwTextFormat = new TextFormat(
             _dwFactory,
             fontFamilyName,
-            _dwFactory.GetSystemFontCollection(false),
+            _fontManager.GetFontCollection(fontFamilyName),
             FontWeight.Normal,
             FontStyle.Normal,
             FontStretch.Normal,
@@ -47,7 +45,7 @@ internal sealed class DirectWriteContext : IDisposable
         _cachedTextFormat.TextFormat = new TextFormat(
             _dwFactory,
             fontFamilyName,
-            _dwFactory.GetSystemFontCollection(false),
+            _fontManager.GetFontCollection(fontFamilyName),
             FontWeight.Normal,
             FontStyle.Normal,
             FontStretch.Normal,
@@ -59,6 +57,8 @@ internal sealed class DirectWriteContext : IDisposable
 
     public void Dispose()
     {
+        _cachedTextFormat.TextFormat?.Dispose();
+        _fontManager.Dispose();
         _dwFactory.Dispose();
     }
 
