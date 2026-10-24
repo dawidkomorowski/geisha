@@ -7,7 +7,6 @@ using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX.Text;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -26,9 +25,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     private readonly DirectWriteContext _directWriteContext;
     private readonly Statistics _statistics;
 
-    private readonly SharpDX.DirectWrite.Factory _dwFactory;
-    private readonly FontCollection _fontCollection;
-
     private readonly SolidColorBrush _d2D1SolidColorBrush;
     private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
     private bool _clippingEnabled;
@@ -40,13 +36,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         RenderTargetSize = renderTargetSize;
         _statistics = statistics;
 
-        _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
         _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
         _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
-
-        var fontCollectionLoader = new CustomFontCollectionLoader();
-        _dwFactory.RegisterFontCollectionLoader(fontCollectionLoader);
-        _fontCollection = new FontCollection(_dwFactory, fontCollectionLoader, fontCollectionLoader.Key);
     }
 
     private Vector2 RenderTargetCenter => RenderTargetSize.ToVector2() / 2d;
@@ -103,20 +94,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         return new Texture(d2D1Bitmap);
     }
 
-    public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
-    {
-        var dwTextFormat = new TextFormat(
-            _dwFactory,
-            fontFamilyName,
-            _fontCollection, // TODO: Font family for text layout can be changed after text format is created. So the font collection cannot be decided at this point only.
-            FontWeight.Normal,
-            FontStyle.Normal,
-            FontStretch.Normal,
-            (float)fontSize.Dips
-        );
-        var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
-        return new TextLayout(dwTextFormat, dwTextLayout, text);
-    }
+    public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight) =>
+        _directWriteContext.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight);
 
     public void CaptureScreenshotAsPng(Stream stream)
     {
@@ -355,7 +334,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
         _d2D1SpriteBatch.Dispose();
         _d2D1SolidColorBrush.Dispose();
-        _dwFactory.Dispose();
     }
 
     #endregion

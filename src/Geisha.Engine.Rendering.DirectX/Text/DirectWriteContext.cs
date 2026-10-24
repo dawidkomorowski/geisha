@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Rendering.Backend;
 using SharpDX.DirectWrite;
 
 namespace Geisha.Engine.Rendering.DirectX.Text;
@@ -11,6 +12,25 @@ internal sealed class DirectWriteContext : IDisposable
     public DirectWriteContext()
     {
         _dwFactory = new Factory(FactoryType.Shared);
+
+        //var fontCollectionLoader = new CustomFontCollectionLoader();
+        //_dwFactory.RegisterFontCollectionLoader(fontCollectionLoader);
+        //_fontCollection = new FontCollection(_dwFactory, fontCollectionLoader, fontCollectionLoader.Key);
+    }
+
+    public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
+    {
+        var dwTextFormat = new TextFormat(
+            _dwFactory,
+            fontFamilyName,
+            _dwFactory.GetSystemFontCollection(false),
+            FontWeight.Normal,
+            FontStyle.Normal,
+            FontStretch.Normal,
+            (float)fontSize.Dips
+        );
+        var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
+        return new TextLayout(dwTextFormat, dwTextLayout, text);
     }
 
     public TextFormat GetCachedTextFormat(string fontFamilyName, FontSize fontSize)

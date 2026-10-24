@@ -2,7 +2,7 @@
 using Geisha.Engine.Rendering.Backend;
 using SharpDX.DirectWrite;
 
-namespace Geisha.Engine.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX.Text
 {
     internal sealed class TextLayout : ITextLayout
     {

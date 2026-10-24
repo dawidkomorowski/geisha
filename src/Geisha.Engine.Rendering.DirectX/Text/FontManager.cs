@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Rendering.DirectX;
+namespace Geisha.Engine.Rendering.DirectX.Text;
 
 internal sealed class FontManager
 {

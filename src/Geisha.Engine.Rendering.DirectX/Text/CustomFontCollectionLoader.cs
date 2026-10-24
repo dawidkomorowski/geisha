@@ -1,7 +1,7 @@
 ﻿using SharpDX;
 using SharpDX.DirectWrite;
 
-namespace Geisha.Engine.Rendering.DirectX;
+namespace Geisha.Engine.Rendering.DirectX.Text;
 
 internal sealed class CustomFontCollectionLoader : CallbackBase, FontCollectionLoader
 {
