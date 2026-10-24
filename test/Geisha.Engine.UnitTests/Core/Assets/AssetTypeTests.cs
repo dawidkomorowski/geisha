@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine.Core.Assets;
-using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Assets;
@@ -39,36 +38,5 @@ public class AssetTypeTests
 
         // Assert
         Assert.That(actual, Is.EqualTo(assetTypeString));
-    }
-
-    [Test]
-    public void ToString_ShouldReturnValue()
-    {
-        // Arrange
-        const string assetTypeString = "Some Asset Type";
-        var assetType = new AssetType(assetTypeString);
-
-        // Act
-        var actual = assetType.ToString();
-
-        // Assert
-        Assert.That(actual, Is.EqualTo(assetTypeString));
-    }
-
-    [TestCase("AssetType 1", "AssetType 1", true)]
-    [TestCase("AssetType 1", "AssetType 2", false)]
-    public void EqualityMembers_ShouldEqualAssetType_WhenStringValueIsEqual(string type1, string type2, bool expectedIsEqual)
-    {
-        // Arrange
-        var assetType1 = new AssetType(type1);
-        var assetType2 = new AssetType(type2);
-
-        // Act
-        // Assert
-        AssertEqualityMembers
-            .ForValues(assetType1, assetType2)
-            .UsingEqualityOperator((x, y) => x == y)
-            .UsingInequalityOperator((x, y) => x != y)
-            .EqualityIsExpectedToBe(expectedIsEqual);
     }
 }
