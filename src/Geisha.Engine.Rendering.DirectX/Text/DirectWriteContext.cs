@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX.DirectWrite;
 
@@ -14,6 +15,8 @@ internal sealed class DirectWriteContext : IDisposable
     {
         _dwFactory = new Factory(FactoryType.Shared);
         _fontManager = new FontManager(_dwFactory);
+
+        _fontManager.RegisterCustomFonts(Enumerable.Empty<string>());
     }
 
     public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
