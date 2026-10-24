@@ -1,13 +1,12 @@
-﻿namespace Geisha.Engine.Rendering.Assets.Serialization
+﻿namespace Geisha.Engine.Rendering.Assets.Serialization;
+
+/// <summary>
+///     Defines texture asset content to be used to load <see cref="ITexture" /> from a file into memory.
+/// </summary>
+public sealed class TextureAssetContent
 {
     /// <summary>
-    ///     Defines texture asset content to be used to load <see cref="ITexture" /> from a file into memory.
+    ///     Path to texture file.
     /// </summary>
-    public sealed class TextureAssetContent
-    {
-        /// <summary>
-        ///     Path to texture file.
-        /// </summary>
-        public string? TextureFilePath { get; set; }
-    }
+    public string? TextureFilePath { get; set; }
 }
