@@ -20,7 +20,7 @@ internal sealed class FontLoader : CallbackBase, FontCollectionLoader
         public Enumerator(Factory factory)
         {
             _factory = factory;
-            CurrentFontFile = new FontFile(_factory, @"C:\Users\Dawid\Downloads\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf");
+            CurrentFontFile = new FontFile(_factory, @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf");
         }
 
         public bool MoveNext()
