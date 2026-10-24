@@ -28,8 +28,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     private readonly SharpDX.DirectWrite.Factory _dwFactory;
     private readonly FontCollection _fontCollection;
-    private TextFormat? _d2D1TextFormat;
-    private string _currentFontFamilyName = string.Empty;
 
     private readonly SolidColorBrush _d2D1SolidColorBrush;
     private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
@@ -258,26 +256,12 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
     {
-        if (_d2D1TextFormat == null || _currentFontFamilyName != fontFamilyName ||
-            Math.Abs(_d2D1TextFormat.FontSize - (float)fontSize.Dips) > float.Epsilon)
-        {
-            _d2D1TextFormat?.Dispose();
-            _d2D1TextFormat = new TextFormat(
-                _dwFactory,
-                fontFamilyName,
-                _fontCollection.FindFamilyName(fontFamilyName, out _) ? _fontCollection : _dwFactory.GetSystemFontCollection(false),
-                FontWeight.Normal,
-                FontStyle.Normal,
-                FontStretch.Normal,
-                (float)fontSize.Dips
-            );
-            _currentFontFamilyName = fontFamilyName;
-        }
+        var textFormat = _directWriteContext.GetCachedTextFormat(fontFamilyName, fontSize);
 
         _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
         _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _deviceContext.D2D1DeviceContext.DrawText(text, _d2D1TextFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+        _deviceContext.D2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
 
         _statistics.IncrementDrawCalls();
     }
@@ -369,7 +353,6 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void Dispose()
     {
-        _d2D1TextFormat?.Dispose();
         _d2D1SpriteBatch.Dispose();
         _d2D1SolidColorBrush.Dispose();
         _dwFactory.Dispose();
