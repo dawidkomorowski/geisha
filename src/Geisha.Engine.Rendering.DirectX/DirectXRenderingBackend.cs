@@ -22,6 +22,8 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     private readonly DirectWriteContext _directWriteContext;
     private readonly RenderingContext2D _renderingContext2D;
 
+    private bool _customFontsRegistered;
+
     /// <summary>
     ///     Creates new instance of <see cref="DirectXRenderingBackend" /> with specified <see cref="Form" /> as render target.
     /// </summary>
@@ -143,7 +145,13 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     /// <inheritdoc />
     public void RegisterCustomFonts(IEnumerable<string> fontPaths)
     {
+        if (_customFontsRegistered)
+        {
+            throw new InvalidOperationException($"Custom font registration can only be performed once per {nameof(DirectXRenderingBackend)} instance.");
+        }
+
         _directWriteContext.RegisterCustomFonts(fontPaths);
+        _customFontsRegistered = true;
     }
 
     #endregion

@@ -26,7 +26,7 @@ internal sealed class FontManager : IDisposable
     {
         if (_customFontCollectionLoader is not null)
         {
-            throw new InvalidOperationException($"Custom fonts can be registered only once per {nameof(FontManager)} instance.");
+            throw new InvalidOperationException($"Custom font registration can only be performed once per {nameof(FontManager)} instance.");
         }
 
         _customFontCollectionLoader = new CustomFontCollectionLoader(fontPaths);
