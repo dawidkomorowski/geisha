@@ -24,6 +24,11 @@ internal sealed class FontManager : IDisposable
 
     public void RegisterCustomFonts(IEnumerable<string> fontPaths)
     {
+        if (_customFontCollectionLoader is not null)
+        {
+            throw new InvalidOperationException($"Custom fonts can be registered only once per {nameof(FontManager)} instance.");
+        }
+
         _customFontCollectionLoader = new CustomFontCollectionLoader(fontPaths);
         _dwFactory.RegisterFontCollectionLoader(_customFontCollectionLoader);
         _customFontCollection = new FontCollection(_dwFactory, _customFontCollectionLoader, _customFontCollectionLoader.Key);

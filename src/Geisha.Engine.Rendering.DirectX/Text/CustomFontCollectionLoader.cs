@@ -20,10 +20,21 @@ internal sealed class CustomFontCollectionLoader : CallbackBase, FontCollectionL
         return new Enumerator(factory, _fontPaths.GetEnumerator());
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Key.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
     private sealed class Enumerator : CallbackBase, FontFileEnumerator
     {
         private readonly Factory _factory;
         private readonly IEnumerator<string> _fontPathsEnumerator;
+        private bool _sourceEnumeratorDisposed;
 
         public Enumerator(Factory factory, IEnumerator<string> fontPathsEnumerator)
         {
@@ -33,17 +44,35 @@ internal sealed class CustomFontCollectionLoader : CallbackBase, FontCollectionL
 
         public bool MoveNext()
         {
+            if (_sourceEnumeratorDisposed)
+            {
+                return false;
+            }
+
             var hasElement = _fontPathsEnumerator.MoveNext();
             if (!hasElement)
             {
-                return hasElement;
+                _fontPathsEnumerator.Dispose();
+                _sourceEnumeratorDisposed = true;
+                return false;
             }
 
             CurrentFontFile = new FontFile(_factory, _fontPathsEnumerator.Current);
 
-            return hasElement;
+            return true;
         }
 
         public FontFile? CurrentFontFile { get; private set; }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && !_sourceEnumeratorDisposed)
+            {
+                _fontPathsEnumerator.Dispose();
+                _sourceEnumeratorDisposed = true;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
