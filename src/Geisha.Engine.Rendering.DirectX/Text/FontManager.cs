@@ -67,5 +67,7 @@ internal sealed class FontManager : IDisposable
             _dwFactory.UnregisterFontCollectionLoader(_customFontCollectionLoader);
             _customFontCollectionLoader.Dispose();
         }
+
+        _systemFontCollection.Dispose();
     }
 }
