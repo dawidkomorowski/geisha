@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
@@ -137,6 +138,12 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
 
         _swapChainPipeline.ResizeBuffers(size);
         _renderingContext2D.UpdateRenderTargetSize(size);
+    }
+
+    /// <inheritdoc />
+    public void RegisterCustomFonts(IEnumerable<string> fontPaths)
+    {
+        _directWriteContext.RegisterCustomFonts(fontPaths);
     }
 
     #endregion

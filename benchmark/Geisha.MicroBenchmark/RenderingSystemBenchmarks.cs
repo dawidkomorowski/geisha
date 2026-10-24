@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
@@ -128,6 +129,11 @@ public class RenderingSystemBenchmarks
         }
 
         public void ResizeBuffers(Size size)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RegisterCustomFonts(IEnumerable<string> fontPaths)
         {
             throw new System.NotImplementedException();
         }

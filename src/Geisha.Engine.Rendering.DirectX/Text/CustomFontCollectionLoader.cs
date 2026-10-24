@@ -1,6 +1,6 @@
-﻿using SharpDX;
+﻿using System.Collections.Generic;
+using SharpDX;
 using SharpDX.DirectWrite;
-using System.Collections.Generic;
 
 namespace Geisha.Engine.Rendering.DirectX.Text;
 

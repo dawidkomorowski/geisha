@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX.DirectWrite;
 
@@ -14,13 +15,9 @@ internal sealed class DirectWriteContext : IDisposable
     {
         _dwFactory = new Factory(FactoryType.Shared);
         _fontManager = new FontManager(_dwFactory);
-
-        _fontManager.RegisterCustomFonts(new[]
-        {
-            @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf",
-            @"Assets\kenney_kenney-fonts\Fonts\Kenney Blocks.ttf"
-        });
     }
+
+    public void RegisterCustomFonts(IEnumerable<string> fontPaths) => _fontManager.RegisterCustomFonts(fontPaths);
 
     public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
     {

@@ -98,6 +98,7 @@ namespace Geisha.Engine
             ConfigureWindowingBackend(game);
             ConfigureAudioBackend();
             RegisterAssets();
+            RegisterCustomFonts();
             LoadStartUpScene();
 
             _gameLoop = _container.Resolve<IGameLoop>();
@@ -160,6 +161,15 @@ namespace Geisha.Engine
             var assetStore = _container.Resolve<IAssetStore>();
 
             assetStore.RegisterAssets(_configuration.Core.AssetsRootDirectoryPath);
+        }
+
+        private void RegisterCustomFonts()
+        {
+            _renderingBackend.RegisterCustomFonts(new[]
+            {
+                @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf",
+                @"Assets\kenney_kenney-fonts\Fonts\Kenney Blocks.ttf"
+            });
         }
 
         private void LoadStartUpScene()
