@@ -6,14 +6,16 @@ namespace Geisha.Engine.Rendering.DirectX.Text
 {
     internal sealed class TextLayout : ITextLayout
     {
+        private readonly FontManager _fontManager;
         private readonly TextFormat _dwTextFormat;
 
         // ReSharper disable once InconsistentNaming
         internal readonly SharpDX.DirectWrite.TextLayout DWTextLayout;
         private bool _isDisposed;
 
-        public TextLayout(TextFormat dwTextFormat, SharpDX.DirectWrite.TextLayout dwTextLayout, string text)
+        public TextLayout(FontManager fontManager, TextFormat dwTextFormat, SharpDX.DirectWrite.TextLayout dwTextLayout, string text)
         {
+            _fontManager = fontManager;
             _dwTextFormat = dwTextFormat;
             DWTextLayout = dwTextLayout;
             Text = text;
@@ -35,6 +37,7 @@ namespace Geisha.Engine.Rendering.DirectX.Text
             {
                 ThrowIfDisposed();
                 DWTextLayout.SetFontFamilyName(value, FullRange);
+                DWTextLayout.SetFontCollection(_fontManager.GetFontCollection(value), FullRange);
             }
         }
 

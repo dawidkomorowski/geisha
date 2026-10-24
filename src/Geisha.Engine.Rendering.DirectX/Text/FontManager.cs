@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using NLog;
 using SharpDX.DirectWrite;
 
 namespace Geisha.Engine.Rendering.DirectX.Text;
 
 internal sealed class FontManager : IDisposable
 {
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
     private readonly Factory _dwFactory;
     private readonly FontCollection _systemFontCollection;
     private readonly HashSet<string> _registeredCustomFonts;
@@ -33,6 +36,8 @@ internal sealed class FontManager : IDisposable
             {
                 var fontFamilyName = fontFamilyNames.GetString(0);
                 _registeredCustomFonts.Add(fontFamilyName);
+
+                Logger.Debug("Registered font family: {fontFamilyName}", fontFamilyName);
             }
         }
     }

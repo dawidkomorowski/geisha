@@ -31,7 +31,7 @@ internal sealed class DirectWriteContext : IDisposable
             (float)fontSize.Dips
         );
         var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
-        return new TextLayout(dwTextFormat, dwTextLayout, text);
+        return new TextLayout(_fontManager, dwTextFormat, dwTextLayout, text);
     }
 
     public TextFormat GetCachedTextFormat(string fontFamilyName, FontSize fontSize)
