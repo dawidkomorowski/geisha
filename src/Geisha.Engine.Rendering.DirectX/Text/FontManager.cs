@@ -24,7 +24,7 @@ internal sealed class FontManager : IDisposable
 
     public void RegisterCustomFonts(IEnumerable<string> fontPaths)
     {
-        _customFontCollectionLoader = new CustomFontCollectionLoader();
+        _customFontCollectionLoader = new CustomFontCollectionLoader(fontPaths);
         _dwFactory.RegisterFontCollectionLoader(_customFontCollectionLoader);
         _customFontCollection = new FontCollection(_dwFactory, _customFontCollectionLoader, _customFontCollectionLoader.Key);
 

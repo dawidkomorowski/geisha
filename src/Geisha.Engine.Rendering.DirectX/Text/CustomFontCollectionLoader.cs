@@ -1,39 +1,49 @@
 ﻿using SharpDX;
 using SharpDX.DirectWrite;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Rendering.DirectX.Text;
 
 internal sealed class CustomFontCollectionLoader : CallbackBase, FontCollectionLoader
 {
+    private readonly IEnumerable<string> _fontPaths;
+
+    public CustomFontCollectionLoader(IEnumerable<string> fontPaths)
+    {
+        _fontPaths = fontPaths;
+    }
+
     public DataStream Key { get; } = new(4, false, false);
 
     public FontFileEnumerator CreateEnumeratorFromKey(Factory factory, DataPointer collectionKey)
     {
-        return new Enumerator(factory);
+        return new Enumerator(factory, _fontPaths.GetEnumerator());
     }
 
     private sealed class Enumerator : CallbackBase, FontFileEnumerator
     {
         private readonly Factory _factory;
-        private bool _done;
+        private readonly IEnumerator<string> _fontPathsEnumerator;
 
-        public Enumerator(Factory factory)
+        public Enumerator(Factory factory, IEnumerator<string> fontPathsEnumerator)
         {
             _factory = factory;
-            CurrentFontFile = new FontFile(_factory, @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf");
+            _fontPathsEnumerator = fontPathsEnumerator;
         }
 
         public bool MoveNext()
         {
-            if (_done)
+            var hasElement = _fontPathsEnumerator.MoveNext();
+            if (!hasElement)
             {
-                return false;
+                return hasElement;
             }
 
-            _done = true;
-            return true;
+            CurrentFontFile = new FontFile(_factory, _fontPathsEnumerator.Current);
+
+            return hasElement;
         }
 
-        public FontFile CurrentFontFile { get; }
+        public FontFile? CurrentFontFile { get; private set; }
     }
 }

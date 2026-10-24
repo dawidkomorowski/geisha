@@ -16,7 +16,7 @@ internal sealed class DirectWriteContext : IDisposable
         _dwFactory = new Factory(FactoryType.Shared);
         _fontManager = new FontManager(_dwFactory);
 
-        _fontManager.RegisterCustomFonts(Enumerable.Empty<string>());
+        _fontManager.RegisterCustomFonts(new[] { @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf" });
     }
 
     public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
