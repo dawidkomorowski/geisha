@@ -1199,6 +1199,23 @@ public class AssetToolIntegrationTests
         Assert.That(() => AssetTool.CreateFontAsset(unsupportedFilePath), Throws.ArgumentException);
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void CreateFontAsset_ShouldCreateFontAssetFileInTheSameDirectoryAsFontFileAndReturnItsPath_GivenFontFilePath(bool keepAssetId)
+    {
+        // Arrange
+        var ttfFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\Fonts\Kenney Blocks.ttf");
+        var ttfFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "Kenney Blocks.ttf");
+        File.Copy(ttfFilePathToCopy, ttfFilePathInTempDir);
+
+        // Act
+        var actual = AssetTool.CreateFontAsset(ttfFilePathInTempDir, keepAssetId);
+
+        // Assert
+        var fontAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("Kenney Blocks"));
+        Assert.That(actual, Is.EqualTo(fontAssetFilePath));
+    }
+
     #endregion
 
     #region Helpers

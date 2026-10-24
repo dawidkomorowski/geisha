@@ -190,7 +190,12 @@ public static class AssetTool
         if (!IsSupportedFontFileFormat(fontFileExtension))
             throw new ArgumentException($"Font file format {fontFileExtension} is not supported.", nameof(fontFilePath));
 
-        return "";
+        var directoryPath = Path.GetDirectoryName(fontFilePath) ?? throw new ArgumentException("The path does not point to any file.", nameof(fontFilePath));
+
+        var fontAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(fontFilePath));
+        var fontAssetFilePath = Path.Combine(directoryPath, fontAssetFileName);
+
+        return fontAssetFilePath;
     }
 
     private static AssetId GetAssetId(bool keepAssetId, string assetFilePath)
