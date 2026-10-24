@@ -517,6 +517,59 @@ namespace Geisha.Cli.IntegrationTests
 
         #endregion
 
+        #region Asset_Create_Font
+
+        [Test]
+        public void Asset_Create_Font_ShouldCreateFontAssetFileInTheSameDirectoryAsFontFile_GivenFontFilePath()
+        {
+            // Arrange
+            var ttfFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\Fonts\Kenney Blocks.ttf");
+            var ttfFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "Kenney Blocks.ttf");
+            File.Copy(ttfFilePathToCopy, ttfFilePathInTempDir);
+
+            // Act
+            RunGeishaCli($"asset create font \"{ttfFilePathInTempDir}\"");
+
+            // Assert
+            var fontAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("Kenney Blocks"));
+            Assert.That(File.Exists(fontAssetFilePath), Is.True, "Font asset file was not created.");
+
+            var assetData = AssetData.Load(fontAssetFilePath);
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(AssetId.Empty));
+            Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Font));
+
+            var fontAssetContent = assetData.ReadJsonContent<FontAssetContent>();
+            Assert.That(fontAssetContent.FontFilePath, Is.EqualTo("Kenney Blocks.ttf"));
+        }
+
+        [Test]
+        public void Asset_Create_Font_ShouldRecreateFontAssetFileWithTheSameAssetId_WhenFontAssetFileAlreadyExists_GivenKeepAssetId()
+        {
+            // Arrange
+            var ttfFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\Fonts\Kenney Blocks.ttf");
+            var ttfFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "Kenney Blocks.ttf");
+            File.Copy(ttfFilePathToCopy, ttfFilePathInTempDir);
+
+            var fontAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("Kenney Blocks"));
+
+            RunGeishaCli($"asset create font \"{ttfFilePathInTempDir}\"");
+
+            var originalAssetData = AssetData.Load(fontAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new FontAssetContent());
+            modifiedAssetData.Save(fontAssetFilePath);
+
+            // Act
+            RunGeishaCli($"asset create font \"{ttfFilePathInTempDir}\" --keep-asset-id");
+
+            // Assert
+            var actualAssetData = AssetData.Load(fontAssetFilePath);
+
+            Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<FontAssetContent>().FontFilePath, Is.EqualTo("Kenney Blocks.ttf"));
+        }
+
+        #endregion
+
         #region Helpers
 
         private static void RunGeishaCli(string arguments, string? workingDirectory = null)
