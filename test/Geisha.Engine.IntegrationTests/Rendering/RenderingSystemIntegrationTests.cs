@@ -1049,10 +1049,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, -30));
                     t3.FontFamilyName = "Kenney Pixel";
-                },
-                // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
-                // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
-                Tolerance = new ImageTolerance(0, 0)
+                }
             }
         };
 
