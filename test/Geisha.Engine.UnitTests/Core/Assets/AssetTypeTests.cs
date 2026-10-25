@@ -33,6 +33,20 @@ public class AssetTypeTests
     }
 
     [Test]
+    public void DefaultValue_ShouldNotEqualNonDefault()
+    {
+        // Arrange
+        var assetType1 = default(AssetType);
+        var assetType2 = new AssetType(string.Empty);
+
+        // Act
+        var actual = assetType1.Equals(assetType2);
+
+        // Assert
+        Assert.That(actual, Is.False);
+    }
+
+    [Test]
     public void Constructor_ThrowsException_GivenNull()
     {
         // Arrange
@@ -58,11 +72,13 @@ public class AssetTypeTests
     public void Value_ThrowsException_WhenAssetTypeIsInvalid()
     {
         // Arrange
-        var assetType = new AssetType();
+        var assetType1 = new AssetType();
+        var assetType2 = default(AssetType);
 
         // Act
         // Assert
-        Assert.That(() => assetType.Value, Throws.InvalidOperationException);
+        Assert.That(() => assetType1.Value, Throws.InvalidOperationException);
+        Assert.That(() => assetType2.Value, Throws.InvalidOperationException);
     }
 
     [TestCase(null, "AssetType { IsValid = False, Value =  }")]
@@ -70,7 +86,7 @@ public class AssetTypeTests
     public void ToString_Test(string? value, string expected)
     {
         // Arrange
-        var assetType = value is null ? new AssetType() : new AssetType(value);
+        var assetType = value is null ? default : new AssetType(value);
 
         // Act
         var actual = assetType.ToString();
