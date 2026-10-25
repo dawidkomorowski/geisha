@@ -35,6 +35,12 @@ public sealed class AssetData
 
     private AssetData(AssetId assetId, AssetType assetType, Content content)
     {
+        // TODO: Consider updating documentation about this validation.
+        if (!assetType.IsValid)
+        {
+            throw new ArgumentException("Asset type is invalid.", nameof(assetType));
+        }
+
         AssetId = assetId;
         AssetType = assetType;
         _content = content;
@@ -128,7 +134,7 @@ public sealed class AssetData
             AssetContentFormat.Binary => new BinaryContent(contentProperty),
             AssetContentFormat.String => new StringContent(contentProperty),
             AssetContentFormat.Json => new JsonContent(contentProperty),
-            _ => throw new ArgumentOutOfRangeException("ContentFormat", contentFormat, "Unknown content format.")
+            _ => throw new InvalidOperationException($"Unknown content format: {contentFormat}.")
         };
 
         return new AssetData(assetId, assetType, content);
