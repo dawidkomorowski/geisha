@@ -20,6 +20,7 @@ internal sealed class RenderingModule : Module
             .SingleInstance();
 
         // Assets
+        builder.RegisterType<FontAssetLoader>().As<IAssetLoader>().SingleInstance();
         builder.RegisterType<SpriteAssetLoader>().As<IAssetLoader>().SingleInstance();
         builder.RegisterType<TextureAssetLoader>().As<IAssetLoader>().SingleInstance();
 
