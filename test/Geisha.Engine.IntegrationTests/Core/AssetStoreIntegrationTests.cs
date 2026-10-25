@@ -4,6 +4,7 @@ using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input;
@@ -143,6 +144,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         // Assert
         Assert.That(texture, Is.Not.Null);
         Assert.That(texture.Dimensions, Is.EqualTo(new Vector2(10, 10)));
+        Assert.That(texture.RuntimeId, Is.Not.EqualTo(RuntimeId.Invalid));
     }
 
     [Test]
