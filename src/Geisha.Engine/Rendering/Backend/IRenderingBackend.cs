@@ -74,6 +74,9 @@ public interface IRenderingBackend
     /// </remarks>
     void ResizeBuffers(Size size);
 
-    // TODO: Add documentation.
+    /// <summary>
+    ///     Registers font files for use by the rendering backend.
+    /// </summary>
+    /// <param name="fontPaths">Paths to the font files to register.</param>
     void RegisterCustomFonts(IEnumerable<string> fontPaths);
 }

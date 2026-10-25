@@ -7,7 +7,9 @@ namespace Geisha.Engine.Rendering.Assets;
 /// </summary>
 public static class RenderingAssetTypes
 {
-    // TODO: Add documentation.
+    /// <summary>
+    ///     <see cref="AssetType"/> of font assets.
+    /// </summary>
     public static AssetType Font { get; } = new("Geisha.Engine.Rendering.Font");
 
     /// <summary>
