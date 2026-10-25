@@ -2,172 +2,171 @@
 using Geisha.Engine.Rendering.Backend;
 using SharpDX.DirectWrite;
 
-namespace Geisha.Engine.Rendering.DirectX.Text
+namespace Geisha.Engine.Rendering.DirectX.Text;
+
+internal sealed class TextLayout : ITextLayout
 {
-    internal sealed class TextLayout : ITextLayout
+    private readonly FontManager _fontManager;
+    private readonly TextFormat _dwTextFormat;
+
+    // ReSharper disable once InconsistentNaming
+    internal readonly SharpDX.DirectWrite.TextLayout DWTextLayout;
+    private bool _isDisposed;
+
+    public TextLayout(FontManager fontManager, TextFormat dwTextFormat, SharpDX.DirectWrite.TextLayout dwTextLayout, string text)
     {
-        private readonly FontManager _fontManager;
-        private readonly TextFormat _dwTextFormat;
+        _fontManager = fontManager;
+        _dwTextFormat = dwTextFormat;
+        DWTextLayout = dwTextLayout;
+        Text = text;
+    }
 
-        // ReSharper disable once InconsistentNaming
-        internal readonly SharpDX.DirectWrite.TextLayout DWTextLayout;
-        private bool _isDisposed;
+    // Text.Length + 1 guarantees that properties of layout will be applied for empty Text.
+    private TextRange FullRange => new(0, Text.Length + 1);
 
-        public TextLayout(FontManager fontManager, TextFormat dwTextFormat, SharpDX.DirectWrite.TextLayout dwTextLayout, string text)
+    public string Text { get; }
+
+    public string FontFamilyName
+    {
+        get
         {
-            _fontManager = fontManager;
-            _dwTextFormat = dwTextFormat;
-            DWTextLayout = dwTextLayout;
-            Text = text;
+            ThrowIfDisposed();
+            return DWTextLayout.GetFontFamilyName(0);
         }
-
-        // Text.Length + 1 guarantees that properties of layout will be applied for empty Text.
-        private TextRange FullRange => new(0, Text.Length + 1);
-
-        public string Text { get; }
-
-        public string FontFamilyName
+        set
         {
-            get
-            {
-                ThrowIfDisposed();
-                return DWTextLayout.GetFontFamilyName(0);
-            }
-            set
-            {
-                ThrowIfDisposed();
-                DWTextLayout.SetFontFamilyName(value, FullRange);
-                DWTextLayout.SetFontCollection(_fontManager.GetFontCollection(value), FullRange);
-            }
+            ThrowIfDisposed();
+            DWTextLayout.SetFontFamilyName(value, FullRange);
+            DWTextLayout.SetFontCollection(_fontManager.GetFontCollection(value), FullRange);
         }
+    }
 
-        public FontSize FontSize
+    public FontSize FontSize
+    {
+        get
         {
-            get
-            {
-                ThrowIfDisposed();
-                return FontSize.FromDips(DWTextLayout.GetFontSize(0));
-            }
-            set
-            {
-                ThrowIfDisposed();
-                DWTextLayout.SetFontSize((float)value.Dips, FullRange);
-            }
+            ThrowIfDisposed();
+            return FontSize.FromDips(DWTextLayout.GetFontSize(0));
         }
-
-        public double MaxWidth
+        set
         {
-            get
-            {
-                ThrowIfDisposed();
-                return DWTextLayout.MaxWidth;
-            }
-            set
-            {
-                ThrowIfDisposed();
-                DWTextLayout.MaxWidth = (float)value;
-            }
+            ThrowIfDisposed();
+            DWTextLayout.SetFontSize((float)value.Dips, FullRange);
         }
+    }
 
-        public double MaxHeight
+    public double MaxWidth
+    {
+        get
         {
-            get
-            {
-                ThrowIfDisposed();
-                return DWTextLayout.MaxHeight;
-            }
-            set
-            {
-                ThrowIfDisposed();
-                DWTextLayout.MaxHeight = (float)value;
-            }
+            ThrowIfDisposed();
+            return DWTextLayout.MaxWidth;
         }
-
-        public TextAlignment TextAlignment
+        set
         {
-            get
-            {
-                ThrowIfDisposed();
-                return DWTextLayout.TextAlignment switch
-                {
-                    SharpDX.DirectWrite.TextAlignment.Leading => TextAlignment.Leading,
-                    SharpDX.DirectWrite.TextAlignment.Trailing => TextAlignment.Trailing,
-                    SharpDX.DirectWrite.TextAlignment.Center => TextAlignment.Center,
-                    SharpDX.DirectWrite.TextAlignment.Justified => TextAlignment.Justified,
-                    _ => throw new ArgumentOutOfRangeException(nameof(DWTextLayout.TextAlignment), DWTextLayout.TextAlignment, null)
-                };
-            }
-            set
-            {
-                ThrowIfDisposed();
-                DWTextLayout.TextAlignment = value switch
-                {
-                    TextAlignment.Leading => SharpDX.DirectWrite.TextAlignment.Leading,
-                    TextAlignment.Trailing => SharpDX.DirectWrite.TextAlignment.Trailing,
-                    TextAlignment.Center => SharpDX.DirectWrite.TextAlignment.Center,
-                    TextAlignment.Justified => SharpDX.DirectWrite.TextAlignment.Justified,
-                    _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
-                };
-            }
+            ThrowIfDisposed();
+            DWTextLayout.MaxWidth = (float)value;
         }
+    }
 
-        public ParagraphAlignment ParagraphAlignment
+    public double MaxHeight
+    {
+        get
         {
-            get
-            {
-                ThrowIfDisposed();
-                return DWTextLayout.ParagraphAlignment switch
-                {
-                    SharpDX.DirectWrite.ParagraphAlignment.Near => ParagraphAlignment.Near,
-                    SharpDX.DirectWrite.ParagraphAlignment.Far => ParagraphAlignment.Far,
-                    SharpDX.DirectWrite.ParagraphAlignment.Center => ParagraphAlignment.Center,
-                    _ => throw new ArgumentOutOfRangeException(nameof(DWTextLayout.ParagraphAlignment), DWTextLayout.ParagraphAlignment, null)
-                };
-            }
-            set
-            {
-                ThrowIfDisposed();
-                DWTextLayout.ParagraphAlignment = value switch
-                {
-                    ParagraphAlignment.Near => SharpDX.DirectWrite.ParagraphAlignment.Near,
-                    ParagraphAlignment.Far => SharpDX.DirectWrite.ParagraphAlignment.Far,
-                    ParagraphAlignment.Center => SharpDX.DirectWrite.ParagraphAlignment.Center,
-                    _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
-                };
-            }
+            ThrowIfDisposed();
+            return DWTextLayout.MaxHeight;
         }
-
-        public TextMetrics Metrics
+        set
         {
-            get
+            ThrowIfDisposed();
+            DWTextLayout.MaxHeight = (float)value;
+        }
+    }
+
+    public TextAlignment TextAlignment
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return DWTextLayout.TextAlignment switch
             {
-                ThrowIfDisposed();
-                var dwMetrics = DWTextLayout.Metrics;
-                return new TextMetrics
-                {
-                    Left = dwMetrics.Left,
-                    Top = dwMetrics.Top,
-                    Width = dwMetrics.Width,
-                    Height = dwMetrics.Height,
-                    LayoutWidth = dwMetrics.LayoutWidth,
-                    LayoutHeight = dwMetrics.LayoutHeight,
-                    LineCount = dwMetrics.LineCount
-                };
-            }
+                SharpDX.DirectWrite.TextAlignment.Leading => TextAlignment.Leading,
+                SharpDX.DirectWrite.TextAlignment.Trailing => TextAlignment.Trailing,
+                SharpDX.DirectWrite.TextAlignment.Center => TextAlignment.Center,
+                SharpDX.DirectWrite.TextAlignment.Justified => TextAlignment.Justified,
+                _ => throw new ArgumentOutOfRangeException(nameof(DWTextLayout.TextAlignment), DWTextLayout.TextAlignment, null)
+            };
         }
-
-        public void Dispose()
+        set
         {
-            if (_isDisposed) return;
-
-            DWTextLayout.Dispose();
-            _dwTextFormat.Dispose();
-            _isDisposed = true;
+            ThrowIfDisposed();
+            DWTextLayout.TextAlignment = value switch
+            {
+                TextAlignment.Leading => SharpDX.DirectWrite.TextAlignment.Leading,
+                TextAlignment.Trailing => SharpDX.DirectWrite.TextAlignment.Trailing,
+                TextAlignment.Center => SharpDX.DirectWrite.TextAlignment.Center,
+                TextAlignment.Justified => SharpDX.DirectWrite.TextAlignment.Justified,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
         }
+    }
 
-        private void ThrowIfDisposed()
+    public ParagraphAlignment ParagraphAlignment
+    {
+        get
         {
-            if (_isDisposed) throw new ObjectDisposedException(nameof(TextLayout));
+            ThrowIfDisposed();
+            return DWTextLayout.ParagraphAlignment switch
+            {
+                SharpDX.DirectWrite.ParagraphAlignment.Near => ParagraphAlignment.Near,
+                SharpDX.DirectWrite.ParagraphAlignment.Far => ParagraphAlignment.Far,
+                SharpDX.DirectWrite.ParagraphAlignment.Center => ParagraphAlignment.Center,
+                _ => throw new ArgumentOutOfRangeException(nameof(DWTextLayout.ParagraphAlignment), DWTextLayout.ParagraphAlignment, null)
+            };
         }
+        set
+        {
+            ThrowIfDisposed();
+            DWTextLayout.ParagraphAlignment = value switch
+            {
+                ParagraphAlignment.Near => SharpDX.DirectWrite.ParagraphAlignment.Near,
+                ParagraphAlignment.Far => SharpDX.DirectWrite.ParagraphAlignment.Far,
+                ParagraphAlignment.Center => SharpDX.DirectWrite.ParagraphAlignment.Center,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
+        }
+    }
+
+    public TextMetrics Metrics
+    {
+        get
+        {
+            ThrowIfDisposed();
+            var dwMetrics = DWTextLayout.Metrics;
+            return new TextMetrics
+            {
+                Left = dwMetrics.Left,
+                Top = dwMetrics.Top,
+                Width = dwMetrics.Width,
+                Height = dwMetrics.Height,
+                LayoutWidth = dwMetrics.LayoutWidth,
+                LayoutHeight = dwMetrics.LayoutHeight,
+                LineCount = dwMetrics.LineCount
+            };
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed) return;
+
+        DWTextLayout.Dispose();
+        _dwTextFormat.Dispose();
+        _isDisposed = true;
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (_isDisposed) throw new ObjectDisposedException(nameof(TextLayout));
     }
 }

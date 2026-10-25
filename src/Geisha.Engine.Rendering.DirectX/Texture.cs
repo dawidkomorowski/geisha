@@ -2,24 +2,23 @@
 using Geisha.Engine.Core.Math;
 using SharpDX.Direct2D1;
 
-namespace Geisha.Engine.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX;
+
+internal sealed class Texture : ITexture
 {
-    internal sealed class Texture : ITexture
+    internal readonly Bitmap1 D2D1Bitmap;
+
+    public Texture(Bitmap1 d2D1Bitmap)
     {
-        internal readonly Bitmap1 D2D1Bitmap;
+        D2D1Bitmap = d2D1Bitmap;
+        RuntimeId = RuntimeId.Next();
+    }
 
-        public Texture(Bitmap1 d2D1Bitmap)
-        {
-            D2D1Bitmap = d2D1Bitmap;
-            RuntimeId = RuntimeId.Next();
-        }
+    public Vector2 Dimensions => new(D2D1Bitmap.PixelSize.Width, D2D1Bitmap.PixelSize.Height);
+    public RuntimeId RuntimeId { get; }
 
-        public Vector2 Dimensions => new(D2D1Bitmap.PixelSize.Width, D2D1Bitmap.PixelSize.Height);
-        public RuntimeId RuntimeId { get; }
-
-        public void Dispose()
-        {
-            D2D1Bitmap.Dispose();
-        }
+    public void Dispose()
+    {
+        D2D1Bitmap.Dispose();
     }
 }
