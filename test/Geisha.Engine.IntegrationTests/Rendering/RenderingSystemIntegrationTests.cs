@@ -69,6 +69,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             base.SetUp();
 
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
+            CustomFonts.Register(SystemUnderTest.AssetStore, SystemUnderTest.RenderingBackend);
 
             LogRenderingEnvironment(SystemUnderTest.RenderingBackend.Info);
         }
@@ -154,9 +155,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
 
                     // 2D transformations
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75), rotation: Angle.DegreesToRadians(45),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75),
+                        rotation: Angle.DegreesToRadians(45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.DegreesToRadians(-45),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75),
+                        rotation: Angle.DegreesToRadians(-45),
                         scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
                         rotation: Angle.DegreesToRadians(-135),
@@ -1018,7 +1021,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 39), scale: new Vector2(3, 3));
                     var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 39), scale: new Vector2(3, 3));
-                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, -39), scale: new Vector2(3, 3));
+                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, -39),
+                        scale: new Vector2(3, 3));
                     var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, -39), scale: new Vector2(3, 3));
 
                     // Set interpolation mode to NearestNeighbor for entity1 and entity2, resulting in sharper pixels
@@ -1028,6 +1032,27 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entity3.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
                     entity4.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
                 }
+            },
+            new()
+            {
+                Name = "43 Text rendering - custom font",
+                ExpectedReferenceImageFile = "43_TextRendering_CustomFont.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 60));
+                    t1.FontFamilyName = "Kenney Blocks";
+
+                    var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 15));
+                    t2.FontFamilyName = "Kenney Future";
+
+                    var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, -30));
+                    t3.FontFamilyName = "Kenney Pixel";
+                },
+                // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
+                // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
+                Tolerance = new ImageTolerance(0, 0)
             }
         };
 
@@ -1070,7 +1095,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             TestContext.WriteLine($"Rendering Backend: {info.Name}");
             TestContext.WriteLine($"Adapter: {info.GraphicsAdapterName}");
             TestContext.WriteLine($"D3D Feature Level: {info.FeatureLevel}");
-            TestContext.WriteLine("Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
+            TestContext.WriteLine("System Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
         }
 
         /// <summary>

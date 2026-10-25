@@ -1,5 +1,6 @@
-﻿// TODO: Add documentation.
+﻿namespace Geisha.Engine.Rendering;
 
+// TODO: Add documentation.
 public sealed class FontFileInfo
 {
     public FontFileInfo(string path)

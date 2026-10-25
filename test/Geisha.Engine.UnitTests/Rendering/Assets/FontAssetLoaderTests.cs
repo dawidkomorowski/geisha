@@ -1,10 +1,11 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System.IO;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.FileSystem;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 using NSubstitute;
 using NUnit.Framework;
-using System.IO;
 
 namespace Geisha.Engine.UnitTests.Rendering.Assets;
 

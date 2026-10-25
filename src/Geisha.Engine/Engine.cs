@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Autofac;
 using Geisha.Engine.Audio;
@@ -13,7 +11,6 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
-using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Windowing;
 using Geisha.Engine.Windowing.Backend;
@@ -101,7 +98,6 @@ namespace Geisha.Engine
             ConfigureWindowingBackend(game);
             ConfigureAudioBackend();
             RegisterAssets();
-            RegisterCustomFonts();
             LoadStartUpScene();
 
             _gameLoop = _container.Resolve<IGameLoop>();
@@ -162,24 +158,8 @@ namespace Geisha.Engine
         private void RegisterAssets()
         {
             var assetStore = _container.Resolve<IAssetStore>();
-
             assetStore.RegisterAssets(_configuration.Core.AssetsRootDirectoryPath);
-        }
-
-        private void RegisterCustomFonts()
-        {
-            var assetStore = _container.Resolve<IAssetStore>();
-
-            var fontAssets = assetStore.GetRegisteredAssets().Where(ai => ai.AssetType == RenderingAssetTypes.Font).ToArray();
-            var fontPaths = new List<string>();
-
-            foreach (var fontAsset in fontAssets)
-            {
-                var fontFileInfo = assetStore.GetAsset<FontFileInfo>(fontAsset.AssetId);
-                fontPaths.Add(fontFileInfo.Path);
-            }
-
-            _renderingBackend.RegisterCustomFonts(fontPaths);
+            CustomFonts.Register(assetStore, _renderingBackend);
         }
 
         private void LoadStartUpScene()
