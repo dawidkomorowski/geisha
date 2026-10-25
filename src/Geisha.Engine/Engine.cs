@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Autofac;
 using Geisha.Engine.Audio;
@@ -11,6 +13,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Windowing;
 using Geisha.Engine.Windowing.Backend;
@@ -165,13 +168,18 @@ namespace Geisha.Engine
 
         private void RegisterCustomFonts()
         {
-            // TODO: Do proper implementation once font asset discovery is in place.
+            var assetStore = _container.Resolve<IAssetStore>();
 
-            //_renderingBackend.RegisterCustomFonts(new[]
-            //{
-            //    @"Assets\kenney_kenney-fonts\Fonts\Kenney Pixel.ttf",
-            //    @"Assets\kenney_kenney-fonts\Fonts\Kenney Blocks.ttf"
-            //});
+            var fontAssets = assetStore.GetRegisteredAssets().Where(ai => ai.AssetType == RenderingAssetTypes.Font).ToArray();
+            var fontPaths = new List<string>();
+
+            foreach (var fontAsset in fontAssets)
+            {
+                var fontFileInfo = assetStore.GetAsset<FontFileInfo>(fontAsset.AssetId);
+                fontPaths.Add(fontFileInfo.Path);
+            }
+
+            _renderingBackend.RegisterCustomFonts(fontPaths);
         }
 
         private void LoadStartUpScene()
