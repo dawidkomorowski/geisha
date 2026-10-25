@@ -143,6 +143,9 @@ public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     }
 
     /// <inheritdoc />
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when custom fonts have already been registered for this backend instance.
+    /// </exception>
     public void RegisterCustomFonts(IEnumerable<string> fontPaths)
     {
         if (_customFontsRegistered)
