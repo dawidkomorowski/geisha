@@ -26,8 +26,10 @@ internal sealed class TextureAssetLoader : IAssetLoader
         var assetData = AssetData.Load(assetFileStream);
         var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
 
-        if (textureAssetContent.TextureFilePath == null)
+        if (textureAssetContent.TextureFilePath is null)
+        {
             throw new InvalidOperationException($"{nameof(TextureAssetContent)}.{nameof(TextureAssetContent.TextureFilePath)} cannot be null.");
+        }
 
         var textureFilePath = PathUtils.GetSiblingPath(assetInfo.AssetFilePath, textureAssetContent.TextureFilePath);
         using var textureFileStream = _fileSystem.GetFile(textureFilePath).OpenRead();
