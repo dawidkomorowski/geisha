@@ -35,16 +35,14 @@ public sealed class AssetData
 
     private AssetData(AssetId assetId, AssetType assetType, Content content)
     {
-        // TODO: Consider updating documentation about this validation.
-        if (!assetType.IsValid)
-        {
-            throw new ArgumentException("Asset type is invalid.", nameof(assetType));
-        }
-
         AssetId = assetId;
         AssetType = assetType;
         _content = content;
     }
+
+    // TODO: Consider updating documentation about this validation.
+    private static AssetType Validate(AssetType assetType) =>
+        assetType.IsValid ? assetType : throw new ArgumentException("Asset type is invalid.", nameof(assetType));
 
     /// <summary>
     ///     Gets <see cref="Assets.AssetId" /> of this <see cref="AssetData" />.
@@ -70,7 +68,7 @@ public sealed class AssetData
     /// <param name="content"><see cref="Stream" /> to read from the binary content of <see cref="AssetData" />.</param>
     /// <returns>New instance of <see cref="AssetData" /> with binary content.</returns>
     public static AssetData CreateWithBinaryContent(AssetId assetId, AssetType assetType, Stream content) =>
-        new(assetId, assetType, new BinaryContent(content));
+        new(assetId, Validate(assetType), new BinaryContent(content));
 
     /// <summary>
     ///     Creates new instance of <see cref="AssetData" /> with specified <see cref="Assets.AssetId" />,
@@ -81,7 +79,7 @@ public sealed class AssetData
     /// <param name="content"><see cref="string" /> to be used as content of <see cref="AssetData" />.</param>
     /// <returns>New instance of <see cref="AssetData" /> with <see cref="string" /> content.</returns>
     public static AssetData CreateWithStringContent(AssetId assetId, AssetType assetType, string content) =>
-        new(assetId, assetType, new StringContent(content));
+        new(assetId, Validate(assetType), new StringContent(content));
 
     /// <summary>
     ///     Creates new instance of <see cref="AssetData" /> with specified <see cref="Assets.AssetId" />,
@@ -95,7 +93,7 @@ public sealed class AssetData
     /// </param>
     /// <returns>New instance of <see cref="AssetData" /> with <see cref="string" /> content.</returns>
     public static AssetData CreateWithJsonContent<T>(AssetId assetId, AssetType assetType, T content) where T : notnull =>
-        new(assetId, assetType, new JsonContent(content));
+        new(assetId, Validate(assetType), new JsonContent(content));
 
     /// <summary>
     ///     Loads <see cref="AssetData" /> from specified file.

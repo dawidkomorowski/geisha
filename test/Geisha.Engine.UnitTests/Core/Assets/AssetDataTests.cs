@@ -43,6 +43,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             // Act
             // Assert
             Assert.That(() => AssetData.CreateWithBinaryContent(_assetId, default, _binaryContent), Throws.ArgumentException);
+            Assert.That(_binaryContent.Position, Is.Zero);
         }
 
         [Test]
