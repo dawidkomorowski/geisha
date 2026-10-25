@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
@@ -60,14 +61,16 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
 
         var spriteAnimationAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestSpriteAnimation);
         Assert.That(spriteAnimationAssetInfo.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
+
+        var fontAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestFont);
+        Assert.That(fontAssetInfo.AssetType, Is.EqualTo(RenderingAssetTypes.Font));
     }
 
     [Test]
     public void GetAsset_ShouldLoadAndReturn_InputMapping()
     {
         // Arrange
-        var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
-        SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
+        RegisterAssets();
 
         // Act
         var inputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(TestAssetIds.TestInputMapping);
@@ -120,8 +123,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
     public void GetAsset_ShouldLoadAndReturn_Sound()
     {
         // Arrange
-        var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
-        SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
+        RegisterAssets();
 
         // Act
         var sound = SystemUnderTest.AssetStore.GetAsset<ISound>(TestAssetIds.TestSound);
@@ -135,8 +137,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
     public void GetAsset_ShouldLoadAndReturn_Texture()
     {
         // Arrange
-        var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
-        SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
+        RegisterAssets();
 
         // Act
         var texture = SystemUnderTest.AssetStore.GetAsset<ITexture>(TestAssetIds.TestTexture);
@@ -151,8 +152,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
     public void GetAsset_ShouldLoadAndReturn_Sprite()
     {
         // Arrange
-        var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
-        SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
+        RegisterAssets();
 
         // Act
         var sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(TestAssetIds.TestSprite);
@@ -170,8 +170,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
     public void GetAsset_ShouldLoadAndReturn_SpriteAnimation()
     {
         // Arrange
-        var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
-        SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
+        RegisterAssets();
 
         // Act
         var spriteAnimation = SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(TestAssetIds.TestSpriteAnimation);
@@ -186,5 +185,27 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[1].Sprite), Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame2));
         Assert.That(spriteAnimation.Frames[2].Duration, Is.EqualTo(0.5));
         Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[2].Sprite), Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3));
+    }
+
+    [Test]
+    public void GetAsset_ShouldLoadAndReturn_FontFileInfo()
+    {
+        // Arrange
+        RegisterAssets();
+
+        // Act
+        var fontFileInfo = SystemUnderTest.AssetStore.GetAsset<FontFileInfo>(TestAssetIds.TestFont);
+
+        // Assert
+        Assert.That(fontFileInfo, Is.Not.Null);
+        Assert.That(fontFileInfo.Path, Is.Not.Empty);
+        Assert.That(Path.IsPathFullyQualified(fontFileInfo.Path), Is.True);
+        Assert.That(fontFileInfo.Path, Contains.Substring("Kenney Blocks.ttf"));
+    }
+
+    private void RegisterAssets()
+    {
+        var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
+        SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
     }
 }

@@ -12,6 +12,7 @@ public static class TestAssetIds
     public static AssetId TestSpriteAnimationFrame1 { get; } = AssetId.Parse("7B8D31A4-7A47-4E35-A512-1EBC325CC564");
     public static AssetId TestSpriteAnimationFrame2 { get; } = AssetId.Parse("1387DD0F-849F-4864-9662-9DD26A79EC34");
     public static AssetId TestSpriteAnimationFrame3 { get; } = AssetId.Parse("752DAA7E-41E1-445D-8711-F2B21213B1D9");
+    public static AssetId TestFont { get; } = AssetId.Parse("a9a213bd-f378-44f2-9f74-00f011753fa5");
 
     public static class Sprites
     {
