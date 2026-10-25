@@ -265,7 +265,7 @@ public class AssetToolIntegrationTests
         Assert.That(assetData.AssetId, Is.Not.EqualTo(AssetId.Empty));
         Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
         var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
-        Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+        Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(TestAssetIds.TestTexture.Value));
         Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
         Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
         Assert.That(spriteAssetContent.SourceDimensions.X, Is.EqualTo(10));
@@ -306,7 +306,7 @@ public class AssetToolIntegrationTests
 
         Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
         Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
-        Assert.That(actualAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+        Assert.That(actualAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(TestAssetIds.TestTexture.Value));
     }
 
     [TestCase(false)]
@@ -429,7 +429,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 100, Y = 100 },
                         Pivot = new SerializableVector2 { X = 50, Y = 50 },
@@ -447,7 +447,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 50, Y = 100 },
                         Pivot = new SerializableVector2 { X = 25, Y = 50 },
@@ -465,7 +465,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 100, Y = 50 },
                         Pivot = new SerializableVector2 { X = 50, Y = 25 },
@@ -483,7 +483,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 50, Y = 50 },
                         Pivot = new SerializableVector2 { X = 25, Y = 25 },
@@ -501,7 +501,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 20, Y = 50 },
                         Pivot = new SerializableVector2 { X = 10, Y = 25 },
@@ -519,7 +519,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 50, Y = 20 },
                         Pivot = new SerializableVector2 { X = 25, Y = 10 },
@@ -537,7 +537,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 20, Y = 20 },
                         Pivot = new SerializableVector2 { X = 10, Y = 10 },
@@ -555,7 +555,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_0.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -567,7 +567,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_1.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 25, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -585,7 +585,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_0.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -597,7 +597,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_1.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 25, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -609,7 +609,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_2.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -621,7 +621,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_3.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 75, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -639,7 +639,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_0.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 30, Y = 40 },
                         SourceDimensions = new SerializableVector2 { X = 20, Y = 10 },
                         Pivot = new SerializableVector2 { X = 10, Y = 5 },
@@ -651,7 +651,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_1.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 40 },
                         SourceDimensions = new SerializableVector2 { X = 20, Y = 10 },
                         Pivot = new SerializableVector2 { X = 10, Y = 5 },
@@ -669,7 +669,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_0.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 60, Y = 20 },
                         SourceDimensions = new SerializableVector2 { X = 30, Y = 20 },
                         Pivot = new SerializableVector2 { X = 15, Y = 10 },
@@ -681,7 +681,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_1.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 40 },
                         SourceDimensions = new SerializableVector2 { X = 30, Y = 20 },
                         Pivot = new SerializableVector2 { X = 15, Y = 10 },
@@ -699,7 +699,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_00.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -711,7 +711,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_01.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 25, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -723,7 +723,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_02.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -735,7 +735,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_03.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 75, Y = 0 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -747,7 +747,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_04.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 25 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -759,7 +759,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_05.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 25, Y = 25 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -771,7 +771,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_06.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 25 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -783,7 +783,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_07.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 75, Y = 25 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -795,7 +795,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_08.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -807,7 +807,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_09.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 25, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -819,7 +819,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_10.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -831,7 +831,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_11.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 75, Y = 50 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -843,7 +843,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_12.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 0, Y = 75 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -855,7 +855,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_13.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 25, Y = 75 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -867,7 +867,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_14.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 50, Y = 75 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -879,7 +879,7 @@ public class AssetToolIntegrationTests
                     FileName = "TestSpriteSheet_15.sprite",
                     SpriteAssetContent = new SpriteAssetContent
                     {
-                        TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
+                        TextureAssetId = TestAssetIds.SpriteSheet.Texture.Value,
                         SourceUV = new SerializableVector2 { X = 75, Y = 75 },
                         SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                         Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -1079,11 +1079,11 @@ public class AssetToolIntegrationTests
         var frame1 = spriteAnimationAssetContent.Frames[0];
         var frame2 = spriteAnimationAssetContent.Frames[1];
         var frame3 = spriteAnimationAssetContent.Frames[2];
-        Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+        Assert.That(frame1.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1.Value));
         Assert.That(frame1.Duration, Is.EqualTo(1.0));
-        Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2.Value));
+        Assert.That(frame2.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame2.Value));
         Assert.That(frame2.Duration, Is.EqualTo(1.0));
-        Assert.That(frame3.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+        Assert.That(frame3.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3.Value));
         Assert.That(frame3.Duration, Is.EqualTo(1.0));
     }
 
@@ -1140,11 +1140,11 @@ public class AssetToolIntegrationTests
         var frame1 = spriteAnimationAssetContent.Frames[0];
         var frame2 = spriteAnimationAssetContent.Frames[1];
         var frame3 = spriteAnimationAssetContent.Frames[2];
-        Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+        Assert.That(frame1.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1.Value));
         Assert.That(frame1.Duration, Is.EqualTo(1.0));
-        Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2.Value));
+        Assert.That(frame2.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame2.Value));
         Assert.That(frame2.Duration, Is.EqualTo(1.0));
-        Assert.That(frame3.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+        Assert.That(frame3.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3.Value));
         Assert.That(frame3.Duration, Is.EqualTo(1.0));
     }
 
@@ -1177,9 +1177,9 @@ public class AssetToolIntegrationTests
         Debug.Assert(spriteAnimationAssetContent.Frames != null, "spriteAnimationAssetContent.Frames != null");
         var frame1 = spriteAnimationAssetContent.Frames[0];
         var frame2 = spriteAnimationAssetContent.Frames[1];
-        Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+        Assert.That(frame1.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3.Value));
         Assert.That(frame1.Duration, Is.EqualTo(1.0));
-        Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+        Assert.That(frame2.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1.Value));
         Assert.That(frame2.Duration, Is.EqualTo(1.0));
     }
 

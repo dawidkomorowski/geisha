@@ -165,7 +165,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData.AssetId, Is.Not.EqualTo(AssetId.Empty));
             Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+            Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(TestAssetIds.TestTexture.Value));
             Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
             Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
             Assert.That(spriteAssetContent.SourceDimensions.X, Is.EqualTo(10));
@@ -203,7 +203,7 @@ namespace Geisha.Cli.IntegrationTests
             var actualAssetData = AssetData.Load(spriteAssetFilePath);
 
             Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
-            Assert.That(actualAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+            Assert.That(actualAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(TestAssetIds.TestTexture.Value));
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData1.AssetId, Is.Not.EqualTo(AssetId.Empty));
             Assert.That(assetData1.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent1 = assetData1.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent1.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
+            Assert.That(spriteAssetContent1.TextureAssetId, Is.EqualTo(TestAssetIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent1.SourceUV.X, Is.EqualTo(25));
             Assert.That(spriteAssetContent1.SourceUV.Y, Is.EqualTo(50));
             Assert.That(spriteAssetContent1.SourceDimensions.X, Is.EqualTo(25));
@@ -284,7 +284,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData2.AssetId, Is.Not.EqualTo(AssetId.Empty));
             Assert.That(assetData2.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent2 = assetData2.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent2.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
+            Assert.That(spriteAssetContent2.TextureAssetId, Is.EqualTo(TestAssetIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent2.SourceUV.X, Is.EqualTo(50));
             Assert.That(spriteAssetContent2.SourceUV.Y, Is.EqualTo(50));
             Assert.That(spriteAssetContent2.SourceDimensions.X, Is.EqualTo(25));
@@ -300,7 +300,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData3.AssetId, Is.Not.EqualTo(AssetId.Empty));
             Assert.That(assetData3.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent3 = assetData3.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent3.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
+            Assert.That(spriteAssetContent3.TextureAssetId, Is.EqualTo(TestAssetIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent3.SourceUV.X, Is.EqualTo(75));
             Assert.That(spriteAssetContent3.SourceUV.Y, Is.EqualTo(50));
             Assert.That(spriteAssetContent3.SourceDimensions.X, Is.EqualTo(25));
@@ -316,7 +316,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData4.AssetId, Is.Not.EqualTo(AssetId.Empty));
             Assert.That(assetData4.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent4 = assetData4.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent4.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
+            Assert.That(spriteAssetContent4.TextureAssetId, Is.EqualTo(TestAssetIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent4.SourceUV.X, Is.EqualTo(0));
             Assert.That(spriteAssetContent4.SourceUV.Y, Is.EqualTo(75));
             Assert.That(spriteAssetContent4.SourceDimensions.X, Is.EqualTo(25));
@@ -416,11 +416,11 @@ namespace Geisha.Cli.IntegrationTests
             var frame1 = spriteAnimationAssetContent.Frames[0];
             var frame2 = spriteAnimationAssetContent.Frames[1];
             var frame3 = spriteAnimationAssetContent.Frames[2];
-            Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+            Assert.That(frame1.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1.Value));
             Assert.That(frame1.Duration, Is.EqualTo(1.0));
-            Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2.Value));
+            Assert.That(frame2.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame2.Value));
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
-            Assert.That(frame3.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+            Assert.That(frame3.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3.Value));
             Assert.That(frame3.Duration, Is.EqualTo(1.0));
         }
 
@@ -476,11 +476,11 @@ namespace Geisha.Cli.IntegrationTests
             var frame1 = spriteAnimationAssetContent.Frames[0];
             var frame2 = spriteAnimationAssetContent.Frames[1];
             var frame3 = spriteAnimationAssetContent.Frames[2];
-            Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+            Assert.That(frame1.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1.Value));
             Assert.That(frame1.Duration, Is.EqualTo(1.0));
-            Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2.Value));
+            Assert.That(frame2.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame2.Value));
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
-            Assert.That(frame3.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+            Assert.That(frame3.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3.Value));
             Assert.That(frame3.Duration, Is.EqualTo(1.0));
         }
 
@@ -509,9 +509,9 @@ namespace Geisha.Cli.IntegrationTests
             Debug.Assert(spriteAnimationAssetContent.Frames != null, "spriteAnimationAssetContent.Frames != null");
             var frame1 = spriteAnimationAssetContent.Frames[0];
             var frame2 = spriteAnimationAssetContent.Frames[1];
-            Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+            Assert.That(frame1.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3.Value));
             Assert.That(frame1.Duration, Is.EqualTo(1.0));
-            Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+            Assert.That(frame2.SpriteAssetId, Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1.Value));
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
         }
 

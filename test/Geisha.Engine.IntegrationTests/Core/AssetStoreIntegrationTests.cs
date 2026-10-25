@@ -46,19 +46,19 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         // Assert
         var registeredAssets = SystemUnderTest.AssetStore.GetRegisteredAssets().ToList();
 
-        var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestInputMapping);
+        var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestInputMapping);
         Assert.That(inputMappingAssetInfo.AssetType, Is.EqualTo(InputAssetTypes.InputMapping));
 
-        var soundAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSound);
+        var soundAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestSound);
         Assert.That(soundAssetInfo.AssetType, Is.EqualTo(AudioAssetTypes.Sound));
 
-        var textureAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestTexture);
+        var textureAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestTexture);
         Assert.That(textureAssetInfo.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
 
-        var spriteAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSprite);
+        var spriteAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestSprite);
         Assert.That(spriteAssetInfo.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
 
-        var spriteAnimationAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSpriteAnimation);
+        var spriteAnimationAssetInfo = registeredAssets.Single(i => i.AssetId == TestAssetIds.TestSpriteAnimation);
         Assert.That(spriteAnimationAssetInfo.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
     }
 
@@ -70,7 +70,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
         // Act
-        var inputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
+        var inputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(TestAssetIds.TestInputMapping);
 
         // Assert
         Assert.That(inputMapping, Is.Not.Null);
@@ -124,7 +124,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
         // Act
-        var sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound);
+        var sound = SystemUnderTest.AssetStore.GetAsset<ISound>(TestAssetIds.TestSound);
 
         // Assert
         Assert.That(sound, Is.Not.Null);
@@ -139,7 +139,7 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
         // Act
-        var texture = SystemUnderTest.AssetStore.GetAsset<ITexture>(AssetsIds.TestTexture);
+        var texture = SystemUnderTest.AssetStore.GetAsset<ITexture>(TestAssetIds.TestTexture);
 
         // Assert
         Assert.That(texture, Is.Not.Null);
@@ -155,14 +155,14 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
         // Act
-        var sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite);
+        var sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(TestAssetIds.TestSprite);
 
         // Assert
         Assert.That(sprite, Is.Not.Null);
         Assert.That(sprite.PixelsPerUnit, Is.EqualTo(1));
         Assert.That(sprite.Pivot, Is.EqualTo(new Vector2(5, 5)));
         Assert.That(sprite.SourceDimensions, Is.EqualTo(new Vector2(10, 10)));
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(sprite.SourceTexture), Is.EqualTo(AssetsIds.TestTexture));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(sprite.SourceTexture), Is.EqualTo(TestAssetIds.TestTexture));
         Assert.That(sprite.SourceUV, Is.EqualTo(new Vector2(0, 0)));
     }
 
@@ -174,17 +174,17 @@ public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegration
         SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
         // Act
-        var spriteAnimation = SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(AssetsIds.TestSpriteAnimation);
+        var spriteAnimation = SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(TestAssetIds.TestSpriteAnimation);
 
         // Assert
         Assert.That(spriteAnimation, Is.Not.Null);
         Assert.That(spriteAnimation.Duration, Is.EqualTo(TimeSpan.FromSeconds(2)));
         Assert.That(spriteAnimation.Frames, Has.Length.EqualTo(3));
         Assert.That(spriteAnimation.Frames[0].Duration, Is.EqualTo(1));
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[0].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[0].Sprite), Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame1));
         Assert.That(spriteAnimation.Frames[1].Duration, Is.EqualTo(1.5));
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[1].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[1].Sprite), Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame2));
         Assert.That(spriteAnimation.Frames[2].Duration, Is.EqualTo(0.5));
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[2].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[2].Sprite), Is.EqualTo(TestAssetIds.TestSpriteAnimationFrame3));
     }
 }
