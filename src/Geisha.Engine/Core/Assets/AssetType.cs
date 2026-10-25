@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 
 namespace Geisha.Engine.Core.Assets;
 
+// TODO: Add and update documentation.
 /// <summary>
 ///     Represents type information of an asset independent of actual asset class.
 /// </summary>
@@ -22,8 +24,17 @@ public readonly record struct AssetType
         _value = value ?? throw new ArgumentNullException(nameof(value));
     }
 
+    public bool IsValid => _value is not null;
+
     /// <summary>
     ///     Actual representation of asset type information. Default value is empty <see cref="string" />.
     /// </summary>
-    public string Value => _value ?? string.Empty;
+    public string Value => _value ?? throw new InvalidOperationException("Current instance is invalid.");
+
+    private bool PrintMembers(StringBuilder builder)
+    {
+        builder.Append($"{nameof(IsValid)} = {IsValid}, ");
+        builder.Append($"{nameof(Value)} = {_value}");
+        return true;
+    }
 }
