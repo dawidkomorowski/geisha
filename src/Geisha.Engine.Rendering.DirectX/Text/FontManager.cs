@@ -19,7 +19,7 @@ internal sealed class FontManager : IDisposable
     {
         _dwFactory = dwFactory;
         _systemFontCollection = _dwFactory.GetSystemFontCollection(true);
-        _registeredCustomFonts = new HashSet<string>();
+        _registeredCustomFonts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     }
 
     public void RegisterCustomFonts(IEnumerable<string> fontPaths)
@@ -33,13 +33,14 @@ internal sealed class FontManager : IDisposable
         _dwFactory.RegisterFontCollectionLoader(_customFontCollectionLoader);
         _customFontCollection = new FontCollection(_dwFactory, _customFontCollectionLoader, _customFontCollectionLoader.Key);
 
-        for (var i = 0; i < _customFontCollection.FontFamilyCount; i++)
+        for (var familyIndex = 0; familyIndex < _customFontCollection.FontFamilyCount; familyIndex++)
         {
-            using var fontFamily = _customFontCollection.GetFontFamily(i);
+            using var fontFamily = _customFontCollection.GetFontFamily(familyIndex);
             using var fontFamilyNames = fontFamily.FamilyNames;
-            if (fontFamilyNames.Count > 0)
+
+            for (var nameIndex = 0; nameIndex < fontFamilyNames.Count; nameIndex++)
             {
-                var fontFamilyName = fontFamilyNames.GetString(0);
+                var fontFamilyName = fontFamilyNames.GetString(nameIndex);
                 _registeredCustomFonts.Add(fontFamilyName);
 
                 Logger.Debug("Registered font family: {fontFamilyName}", fontFamilyName);
