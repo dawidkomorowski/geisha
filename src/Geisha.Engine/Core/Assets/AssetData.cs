@@ -40,7 +40,6 @@ public sealed class AssetData
         _content = content;
     }
 
-    // TODO: Consider updating documentation about this validation.
     private static AssetType Validate(AssetType assetType) =>
         assetType.IsValid ? assetType : throw new ArgumentException("Asset type is invalid.", nameof(assetType));
 
@@ -67,6 +66,7 @@ public sealed class AssetData
     /// <param name="assetType"><see cref="Assets.AssetType" /> of <see cref="AssetData" />.</param>
     /// <param name="content"><see cref="Stream" /> to read from the binary content of <see cref="AssetData" />.</param>
     /// <returns>New instance of <see cref="AssetData" /> with binary content.</returns>
+    /// <exception cref="ArgumentException"><paramref name="assetType" /> is invalid.</exception>
     public static AssetData CreateWithBinaryContent(AssetId assetId, AssetType assetType, Stream content) =>
         new(assetId, Validate(assetType), new BinaryContent(content));
 
@@ -78,6 +78,7 @@ public sealed class AssetData
     /// <param name="assetType"><see cref="Assets.AssetType" /> of <see cref="AssetData" />.</param>
     /// <param name="content"><see cref="string" /> to be used as content of <see cref="AssetData" />.</param>
     /// <returns>New instance of <see cref="AssetData" /> with <see cref="string" /> content.</returns>
+    /// <exception cref="ArgumentException"><paramref name="assetType" /> is invalid.</exception>
     public static AssetData CreateWithStringContent(AssetId assetId, AssetType assetType, string content) =>
         new(assetId, Validate(assetType), new StringContent(content));
 
@@ -92,6 +93,7 @@ public sealed class AssetData
     ///     <see cref="AssetData" />.
     /// </param>
     /// <returns>New instance of <see cref="AssetData" /> with <see cref="string" /> content.</returns>
+    /// <exception cref="ArgumentException"><paramref name="assetType" /> is invalid.</exception>
     public static AssetData CreateWithJsonContent<T>(AssetId assetId, AssetType assetType, T content) where T : notnull =>
         new(assetId, Validate(assetType), new JsonContent(content));
 
