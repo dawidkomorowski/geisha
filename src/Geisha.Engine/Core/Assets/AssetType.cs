@@ -1,71 +1,48 @@
 ﻿using System;
+using System.Text;
 
-namespace Geisha.Engine.Core.Assets
+namespace Geisha.Engine.Core.Assets;
+
+/// <summary>
+///     Represents a string identifier for an asset type, independent of the actual asset class.
+/// </summary>
+/// <remarks>
+///     A default-initialized instance is invalid. Use <see cref="IsValid" /> to check an instance before accessing
+///     <see cref="Value" />.
+/// </remarks>
+public readonly record struct AssetType
 {
+    private readonly string? _value;
+
     /// <summary>
-    ///     Represents type information of an asset independent of actual asset class.
+    ///     Creates new instance of <see cref="AssetType" /> given <see cref="string" /> value representing the asset type.
     /// </summary>
-    public readonly struct AssetType : IEquatable<AssetType>
+    /// <param name="value">
+    ///     Value representing the asset type. It can be any kind of unique identifier of the asset type, but it
+    ///     may be useful to have it human-readable. An empty string is allowed and is distinct from a default-initialized
+    ///     invalid instance.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> is <c>null</c>.</exception>
+    public AssetType(string value)
     {
-        private readonly string? _value;
+        _value = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
-        /// <summary>
-        ///     Creates new instance of <see cref="AssetType" /> given <see cref="string" /> value representing the asset type.
-        /// </summary>
-        /// <param name="value">
-        ///     Value representing the asset type. It can be any kind of unique identifier of the asset type but it
-        ///     may be useful to have it human readable.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> is <c>null</c>.</exception>
-        public AssetType(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
+    /// <summary>
+    ///     Gets whether this instance was initialized with a value.
+    /// </summary>
+    public bool IsValid => _value is not null;
 
-        /// <summary>
-        ///     Actual representation of asset type information. Default value is empty <see cref="string" />.
-        /// </summary>
-        public string Value => _value ?? string.Empty;
+    /// <summary>
+    ///     Gets the string identifier represented by this instance.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">This instance is default-initialized and invalid.</exception>
+    public string Value => _value ?? throw new InvalidOperationException("Current instance is invalid.");
 
-        /// <summary>
-        ///     Returns <see cref="Value" /> of this <see cref="AssetType" /> instance.
-        /// </summary>
-        /// <returns><see cref="Value" /> of this <see cref="AssetType" /> instance.</returns>
-        public override string ToString() => Value;
-
-        #region Equality members
-
-        /// <inheritdoc />
-        public bool Equals(AssetType other) => Value == other.Value;
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => obj is AssetType other && Equals(other);
-
-        /// <inheritdoc />
-        public override int GetHashCode() => Value.GetHashCode();
-
-        /// <summary>
-        ///     Determines whether two specified instances of <see cref="AssetType" /> are equal.
-        /// </summary>
-        /// <param name="left">The first object to compare.</param>
-        /// <param name="right">The second object to compare.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
-        ///     <see cref="AssetType" />; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool operator ==(AssetType left, AssetType right) => left.Equals(right);
-
-        /// <summary>
-        ///     Determines whether two specified instances of <see cref="AssetType" /> are not equal.
-        /// </summary>
-        /// <param name="left">The first object to compare.</param>
-        /// <param name="right">The second object to compare.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
-        ///     <see cref="AssetType" />; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool operator !=(AssetType left, AssetType right) => !left.Equals(right);
-
-        #endregion
+    private bool PrintMembers(StringBuilder builder)
+    {
+        builder.Append($"{nameof(IsValid)} = {IsValid}, ");
+        builder.Append($"{nameof(Value)} = {_value}");
+        return true;
     }
 }

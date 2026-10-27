@@ -4,9 +4,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Rendering.DirectX.Text;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -22,22 +22,20 @@ namespace Geisha.Engine.Rendering.DirectX;
 internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 {
     private readonly DeviceContext _deviceContext;
+    private readonly DirectWriteContext _directWriteContext;
     private readonly Statistics _statistics;
 
-    private readonly SharpDX.DirectWrite.Factory _dwFactory;
     private readonly SolidColorBrush _d2D1SolidColorBrush;
     private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
-    private TextFormat? _d2D1TextFormat;
-    private string _currentFontFamilyName = string.Empty;
     private bool _clippingEnabled;
 
-    public RenderingContext2D(DeviceContext deviceContext, Size renderTargetSize, Statistics statistics)
+    public RenderingContext2D(DeviceContext deviceContext, DirectWriteContext directWriteContext, Size renderTargetSize, Statistics statistics)
     {
         _deviceContext = deviceContext;
+        _directWriteContext = directWriteContext;
         RenderTargetSize = renderTargetSize;
         _statistics = statistics;
 
-        _dwFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
         _d2D1SolidColorBrush = new SolidColorBrush(_deviceContext.D2D1DeviceContext, default);
         _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_deviceContext.D2D1DeviceContext);
     }
@@ -96,12 +94,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
         return new Texture(d2D1Bitmap);
     }
 
-    public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
-    {
-        var dwTextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
-        var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
-        return new TextLayout(dwTextFormat, dwTextLayout, text);
-    }
+    public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight) =>
+        _directWriteContext.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight);
 
     public void CaptureScreenshotAsPng(Stream stream)
     {
@@ -241,18 +235,12 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
     {
-        if (_d2D1TextFormat == null || _currentFontFamilyName != fontFamilyName ||
-            Math.Abs(_d2D1TextFormat.FontSize - (float)fontSize.Dips) > float.Epsilon)
-        {
-            _d2D1TextFormat?.Dispose();
-            _d2D1TextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
-            _currentFontFamilyName = fontFamilyName;
-        }
+        var textFormat = _directWriteContext.GetCachedTextFormat(fontFamilyName, fontSize);
 
         _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
         _deviceContext.D2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-        _deviceContext.D2D1DeviceContext.DrawText(text, _d2D1TextFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+        _deviceContext.D2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
 
         _statistics.IncrementDrawCalls();
     }
@@ -344,10 +332,8 @@ internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
 
     public void Dispose()
     {
-        _d2D1TextFormat?.Dispose();
         _d2D1SpriteBatch.Dispose();
         _d2D1SolidColorBrush.Dispose();
-        _dwFactory.Dispose();
     }
 
     #endregion

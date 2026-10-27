@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Math;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Rendering.Backend;
 
@@ -72,4 +73,10 @@ public interface IRenderingBackend
     ///     render target, <paramref name="size" /> should match the window client-area size.
     /// </remarks>
     void ResizeBuffers(Size size);
+
+    /// <summary>
+    ///     Registers font files for use by the rendering backend.
+    /// </summary>
+    /// <param name="fontPaths">Paths to the font files to register.</param>
+    void RegisterCustomFonts(IEnumerable<string> fontPaths);
 }

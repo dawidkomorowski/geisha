@@ -158,8 +158,8 @@ namespace Geisha.Engine
         private void RegisterAssets()
         {
             var assetStore = _container.Resolve<IAssetStore>();
-
             assetStore.RegisterAssets(_configuration.Core.AssetsRootDirectoryPath);
+            CustomFonts.Register(assetStore, _renderingBackend);
         }
 
         private void LoadStartUpScene()

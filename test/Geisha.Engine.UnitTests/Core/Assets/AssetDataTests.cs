@@ -37,6 +37,34 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         }
 
         [Test]
+        public void Create_AssetData_WithBinaryContent_ThrowsException_GivenInvalidAssetType()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.That(() => AssetData.CreateWithBinaryContent(_assetId, default, _binaryContent), Throws.ArgumentException);
+            Assert.That(_binaryContent.Position, Is.Zero);
+        }
+
+        [Test]
+        public void Create_AssetData_WithStringContent_ThrowsException_GivenInvalidAssetType()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.That(() => AssetData.CreateWithStringContent(_assetId, default, StringContent), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void Create_AssetData_WithJsonContent_ThrowsException_GivenInvalidAssetType()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.That(() => AssetData.CreateWithJsonContent(_assetId, default, _jsonContent), Throws.ArgumentException);
+        }
+
+        [Test]
         public void Create_AssetData_WithBinaryContent()
         {
             // Arrange
@@ -210,7 +238,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         private static byte[] ReadToEnd(Stream stream)
         {
             using var streamReader = new BinaryReader(stream);
-            return streamReader.ReadBytes((int) stream.Length);
+            return streamReader.ReadBytes((int)stream.Length);
         }
 
         private sealed class JsonContent

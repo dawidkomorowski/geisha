@@ -136,7 +136,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
 
         var entity1 = CreateEntity(scene, "Entity1");
         var spriteAnimationComponent1 = entity1.CreateComponent<SpriteAnimationComponent>();
-        spriteAnimationComponent1.AddAnimation("animation1", SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(AssetsIds.TestSpriteAnimation));
+        spriteAnimationComponent1.AddAnimation("animation1", SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(TestAssetIds.TestSpriteAnimation));
         spriteAnimationComponent1.PlayAnimation("animation1");
         spriteAnimationComponent1.Position = 0.7;
         spriteAnimationComponent1.PlaybackSpeed = 1.3;
@@ -145,7 +145,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
 
         var entity2 = CreateEntity(scene, "Entity2");
         var spriteAnimationComponent2 = entity2.CreateComponent<SpriteAnimationComponent>();
-        spriteAnimationComponent2.AddAnimation("animation2", SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(AssetsIds.TestSpriteAnimation));
+        spriteAnimationComponent2.AddAnimation("animation2", SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(TestAssetIds.TestSpriteAnimation));
         spriteAnimationComponent2.PlaybackSpeed = 2.5;
         spriteAnimationComponent2.PlayInLoop = false;
         spriteAnimationComponent2.IgnoreTimeScale = false;
@@ -163,11 +163,11 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent1.Animations, Has.Count.EqualTo(1));
         Assert.That(loadedComponent1.Animations.Single().Key, Is.EqualTo("animation1"));
         Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.Animations.Single().Value),
-            Is.EqualTo(AssetsIds.TestSpriteAnimation));
+            Is.EqualTo(TestAssetIds.TestSpriteAnimation));
         Assert.That(loadedComponent1.CurrentAnimation, Is.Not.Null);
         Assert.That(loadedComponent1.CurrentAnimation.Value.Name, Is.EqualTo("animation1"));
         Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.CurrentAnimation.Value.Animation),
-            Is.EqualTo(AssetsIds.TestSpriteAnimation));
+            Is.EqualTo(TestAssetIds.TestSpriteAnimation));
         Assert.That(loadedComponent1.IsPlaying, Is.True);
         Assert.That(loadedComponent1.Position, Is.EqualTo(spriteAnimationComponent1.Position));
         Assert.That(loadedComponent1.PlaybackSpeed, Is.EqualTo(spriteAnimationComponent1.PlaybackSpeed));
@@ -180,7 +180,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         Assert.That(loadedComponent2.Animations, Has.Count.EqualTo(1));
         Assert.That(loadedComponent2.Animations.Single().Key, Is.EqualTo("animation2"));
         Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.Animations.Single().Value),
-            Is.EqualTo(AssetsIds.TestSpriteAnimation));
+            Is.EqualTo(TestAssetIds.TestSpriteAnimation));
         Assert.That(loadedComponent2.CurrentAnimation, Is.Null);
         Assert.That(loadedComponent2.IsPlaying, Is.False);
         Assert.That(loadedComponent2.Position, Is.EqualTo(spriteAnimationComponent2.Position));
@@ -201,7 +201,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
 
         var entityWithAudioSource = CreateEntity(scene, "EntityWithAudioSource");
         var audioSourceComponent = entityWithAudioSource.CreateComponent<AudioSourceComponent>();
-        audioSourceComponent.Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound);
+        audioSourceComponent.Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(TestAssetIds.TestSound);
 
         // Act
         SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -213,7 +213,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
         Assert.That(loadedComponent.IsPlaying, Is.EqualTo(audioSourceComponent.IsPlaying));
         Assert.That(loadedComponent.Sound, Is.Not.Null);
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sound), Is.EqualTo(AssetsIds.TestSound));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sound), Is.EqualTo(TestAssetIds.TestSound));
     }
 
     #endregion
@@ -356,12 +356,12 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
 
         var entity1 = CreateEntity(scene, "Entity1");
         var inputComponent1 = entity1.CreateComponent<InputComponent>();
-        inputComponent1.InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
+        inputComponent1.InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(TestAssetIds.TestInputMapping);
         inputComponent1.Enabled = true;
 
         var entity2 = CreateEntity(scene, "Entity2");
         var inputComponent2 = entity2.CreateComponent<InputComponent>();
-        inputComponent2.InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
+        inputComponent2.InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(TestAssetIds.TestInputMapping);
         inputComponent2.Enabled = false;
 
         // Act
@@ -376,7 +376,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent1 = loadedEntity1.GetComponent<InputComponent>();
         Assert.That(loadedComponent1.HardwareInput, Is.EqualTo(HardwareInput.Empty));
         Assert.That(loadedComponent1.InputMapping, Is.Not.Null);
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.InputMapping), Is.EqualTo(TestAssetIds.TestInputMapping));
         Assert.That(loadedComponent1.Enabled, Is.EqualTo(inputComponent1.Enabled));
 
         var loadedEntity2 = loadedScene.RootEntities.Single(e => e.Name == "Entity2");
@@ -384,7 +384,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         var loadedComponent2 = loadedEntity2.GetComponent<InputComponent>();
         Assert.That(loadedComponent2.HardwareInput, Is.EqualTo(HardwareInput.Empty));
         Assert.That(loadedComponent2.InputMapping, Is.Not.Null);
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.InputMapping), Is.EqualTo(TestAssetIds.TestInputMapping));
         Assert.That(loadedComponent2.Enabled, Is.EqualTo(inputComponent2.Enabled));
     }
 
@@ -704,7 +704,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
 
         var entity1 = CreateEntity(scene, "Entity1");
         var spriteRendererComponent1 = entity1.CreateComponent<SpriteRendererComponent>();
-        spriteRendererComponent1.Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite);
+        spriteRendererComponent1.Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(TestAssetIds.TestSprite);
         spriteRendererComponent1.Opacity = 0.5;
         spriteRendererComponent1.BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
         spriteRendererComponent1.Visible = true;
@@ -714,7 +714,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
 
         var entity2 = CreateEntity(scene, "Entity2");
         var spriteRendererComponent2 = entity2.CreateComponent<SpriteRendererComponent>();
-        spriteRendererComponent2.Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite);
+        spriteRendererComponent2.Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(TestAssetIds.TestSprite);
         spriteRendererComponent2.Opacity = 0.75;
         spriteRendererComponent2.BitmapInterpolationMode = BitmapInterpolationMode.Linear;
         spriteRendererComponent2.Visible = false;
@@ -733,7 +733,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         AssertEntitiesAreEqual(loadedEntity1, entity1);
         var loadedComponent1 = loadedEntity1.GetComponent<SpriteRendererComponent>();
         Assert.That(loadedComponent1.Sprite, Is.Not.Null);
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.Sprite), Is.EqualTo(AssetsIds.TestSprite));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent1.Sprite), Is.EqualTo(TestAssetIds.TestSprite));
         Assert.That(loadedComponent1.Opacity, Is.EqualTo(spriteRendererComponent1.Opacity));
         Assert.That(loadedComponent1.BitmapInterpolationMode, Is.EqualTo(spriteRendererComponent1.BitmapInterpolationMode));
         Assert.That(loadedComponent1.Visible, Is.EqualTo(spriteRendererComponent1.Visible));
@@ -745,7 +745,7 @@ public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrati
         AssertEntitiesAreEqual(loadedEntity2, entity2);
         var loadedComponent2 = loadedEntity2.GetComponent<SpriteRendererComponent>();
         Assert.That(loadedComponent2.Sprite, Is.Not.Null);
-        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.Sprite), Is.EqualTo(AssetsIds.TestSprite));
+        Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent2.Sprite), Is.EqualTo(TestAssetIds.TestSprite));
         Assert.That(loadedComponent2.Opacity, Is.EqualTo(spriteRendererComponent2.Opacity));
         Assert.That(loadedComponent2.BitmapInterpolationMode, Is.EqualTo(spriteRendererComponent2.BitmapInterpolationMode));
         Assert.That(loadedComponent2.Visible, Is.EqualTo(spriteRendererComponent2.Visible));

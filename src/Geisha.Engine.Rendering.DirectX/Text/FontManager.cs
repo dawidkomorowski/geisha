@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using NLog;
+using SharpDX.DirectWrite;
+
+namespace Geisha.Engine.Rendering.DirectX.Text;
+
+internal sealed class FontManager : IDisposable
+{
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+    private readonly Factory _dwFactory;
+    private readonly FontCollection _systemFontCollection;
+    private readonly HashSet<string> _registeredCustomFonts;
+    private FontCollection? _customFontCollection;
+    private CustomFontCollectionLoader? _customFontCollectionLoader;
+
+    public FontManager(Factory dwFactory)
+    {
+        _dwFactory = dwFactory;
+        _systemFontCollection = _dwFactory.GetSystemFontCollection(true);
+        _registeredCustomFonts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    }
+
+    public void RegisterCustomFonts(IEnumerable<string> fontPaths)
+    {
+        if (_customFontCollectionLoader is not null)
+        {
+            throw new InvalidOperationException($"Custom font registration can only be performed once per {nameof(FontManager)} instance.");
+        }
+
+        _customFontCollectionLoader = new CustomFontCollectionLoader(fontPaths);
+        _dwFactory.RegisterFontCollectionLoader(_customFontCollectionLoader);
+        _customFontCollection = new FontCollection(_dwFactory, _customFontCollectionLoader, _customFontCollectionLoader.Key);
+
+        for (var familyIndex = 0; familyIndex < _customFontCollection.FontFamilyCount; familyIndex++)
+        {
+            using var fontFamily = _customFontCollection.GetFontFamily(familyIndex);
+            using var fontFamilyNames = fontFamily.FamilyNames;
+
+            for (var nameIndex = 0; nameIndex < fontFamilyNames.Count; nameIndex++)
+            {
+                var fontFamilyName = fontFamilyNames.GetString(nameIndex);
+                _registeredCustomFonts.Add(fontFamilyName);
+
+                Logger.Debug("Registered font family: {fontFamilyName}", fontFamilyName);
+            }
+        }
+    }
+
+    public FontCollection GetFontCollection(string fontFamilyName)
+    {
+        if (_customFontCollection is not null && _registeredCustomFonts.Contains(fontFamilyName))
+        {
+            return _customFontCollection;
+        }
+
+        return _systemFontCollection;
+    }
+
+    public void Dispose()
+    {
+        _registeredCustomFonts.Clear();
+        _customFontCollection?.Dispose();
+
+        if (_customFontCollectionLoader is not null)
+        {
+            _dwFactory.UnregisterFontCollectionLoader(_customFontCollectionLoader);
+            _customFontCollectionLoader.Dispose();
+        }
+
+        _systemFontCollection.Dispose();
+    }
+}

@@ -1,36 +1,47 @@
 using NUnit.Framework;
 
-namespace Geisha.Tools.UnitTests
+namespace Geisha.Tools.UnitTests;
+
+[TestFixture]
+public class AssetToolTests
 {
-    [TestFixture]
-    public class AssetToolTests
+    [TestCase(".unsupported", false)]
+    [TestCase(".wav", true)]
+    [TestCase(".mp3", true)]
+    public void IsSupportedSoundFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedSoundFileFormat(string fileExtension, bool expectedIsSupported)
     {
-        [TestCase(".unsupported", false)]
-        [TestCase(".wav", true)]
-        [TestCase(".mp3", true)]
-        public void IsSupportedSoundFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedSoundFileFormat(string fileExtension, bool expectedIsSupported)
-        {
-            // Arrange
-            // Act
-            var isSupported = AssetTool.IsSupportedSoundFileFormat(fileExtension);
+        // Arrange
+        // Act
+        var isSupported = AssetTool.IsSupportedSoundFileFormat(fileExtension);
 
-            // Assert
-            Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
-        }
+        // Assert
+        Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
+    }
 
-        [TestCase(".unsupported", false)]
-        [TestCase(".bmp", true)]
-        [TestCase(".png", true)]
-        [TestCase(".jpg", true)]
-        public void IsSupportedTextureFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedTextureFileFormat(string fileExtension,
-            bool expectedIsSupported)
-        {
-            // Arrange
-            // Act
-            var isSupported = AssetTool.IsSupportedTextureFileFormat(fileExtension);
+    [TestCase(".unsupported", false)]
+    [TestCase(".bmp", true)]
+    [TestCase(".png", true)]
+    [TestCase(".jpg", true)]
+    public void IsSupportedTextureFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedTextureFileFormat(string fileExtension,
+        bool expectedIsSupported)
+    {
+        // Arrange
+        // Act
+        var isSupported = AssetTool.IsSupportedTextureFileFormat(fileExtension);
 
-            // Assert
-            Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
-        }
+        // Assert
+        Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
+    }
+
+    [TestCase(".unsupported", false)]
+    [TestCase(".ttf", true)]
+    public void IsSupportedFontFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedFontFileFormat(string fileExtension, bool expectedIsSupported)
+    {
+        // Arrange
+        // Act
+        var isSupported = AssetTool.IsSupportedFontFileFormat(fileExtension);
+
+        // Assert
+        Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
     }
 }

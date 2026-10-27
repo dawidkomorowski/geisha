@@ -69,6 +69,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             base.SetUp();
 
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
+            CustomFonts.Register(SystemUnderTest.AssetStore, SystemUnderTest.RenderingBackend);
 
             LogRenderingEnvironment(SystemUnderTest.RenderingBackend.Info);
         }
@@ -147,26 +148,28 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     // Basic scenario
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-39, 39));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part1Sprite, translation: new Vector2(39, 39));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part2Sprite, translation: new Vector2(-39, -39));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
-                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-39, 39));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part1Sprite, translation: new Vector2(39, 39));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part2Sprite, translation: new Vector2(-39, -39));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
+                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
 
                     // 2D transformations
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75), rotation: Angle.DegreesToRadians(45),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75),
+                        rotation: Angle.DegreesToRadians(45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.DegreesToRadians(-45),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75),
+                        rotation: Angle.DegreesToRadians(-45),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
                         rotation: Angle.DegreesToRadians(-135),
                         scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75),
                         rotation: Angle.DegreesToRadians(135),
                         scale: new Vector2(0.2, 0.2));
 
                     // Visibility
-                    var visibilityEntity = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, scale: new Vector2(2, 2));
+                    var visibilityEntity = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, scale: new Vector2(2, 2));
                     visibilityEntity.GetComponent<SpriteRendererComponent>().Visible = false;
                 }
             },
@@ -178,16 +181,16 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture0, translation: new Vector2(-50, 50));
+                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture0, translation: new Vector2(-50, 50));
                     entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
 
-                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture1, translation: new Vector2(50, 50));
+                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture1, translation: new Vector2(50, 50));
                     entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
 
-                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture2, translation: new Vector2(-50, -50));
+                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture2, translation: new Vector2(-50, -50));
                     entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
 
-                    var entity4 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture3, translation: new Vector2(50, -50));
+                    var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture3, translation: new Vector2(50, -50));
                     entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
                 }
             },
@@ -199,16 +202,16 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-50, 50));
+                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-50, 50));
                     entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
 
-                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(50, 50));
+                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(50, 50));
                     entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
 
-                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-50, -50));
+                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-50, -50));
                     entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
 
-                    var entity4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(50, -50));
+                    var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(50, -50));
                     entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
                 }
             },
@@ -220,13 +223,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(30, -30));
+                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(30, -30));
                     entity1.GetComponent<SpriteRendererComponent>().OrderInLayer = 3;
 
-                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(0, 0));
+                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(0, 0));
                     entity2.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
 
-                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-30, 30));
+                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-30, 30));
                     entity3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
                 }
             },
@@ -492,11 +495,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     e3.GetComponent<EllipseRendererComponent>().SortingLayerName = Foreground;
 
                     // Sprite
-                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
-                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
-                    var s1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
+                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
+                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
+                    var s1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
                     s1.GetComponent<SpriteRendererComponent>().SortingLayerName = Background;
-                    var s3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
+                    var s3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
                     s3.GetComponent<SpriteRendererComponent>().SortingLayerName = Foreground;
 
                     // Text
@@ -538,11 +541,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     e3.GetComponent<EllipseRendererComponent>().OrderInLayer = 1;
 
                     // Sprite
-                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
-                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
-                    var s1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
+                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
+                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
+                    var s1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
                     s1.GetComponent<SpriteRendererComponent>().OrderInLayer = -1;
-                    var s3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
+                    var s3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
                     s3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
 
                     // Text
@@ -576,7 +579,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(75, 75));
 
                     // Sprite
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
 
                     // Text
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
@@ -602,7 +605,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(75, 75));
 
                     // Sprite
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
 
                     // Text
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
@@ -628,7 +631,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(75, 75));
 
                     // Sprite
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
 
                     // Text
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
@@ -663,11 +666,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         ellipse.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
                         ellipse.Parent = root;
 
-                        var sprite = entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
+                        var sprite = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
                         sprite.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
                         sprite.Parent = root;
 
-                        var colorBackground = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, scale: new Vector2(1.28, 1.28));
+                        var colorBackground = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, scale: new Vector2(1.28, 1.28));
                         colorBackground.GetComponent<SpriteRendererComponent>().OrderInLayer = 0;
                         colorBackground.Parent = root;
 
@@ -749,11 +752,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite);
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-120, -120));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(125, -125));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite);
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-120, -120));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(125, -125));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150));
                 }
             },
             new()
@@ -817,14 +820,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100),
                         rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115),
                         rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120),
                         rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150),
+                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150),
                         rotation: Angle.DegreesToRadians(45));
                 }
             },
@@ -910,23 +913,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                    var e1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e1.Parent = p1;
 
                     var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                    var e2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e2.Parent = p2;
 
                     var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                    var e3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e3.Parent = p3;
 
                     var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                    var e4 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e4.Parent = p4;
 
                     var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                    var e5 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
                     e5.Parent = p5;
                 }
             },
@@ -999,8 +1002,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(-39, 0), scale: new Vector2(3, 3));
-                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(39, 0), scale: new Vector2(3, 3));
+                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 0), scale: new Vector2(3, 3));
+                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 0), scale: new Vector2(3, 3));
 
                     // Set interpolation mode to NearestNeighbor for entity1, resulting in sharper pixels
                     entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
@@ -1016,10 +1019,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(-39, 39), scale: new Vector2(3, 3));
-                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(39, 39), scale: new Vector2(3, 3));
-                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(-39, -39), scale: new Vector2(3, 3));
-                    var entity4 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.PixelArt, translation: new Vector2(39, -39), scale: new Vector2(3, 3));
+                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 39), scale: new Vector2(3, 3));
+                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 39), scale: new Vector2(3, 3));
+                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, -39),
+                        scale: new Vector2(3, 3));
+                    var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, -39), scale: new Vector2(3, 3));
 
                     // Set interpolation mode to NearestNeighbor for entity1 and entity2, resulting in sharper pixels
                     entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
@@ -1027,6 +1031,24 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     // Set interpolation mode to Linear for entity3 and entity4, resulting in smoother pixels
                     entity3.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
                     entity4.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+                }
+            },
+            new()
+            {
+                Name = "43 Text rendering - custom font",
+                ExpectedReferenceImageFile = "43_TextRendering_CustomFont.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 60));
+                    t1.FontFamilyName = "Kenney Blocks";
+
+                    var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 15));
+                    t2.FontFamilyName = "Kenney Future";
+
+                    var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, -30));
+                    t3.FontFamilyName = "Kenney Pixel";
                 }
             }
         };
@@ -1070,7 +1092,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             TestContext.WriteLine($"Rendering Backend: {info.Name}");
             TestContext.WriteLine($"Adapter: {info.GraphicsAdapterName}");
             TestContext.WriteLine($"D3D Feature Level: {info.FeatureLevel}");
-            TestContext.WriteLine("Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
+            TestContext.WriteLine("System Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
         }
 
         /// <summary>
