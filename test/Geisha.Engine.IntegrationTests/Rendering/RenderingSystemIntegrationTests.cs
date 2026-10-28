@@ -20,1322 +20,1321 @@ using SixLabors.ImageSharp.PixelFormats;
 using Color = Geisha.Engine.Core.Math.Color;
 using Size = Geisha.Engine.Core.Math.Size;
 
-namespace Geisha.Engine.IntegrationTests.Rendering
-{
-    internal sealed class RenderingSystemIntegrationTestsSut
-    {
-        public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IDebugRenderer debugRenderer, IRenderingBackend renderingBackend,
-            IRenderingGameLoopStep renderingSystem, ISceneManagerInternal sceneManager)
-        {
-            AssetStore = assetStore;
-            DebugRenderer = debugRenderer;
-            RenderingBackend = renderingBackend;
-            RenderingSystem = renderingSystem;
-            SceneManager = sceneManager;
-        }
+namespace Geisha.Engine.IntegrationTests.Rendering;
 
-        public IAssetStore AssetStore { get; }
-        public IDebugRenderer DebugRenderer { get; }
-        public IRenderingBackend RenderingBackend { get; }
-        public IRenderingGameLoopStep RenderingSystem { get; }
-        public ISceneManagerInternal SceneManager { get; }
+internal sealed class RenderingSystemIntegrationTestsSut
+{
+    public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IDebugRenderer debugRenderer, IRenderingBackend renderingBackend,
+        IRenderingGameLoopStep renderingSystem, ISceneManagerInternal sceneManager)
+    {
+        AssetStore = assetStore;
+        DebugRenderer = debugRenderer;
+        RenderingBackend = renderingBackend;
+        RenderingSystem = renderingSystem;
+        SceneManager = sceneManager;
     }
 
-    [TestFixture]
-    internal class RenderingSystemIntegrationTests : IntegrationTests<RenderingSystemIntegrationTestsSut>
+    public IAssetStore AssetStore { get; }
+    public IDebugRenderer DebugRenderer { get; }
+    public IRenderingBackend RenderingBackend { get; }
+    public IRenderingGameLoopStep RenderingSystem { get; }
+    public ISceneManagerInternal SceneManager { get; }
+}
+
+[TestFixture]
+internal class RenderingSystemIntegrationTests : IntegrationTests<RenderingSystemIntegrationTestsSut>
+{
+    private const string Background = "Background";
+    private const string Foreground = "Foreground";
+
+    protected override bool ShowDebugWindow => false;
+
+    protected override Configuration Configure(Configuration configuration)
     {
-        private const string Background = "Background";
-        private const string Foreground = "Foreground";
-
-        protected override bool ShowDebugWindow => false;
-
-        protected override Configuration Configure(Configuration configuration)
+        return base.Configure(configuration) with
         {
-            return base.Configure(configuration) with
+            Rendering = configuration.Rendering with
             {
-                Rendering = configuration.Rendering with
-                {
-                    SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
-                },
-                Windowing = configuration.Windowing with
-                {
-                    WindowClientSize = new Size(200, 200)
-                }
-            };
-        }
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
-            CustomFonts.Register(SystemUnderTest.AssetStore, SystemUnderTest.RenderingBackend);
-
-            LogRenderingEnvironment(SystemUnderTest.RenderingBackend.Info);
-        }
-
-        public sealed class RenderingTestCase
-        {
-            public string Name { get; init; } = string.Empty;
-            public string ExpectedReferenceImageFile { get; init; } = string.Empty;
-            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; init; } = (_, _, _) => { };
-            public ImageTolerance Tolerance { get; init; } = ImageTolerance.Strict;
-
-            public override string ToString() => Name;
-        }
-
-        public readonly record struct ImageTolerance(int ChannelTolerance, double MaxDiffRatio)
-        {
-            public static readonly ImageTolerance Strict = new(0, 0);
-        }
-
-        public static readonly RenderingTestCase[] RenderingTestCases =
-        {
-            new()
-            {
-                Name = "01 Rectangle rendering",
-                ExpectedReferenceImageFile = "01_Rectangles.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    // Basic scenario
-                    entityFactory.CreateRectangle(scene, new Vector2(40, 20), Color.Red, translation: new Vector2(50, -50));
-                    entityFactory.CreateRectangle(scene, new Vector2(20, 40), Color.Blue, translation: new Vector2(-50, 50));
-                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true);
-
-                    // 2D transformations
-                    entityFactory.CreateRectangle(scene, new Vector2(100, 100), Color.FromArgb(255, 255, 255, 0), fillInterior: true,
-                        translation: new Vector2(50, 50), rotation: Angle.DegreesToRadians(45), scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateRectangle(scene, new Vector2(200, 100), Color.FromArgb(255, 255, 0, 255), fillInterior: true,
-                        translation: new Vector2(-50, -50), rotation: Angle.DegreesToRadians(20), scale: new Vector2(0.2, 0.3));
-
-                    // Visibility
-                    var visibilityEntity = entityFactory.CreateRectangle(scene, new Vector2(200, 200), Color.Black, true);
-                    visibilityEntity.GetComponent<RectangleRendererComponent>().Visible = false;
-                }
+                SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
             },
-            new()
+            Windowing = configuration.Windowing with
             {
-                Name = "02 Ellipse rendering",
-                ExpectedReferenceImageFile = "02_Ellipses.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    // Basic scenario
-                    entityFactory.CreateEllipse(scene, 20, 10, Color.Red, translation: new Vector2(50, -50));
-                    entityFactory.CreateEllipse(scene, 10, 20, Color.Blue, translation: new Vector2(-50, 50));
-                    entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true);
-
-                    // 2D transformations
-                    entityFactory.CreateEllipse(scene, 100, 100, Color.FromArgb(255, 255, 255, 0), fillInterior: true,
-                        translation: new Vector2(50, 50), rotation: Angle.DegreesToRadians(45), scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateEllipse(scene, 200, 100, Color.FromArgb(255, 255, 0, 255), fillInterior: true,
-                        translation: new Vector2(-50, -50), rotation: Angle.DegreesToRadians(20), scale: new Vector2(0.2, 0.3));
-
-                    // Visibility
-                    var visibilityEntity = entityFactory.CreateEllipse(scene, 200, 200, Color.Black, true);
-                    visibilityEntity.GetComponent<EllipseRendererComponent>().Visible = false;
-                }
-            },
-            new()
-            {
-                Name = "03 Sprite rendering",
-                ExpectedReferenceImageFile = "03_Sprites.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    // Basic scenario
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-39, 39));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part1Sprite, translation: new Vector2(39, 39));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part2Sprite, translation: new Vector2(-39, -39));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
-                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
-
-                    // 2D transformations
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75),
-                        rotation: Angle.DegreesToRadians(45),
-                        scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75),
-                        rotation: Angle.DegreesToRadians(-45),
-                        scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
-                        rotation: Angle.DegreesToRadians(-135),
-                        scale: new Vector2(0.2, 0.2));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75),
-                        rotation: Angle.DegreesToRadians(135),
-                        scale: new Vector2(0.2, 0.2));
-
-                    // Visibility
-                    var visibilityEntity = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, scale: new Vector2(2, 2));
-                    visibilityEntity.GetComponent<SpriteRendererComponent>().Visible = false;
-                }
-            },
-            new()
-            {
-                Name = "04 Sprite rendering - opacity",
-                ExpectedReferenceImageFile = "04_Sprites_Opacity.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture0, translation: new Vector2(-50, 50));
-                    entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
-
-                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture1, translation: new Vector2(50, 50));
-                    entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
-
-                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture2, translation: new Vector2(-50, -50));
-                    entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
-
-                    var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture3, translation: new Vector2(50, -50));
-                    entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
-                }
-            },
-            new()
-            {
-                Name = "05 Sprite batch rendering - opacity",
-                ExpectedReferenceImageFile = "05_SpriteBatch_Opacity.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-50, 50));
-                    entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
-
-                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(50, 50));
-                    entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
-
-                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-50, -50));
-                    entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
-
-                    var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(50, -50));
-                    entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
-                }
-            },
-            new()
-            {
-                Name = "06 Sprite batch rendering - sorting",
-                ExpectedReferenceImageFile = "06_SpriteBatch_Sorting.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(30, -30));
-                    entity1.GetComponent<SpriteRendererComponent>().OrderInLayer = 3;
-
-                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(0, 0));
-                    entity2.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
-
-                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-30, 30));
-                    entity3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
-                }
-            },
-            new()
-            {
-                Name = "07 Text rendering",
-                ExpectedReferenceImageFile = "07_TextRendering.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    // Basic scenario
-                    entityFactory.CreateText(scene, "Geisha Engine", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 70));
-                    entityFactory.CreateText(scene, "Red", FontSize.FromDips(30), Color.Red, translation: new Vector2(-70, 30));
-                    entityFactory.CreateText(scene, "Green", FontSize.FromDips(30), Color.Green, translation: new Vector2(-70, 0));
-                    entityFactory.CreateText(scene, "Blue", FontSize.FromDips(30), Color.Blue, translation: new Vector2(-70, -30));
-
-                    // 2D transformations
-                    entityFactory.CreateText(scene, "Transformed", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 255), translation: new Vector2(90, 30),
-                        rotation: Angle.DegreesToRadians(-90), scale: new Vector2(0.5, 2.0));
-
-                    // Visibility
-                    var visibilityTextRendererComponent = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.Black,
-                        translation: new Vector2(-100, 100));
-                    visibilityTextRendererComponent.Visible = false;
-                }
-            },
-            new()
-            {
-                Name = "08 Text rendering - font family name",
-                ExpectedReferenceImageFile = "08_TextRendering_FontFamilyName.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 60));
-                    t1.FontFamilyName = "Consolas";
-
-                    var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 15));
-                    t2.FontFamilyName = "Calibri";
-
-                    var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, -30));
-                    t3.FontFamilyName = "Comic Sans MS";
-                },
-                // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
-                // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
-                Tolerance = new ImageTolerance(0, 0.00005)
-            },
-            new()
-            {
-                Name = "09 Text rendering - wrapping to layout box",
-                ExpectedReferenceImageFile = "09_TextRendering_WrappingToLayoutBox.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                }
-            },
-            new()
-            {
-                Name = "10 Text rendering - clipping to layout box",
-                ExpectedReferenceImageFile = "10_TextRendering_ClippingToLayoutBox.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 102;
-                    textRendererComponent.ClipToLayoutBox = true;
-                }
-            },
-            new()
-            {
-                Name = "11 Text rendering - text alignment - leading",
-                ExpectedReferenceImageFile = "11_TextRendering_TextAlignment_Leading.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.TextAlignment = TextAlignment.Leading;
-                }
-            },
-            new()
-            {
-                Name = "12 Text rendering - text alignment - trailing",
-                ExpectedReferenceImageFile = "12_TextRendering_TextAlignment_Trailing.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.TextAlignment = TextAlignment.Trailing;
-                }
-            },
-            new()
-            {
-                Name = "13 Text rendering - text alignment - center",
-                ExpectedReferenceImageFile = "13_TextRendering_TextAlignment_Center.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.TextAlignment = TextAlignment.Center;
-                }
-            },
-            new()
-            {
-                Name = "14 Text rendering - text alignment - justified",
-                ExpectedReferenceImageFile = "14_TextRendering_TextAlignment_Justified.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.TextAlignment = TextAlignment.Justified;
-                }
-            },
-            new()
-            {
-                Name = "15 Text rendering - paragraph alignment - near",
-                ExpectedReferenceImageFile = "15_TextRendering_ParagraphAlignment_Near.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Near;
-                }
-            },
-            new()
-            {
-                Name = "16 Text rendering - paragraph alignment - far",
-                ExpectedReferenceImageFile = "16_TextRendering_ParagraphAlignment_Far.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Far;
-                }
-            },
-            new()
-            {
-                Name = "17 Text rendering - paragraph alignment - center",
-                ExpectedReferenceImageFile = "17_TextRendering_ParagraphAlignment_Center.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
-                }
-            },
-            new()
-            {
-                Name = "18 Text rendering - pivot - center",
-                ExpectedReferenceImageFile = "18_TextRendering_Pivot_Center.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text = "Geisha Engine";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(25), Color.Black);
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 100;
-                    textRendererComponent.MaxHeight = 100;
-                    textRendererComponent.Pivot = new Vector2(50, 50);
-                    textRendererComponent.TextAlignment = TextAlignment.Center;
-                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
-                }
-            },
-            new()
-            {
-                Name = "19 Text rendering - pivot - arbitrary",
-                ExpectedReferenceImageFile = "19_TextRendering_Pivot_Arbitrary.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var text =
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
-                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black,
-                        translation: new Vector2(-20, -10), rotation: Angle.DegreesToRadians(45));
-                    textRendererComponent.FontFamilyName = "Calibri";
-                    textRendererComponent.MaxWidth = 180;
-                    textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.Pivot = new Vector2(50, 50);
-                }
-            },
-            new()
-            {
-                Name = "20 Sorting layers",
-                ExpectedReferenceImageFile = "20_SortingLayers.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true,
-                        translation: new Vector2(-65, 65));
-                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Red, fillInterior: true,
-                        translation: new Vector2(-75, 75));
-                    r1.GetComponent<RectangleRendererComponent>().SortingLayerName = Background;
-                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Blue, fillInterior: true,
-                        translation: new Vector2(-55, 55));
-                    r3.GetComponent<RectangleRendererComponent>().SortingLayerName = Foreground;
-
-                    // Ellipse
-                    entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true,
-                        translation: new Vector2(65, 65));
-                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.Red, fillInterior: true,
-                        translation: new Vector2(75, 75));
-                    e1.GetComponent<EllipseRendererComponent>().SortingLayerName = Background;
-                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.Blue, fillInterior: true,
-                        translation: new Vector2(55, 55));
-                    e3.GetComponent<EllipseRendererComponent>().SortingLayerName = Foreground;
-
-                    // Sprite
-                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
-                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
-                    var s1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
-                    s1.GetComponent<SpriteRendererComponent>().SortingLayerName = Background;
-                    var s3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
-                    s3.GetComponent<SpriteRendererComponent>().SortingLayerName = Foreground;
-
-                    // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
-                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
-                        translation: new Vector2(-30, -65));
-                    t1.SortingLayerName = Background;
-                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
-                        translation: new Vector2(-32, -67));
-                    t3.SortingLayerName = Foreground;
-                }
-            },
-            new()
-            {
-                Name = "21 Order in layer",
-                ExpectedReferenceImageFile = "21_OrderInLayer.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true,
-                        translation: new Vector2(-65, 65));
-                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Red, fillInterior: true,
-                        translation: new Vector2(-75, 75));
-                    r1.GetComponent<RectangleRendererComponent>().OrderInLayer = -1;
-                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Blue, fillInterior: true,
-                        translation: new Vector2(-55, 55));
-                    r3.GetComponent<RectangleRendererComponent>().OrderInLayer = 1;
-
-                    // Ellipse
-                    entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true,
-                        translation: new Vector2(65, 65));
-                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.Red, fillInterior: true,
-                        translation: new Vector2(75, 75));
-                    e1.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
-                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.Blue, fillInterior: true,
-                        translation: new Vector2(55, 55));
-                    e3.GetComponent<EllipseRendererComponent>().OrderInLayer = 1;
-
-                    // Sprite
-                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
-                    entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
-                    var s1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
-                    s1.GetComponent<SpriteRendererComponent>().OrderInLayer = -1;
-                    var s3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
-                    s3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
-
-                    // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
-                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
-                        translation: new Vector2(-30, -65));
-                    t1.OrderInLayer = -1;
-                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
-                        translation: new Vector2(-32, -67));
-                    t3.OrderInLayer = 1;
-                }
-            },
-            new()
-            {
-                Name = "22 Camera transformation",
-                ExpectedReferenceImageFile = "22_CameraTransformation.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    var camera = entityFactory.CreateCamera(scene);
-                    var cameraTransform = camera.GetComponent<Transform2DComponent>();
-                    cameraTransform.Translation = new Vector2(100, 100);
-                    cameraTransform.Rotation = Angle.DegreesToRadians(-45);
-                    cameraTransform.Scale = new Vector2(3, 3);
-
-                    // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
-                        translation: new Vector2(-75, 75));
-
-                    // Ellipse
-                    entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
-                        translation: new Vector2(75, 75));
-
-                    // Sprite
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
-
-                    // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
-                }
-            },
-            new()
-            {
-                Name = "23 Camera overscan",
-                ExpectedReferenceImageFile = "23_CameraOverscan.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    var camera = entityFactory.CreateCamera(scene);
-                    var cameraComponent = camera.GetComponent<CameraComponent>();
-                    cameraComponent.ViewRectangle = new Vector2(640, 480);
-                    cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Overscan;
-
-                    // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
-                        translation: new Vector2(-75, 75));
-
-                    // Ellipse
-                    entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
-                        translation: new Vector2(75, 75));
-
-                    // Sprite
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
-
-                    // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
-                }
-            },
-            new()
-            {
-                Name = "24 Camera underscan",
-                ExpectedReferenceImageFile = "24_CameraUnderscan.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    var camera = entityFactory.CreateCamera(scene);
-                    var cameraComponent = camera.GetComponent<CameraComponent>();
-                    cameraComponent.ViewRectangle = new Vector2(640, 480);
-                    cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
-
-                    // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
-                        translation: new Vector2(-75, 75));
-
-                    // Ellipse
-                    entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
-                        translation: new Vector2(75, 75));
-
-                    // Sprite
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
-
-                    // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
-                }
-            },
-            new()
-            {
-                Name = "25 Transform hierarchy",
-                ExpectedReferenceImageFile = "25_TransformHierarchy.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    CreatePortrait(scene, entityFactory, new Vector2(0, 0), 0, new Vector2(0.5, 0.5));
-                    CreatePortrait(scene, entityFactory, new Vector2(-60, 60), Angle.DegreesToRadians(45), new Vector2(0.3, 0.3));
-                    CreatePortrait(scene, entityFactory, new Vector2(60, -60), Angle.DegreesToRadians(-45), new Vector2(0.4, 0.4));
-
-                    static void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
-                    {
-                        var root = scene.CreateEntity();
-                        var transform2DComponent = root.CreateComponent<Transform2DComponent>();
-                        transform2DComponent.Translation = translation;
-                        transform2DComponent.Rotation = rotation;
-                        transform2DComponent.Scale = scale;
-
-                        var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.Black, fillInterior: true,
-                            rotation: Angle.DegreesToRadians(-45));
-                        rectangle.GetComponent<RectangleRendererComponent>().OrderInLayer = -2;
-                        rectangle.Parent = root;
-
-                        var ellipse = entityFactory.CreateEllipse(scene, 75, 75, Color.FromArgb(255, 100, 100, 100), fillInterior: true);
-                        ellipse.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
-                        ellipse.Parent = root;
-
-                        var sprite = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
-                        sprite.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
-                        sprite.Parent = root;
-
-                        var colorBackground = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, scale: new Vector2(1.28, 1.28));
-                        colorBackground.GetComponent<SpriteRendererComponent>().OrderInLayer = 0;
-                        colorBackground.Parent = root;
-
-                        for (var i = 0; i < 4; i++)
-                        {
-                            const int x = -49;
-                            var y = 48 - i * 25;
-                            var watermark = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(100, 255, 255, 255),
-                                translation: new Vector2(x, y), scale: new Vector2(1.5, 1.0));
-                            watermark.OrderInLayer = 1;
-                            watermark.Entity.Parent = colorBackground;
-                        }
-                    }
-                },
-                // CI drift observed: many 1-level channel deltas; max |Δ|=1 across 157 pixels (~0.3925%).
-                // Allow ±1 per-channel tolerance; keep ratio at 0 to stay strict on larger deviations.
-                Tolerance = new ImageTolerance(1, 0)
-            },
-            new()
-            {
-                Name = "26 Debug renderer",
-                ExpectedReferenceImageFile = "26_DebugRenderer.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, Matrix3x3.Identity);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, Matrix3x3.Identity);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.Blue, Matrix3x3.Identity);
-
-                    var rectangleTransform =
-                        Matrix3x3.CreateTranslation(new Vector2(-50, 50))
-                        * Matrix3x3.CreateRotation(Angle.DegreesToRadians(45))
-                        * Matrix3x3.CreateScale(new Vector2(0.5, 0.5));
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, rectangleTransform);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, rectangleTransform);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.Blue, rectangleTransform);
-
-                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 30), Color.Red);
-                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 20), Color.Green);
-                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 10), Color.Blue);
-                }
-            },
-            new()
-            {
-                Name = "27 Camera view rectangle culling - straight - rectangle",
-                ExpectedReferenceImageFile = "27_CameraViewRectangleCulling_Straight_Rectangle.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
-                }
-            },
-            new()
-            {
-                Name = "28 Camera view rectangle culling - straight - ellipse",
-                ExpectedReferenceImageFile = "28_CameraViewRectangleCulling_Straight_Ellipse.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true);
-                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
-                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115));
-                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(125, -125));
-                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150));
-                }
-            },
-            new()
-            {
-                Name = "29 Camera view rectangle culling - straight - sprite",
-                ExpectedReferenceImageFile = "29_CameraViewRectangleCulling_Straight_Sprite.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite);
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-120, -120));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(125, -125));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150));
-                }
-            },
-            new()
-            {
-                Name = "30 Camera view rectangle culling - straight - text",
-                ExpectedReferenceImageFile = "30_CameraViewRectangleCulling_Straight_Text.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateText50X50(scene);
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(-110, -110));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(120, -120));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150));
-                }
-            },
-            new()
-            {
-                Name = "31 Camera view rectangle culling - rotated - rectangle",
-                ExpectedReferenceImageFile = "31_CameraViewRectangleCulling_Rotated_Rectangle.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(120, -120),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150),
-                        rotation: Angle.DegreesToRadians(45));
-                }
-            },
-            new()
-            {
-                Name = "32 Camera view rectangle culling - rotated - ellipse",
-                ExpectedReferenceImageFile = "32_CameraViewRectangleCulling_Rotated_Ellipse.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(120, -120),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150),
-                        rotation: Angle.DegreesToRadians(45));
-                }
-            },
-            new()
-            {
-                Name = "33 Camera view rectangle culling - rotated - sprite",
-                ExpectedReferenceImageFile = "33_CameraViewRectangleCulling_Rotated_Sprite.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120),
-                        rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150),
-                        rotation: Angle.DegreesToRadians(45));
-                }
-            },
-            new()
-            {
-                Name = "34 Camera view rectangle culling - rotated - text",
-                ExpectedReferenceImageFile = "34_CameraViewRectangleCulling_Rotated_Text.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(-105, -105), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(115, -115), rotation: Angle.DegreesToRadians(45));
-                    entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150), rotation: Angle.DegreesToRadians(45));
-                }
-            },
-            new()
-            {
-                Name = "35 Camera view rectangle culling - skewed - rectangle",
-                ExpectedReferenceImageFile = "35_CameraViewRectangleCulling_Skewed_Rectangle.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e1.Parent = p1;
-
-                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e2.Parent = p2;
-
-                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e3.Parent = p3;
-
-                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e4.Parent = p4;
-
-                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e5.Parent = p5;
-                }
-            },
-            new()
-            {
-                Name = "36 Camera view rectangle culling - skewed - ellipse",
-                ExpectedReferenceImageFile = "36_CameraViewRectangleCulling_Skewed_Ellipse.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e1.Parent = p1;
-
-                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e2.Parent = p2;
-
-                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e3.Parent = p3;
-
-                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e4.Parent = p4;
-
-                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
-                    e5.Parent = p5;
-                }
-            },
-            new()
-            {
-                Name = "37 Camera view rectangle culling - skewed - sprite",
-                ExpectedReferenceImageFile = "37_CameraViewRectangleCulling_Skewed_Sprite.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
-                    e1.Parent = p1;
-
-                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
-                    e2.Parent = p2;
-
-                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
-                    e3.Parent = p3;
-
-                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
-                    var e4 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
-                    e4.Parent = p4;
-
-                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
-                    e5.Parent = p5;
-                }
-            },
-            new()
-            {
-                Name = "38 Camera view rectangle culling - skewed - text",
-                ExpectedReferenceImageFile = "38_CameraViewRectangleCulling_Skewed_Text.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
-                    var e1 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
-                    e1.Parent = p1;
-
-                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
-                    var e2 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
-                    e2.Parent = p2;
-
-                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
-                    var e3 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
-                    e3.Parent = p3;
-
-                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(120, -120));
-                    var e4 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
-                    e4.Parent = p4;
-
-                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
-                    var e5 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
-                    e5.Parent = p5;
-                }
-            },
-            new()
-            {
-                Name = "39 Camera view rectangle culling - camera - translated",
-                ExpectedReferenceImageFile = "39_CameraViewRectangleCulling_Camera_Translated.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    var camera = entityFactory.CreateCamera(scene);
-                    camera.GetComponent<Transform2DComponent>().Translation = new Vector2(50, 50);
-
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
-                }
-            },
-            new()
-            {
-                Name = "40 Camera view rectangle culling - camera - rotated",
-                ExpectedReferenceImageFile = "40_CameraViewRectangleCulling_Camera_Rotated.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    var camera = entityFactory.CreateCamera(scene);
-                    camera.GetComponent<Transform2DComponent>().Rotation = Angle.DegreesToRadians(45);
-
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
-                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
-                }
-            },
-            new()
-            {
-                Name = "41 Sprite rendering - bitmap interpolation mode",
-                ExpectedReferenceImageFile = "41_Sprites_BitmapInterpolationMode.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 0), scale: new Vector2(3, 3));
-                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 0), scale: new Vector2(3, 3));
-
-                    // Set interpolation mode to NearestNeighbor for entity1, resulting in sharper pixels
-                    entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
-                    // Set interpolation mode to Linear for entity2, resulting in smoother pixels
-                    entity2.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
-                }
-            },
-            new()
-            {
-                Name = "42 Sprite batch rendering - bitmap interpolation mode",
-                ExpectedReferenceImageFile = "42_SpriteBatch_BitmapInterpolationMode.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 39), scale: new Vector2(3, 3));
-                    var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 39), scale: new Vector2(3, 3));
-                    var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, -39),
-                        scale: new Vector2(3, 3));
-                    var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, -39), scale: new Vector2(3, 3));
-
-                    // Set interpolation mode to NearestNeighbor for entity1 and entity2, resulting in sharper pixels
-                    entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
-                    entity2.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
-                    // Set interpolation mode to Linear for entity3 and entity4, resulting in smoother pixels
-                    entity3.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
-                    entity4.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
-                }
-            },
-            new()
-            {
-                Name = "43 Text rendering - custom font",
-                ExpectedReferenceImageFile = "43_TextRendering_CustomFont.png",
-                SetUpScene = (scene, entityFactory, _) =>
-                {
-                    entityFactory.CreateCamera(scene);
-
-                    var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 60));
-                    t1.FontFamilyName = "Kenney Blocks";
-
-                    var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 15));
-                    t2.FontFamilyName = "Kenney Future";
-
-                    var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, -30));
-                    t3.FontFamilyName = "Kenney Pixel";
-                }
+                WindowClientSize = new Size(200, 200)
             }
         };
+    }
 
-        [TestCaseSource(nameof(RenderingTestCases))]
-        public void RenderScene_ShouldRenderImageSameAsReferenceImage(RenderingTestCase testCase)
+    public override void SetUp()
+    {
+        base.SetUp();
+
+        SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
+        CustomFonts.Register(SystemUnderTest.AssetStore, SystemUnderTest.RenderingBackend);
+
+        LogRenderingEnvironment(SystemUnderTest.RenderingBackend.Info);
+    }
+
+    public sealed class RenderingTestCase
+    {
+        public string Name { get; init; } = string.Empty;
+        public string ExpectedReferenceImageFile { get; init; } = string.Empty;
+        public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; init; } = (_, _, _) => { };
+        public ImageTolerance Tolerance { get; init; } = ImageTolerance.Strict;
+
+        public override string ToString() => Name;
+    }
+
+    public readonly record struct ImageTolerance(int ChannelTolerance, double MaxDiffRatio)
+    {
+        public static readonly ImageTolerance Strict = new(0, 0);
+    }
+
+    public static readonly RenderingTestCase[] RenderingTestCases =
+    {
+        new()
         {
-            // Arrange
-            var scene = SystemUnderTest.SceneManager.CurrentScene;
-            var entityFactory = new EntityFactory(SystemUnderTest.AssetStore);
+            Name = "01 Rectangle rendering",
+            ExpectedReferenceImageFile = "01_Rectangles.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
 
-            testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
+                // Basic scenario
+                entityFactory.CreateRectangle(scene, new Vector2(40, 20), Color.Red, translation: new Vector2(50, -50));
+                entityFactory.CreateRectangle(scene, new Vector2(20, 40), Color.Blue, translation: new Vector2(-50, 50));
+                entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true);
 
-            // Act
-            SystemUnderTest.RenderingSystem.RenderScene();
+                // 2D transformations
+                entityFactory.CreateRectangle(scene, new Vector2(100, 100), Color.FromArgb(255, 255, 255, 0), fillInterior: true,
+                    translation: new Vector2(50, 50), rotation: Angle.DegreesToRadians(45), scale: new Vector2(0.2, 0.2));
+                entityFactory.CreateRectangle(scene, new Vector2(200, 100), Color.FromArgb(255, 255, 0, 255), fillInterior: true,
+                    translation: new Vector2(-50, -50), rotation: Angle.DegreesToRadians(20), scale: new Vector2(0.2, 0.3));
 
-            // Assert
-            using var memoryStream = new MemoryStream();
-            SystemUnderTest.RenderingBackend.Context2D.CaptureScreenshotAsPng(memoryStream);
-            using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
-
-            var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
-            using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
-
-            var useTolerances = IsImageToleranceEnabled();
-
-            AssertImagesEqualWithinTolerance(
-                actualImage,
-                referenceImage,
-                useTolerances,
-                testCase.Tolerance,
-                Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
-                Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
-            );
-        }
-
-        private static void LogRenderingEnvironment(RenderingBackendInfo info)
+                // Visibility
+                var visibilityEntity = entityFactory.CreateRectangle(scene, new Vector2(200, 200), Color.Black, true);
+                visibilityEntity.GetComponent<RectangleRendererComponent>().Visible = false;
+            }
+        },
+        new()
         {
-            TestContext.WriteLine("Rendering Environment Info:");
-            TestContext.WriteLine($"OS: {RuntimeInformation.OSDescription}");
-            TestContext.WriteLine($"Rendering Backend: {info.Name}");
-            TestContext.WriteLine($"Adapter: {info.GraphicsAdapterName}");
-            TestContext.WriteLine($"D3D Feature Level: {info.FeatureLevel}");
-            TestContext.WriteLine("System Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
-        }
+            Name = "02 Ellipse rendering",
+            ExpectedReferenceImageFile = "02_Ellipses.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
 
-        /// <summary>
-        ///     Determines whether tolerant image comparison is enabled via a test-only environment switch.
-        ///     <br />
-        ///     The environment variable <c>GEISHA_TEST_ENABLE_IMAGE_TOLERANCE</c>, when set to any non-empty value (e.g. "1",
-        ///     "true"), enables tolerant comparison that ignores minor pixel differences due to environment or driver variability.
-        /// </summary>
-        /// <remarks>
-        ///     This setting is intended for tests only and should not be used in production code paths.
-        /// </remarks>
-        private static bool IsImageToleranceEnabled()
+                // Basic scenario
+                entityFactory.CreateEllipse(scene, 20, 10, Color.Red, translation: new Vector2(50, -50));
+                entityFactory.CreateEllipse(scene, 10, 20, Color.Blue, translation: new Vector2(-50, 50));
+                entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true);
+
+                // 2D transformations
+                entityFactory.CreateEllipse(scene, 100, 100, Color.FromArgb(255, 255, 255, 0), fillInterior: true,
+                    translation: new Vector2(50, 50), rotation: Angle.DegreesToRadians(45), scale: new Vector2(0.2, 0.2));
+                entityFactory.CreateEllipse(scene, 200, 100, Color.FromArgb(255, 255, 0, 255), fillInterior: true,
+                    translation: new Vector2(-50, -50), rotation: Angle.DegreesToRadians(20), scale: new Vector2(0.2, 0.3));
+
+                // Visibility
+                var visibilityEntity = entityFactory.CreateEllipse(scene, 200, 200, Color.Black, true);
+                visibilityEntity.GetComponent<EllipseRendererComponent>().Visible = false;
+            }
+        },
+        new()
         {
-            return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GEISHA_TEST_ENABLE_IMAGE_TOLERANCE"));
-        }
+            Name = "03 Sprite rendering",
+            ExpectedReferenceImageFile = "03_Sprites.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
 
-        private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, bool useTolerances, ImageTolerance tolerance,
-            string outputDir, string baseName)
+                // Basic scenario
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-39, 39));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part1Sprite, translation: new Vector2(39, 39));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part2Sprite, translation: new Vector2(-39, -39));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
+                entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
+
+                // 2D transformations
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75),
+                    rotation: Angle.DegreesToRadians(45),
+                    scale: new Vector2(0.2, 0.2));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75),
+                    rotation: Angle.DegreesToRadians(-45),
+                    scale: new Vector2(0.2, 0.2));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75),
+                    rotation: Angle.DegreesToRadians(-135),
+                    scale: new Vector2(0.2, 0.2));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75),
+                    rotation: Angle.DegreesToRadians(135),
+                    scale: new Vector2(0.2, 0.2));
+
+                // Visibility
+                var visibilityEntity = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, scale: new Vector2(2, 2));
+                visibilityEntity.GetComponent<SpriteRendererComponent>().Visible = false;
+            }
+        },
+        new()
         {
-            if (actual.Width != expected.Width || actual.Height != expected.Height)
+            Name = "04 Sprite rendering - opacity",
+            ExpectedReferenceImageFile = "04_Sprites_Opacity.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                Assert.Fail($"Image dimensions differ. Expected: {expected.Width}x{expected.Height}, Actual: {actual.Width}x{actual.Height}");
+                entityFactory.CreateCamera(scene);
+
+                var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture0, translation: new Vector2(-50, 50));
+                entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
+
+                var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture1, translation: new Vector2(50, 50));
+                entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
+
+                var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture2, translation: new Vector2(-50, -50));
+                entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
+
+                var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.SpriteOfTexture3, translation: new Vector2(50, -50));
+                entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
             }
-
-            var width = expected.Width;
-            var height = expected.Height;
-            var totalPixels = width * height;
-            var differingPixels = 0;
-            // Determine coordinate column width for aligned output (based on max of width/height)
-            var coordWidth = Math.Max(width.ToString().Length, height.ToString().Length);
-
-            // Prepare diff images
-            using var diffImage = new Image<Bgra32>(width, height);
-            using var rawDiffImage = new Image<Bgra32>(width, height);
-            var diffColor = new Bgra32(255, 0, 255, 255); // Magenta for diff
-            var whiteColor = new Bgra32(255, 255, 255, 255); // White background
-
-            // Prepare textual diff details
-            var detailsBuilder = new StringBuilder();
-            detailsBuilder.AppendLine($"Image diff details for '{baseName}'");
-            detailsBuilder.AppendLine($"Dimensions: {width}x{height}");
-            detailsBuilder.AppendLine($"Mode: {(useTolerances ? "tolerant" : "strict")}");
-            if (useTolerances)
-            {
-                detailsBuilder.AppendLine($"Channel tolerance: {tolerance.ChannelTolerance}");
-                detailsBuilder.AppendLine($"Max diff ratio: {tolerance.MaxDiffRatio}");
-            }
-
-            // Header with column labels and dynamic ruler aligned to field widths
-            detailsBuilder.AppendLine("Columns: x,y | E=(B,G,R,A) | A=(B,G,R,A) | Δ=(B,G,R,A) | |Δ|=(B,G,R,A)");
-            var coordRuler = $"{new string('-', coordWidth)},{new string('-', coordWidth)}";
-            var channels3 = $"({new string('-', 3)},{new string('-', 3)},{new string('-', 3)},{new string('-', 3)})";
-            var channels4 = $"({new string('-', 4)},{new string('-', 4)},{new string('-', 4)},{new string('-', 4)})";
-            detailsBuilder.AppendLine();
-            detailsBuilder.AppendLine($"{coordRuler} | E={channels3} | A={channels3} | Δ={channels4} | |Δ|={channels3}");
-            detailsBuilder.AppendLine();
-
-            // Single-pass processing using direct row spans to avoid intermediate arrays and repeated accessors
-            for (var y = 0; y < height; y++)
-            {
-                var actualSpan = actual.DangerousGetPixelRowMemory(y).Span;
-                var expectedSpan = expected.DangerousGetPixelRowMemory(y).Span;
-                var diffSpan = diffImage.DangerousGetPixelRowMemory(y).Span;
-                var rawDiffSpan = rawDiffImage.DangerousGetPixelRowMemory(y).Span;
-
-                for (var x = 0; x < width; x++)
-                {
-                    var actualPixel = actualSpan[x];
-                    var expectedPixel = expectedSpan[x];
-                    bool isDiff;
-
-                    if (useTolerances)
-                    {
-                        isDiff =
-                            Math.Abs(expectedPixel.B - actualPixel.B) > tolerance.ChannelTolerance ||
-                            Math.Abs(expectedPixel.G - actualPixel.G) > tolerance.ChannelTolerance ||
-                            Math.Abs(expectedPixel.R - actualPixel.R) > tolerance.ChannelTolerance ||
-                            Math.Abs(expectedPixel.A - actualPixel.A) > tolerance.ChannelTolerance;
-                    }
-                    else
-                    {
-                        isDiff = !actualPixel.Equals(expectedPixel);
-                    }
-
-                    if (isDiff)
-                    {
-                        differingPixels++;
-                        diffSpan[x] = diffColor;
-                        rawDiffSpan[x] = diffColor;
-
-                        // Capture detailed info for this pixel (aligned columns)
-                        var dB = expectedPixel.B - actualPixel.B;
-                        var dG = expectedPixel.G - actualPixel.G;
-                        var dR = expectedPixel.R - actualPixel.R;
-                        var dA = expectedPixel.A - actualPixel.A;
-                        detailsBuilder.AppendLine(
-                            $"{x.ToString().PadLeft(coordWidth)},{y.ToString().PadLeft(coordWidth)} | E=({(int)expectedPixel.B,3},{(int)expectedPixel.G,3},{(int)expectedPixel.R,3},{(int)expectedPixel.A,3}) | A=({(int)actualPixel.B,3},{(int)actualPixel.G,3},{(int)actualPixel.R,3},{(int)actualPixel.A,3}) | Δ=({dB,4},{dG,4},{dR,4},{dA,4}) | |Δ|=({Math.Abs(dB),3},{Math.Abs(dG),3},{Math.Abs(dR),3},{Math.Abs(dA),3})");
-                    }
-                    else
-                    {
-                        diffSpan[x] = actualPixel;
-                        rawDiffSpan[x] = whiteColor;
-                    }
-                }
-            }
-
-            var diffRatio = (double)differingPixels / totalPixels;
-            detailsBuilder.AppendLine();
-            detailsBuilder.AppendLine($"Total differing pixels: {differingPixels} ({diffRatio:P}) out of {totalPixels}");
-
-            // Save actual and diff images
-            Directory.CreateDirectory(outputDir);
-            var actualFileName = $"{baseName}_actual.png";
-            var diffFileName = $"{baseName}_diff.png";
-            var rawDiffFileName = $"{baseName}_raw-diff.png";
-            var detailsFileName = $"{baseName}_diff-details.txt";
-
-            var actualFilePath = Path.Combine(outputDir, actualFileName);
-            var diffFilePath = Path.Combine(outputDir, diffFileName);
-            var rawDiffFilePath = Path.Combine(outputDir, rawDiffFileName);
-            var detailsFilePath = Path.Combine(outputDir, detailsFileName);
-
-            actual.SaveAsPng(actualFilePath);
-            diffImage.SaveAsPng(diffFilePath);
-            rawDiffImage.SaveAsPng(rawDiffFilePath);
-            File.WriteAllText(detailsFilePath, detailsBuilder.ToString());
-
-            if (useTolerances)
-            {
-                Assert.That(
-                    diffRatio,
-                    Is.LessThanOrEqualTo(tolerance.MaxDiffRatio),
-                    $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {tolerance.ChannelTolerance} per channel, max ratio: {tolerance.MaxDiffRatio:P}. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
-                );
-            }
-            else
-            {
-                Assert.That(
-                    differingPixels,
-                    Is.EqualTo(0),
-                    $"Images differ in {differingPixels} pixels. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
-                );
-            }
-        }
-
-        public sealed class EntityFactory
+        },
+        new()
         {
-            private readonly IAssetStore _assetStore;
-
-            public EntityFactory(IAssetStore assetStore)
+            Name = "05 Sprite batch rendering - opacity",
+            ExpectedReferenceImageFile = "05_SpriteBatch_Opacity.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                _assetStore = assetStore;
+                entityFactory.CreateCamera(scene);
+
+                var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-50, 50));
+                entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
+
+                var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(50, 50));
+                entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
+
+                var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-50, -50));
+                entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
+
+                var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(50, -50));
+                entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
             }
-
-            public Entity CreateCamera(Scene scene)
+        },
+        new()
+        {
+            Name = "06 Sprite batch rendering - sorting",
+            ExpectedReferenceImageFile = "06_SpriteBatch_Sorting.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var entity = scene.CreateEntity();
-                entity.CreateComponent<Transform2DComponent>();
-                var cameraComponent = entity.CreateComponent<CameraComponent>();
-                cameraComponent.ViewRectangle = new Vector2(200, 200);
+                entityFactory.CreateCamera(scene);
 
-                return entity;
+                var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(30, -30));
+                entity1.GetComponent<SpriteRendererComponent>().OrderInLayer = 3;
+
+                var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(0, 0));
+                entity2.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
+
+                var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, translation: new Vector2(-30, 30));
+                entity3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
             }
-
-            public Entity CreateTransform(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+        },
+        new()
+        {
+            Name = "07 Text rendering",
+            ExpectedReferenceImageFile = "07_TextRendering.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var entity = scene.CreateEntity();
+                entityFactory.CreateCamera(scene);
 
-                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = translation ?? Vector2.Zero;
-                transform2DComponent.Rotation = rotation;
-                transform2DComponent.Scale = scale ?? Vector2.One;
+                // Basic scenario
+                entityFactory.CreateText(scene, "Geisha Engine", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 70));
+                entityFactory.CreateText(scene, "Red", FontSize.FromDips(30), Color.Red, translation: new Vector2(-70, 30));
+                entityFactory.CreateText(scene, "Green", FontSize.FromDips(30), Color.Green, translation: new Vector2(-70, 0));
+                entityFactory.CreateText(scene, "Blue", FontSize.FromDips(30), Color.Blue, translation: new Vector2(-70, -30));
 
-                return entity;
+                // 2D transformations
+                entityFactory.CreateText(scene, "Transformed", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 255), translation: new Vector2(90, 30),
+                    rotation: Angle.DegreesToRadians(-90), scale: new Vector2(0.5, 2.0));
+
+                // Visibility
+                var visibilityTextRendererComponent = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.Black,
+                    translation: new Vector2(-100, 100));
+                visibilityTextRendererComponent.Visible = false;
             }
-
-            public Entity CreateRectangle(Scene scene, Vector2 dimensions, Color color, bool fillInterior = false, Vector2? translation = null,
-                double rotation = 0, Vector2? scale = null)
+        },
+        new()
+        {
+            Name = "08 Text rendering - font family name",
+            ExpectedReferenceImageFile = "08_TextRendering_FontFamilyName.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var entity = CreateTransform(scene, translation, rotation, scale);
+                entityFactory.CreateCamera(scene);
 
-                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-                rectangleRendererComponent.Dimensions = dimensions;
-                rectangleRendererComponent.Color = color;
-                rectangleRendererComponent.FillInterior = fillInterior;
+                var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 60));
+                t1.FontFamilyName = "Consolas";
 
-                return entity;
+                var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 15));
+                t2.FontFamilyName = "Calibri";
+
+                var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, -30));
+                t3.FontFamilyName = "Comic Sans MS";
+            },
+            // CI drift observed: 2 pixels differ with max |Δ|=17 (0.005% of pixels).
+            // Prefer minimal ratio over large channel tolerance to avoid masking broader changes.
+            Tolerance = new ImageTolerance(0, 0.00005)
+        },
+        new()
+        {
+            Name = "09 Text rendering - wrapping to layout box",
+            ExpectedReferenceImageFile = "09_TextRendering_WrappingToLayoutBox.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
             }
-
-            public Entity CreateEllipse(Scene scene, double radiusX, double radiusY, Color color, bool fillInterior = false, Vector2? translation = null,
-                double rotation = 0, Vector2? scale = null)
+        },
+        new()
+        {
+            Name = "10 Text rendering - clipping to layout box",
+            ExpectedReferenceImageFile = "10_TextRendering_ClippingToLayoutBox.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var entity = CreateTransform(scene, translation, rotation, scale);
+                entityFactory.CreateCamera(scene);
 
-                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
-                ellipseRendererComponent.RadiusX = radiusX;
-                ellipseRendererComponent.RadiusY = radiusY;
-                ellipseRendererComponent.Color = color;
-                ellipseRendererComponent.FillInterior = fillInterior;
-
-                return entity;
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 102;
+                textRendererComponent.ClipToLayoutBox = true;
             }
-
-            public Entity CreateSprite(Scene scene, AssetId spriteAssetId, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+        },
+        new()
+        {
+            Name = "11 Text rendering - text alignment - leading",
+            ExpectedReferenceImageFile = "11_TextRendering_TextAlignment_Leading.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var entity = CreateTransform(scene, translation, rotation, scale);
+                entityFactory.CreateCamera(scene);
 
-                var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
-                spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId);
-
-                return entity;
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.TextAlignment = TextAlignment.Leading;
             }
-
-            public TextRendererComponent CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
-                Vector2? scale = null)
+        },
+        new()
+        {
+            Name = "12 Text rendering - text alignment - trailing",
+            ExpectedReferenceImageFile = "12_TextRendering_TextAlignment_Trailing.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var entity = CreateTransform(scene, translation, rotation, scale);
+                entityFactory.CreateCamera(scene);
 
-                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
-                textRendererComponent.Text = text;
-                textRendererComponent.FontSize = fontSize;
-                textRendererComponent.Color = color;
-
-                return textRendererComponent;
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.TextAlignment = TextAlignment.Trailing;
             }
-
-            public Entity CreateText50X50(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+        },
+        new()
+        {
+            Name = "13 Text rendering - text alignment - center",
+            ExpectedReferenceImageFile = "13_TextRendering_TextAlignment_Center.png",
+            SetUpScene = (scene, entityFactory, _) =>
             {
-                var root = CreateTransform(scene, translation, rotation, scale);
+                entityFactory.CreateCamera(scene);
 
-                var rectangle = CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: false);
-                rectangle.Parent = root;
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.TextAlignment = TextAlignment.Center;
+            }
+        },
+        new()
+        {
+            Name = "14 Text rendering - text alignment - justified",
+            ExpectedReferenceImageFile = "14_TextRendering_TextAlignment_Justified.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
 
-                var textRendererComponent = CreateText(scene, "Test Test", FontSize.FromDips(20), Color.Black);
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.TextAlignment = TextAlignment.Justified;
+            }
+        },
+        new()
+        {
+            Name = "15 Text rendering - paragraph alignment - near",
+            ExpectedReferenceImageFile = "15_TextRendering_ParagraphAlignment_Near.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Near;
+            }
+        },
+        new()
+        {
+            Name = "16 Text rendering - paragraph alignment - far",
+            ExpectedReferenceImageFile = "16_TextRendering_ParagraphAlignment_Far.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Far;
+            }
+        },
+        new()
+        {
+            Name = "17 Text rendering - paragraph alignment - center",
+            ExpectedReferenceImageFile = "17_TextRendering_ParagraphAlignment_Center.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+            }
+        },
+        new()
+        {
+            Name = "18 Text rendering - pivot - center",
+            ExpectedReferenceImageFile = "18_TextRendering_Pivot_Center.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var text = "Geisha Engine";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(25), Color.Black);
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 100;
+                textRendererComponent.MaxHeight = 100;
+                textRendererComponent.Pivot = new Vector2(50, 50);
                 textRendererComponent.TextAlignment = TextAlignment.Center;
                 textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
-                textRendererComponent.Pivot = new Vector2(25, 25);
-                textRendererComponent.MaxWidth = 50;
-                textRendererComponent.MaxHeight = 50;
-                textRendererComponent.Entity.Parent = root;
-
-                return root;
             }
+        },
+        new()
+        {
+            Name = "19 Text rendering - pivot - arbitrary",
+            ExpectedReferenceImageFile = "19_TextRendering_Pivot_Arbitrary.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black,
+                    translation: new Vector2(-20, -10), rotation: Angle.DegreesToRadians(45));
+                textRendererComponent.FontFamilyName = "Calibri";
+                textRendererComponent.MaxWidth = 180;
+                textRendererComponent.MaxHeight = 180;
+                textRendererComponent.Pivot = new Vector2(50, 50);
+            }
+        },
+        new()
+        {
+            Name = "20 Sorting layers",
+            ExpectedReferenceImageFile = "20_SortingLayers.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                // Rectangle
+                entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true,
+                    translation: new Vector2(-65, 65));
+                var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Red, fillInterior: true,
+                    translation: new Vector2(-75, 75));
+                r1.GetComponent<RectangleRendererComponent>().SortingLayerName = Background;
+                var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Blue, fillInterior: true,
+                    translation: new Vector2(-55, 55));
+                r3.GetComponent<RectangleRendererComponent>().SortingLayerName = Foreground;
+
+                // Ellipse
+                entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true,
+                    translation: new Vector2(65, 65));
+                var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.Red, fillInterior: true,
+                    translation: new Vector2(75, 75));
+                e1.GetComponent<EllipseRendererComponent>().SortingLayerName = Background;
+                var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.Blue, fillInterior: true,
+                    translation: new Vector2(55, 55));
+                e3.GetComponent<EllipseRendererComponent>().SortingLayerName = Foreground;
+
+                // Sprite
+                entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
+                entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
+                var s1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
+                s1.GetComponent<SpriteRendererComponent>().SortingLayerName = Background;
+                var s3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
+                s3.GetComponent<SpriteRendererComponent>().SortingLayerName = Foreground;
+
+                // Text
+                entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
+                var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
+                    translation: new Vector2(-30, -65));
+                t1.SortingLayerName = Background;
+                var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
+                    translation: new Vector2(-32, -67));
+                t3.SortingLayerName = Foreground;
+            }
+        },
+        new()
+        {
+            Name = "21 Order in layer",
+            ExpectedReferenceImageFile = "21_OrderInLayer.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                // Rectangle
+                entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true,
+                    translation: new Vector2(-65, 65));
+                var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Red, fillInterior: true,
+                    translation: new Vector2(-75, 75));
+                r1.GetComponent<RectangleRendererComponent>().OrderInLayer = -1;
+                var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Blue, fillInterior: true,
+                    translation: new Vector2(-55, 55));
+                r3.GetComponent<RectangleRendererComponent>().OrderInLayer = 1;
+
+                // Ellipse
+                entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true,
+                    translation: new Vector2(65, 65));
+                var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.Red, fillInterior: true,
+                    translation: new Vector2(75, 75));
+                e1.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
+                var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.Blue, fillInterior: true,
+                    translation: new Vector2(55, 55));
+                e3.GetComponent<EllipseRendererComponent>().OrderInLayer = 1;
+
+                // Sprite
+                entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
+                entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
+                var s1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
+                s1.GetComponent<SpriteRendererComponent>().OrderInLayer = -1;
+                var s3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
+                s3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
+
+                // Text
+                entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
+                var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
+                    translation: new Vector2(-30, -65));
+                t1.OrderInLayer = -1;
+                var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
+                    translation: new Vector2(-32, -67));
+                t3.OrderInLayer = 1;
+            }
+        },
+        new()
+        {
+            Name = "22 Camera transformation",
+            ExpectedReferenceImageFile = "22_CameraTransformation.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                var camera = entityFactory.CreateCamera(scene);
+                var cameraTransform = camera.GetComponent<Transform2DComponent>();
+                cameraTransform.Translation = new Vector2(100, 100);
+                cameraTransform.Rotation = Angle.DegreesToRadians(-45);
+                cameraTransform.Scale = new Vector2(3, 3);
+
+                // Rectangle
+                entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
+                    translation: new Vector2(-75, 75));
+
+                // Ellipse
+                entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
+                    translation: new Vector2(75, 75));
+
+                // Sprite
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
+
+                // Text
+                entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
+            }
+        },
+        new()
+        {
+            Name = "23 Camera overscan",
+            ExpectedReferenceImageFile = "23_CameraOverscan.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                var camera = entityFactory.CreateCamera(scene);
+                var cameraComponent = camera.GetComponent<CameraComponent>();
+                cameraComponent.ViewRectangle = new Vector2(640, 480);
+                cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+
+                // Rectangle
+                entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
+                    translation: new Vector2(-75, 75));
+
+                // Ellipse
+                entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
+                    translation: new Vector2(75, 75));
+
+                // Sprite
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
+
+                // Text
+                entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
+            }
+        },
+        new()
+        {
+            Name = "24 Camera underscan",
+            ExpectedReferenceImageFile = "24_CameraUnderscan.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                var camera = entityFactory.CreateCamera(scene);
+                var cameraComponent = camera.GetComponent<CameraComponent>();
+                cameraComponent.ViewRectangle = new Vector2(640, 480);
+                cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+                // Rectangle
+                entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
+                    translation: new Vector2(-75, 75));
+
+                // Ellipse
+                entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
+                    translation: new Vector2(75, 75));
+
+                // Sprite
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite);
+
+                // Text
+                entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
+            }
+        },
+        new()
+        {
+            Name = "25 Transform hierarchy",
+            ExpectedReferenceImageFile = "25_TransformHierarchy.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                CreatePortrait(scene, entityFactory, new Vector2(0, 0), 0, new Vector2(0.5, 0.5));
+                CreatePortrait(scene, entityFactory, new Vector2(-60, 60), Angle.DegreesToRadians(45), new Vector2(0.3, 0.3));
+                CreatePortrait(scene, entityFactory, new Vector2(60, -60), Angle.DegreesToRadians(-45), new Vector2(0.4, 0.4));
+
+                static void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
+                {
+                    var root = scene.CreateEntity();
+                    var transform2DComponent = root.CreateComponent<Transform2DComponent>();
+                    transform2DComponent.Translation = translation;
+                    transform2DComponent.Rotation = rotation;
+                    transform2DComponent.Scale = scale;
+
+                    var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.Black, fillInterior: true,
+                        rotation: Angle.DegreesToRadians(-45));
+                    rectangle.GetComponent<RectangleRendererComponent>().OrderInLayer = -2;
+                    rectangle.Parent = root;
+
+                    var ellipse = entityFactory.CreateEllipse(scene, 75, 75, Color.FromArgb(255, 100, 100, 100), fillInterior: true);
+                    ellipse.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
+                    ellipse.Parent = root;
+
+                    var sprite = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.Sample01);
+                    sprite.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
+                    sprite.Parent = root;
+
+                    var colorBackground = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.FullSprite, scale: new Vector2(1.28, 1.28));
+                    colorBackground.GetComponent<SpriteRendererComponent>().OrderInLayer = 0;
+                    colorBackground.Parent = root;
+
+                    for (var i = 0; i < 4; i++)
+                    {
+                        const int x = -49;
+                        var y = 48 - i * 25;
+                        var watermark = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(100, 255, 255, 255),
+                            translation: new Vector2(x, y), scale: new Vector2(1.5, 1.0));
+                        watermark.OrderInLayer = 1;
+                        watermark.Entity.Parent = colorBackground;
+                    }
+                }
+            },
+            // CI drift observed: many 1-level channel deltas; max |Δ|=1 across 157 pixels (~0.3925%).
+            // Allow ±1 per-channel tolerance; keep ratio at 0 to stay strict on larger deviations.
+            Tolerance = new ImageTolerance(1, 0)
+        },
+        new()
+        {
+            Name = "26 Debug renderer",
+            ExpectedReferenceImageFile = "26_DebugRenderer.png",
+            SetUpScene = (scene, entityFactory, debugRenderer) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, Matrix3x3.Identity);
+                debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, Matrix3x3.Identity);
+                debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.Blue, Matrix3x3.Identity);
+
+                var rectangleTransform =
+                    Matrix3x3.CreateTranslation(new Vector2(-50, 50))
+                    * Matrix3x3.CreateRotation(Angle.DegreesToRadians(45))
+                    * Matrix3x3.CreateScale(new Vector2(0.5, 0.5));
+                debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, rectangleTransform);
+                debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, rectangleTransform);
+                debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.Blue, rectangleTransform);
+
+                debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 30), Color.Red);
+                debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 20), Color.Green);
+                debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 10), Color.Blue);
+            }
+        },
+        new()
+        {
+            Name = "27 Camera view rectangle culling - straight - rectangle",
+            ExpectedReferenceImageFile = "27_CameraViewRectangleCulling_Straight_Rectangle.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+            }
+        },
+        new()
+        {
+            Name = "28 Camera view rectangle culling - straight - ellipse",
+            ExpectedReferenceImageFile = "28_CameraViewRectangleCulling_Straight_Ellipse.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true);
+                entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115));
+                entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+            }
+        },
+        new()
+        {
+            Name = "29 Camera view rectangle culling - straight - sprite",
+            ExpectedReferenceImageFile = "29_CameraViewRectangleCulling_Straight_Sprite.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite);
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-120, -120));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(125, -125));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150));
+            }
+        },
+        new()
+        {
+            Name = "30 Camera view rectangle culling - straight - text",
+            ExpectedReferenceImageFile = "30_CameraViewRectangleCulling_Straight_Text.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateText50X50(scene);
+                entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(-110, -110));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(120, -120));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150));
+            }
+        },
+        new()
+        {
+            Name = "31 Camera view rectangle culling - rotated - rectangle",
+            ExpectedReferenceImageFile = "31_CameraViewRectangleCulling_Rotated_Rectangle.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(120, -120),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150),
+                    rotation: Angle.DegreesToRadians(45));
+            }
+        },
+        new()
+        {
+            Name = "32 Camera view rectangle culling - rotated - ellipse",
+            ExpectedReferenceImageFile = "32_CameraViewRectangleCulling_Rotated_Ellipse.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(120, -120),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150),
+                    rotation: Angle.DegreesToRadians(45));
+            }
+        },
+        new()
+        {
+            Name = "33 Camera view rectangle culling - rotated - sprite",
+            ExpectedReferenceImageFile = "33_CameraViewRectangleCulling_Rotated_Sprite.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120),
+                    rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150),
+                    rotation: Angle.DegreesToRadians(45));
+            }
+        },
+        new()
+        {
+            Name = "34 Camera view rectangle culling - rotated - text",
+            ExpectedReferenceImageFile = "34_CameraViewRectangleCulling_Rotated_Text.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100), rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(-105, -105), rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(115, -115), rotation: Angle.DegreesToRadians(45));
+                entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150), rotation: Angle.DegreesToRadians(45));
+            }
+        },
+        new()
+        {
+            Name = "35 Camera view rectangle culling - skewed - rectangle",
+            ExpectedReferenceImageFile = "35_CameraViewRectangleCulling_Skewed_Rectangle.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                var e1 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e1.Parent = p1;
+
+                var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                var e2 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e2.Parent = p2;
+
+                var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                var e3 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e3.Parent = p3;
+
+                var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
+                var e4 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e4.Parent = p4;
+
+                var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                var e5 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e5.Parent = p5;
+            }
+        },
+        new()
+        {
+            Name = "36 Camera view rectangle culling - skewed - ellipse",
+            ExpectedReferenceImageFile = "36_CameraViewRectangleCulling_Skewed_Ellipse.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                var e1 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e1.Parent = p1;
+
+                var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                var e2 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e2.Parent = p2;
+
+                var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                var e3 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e3.Parent = p3;
+
+                var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
+                var e4 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e4.Parent = p4;
+
+                var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                var e5 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.DegreesToRadians(30));
+                e5.Parent = p5;
+            }
+        },
+        new()
+        {
+            Name = "37 Camera view rectangle culling - skewed - sprite",
+            ExpectedReferenceImageFile = "37_CameraViewRectangleCulling_Skewed_Sprite.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                var e1 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                e1.Parent = p1;
+
+                var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                var e2 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                e2.Parent = p2;
+
+                var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                var e3 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                e3.Parent = p3;
+
+                var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
+                var e4 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                e4.Parent = p4;
+
+                var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                var e5 = entityFactory.CreateSprite(scene, TestAssetIds.SpriteSheet.Part0Sprite, rotation: Angle.DegreesToRadians(30));
+                e5.Parent = p5;
+            }
+        },
+        new()
+        {
+            Name = "38 Camera view rectangle culling - skewed - text",
+            ExpectedReferenceImageFile = "38_CameraViewRectangleCulling_Skewed_Text.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                var e1 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
+                e1.Parent = p1;
+
+                var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                var e2 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
+                e2.Parent = p2;
+
+                var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                var e3 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
+                e3.Parent = p3;
+
+                var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(120, -120));
+                var e4 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
+                e4.Parent = p4;
+
+                var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                var e5 = entityFactory.CreateText50X50(scene, rotation: Angle.DegreesToRadians(30));
+                e5.Parent = p5;
+            }
+        },
+        new()
+        {
+            Name = "39 Camera view rectangle culling - camera - translated",
+            ExpectedReferenceImageFile = "39_CameraViewRectangleCulling_Camera_Translated.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                var camera = entityFactory.CreateCamera(scene);
+                camera.GetComponent<Transform2DComponent>().Translation = new Vector2(50, 50);
+
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+            }
+        },
+        new()
+        {
+            Name = "40 Camera view rectangle culling - camera - rotated",
+            ExpectedReferenceImageFile = "40_CameraViewRectangleCulling_Camera_Rotated.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                var camera = entityFactory.CreateCamera(scene);
+                camera.GetComponent<Transform2DComponent>().Rotation = Angle.DegreesToRadians(45);
+
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+            }
+        },
+        new()
+        {
+            Name = "41 Sprite rendering - bitmap interpolation mode",
+            ExpectedReferenceImageFile = "41_Sprites_BitmapInterpolationMode.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 0), scale: new Vector2(3, 3));
+                var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 0), scale: new Vector2(3, 3));
+
+                // Set interpolation mode to NearestNeighbor for entity1, resulting in sharper pixels
+                entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                // Set interpolation mode to Linear for entity2, resulting in smoother pixels
+                entity2.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+            }
+        },
+        new()
+        {
+            Name = "42 Sprite batch rendering - bitmap interpolation mode",
+            ExpectedReferenceImageFile = "42_SpriteBatch_BitmapInterpolationMode.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var entity1 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, 39), scale: new Vector2(3, 3));
+                var entity2 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, 39), scale: new Vector2(3, 3));
+                var entity3 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(-39, -39),
+                    scale: new Vector2(3, 3));
+                var entity4 = entityFactory.CreateSprite(scene, TestAssetIds.Sprites.PixelArt, translation: new Vector2(39, -39), scale: new Vector2(3, 3));
+
+                // Set interpolation mode to NearestNeighbor for entity1 and entity2, resulting in sharper pixels
+                entity1.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                entity2.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                // Set interpolation mode to Linear for entity3 and entity4, resulting in smoother pixels
+                entity3.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+                entity4.GetComponent<SpriteRendererComponent>().BitmapInterpolationMode = BitmapInterpolationMode.Linear;
+            }
+        },
+        new()
+        {
+            Name = "43 Text rendering - custom font",
+            ExpectedReferenceImageFile = "43_TextRendering_CustomFont.png",
+            SetUpScene = (scene, entityFactory, _) =>
+            {
+                entityFactory.CreateCamera(scene);
+
+                var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 60));
+                t1.FontFamilyName = "Kenney Blocks";
+
+                var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, 15));
+                t2.FontFamilyName = "Kenney Future";
+
+                var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-80, -30));
+                t3.FontFamilyName = "Kenney Pixel";
+            }
+        }
+    };
+
+    [TestCaseSource(nameof(RenderingTestCases))]
+    public void RenderScene_ShouldRenderImageSameAsReferenceImage(RenderingTestCase testCase)
+    {
+        // Arrange
+        var scene = SystemUnderTest.SceneManager.CurrentScene;
+        var entityFactory = new EntityFactory(SystemUnderTest.AssetStore);
+
+        testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
+
+        // Act
+        SystemUnderTest.RenderingSystem.RenderScene();
+
+        // Assert
+        using var memoryStream = new MemoryStream();
+        SystemUnderTest.RenderingBackend.Context2D.CaptureScreenshotAsPng(memoryStream);
+        using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
+
+        var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
+        using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
+
+        var useTolerances = IsImageToleranceEnabled();
+
+        AssertImagesEqualWithinTolerance(
+            actualImage,
+            referenceImage,
+            useTolerances,
+            testCase.Tolerance,
+            Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput")),
+            Path.GetFileNameWithoutExtension(testCase.ExpectedReferenceImageFile)
+        );
+    }
+
+    private static void LogRenderingEnvironment(RenderingBackendInfo info)
+    {
+        TestContext.WriteLine("Rendering Environment Info:");
+        TestContext.WriteLine($"OS: {RuntimeInformation.OSDescription}");
+        TestContext.WriteLine($"Rendering Backend: {info.Name}");
+        TestContext.WriteLine($"Adapter: {info.GraphicsAdapterName}");
+        TestContext.WriteLine($"D3D Feature Level: {info.FeatureLevel}");
+        TestContext.WriteLine("System Fonts: Consolas, Calibri, Comic Sans MS (used in tests)");
+    }
+
+    /// <summary>
+    ///     Determines whether tolerant image comparison is enabled via a test-only environment switch.
+    ///     <br />
+    ///     The environment variable <c>GEISHA_TEST_ENABLE_IMAGE_TOLERANCE</c>, when set to any non-empty value (e.g. "1",
+    ///     "true"), enables tolerant comparison that ignores minor pixel differences due to environment or driver variability.
+    /// </summary>
+    /// <remarks>
+    ///     This setting is intended for tests only and should not be used in production code paths.
+    /// </remarks>
+    private static bool IsImageToleranceEnabled()
+    {
+        return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GEISHA_TEST_ENABLE_IMAGE_TOLERANCE"));
+    }
+
+    private static void AssertImagesEqualWithinTolerance(Image<Bgra32> actual, Image<Bgra32> expected, bool useTolerances, ImageTolerance tolerance,
+        string outputDir, string baseName)
+    {
+        if (actual.Width != expected.Width || actual.Height != expected.Height)
+        {
+            Assert.Fail($"Image dimensions differ. Expected: {expected.Width}x{expected.Height}, Actual: {actual.Width}x{actual.Height}");
+        }
+
+        var width = expected.Width;
+        var height = expected.Height;
+        var totalPixels = width * height;
+        var differingPixels = 0;
+        // Determine coordinate column width for aligned output (based on max of width/height)
+        var coordWidth = Math.Max(width.ToString().Length, height.ToString().Length);
+
+        // Prepare diff images
+        using var diffImage = new Image<Bgra32>(width, height);
+        using var rawDiffImage = new Image<Bgra32>(width, height);
+        var diffColor = new Bgra32(255, 0, 255, 255); // Magenta for diff
+        var whiteColor = new Bgra32(255, 255, 255, 255); // White background
+
+        // Prepare textual diff details
+        var detailsBuilder = new StringBuilder();
+        detailsBuilder.AppendLine($"Image diff details for '{baseName}'");
+        detailsBuilder.AppendLine($"Dimensions: {width}x{height}");
+        detailsBuilder.AppendLine($"Mode: {(useTolerances ? "tolerant" : "strict")}");
+        if (useTolerances)
+        {
+            detailsBuilder.AppendLine($"Channel tolerance: {tolerance.ChannelTolerance}");
+            detailsBuilder.AppendLine($"Max diff ratio: {tolerance.MaxDiffRatio}");
+        }
+
+        // Header with column labels and dynamic ruler aligned to field widths
+        detailsBuilder.AppendLine("Columns: x,y | E=(B,G,R,A) | A=(B,G,R,A) | Δ=(B,G,R,A) | |Δ|=(B,G,R,A)");
+        var coordRuler = $"{new string('-', coordWidth)},{new string('-', coordWidth)}";
+        var channels3 = $"({new string('-', 3)},{new string('-', 3)},{new string('-', 3)},{new string('-', 3)})";
+        var channels4 = $"({new string('-', 4)},{new string('-', 4)},{new string('-', 4)},{new string('-', 4)})";
+        detailsBuilder.AppendLine();
+        detailsBuilder.AppendLine($"{coordRuler} | E={channels3} | A={channels3} | Δ={channels4} | |Δ|={channels3}");
+        detailsBuilder.AppendLine();
+
+        // Single-pass processing using direct row spans to avoid intermediate arrays and repeated accessors
+        for (var y = 0; y < height; y++)
+        {
+            var actualSpan = actual.DangerousGetPixelRowMemory(y).Span;
+            var expectedSpan = expected.DangerousGetPixelRowMemory(y).Span;
+            var diffSpan = diffImage.DangerousGetPixelRowMemory(y).Span;
+            var rawDiffSpan = rawDiffImage.DangerousGetPixelRowMemory(y).Span;
+
+            for (var x = 0; x < width; x++)
+            {
+                var actualPixel = actualSpan[x];
+                var expectedPixel = expectedSpan[x];
+                bool isDiff;
+
+                if (useTolerances)
+                {
+                    isDiff =
+                        Math.Abs(expectedPixel.B - actualPixel.B) > tolerance.ChannelTolerance ||
+                        Math.Abs(expectedPixel.G - actualPixel.G) > tolerance.ChannelTolerance ||
+                        Math.Abs(expectedPixel.R - actualPixel.R) > tolerance.ChannelTolerance ||
+                        Math.Abs(expectedPixel.A - actualPixel.A) > tolerance.ChannelTolerance;
+                }
+                else
+                {
+                    isDiff = !actualPixel.Equals(expectedPixel);
+                }
+
+                if (isDiff)
+                {
+                    differingPixels++;
+                    diffSpan[x] = diffColor;
+                    rawDiffSpan[x] = diffColor;
+
+                    // Capture detailed info for this pixel (aligned columns)
+                    var dB = expectedPixel.B - actualPixel.B;
+                    var dG = expectedPixel.G - actualPixel.G;
+                    var dR = expectedPixel.R - actualPixel.R;
+                    var dA = expectedPixel.A - actualPixel.A;
+                    detailsBuilder.AppendLine(
+                        $"{x.ToString().PadLeft(coordWidth)},{y.ToString().PadLeft(coordWidth)} | E=({(int)expectedPixel.B,3},{(int)expectedPixel.G,3},{(int)expectedPixel.R,3},{(int)expectedPixel.A,3}) | A=({(int)actualPixel.B,3},{(int)actualPixel.G,3},{(int)actualPixel.R,3},{(int)actualPixel.A,3}) | Δ=({dB,4},{dG,4},{dR,4},{dA,4}) | |Δ|=({Math.Abs(dB),3},{Math.Abs(dG),3},{Math.Abs(dR),3},{Math.Abs(dA),3})");
+                }
+                else
+                {
+                    diffSpan[x] = actualPixel;
+                    rawDiffSpan[x] = whiteColor;
+                }
+            }
+        }
+
+        var diffRatio = (double)differingPixels / totalPixels;
+        detailsBuilder.AppendLine();
+        detailsBuilder.AppendLine($"Total differing pixels: {differingPixels} ({diffRatio:P}) out of {totalPixels}");
+
+        // Save actual and diff images
+        Directory.CreateDirectory(outputDir);
+        var actualFileName = $"{baseName}_actual.png";
+        var diffFileName = $"{baseName}_diff.png";
+        var rawDiffFileName = $"{baseName}_raw-diff.png";
+        var detailsFileName = $"{baseName}_diff-details.txt";
+
+        var actualFilePath = Path.Combine(outputDir, actualFileName);
+        var diffFilePath = Path.Combine(outputDir, diffFileName);
+        var rawDiffFilePath = Path.Combine(outputDir, rawDiffFileName);
+        var detailsFilePath = Path.Combine(outputDir, detailsFileName);
+
+        actual.SaveAsPng(actualFilePath);
+        diffImage.SaveAsPng(diffFilePath);
+        rawDiffImage.SaveAsPng(rawDiffFilePath);
+        File.WriteAllText(detailsFilePath, detailsBuilder.ToString());
+
+        if (useTolerances)
+        {
+            Assert.That(
+                diffRatio,
+                Is.LessThanOrEqualTo(tolerance.MaxDiffRatio),
+                $"Images differ in {differingPixels} pixels ({diffRatio:P}). Tolerance: {tolerance.ChannelTolerance} per channel, max ratio: {tolerance.MaxDiffRatio:P}. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
+            );
+        }
+        else
+        {
+            Assert.That(
+                differingPixels,
+                Is.EqualTo(0),
+                $"Images differ in {differingPixels} pixels. See diff image: {diffFileName}, raw diff image: {rawDiffFileName}, details: {detailsFileName}"
+            );
+        }
+    }
+
+    public sealed class EntityFactory
+    {
+        private readonly IAssetStore _assetStore;
+
+        public EntityFactory(IAssetStore assetStore)
+        {
+            _assetStore = assetStore;
+        }
+
+        public Entity CreateCamera(Scene scene)
+        {
+            var entity = scene.CreateEntity();
+            entity.CreateComponent<Transform2DComponent>();
+            var cameraComponent = entity.CreateComponent<CameraComponent>();
+            cameraComponent.ViewRectangle = new Vector2(200, 200);
+
+            return entity;
+        }
+
+        public Entity CreateTransform(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+            transform2DComponent.Translation = translation ?? Vector2.Zero;
+            transform2DComponent.Rotation = rotation;
+            transform2DComponent.Scale = scale ?? Vector2.One;
+
+            return entity;
+        }
+
+        public Entity CreateRectangle(Scene scene, Vector2 dimensions, Color color, bool fillInterior = false, Vector2? translation = null,
+            double rotation = 0, Vector2? scale = null)
+        {
+            var entity = CreateTransform(scene, translation, rotation, scale);
+
+            var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+            rectangleRendererComponent.Dimensions = dimensions;
+            rectangleRendererComponent.Color = color;
+            rectangleRendererComponent.FillInterior = fillInterior;
+
+            return entity;
+        }
+
+        public Entity CreateEllipse(Scene scene, double radiusX, double radiusY, Color color, bool fillInterior = false, Vector2? translation = null,
+            double rotation = 0, Vector2? scale = null)
+        {
+            var entity = CreateTransform(scene, translation, rotation, scale);
+
+            var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = radiusX;
+            ellipseRendererComponent.RadiusY = radiusY;
+            ellipseRendererComponent.Color = color;
+            ellipseRendererComponent.FillInterior = fillInterior;
+
+            return entity;
+        }
+
+        public Entity CreateSprite(Scene scene, AssetId spriteAssetId, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+        {
+            var entity = CreateTransform(scene, translation, rotation, scale);
+
+            var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
+            spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId);
+
+            return entity;
+        }
+
+        public TextRendererComponent CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
+            Vector2? scale = null)
+        {
+            var entity = CreateTransform(scene, translation, rotation, scale);
+
+            var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+            textRendererComponent.Text = text;
+            textRendererComponent.FontSize = fontSize;
+            textRendererComponent.Color = color;
+
+            return textRendererComponent;
+        }
+
+        public Entity CreateText50X50(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+        {
+            var root = CreateTransform(scene, translation, rotation, scale);
+
+            var rectangle = CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: false);
+            rectangle.Parent = root;
+
+            var textRendererComponent = CreateText(scene, "Test Test", FontSize.FromDips(20), Color.Black);
+            textRendererComponent.TextAlignment = TextAlignment.Center;
+            textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+            textRendererComponent.Pivot = new Vector2(25, 25);
+            textRendererComponent.MaxWidth = 50;
+            textRendererComponent.MaxHeight = 50;
+            textRendererComponent.Entity.Parent = root;
+
+            return root;
         }
     }
 }
