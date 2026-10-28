@@ -65,7 +65,7 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.Text;
         set
         {
-            if (Text == value)
+            if (TextLayout.Text == value)
             {
                 return;
             }
