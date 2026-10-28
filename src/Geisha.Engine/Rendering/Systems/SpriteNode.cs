@@ -40,7 +40,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         protected override AxisAlignedRectangle ComputeBoundingRectangle()
         {
-            if (Sprite == null)
+            if (Sprite is null)
             {
                 return new AxisAlignedRectangle();
             }
@@ -64,6 +64,13 @@ namespace Geisha.Engine.Rendering.Systems
             get => _sprite;
             set
             {
+                if (_sprite == value)
+                {
+                    return;
+                }
+
+                var geometryChanged = _sprite?.Rectangle != value?.Rectangle;
+
                 _sprite = value;
 
                 _batchId = _batchId with
@@ -71,7 +78,10 @@ namespace Geisha.Engine.Rendering.Systems
                     ResourceId = value is not null ? value.SourceTexture.RuntimeId : RuntimeId.Invalid
                 };
 
-                CacheStaticGeometry();
+                if (geometryChanged)
+                {
+                    CacheStaticGeometry();
+                }
             }
         }
 
