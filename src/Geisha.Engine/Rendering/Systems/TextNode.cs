@@ -43,6 +43,10 @@ internal sealed class TextNode : RenderNode, ITextNode
 {
     private readonly TextRendererComponent _textRendererComponent;
     private readonly IRenderingContext2D _renderingContext2D;
+
+    private FontSize _fontSize;
+    private double _maxWidth;
+    private double _maxHeight;
     private Vector2 _pivot;
 
     public TextNode(Transform2DComponent transform, TextRendererComponent textRendererComponent, IRenderingContext2D renderingContext2D)
@@ -97,45 +101,51 @@ internal sealed class TextNode : RenderNode, ITextNode
 
     public FontSize FontSize
     {
-        get => TextLayout.FontSize;
+        get => _fontSize;
         set
         {
-            if (TextLayout.FontSize == value)
+            if (_fontSize == value)
             {
                 return;
             }
 
             TextLayout.FontSize = value;
+            _fontSize = value;
+
             CacheStaticGeometry();
         }
     }
 
     public double MaxWidth
     {
-        get => TextLayout.MaxWidth;
+        get => _maxWidth;
         set
         {
-            if (TextLayout.MaxWidth == value)
+            if (_maxWidth == value)
             {
                 return;
             }
 
             TextLayout.MaxWidth = value;
+            _maxWidth = value;
+
             CacheStaticGeometry();
         }
     }
 
     public double MaxHeight
     {
-        get => TextLayout.MaxHeight;
+        get => _maxHeight;
         set
         {
-            if (TextLayout.MaxHeight == value)
+            if (_maxHeight == value)
             {
                 return;
             }
 
             TextLayout.MaxHeight = value;
+            _maxHeight = value;
+
             CacheStaticGeometry();
         }
     }
