@@ -53,6 +53,11 @@ internal sealed class EllipseNode : RenderNode, IEllipseNode
         get => _radiusX;
         set
         {
+            if (_radiusX == value)
+            {
+                return;
+            }
+
             _radiusX = value;
             CacheStaticGeometry();
         }
@@ -63,6 +68,11 @@ internal sealed class EllipseNode : RenderNode, IEllipseNode
         get => _radiusY;
         set
         {
+            if (_radiusY == value)
+            {
+                return;
+            }
+
             _radiusY = value;
             CacheStaticGeometry();
         }

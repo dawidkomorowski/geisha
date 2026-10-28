@@ -14,7 +14,7 @@ internal interface ITextNode : IRenderNode
     double MaxHeight { get; set; }
     TextAlignment TextAlignment { get; set; }
     ParagraphAlignment ParagraphAlignment { get; set; }
-    Color Color { set; get; }
+    Color Color { get; set; }
     Vector2 Pivot { get; set; }
     bool ClipToLayoutBox { get; set; }
     TextMetrics Metrics { get; }
@@ -65,7 +65,7 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.Text;
         set
         {
-            if (value == Text)
+            if (Text == value)
             {
                 return;
             }
@@ -85,6 +85,11 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.FontFamilyName;
         set
         {
+            if (TextLayout.FontFamilyName == value)
+            {
+                return;
+            }
+
             TextLayout.FontFamilyName = value;
             CacheStaticGeometry();
         }
@@ -95,6 +100,11 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.FontSize;
         set
         {
+            if (TextLayout.FontSize == value)
+            {
+                return;
+            }
+
             TextLayout.FontSize = value;
             CacheStaticGeometry();
         }
@@ -105,6 +115,11 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.MaxWidth;
         set
         {
+            if (TextLayout.MaxWidth == value)
+            {
+                return;
+            }
+
             TextLayout.MaxWidth = value;
             CacheStaticGeometry();
         }
@@ -115,6 +130,11 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.MaxHeight;
         set
         {
+            if (TextLayout.MaxHeight == value)
+            {
+                return;
+            }
+
             TextLayout.MaxHeight = value;
             CacheStaticGeometry();
         }
@@ -125,6 +145,11 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.TextAlignment;
         set
         {
+            if (TextLayout.TextAlignment == value)
+            {
+                return;
+            }
+
             TextLayout.TextAlignment = value;
             CacheStaticGeometry();
         }
@@ -135,18 +160,28 @@ internal sealed class TextNode : RenderNode, ITextNode
         get => TextLayout.ParagraphAlignment;
         set
         {
+            if (TextLayout.ParagraphAlignment == value)
+            {
+                return;
+            }
+
             TextLayout.ParagraphAlignment = value;
             CacheStaticGeometry();
         }
     }
 
-    public Color Color { set; get; }
+    public Color Color { get; set; }
 
     public Vector2 Pivot
     {
         get => _pivot;
         set
         {
+            if (_pivot == value)
+            {
+                return;
+            }
+
             _pivot = value;
             CacheStaticGeometry();
         }
