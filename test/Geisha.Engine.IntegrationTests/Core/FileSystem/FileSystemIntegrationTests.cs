@@ -5,164 +5,163 @@ using NUnit.Framework;
 using Directory = System.IO.Directory;
 using File = System.IO.File;
 
-namespace Geisha.Engine.IntegrationTests.Core.FileSystem
+namespace Geisha.Engine.IntegrationTests.Core.FileSystem;
+
+[TestFixture]
+public class FileSystemIntegrationTests
 {
-    [TestFixture]
-    public class FileSystemIntegrationTests
+    private IFileSystem _fileSystem = null!;
+    private TemporaryDirectory _temporaryDirectory = null!;
+    private string _absoluteFilePath = null!;
+    private string _relativeFilePath = null!;
+    private string _absoluteDirectoryPath = null!;
+    private string _relativeDirectoryPath = null!;
+
+    [SetUp]
+    public void SetUp()
     {
-        private IFileSystem _fileSystem = null!;
-        private TemporaryDirectory _temporaryDirectory = null!;
-        private string _absoluteFilePath = null!;
-        private string _relativeFilePath = null!;
-        private string _absoluteDirectoryPath = null!;
-        private string _relativeDirectoryPath = null!;
+        _fileSystem = new Geisha.Engine.Core.FileSystem.FileSystem();
+        _temporaryDirectory = new TemporaryDirectory();
 
-        [SetUp]
-        public void SetUp()
-        {
-            _fileSystem = new Geisha.Engine.Core.FileSystem.FileSystem();
-            _temporaryDirectory = new TemporaryDirectory();
+        _absoluteFilePath = _temporaryDirectory.GetRandomFilePath();
+        _relativeFilePath = Path.GetRelativePath(_temporaryDirectory.Path, _absoluteFilePath);
+        File.WriteAllText(_absoluteFilePath, string.Empty);
 
-            _absoluteFilePath = _temporaryDirectory.GetRandomFilePath();
-            _relativeFilePath = Path.GetRelativePath(_temporaryDirectory.Path, _absoluteFilePath);
-            File.WriteAllText(_absoluteFilePath, string.Empty);
+        _absoluteDirectoryPath = _temporaryDirectory.GetRandomDirectoryPath();
+        _relativeDirectoryPath = Path.GetRelativePath(_temporaryDirectory.Path, _absoluteDirectoryPath);
+        Directory.CreateDirectory(_absoluteDirectoryPath);
+    }
 
-            _absoluteDirectoryPath = _temporaryDirectory.GetRandomDirectoryPath();
-            _relativeDirectoryPath = Path.GetRelativePath(_temporaryDirectory.Path, _absoluteDirectoryPath);
-            Directory.CreateDirectory(_absoluteDirectoryPath);
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        _temporaryDirectory.Dispose();
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _temporaryDirectory.Dispose();
-        }
+    [Test]
+    public void CreateFile_ShouldCreateEmptyFile()
+    {
+        // Arrange
+        var filePath = _temporaryDirectory.GetRandomFilePath();
 
-        [Test]
-        public void CreateFile_ShouldCreateEmptyFile()
-        {
-            // Arrange
-            var filePath = _temporaryDirectory.GetRandomFilePath();
+        // Assume
+        Assert.That(File.Exists(filePath), Is.False);
 
-            // Assume
-            Assert.That(File.Exists(filePath), Is.False);
+        // Act
+        var file = _fileSystem.CreateFile(filePath);
 
-            // Act
-            var file = _fileSystem.CreateFile(filePath);
+        // Assert
+        Assert.That(file.Path, Is.EqualTo(filePath));
+        Assert.That(File.Exists(filePath), Is.True);
+        Assert.That(File.ReadAllText(filePath), Is.Empty);
+    }
 
-            // Assert
-            Assert.That(file.Path, Is.EqualTo(filePath));
-            Assert.That(File.Exists(filePath), Is.True);
-            Assert.That(File.ReadAllText(filePath), Is.Empty);
-        }
+    [Test]
+    public void CreateFile_ShouldOverwriteExistingFileMakingItEmpty()
+    {
+        // Arrange
+        var filePath = _temporaryDirectory.GetRandomFilePath();
+        var fileContents = Utils.Random.GetString();
+        File.WriteAllText(filePath, fileContents);
 
-        [Test]
-        public void CreateFile_ShouldOverwriteExistingFileMakingItEmpty()
-        {
-            // Arrange
-            var filePath = _temporaryDirectory.GetRandomFilePath();
-            var fileContents = Utils.Random.GetString();
-            File.WriteAllText(filePath, fileContents);
+        // Assume
+        Assert.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
 
-            // Assume
-            Assert.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
+        // Act
+        var file = _fileSystem.CreateFile(filePath);
 
-            // Act
-            var file = _fileSystem.CreateFile(filePath);
+        // Assert
+        Assert.That(file.ReadAllText(), Is.Empty);
+        Assert.That(File.ReadAllText(filePath), Is.Empty);
+    }
 
-            // Assert
-            Assert.That(file.ReadAllText(), Is.Empty);
-            Assert.That(File.ReadAllText(filePath), Is.Empty);
-        }
+    [Test]
+    public void CreateFile_ShouldCreateFile_Then_WriteAllText_ShouldWriteTextContentsToFile()
+    {
+        // Arrange
+        var filePath = _temporaryDirectory.GetRandomFilePath();
+        var fileContents = Utils.Random.GetString();
 
-        [Test]
-        public void CreateFile_ShouldCreateFile_Then_WriteAllText_ShouldWriteTextContentsToFile()
-        {
-            // Arrange
-            var filePath = _temporaryDirectory.GetRandomFilePath();
-            var fileContents = Utils.Random.GetString();
+        // Assume
+        Assert.That(File.Exists(filePath), Is.False);
 
-            // Assume
-            Assert.That(File.Exists(filePath), Is.False);
+        // Act
+        var file = _fileSystem.CreateFile(filePath);
+        file.WriteAllText(fileContents);
 
-            // Act
-            var file = _fileSystem.CreateFile(filePath);
-            file.WriteAllText(fileContents);
+        // Assert
+        Assert.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
+    }
 
-            // Assert
-            Assert.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
-        }
+    [Test]
+    public void GetFile_ShouldThrowFileNotFoundException_GivenPathToNotExistingFile()
+    {
+        // Arrange
+        var notExistingFilePath = Path.GetFullPath("Not existing file");
 
-        [Test]
-        public void GetFile_ShouldThrowFileNotFoundException_GivenPathToNotExistingFile()
-        {
-            // Arrange
-            var notExistingFilePath = Path.GetFullPath("Not existing file");
+        // Act
+        // Assert
+        Assert.That(() => { _fileSystem.GetFile(notExistingFilePath); },
+            Throws.TypeOf<FileNotFoundException>().With.Matches<FileNotFoundException>(e => e.FileName == notExistingFilePath));
+    }
 
-            // Act
-            // Assert
-            Assert.That(() => { _fileSystem.GetFile(notExistingFilePath); },
-                Throws.TypeOf<FileNotFoundException>().With.Matches<FileNotFoundException>(e => e.FileName == notExistingFilePath));
-        }
+    [Test]
+    public void GetFile_ShouldReturnFile_GivenAbsolutePath()
+    {
+        // Arrange
+        // Act
+        var file = _fileSystem.GetFile(_absoluteFilePath);
 
-        [Test]
-        public void GetFile_ShouldReturnFile_GivenAbsolutePath()
-        {
-            // Arrange
-            // Act
-            var file = _fileSystem.GetFile(_absoluteFilePath);
+        // Assert
+        Assert.That(file.Path, Is.EqualTo(_absoluteFilePath));
+    }
 
-            // Assert
-            Assert.That(file.Path, Is.EqualTo(_absoluteFilePath));
-        }
+    [Test]
+    public void GetFile_ShouldReturnFile_GivenRelativePath()
+    {
+        // Arrange
+        Directory.SetCurrentDirectory(_temporaryDirectory.Path);
 
-        [Test]
-        public void GetFile_ShouldReturnFile_GivenRelativePath()
-        {
-            // Arrange
-            Directory.SetCurrentDirectory(_temporaryDirectory.Path);
+        // Act
+        var file = _fileSystem.GetFile(_relativeFilePath);
 
-            // Act
-            var file = _fileSystem.GetFile(_relativeFilePath);
+        // Assert
+        Assert.That(file.Path, Is.EqualTo(_absoluteFilePath));
+    }
 
-            // Assert
-            Assert.That(file.Path, Is.EqualTo(_absoluteFilePath));
-        }
+    [Test]
+    public void GetDirectory_ShouldThrowDirectoryNotFoundException_GivenPathToNotExistingDirectory()
+    {
+        // Arrange
+        var notExistingDirectoryPath = Path.GetFullPath("Not existing file");
 
-        [Test]
-        public void GetDirectory_ShouldThrowDirectoryNotFoundException_GivenPathToNotExistingDirectory()
-        {
-            // Arrange
-            var notExistingDirectoryPath = Path.GetFullPath("Not existing file");
+        // Act
+        // Assert
+        Assert.That(() => { _fileSystem.GetDirectory(notExistingDirectoryPath); },
+            Throws.TypeOf<DirectoryNotFoundException>().With.Message.Contains(notExistingDirectoryPath));
+    }
 
-            // Act
-            // Assert
-            Assert.That(() => { _fileSystem.GetDirectory(notExistingDirectoryPath); },
-                Throws.TypeOf<DirectoryNotFoundException>().With.Message.Contains(notExistingDirectoryPath));
-        }
+    [Test]
+    public void GetDirectory_ShouldReturnDirectory_GivenAbsolutePath()
+    {
+        // Arrange
+        // Act
+        var directory = _fileSystem.GetDirectory(_absoluteDirectoryPath);
 
-        [Test]
-        public void GetDirectory_ShouldReturnDirectory_GivenAbsolutePath()
-        {
-            // Arrange
-            // Act
-            var directory = _fileSystem.GetDirectory(_absoluteDirectoryPath);
+        // Assert
+        Assert.That(directory.Path, Is.EqualTo(_absoluteDirectoryPath));
+    }
 
-            // Assert
-            Assert.That(directory.Path, Is.EqualTo(_absoluteDirectoryPath));
-        }
+    [Test]
+    public void GetDirectory_ShouldReturnDirectory_GivenRelativePath()
+    {
+        // Arrange
+        Directory.SetCurrentDirectory(_temporaryDirectory.Path);
 
-        [Test]
-        public void GetDirectory_ShouldReturnDirectory_GivenRelativePath()
-        {
-            // Arrange
-            Directory.SetCurrentDirectory(_temporaryDirectory.Path);
+        // Act
+        var directory = _fileSystem.GetDirectory(_relativeDirectoryPath);
 
-            // Act
-            var directory = _fileSystem.GetDirectory(_relativeDirectoryPath);
-
-            // Assert
-            Assert.That(directory.Path, Is.EqualTo(_absoluteDirectoryPath));
-        }
+        // Assert
+        Assert.That(directory.Path, Is.EqualTo(_absoluteDirectoryPath));
     }
 }

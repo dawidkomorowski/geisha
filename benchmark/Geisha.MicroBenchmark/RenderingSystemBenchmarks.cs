@@ -22,6 +22,9 @@ public class RenderingSystemBenchmarks
     private Scene _scene = null!;
     private RenderingSystem _renderingSystem = null!;
     private StubRenderingBackend _stubRenderingBackend = null!;
+    private List<SpriteRendererComponent> _spriteRendererComponents = new();
+    private Sprite _sprite1 = BenchKit.CreateSprite();
+    private Sprite _sprite2 = BenchKit.CreateSprite();
 
     private void InitializeRenderingSystem()
     {
@@ -43,10 +46,14 @@ public class RenderingSystemBenchmarks
 
         _scene = TestSceneFactory.Create();
         _scene.AddObserver(_renderingSystem);
+
+        _spriteRendererComponents.Clear();
     }
 
     private void CleanupRenderingSystem()
     {
+        _spriteRendererComponents.Clear();
+
         _scene.RemoveObserver(_renderingSystem);
         _scene = null!;
         _renderingSystem = null!;
@@ -59,7 +66,8 @@ public class RenderingSystemBenchmarks
 
         for (var i = 0; i < 10_000; i++)
         {
-            CreateStaticSprite();
+            var spriteRendererComponent = CreateStaticSprite();
+            _spriteRendererComponents.Add(spriteRendererComponent);
         }
     }
 
@@ -92,6 +100,21 @@ public class RenderingSystemBenchmarks
         }
     }
 
+    [Benchmark]
+    public void RenderScene_10_Seconds_10_000_StaticSprites_SpriteUpdated()
+    {
+        // Assuming 60FPS it simulates 10s.
+        for (var i = 0; i < 600; i++)
+        {
+            foreach (var spriteRendererComponent in _spriteRendererComponents)
+            {
+                spriteRendererComponent.Sprite = i % 2 == 0 ? _sprite1 : _sprite2;
+            }
+
+            _renderingSystem.RenderScene();
+        }
+    }
+
     private void CreateCamera()
     {
         var entity = _scene.CreateEntity();
@@ -99,13 +122,14 @@ public class RenderingSystemBenchmarks
         entity.CreateComponent<CameraComponent>();
     }
 
-    private void CreateStaticSprite()
+    private SpriteRendererComponent CreateStaticSprite()
     {
         var entity = _scene.CreateEntity();
         entity.CreateComponent<Transform2DComponent>();
         var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
         spriteRendererComponent.Sprite = BenchKit.CreateSprite();
         spriteRendererComponent.IsStatic = true;
+        return spriteRendererComponent;
     }
 
     private sealed class StubRenderingBackend : IRenderingBackend

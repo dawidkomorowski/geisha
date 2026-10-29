@@ -50,6 +50,11 @@ internal sealed class RectangleNode : RenderNode, IRectangleNode
         get => _dimensions;
         set
         {
+            if (_dimensions == value)
+            {
+                return;
+            }
+
             _dimensions = value;
             CacheStaticGeometry();
         }

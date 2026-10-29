@@ -221,13 +221,26 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
     {
         // Arrange
         const string text = "Sample text";
+
+        const string initialFontFamilyName = "Arial";
         const string fontFamilyName = "Calibri";
+
+        var initialFontSize = FontSize.FromDips(15);
         var fontSize = FontSize.FromDips(20);
-        var color = Color.Red;
+
+        const double initialMaxWidth = 100;
         const double maxWidth = 200;
+
+        const double initialMaxHeight = 200;
         const double maxHeight = 400;
+
+        const TextAlignment initialTextAlignment = TextAlignment.Leading;
         const TextAlignment textAlignment = TextAlignment.Center;
+
+        const ParagraphAlignment initialParagraphAlignment = ParagraphAlignment.Near;
         const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+
+        var color = Color.Red;
         var pivot = new Vector2(100, 200);
         const bool clipToLayoutBox = true;
 
@@ -237,18 +250,28 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         context.AddCamera();
         var (entity, textRendererComponent) = context.AddText();
 
+        // Initial layout properties
+        textRendererComponent.FontFamilyName = initialFontFamilyName;
+        textRendererComponent.FontSize = initialFontSize;
+        textRendererComponent.MaxWidth = initialMaxWidth;
+        textRendererComponent.MaxHeight = initialMaxHeight;
+        textRendererComponent.TextAlignment = initialTextAlignment;
+        textRendererComponent.ParagraphAlignment = initialParagraphAlignment;
+        // Renderer properties
+        textRendererComponent.Color = color;
+        textRendererComponent.Pivot = pivot;
+        textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
+        // Force recreation of ITextLayout
         textRendererComponent.Text = text;
+
+        // Act
         textRendererComponent.FontFamilyName = fontFamilyName;
         textRendererComponent.FontSize = fontSize;
-        textRendererComponent.Color = color;
         textRendererComponent.MaxWidth = maxWidth;
         textRendererComponent.MaxHeight = maxHeight;
         textRendererComponent.TextAlignment = textAlignment;
         textRendererComponent.ParagraphAlignment = paragraphAlignment;
-        textRendererComponent.Pivot = pivot;
-        textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
-        // Act
         context.RenderingSystem.RenderScene();
 
         // Assert
