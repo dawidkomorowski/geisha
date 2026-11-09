@@ -29,7 +29,8 @@ internal static class XInputController
         {
             Index = controllerIndex,
             IsConnected = isConnected,
-            PacketNumber = xInputState.PacketNumber
+            PacketNumber = xInputState.PacketNumber,
+            Buttons = (ControllerButtons)xInputState.Gamepad.Buttons
         };
     }
 }

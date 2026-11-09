@@ -36,7 +36,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         ConnectionStateLabel.Text = controllerState.IsConnected ? "Connected" : "Disconnected";
         PacketNumberLabel.Text = controllerState.PacketNumber.ToString();
 
-        ButonAImage.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse("ea57a9e0-815e-4789-b48c-64b33e14c14f"));
+        ButonAImage.Sprite = (controllerState.Buttons & ControllerButtons.A) != ControllerButtons.None
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("ce9750b2-c9b3-4e4a-8bfa-4ff1f2ed5e65"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("ea57a9e0-815e-4789-b48c-64b33e14c14f"));
     }
 }
 

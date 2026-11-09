@@ -8,4 +8,5 @@ public readonly record struct ControllerState
     public ControllerIndex Index { get; init; }
     public bool IsConnected { get; init; }
     public int PacketNumber { get; init; }
+    public ControllerButtons Buttons { get; init; }
 }
