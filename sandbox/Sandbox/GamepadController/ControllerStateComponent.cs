@@ -3,14 +3,18 @@ using System.Globalization;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.GamepadController;
 
 internal sealed class ControllerStateComponent : BehaviorComponent
 {
-    public ControllerStateComponent(Entity entity) : base(entity)
+    private readonly IInputBackend _inputBackend;
+
+    public ControllerStateComponent(Entity entity, IInputBackend inputBackend) : base(entity)
     {
+        _inputBackend = inputBackend;
     }
 
     public TextRendererComponent? ConnectionStateLabel { get; set; }
@@ -21,11 +25,21 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (ConnectionStateLabel is null) return;
         if (PacketNumberLabel is null) return;
 
-        PacketNumberLabel.Text = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+        var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
+
+        ConnectionStateLabel.Text = controllerState.IsConnected ? "Connected" : "Disconnected";
+        PacketNumberLabel.Text = controllerState.PacketNumber.ToString();
     }
 }
 
 internal sealed class ControllerStateComponentFactory : ComponentFactory<ControllerStateComponent>
 {
-    protected override ControllerStateComponent CreateComponent(Entity entity) => new(entity);
+    private readonly IInputBackend _inputBackend;
+
+    public ControllerStateComponentFactory(IInputBackend inputBackend)
+    {
+        _inputBackend = inputBackend;
+    }
+
+    protected override ControllerStateComponent CreateComponent(Entity entity) => new(entity, _inputBackend);
 }

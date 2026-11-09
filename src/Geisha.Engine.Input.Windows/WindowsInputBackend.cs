@@ -32,6 +32,6 @@ public sealed class WindowsInputBackend : IInputBackend
     // TODO: Add documentation.
     public ControllerState GetControllerState(ControllerIndex controllerIndex)
     {
-        throw new System.NotImplementedException();
+        return default;
     }
 }
