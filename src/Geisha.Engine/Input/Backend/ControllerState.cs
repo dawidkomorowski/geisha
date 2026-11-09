@@ -9,4 +9,6 @@ public readonly record struct ControllerState
     public bool IsConnected { get; init; }
     public int PacketNumber { get; init; }
     public ControllerButtons Buttons { get; init; }
+
+    public bool ButtonA => (Buttons & ControllerButtons.A) != ControllerButtons.None;
 }
