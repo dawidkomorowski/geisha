@@ -7,7 +7,7 @@ using Sandbox.Common;
 
 namespace Sandbox.CustomFont;
 
-public sealed class CustomFontSandboxSceneBehaviorFactory : ISceneBehaviorFactory
+internal sealed class CustomFontSandboxSceneBehaviorFactory : ISceneBehaviorFactory
 {
     private const string SceneBehaviorName = "CustomFontSandbox";
 

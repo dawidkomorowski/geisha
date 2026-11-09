@@ -2,6 +2,7 @@
 using Sandbox.Animation;
 using Sandbox.Common;
 using Sandbox.CustomFont;
+using Sandbox.GamepadController;
 using Sandbox.Physics;
 
 namespace Sandbox;
@@ -20,6 +21,9 @@ public sealed class SandboxApp : Game
 
         // CustomFont
         componentsRegistry.RegisterSceneBehaviorFactory<CustomFontSandboxSceneBehaviorFactory>();
+
+        // GamepadController
+        componentsRegistry.RegisterSceneBehaviorFactory<GamepadControllerSandboxSceneBehaviorFactory>();
 
         // Physics
         componentsRegistry.RegisterSceneBehaviorFactory<PhysicsSandboxSceneBehaviorFactory>();

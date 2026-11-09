@@ -11,15 +11,15 @@
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "LogLevel": "Debug",
-    "ShowAllEntitiesCount": true,
-    "ShowRootEntitiesCount": true,
+    "ShowAllEntitiesCount": false,
+    "ShowRootEntitiesCount": false,
     "ShowFps": true,
-    "ShowFrameTime": true,
-    "ShowGameLoopStatistics": true,
-    "ShowTotalFrames": true,
-    "ShowTotalTime": true,
+    "ShowFrameTime": false,
+    "ShowGameLoopStatistics": false,
+    "ShowTotalFrames": false,
+    "ShowTotalTime": false,
     //"StartUpScene": ""
-    "StartUpSceneBehavior": "CustomFontSandbox"
+    "StartUpSceneBehavior": "GamepadControllerSandbox"
   },
   "Physics": {
     "Substeps": 1,
@@ -39,7 +39,7 @@
   "Rendering": {
     "EnableVSync": false,
     "BufferingMode": "TripleBuffering",
-    "ShowRenderingStatistics": true,
+    "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "Default",
       "UI"
