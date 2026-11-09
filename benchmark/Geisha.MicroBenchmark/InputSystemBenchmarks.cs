@@ -221,5 +221,9 @@ public class InputSystemBenchmarks
         }
 
         public IInputProvider CreateInputProvider() => _inputProvider;
+        public ControllerState GetControllerState(ControllerIndex controllerIndex)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

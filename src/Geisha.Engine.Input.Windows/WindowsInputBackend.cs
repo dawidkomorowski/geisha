@@ -28,4 +28,10 @@ public sealed class WindowsInputBackend : IInputBackend
     {
         return new InputProvider(_form);
     }
+
+    // TODO: Add documentation.
+    public ControllerState GetControllerState(ControllerIndex controllerIndex)
+    {
+        throw new System.NotImplementedException();
+    }
 }
