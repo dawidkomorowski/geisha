@@ -38,27 +38,32 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             _commonEntityFactory.CreateCamera(Scene);
             _commonEntityFactory.CreateBasicControls(Scene);
 
-            var labelsGroup = Scene.CreateEntity();
-            var labelsTransform = labelsGroup.CreateComponent<Transform2DComponent>();
+            var labelGroup = Scene.CreateEntity();
+            var labelsTransform = labelGroup.CreateComponent<Transform2DComponent>();
             labelsTransform.Translation = new Vector2(-300, 400);
 
-            CreateText(Scene, new Vector2(0, 0), "Controller State", 30).Parent = labelsGroup;
-            var connectionStateLabelEntity = CreateText(Scene, new Vector2(350, 0), "Disconnected", 30);
-            connectionStateLabelEntity.Parent = labelsGroup;
+            CreateText(labelGroup, new Vector2(0, 0), "Controller State", 30);
+            var connectionStateLabel = CreateText(labelGroup, new Vector2(350, 0), string.Empty, 30);
 
-            CreateText(Scene, new Vector2(0, -30), "Packet Number", 30).Parent = labelsGroup;
-            var packetNumberLabelEntity = CreateText(Scene, new Vector2(350, -30), "9999", 30);
-            packetNumberLabelEntity.Parent = labelsGroup;
+            CreateText(labelGroup, new Vector2(0, -30), "Packet Number", 30);
+            var packetNumberLabel = CreateText(labelGroup, new Vector2(350, -30), string.Empty, 30);
+
+            var imageGroup = Scene.CreateEntity();
+
+            var buttonAImage = CreateImage(imageGroup, new Vector2(0, 0));
 
             var controllerStateEntity = Scene.CreateEntity();
             var controllerStateComponent = controllerStateEntity.CreateComponent<ControllerStateComponent>();
-            controllerStateComponent.ConnectionStateLabel = connectionStateLabelEntity.GetComponent<TextRendererComponent>();
-            controllerStateComponent.PacketNumberLabel = packetNumberLabelEntity.GetComponent<TextRendererComponent>();
+
+            controllerStateComponent.ConnectionStateLabel = connectionStateLabel;
+            controllerStateComponent.PacketNumberLabel = packetNumberLabel;
+
+            controllerStateComponent.ButonAImage = buttonAImage;
         }
 
-        private static Entity CreateText(Scene scene, Vector2 position, string text, int fontSize)
+        private static TextRendererComponent CreateText(Entity parent, Vector2 position, string text, int fontSize)
         {
-            var entity = scene.CreateEntity();
+            var entity = parent.CreateChildEntity();
             var transform = entity.CreateComponent<Transform2DComponent>();
             transform.Translation = position;
             var textRenderer = entity.CreateComponent<TextRendererComponent>();
@@ -70,7 +75,16 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             textRenderer.TextAlignment = TextAlignment.Leading;
             textRenderer.ParagraphAlignment = ParagraphAlignment.Near;
             textRenderer.Text = text;
-            return entity;
+            return textRenderer;
+        }
+
+        private SpriteRendererComponent CreateImage(Entity parent, Vector2 position)
+        {
+            var entity = parent.CreateChildEntity();
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = position;
+            var spriteRenderer = entity.CreateComponent<SpriteRendererComponent>();
+            return spriteRenderer;
         }
     }
 }
