@@ -11,4 +11,7 @@ public readonly record struct ControllerState
     public ControllerButtons Buttons { get; init; }
 
     public bool ButtonA => (Buttons & ControllerButtons.A) != ControllerButtons.None;
+    public bool ButtonB => (Buttons & ControllerButtons.B) != ControllerButtons.None;
+    public bool ButtonX => (Buttons & ControllerButtons.X) != ControllerButtons.None;
+    public bool ButtonY => (Buttons & ControllerButtons.Y) != ControllerButtons.None;
 }

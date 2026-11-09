@@ -50,7 +50,10 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             var imageGroup = Scene.CreateEntity();
 
-            var buttonAImage = CreateImage(imageGroup, new Vector2(0, 0));
+            var buttonAImage = CreateImage(imageGroup, new Vector2(200, -50));
+            var buttonBImage = CreateImage(imageGroup, new Vector2(250, 0));
+            var buttonXImage = CreateImage(imageGroup, new Vector2(150, 0));
+            var buttonYImage = CreateImage(imageGroup, new Vector2(200, 50));
 
             var controllerStateEntity = Scene.CreateEntity();
             var controllerStateComponent = controllerStateEntity.CreateComponent<ControllerStateComponent>();
@@ -59,6 +62,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             controllerStateComponent.PacketNumberLabel = packetNumberLabel;
 
             controllerStateComponent.ButonAImage = buttonAImage;
+            controllerStateComponent.ButonBImage = buttonBImage;
+            controllerStateComponent.ButonXImage = buttonXImage;
+            controllerStateComponent.ButonYImage = buttonYImage;
         }
 
         private static TextRendererComponent CreateText(Entity parent, Vector2 position, string text, int fontSize)

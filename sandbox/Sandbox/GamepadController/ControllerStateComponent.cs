@@ -23,6 +23,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public TextRendererComponent? PacketNumberLabel { get; set; }
 
     public SpriteRendererComponent? ButonAImage { get; set; }
+    public SpriteRendererComponent? ButonBImage { get; set; }
+    public SpriteRendererComponent? ButonXImage { get; set; }
+    public SpriteRendererComponent? ButonYImage { get; set; }
 
     public override void OnUpdate(in TimeStep timeStep)
     {
@@ -30,6 +33,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (PacketNumberLabel is null) return;
 
         if (ButonAImage is null) return;
+        if (ButonBImage is null) return;
+        if (ButonXImage is null) return;
+        if (ButonYImage is null) return;
 
         var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
 
@@ -39,6 +45,18 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         ButonAImage.Sprite = controllerState.ButtonA
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("ce9750b2-c9b3-4e4a-8bfa-4ff1f2ed5e65"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("ea57a9e0-815e-4789-b48c-64b33e14c14f"));
+
+        ButonBImage.Sprite = controllerState.ButtonB
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("3a9ff6f9-cecf-4f15-ad99-f6f557682f7a"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("e1761492-b779-4a4f-871e-188356feed46"));
+
+        ButonXImage.Sprite = controllerState.ButtonX
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("a6d8b6f3-f246-42fe-9c14-25159614d5fb"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("c4949127-9b35-4b96-b80c-5bbbe7dd130b"));
+
+        ButonYImage.Sprite = controllerState.ButtonY
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("1ae66fce-c0f9-474e-bddf-7718d24d219d"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("ef1ad0db-accb-4cf7-9612-faa854a17f2f"));
     }
 }
 
