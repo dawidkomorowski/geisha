@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Geisha.Engine.Core;
+﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
