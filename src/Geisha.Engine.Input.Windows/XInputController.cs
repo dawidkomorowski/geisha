@@ -8,9 +8,7 @@ internal static class XInputController
     public static void Test()
     {
         var controller = new Controller(UserIndex.One);
-        var state = controller.GetState();
-        Debug.WriteLine($"Controller Connected: {controller.IsConnected}");
-        Debug.WriteLine($"Packet Number: {state.PacketNumber}");
-        Debug.WriteLine($"Button A: {state.Gamepad.Buttons & GamepadButtonFlags.A}");
+        var isConnected = controller.GetState(out var state);
+        Debug.WriteLine($"Controller Connected: {isConnected}, Packet Number: {state.PacketNumber}, Button A: {state.Gamepad.Buttons & GamepadButtonFlags.A}");
     }
 }
