@@ -29,7 +29,6 @@ internal sealed class InputProvider : IInputProvider
     {
         var keyboardInput = CaptureKeyboardInput();
         var mouseInput = CaptureMouseInput();
-        XInputController.Test();
         return new HardwareInput(keyboardInput, mouseInput);
     }
 

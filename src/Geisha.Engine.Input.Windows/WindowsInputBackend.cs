@@ -30,8 +30,5 @@ public sealed class WindowsInputBackend : IInputBackend
     }
 
     // TODO: Add documentation.
-    public ControllerState GetControllerState(ControllerIndex controllerIndex)
-    {
-        return default;
-    }
+    public ControllerState GetControllerState(ControllerIndex controllerIndex) => XInputController.GetState(controllerIndex);
 }
