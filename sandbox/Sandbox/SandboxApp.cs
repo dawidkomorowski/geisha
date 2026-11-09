@@ -24,6 +24,7 @@ public sealed class SandboxApp : Game
 
         // GamepadController
         componentsRegistry.RegisterSceneBehaviorFactory<GamepadControllerSandboxSceneBehaviorFactory>();
+        componentsRegistry.RegisterComponentFactory<ControllerStateComponentFactory>();
 
         // Physics
         componentsRegistry.RegisterSceneBehaviorFactory<PhysicsSandboxSceneBehaviorFactory>();
