@@ -121,6 +121,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var rightStickImage = CreateImage(rightStickRoot, Vector2.Zero);
             var rightStickTransform = rightStickImage.Entity.GetComponent<Transform2DComponent>();
 
+            var leftBumperImage = CreateImage(imageGroup, new Vector2(-200, 125));
+            var rightBumperImage = CreateImage(imageGroup, new Vector2(200, 125));
+
             // Behavior component setup
             var controllerStateEntity = Scene.CreateEntity();
             var controllerStateComponent = controllerStateEntity.CreateComponent<ControllerStateComponent>();
@@ -148,6 +151,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             controllerStateComponent.RightStickImage = rightStickImage;
             controllerStateComponent.RightStickTransform = rightStickTransform;
+
+            controllerStateComponent.LeftBumperImage = leftBumperImage;
+            controllerStateComponent.RightBumperImage = rightBumperImage;
         }
 
         private static TextRendererComponent CreateText(Entity parent, Vector2 position, string text, int fontSize)
