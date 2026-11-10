@@ -66,8 +66,8 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var imageGroup = Scene.CreateEntity();
 
             var abxyGroup = imageGroup.CreateChildEntity();
-            var abxyTransform = abxyGroup.CreateComponent<Transform2DComponent>();
-            abxyTransform.Translation = new Vector2(250, 0);
+            var abxyGroupTransform = abxyGroup.CreateComponent<Transform2DComponent>();
+            abxyGroupTransform.Translation = new Vector2(200, 0);
 
             var buttonAImage = CreateImage(abxyGroup, new Vector2(0, -50));
             var buttonBImage = CreateImage(abxyGroup, new Vector2(50, 0));
@@ -76,7 +76,7 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             var dPadGroup = imageGroup.CreateChildEntity();
             var dPadGroupTransform = dPadGroup.CreateComponent<Transform2DComponent>();
-            dPadGroupTransform.Translation = new Vector2(-200, -100);
+            dPadGroupTransform.Translation = new Vector2(-150, -100);
 
             var dPadBackgroundImage = CreateImage(dPadGroup, "cf503821-093f-4524-9b6f-ff0146baecb0");
             dPadBackgroundImage.OrderInLayer = -10;
@@ -85,6 +85,13 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var dPadDownImage = CreateImage(dPadGroup, "5a017db9-c0fa-4e0d-b62e-699f064d8b29");
             var dPadLeftImage = CreateImage(dPadGroup, "dac2b91d-4835-43bd-8bc8-47c55ccabcaf");
             var dPadRightImage = CreateImage(dPadGroup, "d581d762-caaf-4358-8659-a400722ed196");
+
+            var startBackGroup = imageGroup.CreateChildEntity();
+            var startBackGroupTransform = startBackGroup.CreateComponent<Transform2DComponent>();
+            startBackGroupTransform.Translation = new Vector2();
+
+            var startImage = CreateImage(startBackGroup, new Vector2(50, 0));
+            var backImage = CreateImage(startBackGroup, new Vector2(-50, 0));
 
             // Behavior component setup
             var controllerStateEntity = Scene.CreateEntity();
@@ -102,6 +109,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             controllerStateComponent.DPadDownImage = dPadDownImage;
             controllerStateComponent.DPadLeftImage = dPadLeftImage;
             controllerStateComponent.DPadRightImage = dPadRightImage;
+
+            controllerStateComponent.StartImage = startImage;
+            controllerStateComponent.BackImage = backImage;
         }
 
         private static TextRendererComponent CreateText(Entity parent, Vector2 position, string text, int fontSize)

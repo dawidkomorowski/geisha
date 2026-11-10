@@ -32,6 +32,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public SpriteRendererComponent? DPadLeftImage { get; set; }
     public SpriteRendererComponent? DPadRightImage { get; set; }
 
+    public SpriteRendererComponent? StartImage { get; set; }
+    public SpriteRendererComponent? BackImage { get; set; }
+
     public override void OnUpdate(in TimeStep timeStep)
     {
         if (ConnectionStateLabel is null) return;
@@ -46,6 +49,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (DPadDownImage is null) return;
         if (DPadLeftImage is null) return;
         if (DPadRightImage is null) return;
+
+        if (StartImage is null) return;
+        if (BackImage is null) return;
 
         var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
 
@@ -72,6 +78,14 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         DPadDownImage.Visible = controllerState.ButtonDPadDown;
         DPadLeftImage.Visible = controllerState.ButtonDPadLeft;
         DPadRightImage.Visible = controllerState.ButtonDPadRight;
+
+        StartImage.Sprite = controllerState.ButtonStart
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("2581e31e-3aa7-449d-8c2f-9eda5619a4cc"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("35a90976-0ffc-4bfd-86b4-be05dcf13f1c"));
+
+        BackImage.Sprite = controllerState.ButtonBack
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("448abad2-aec2-4c23-977c-7db72df81394"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("78b192ed-8121-4b89-9d20-9c3708e1a9b1"));
     }
 }
 
