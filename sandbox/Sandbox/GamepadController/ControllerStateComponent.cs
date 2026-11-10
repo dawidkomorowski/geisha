@@ -35,6 +35,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public SpriteRendererComponent? StartImage { get; set; }
     public SpriteRendererComponent? BackImage { get; set; }
 
+    public SpriteRendererComponent? LeftStrickImage { get; set; }
+    public Transform2DComponent? LeftStickTransform { get; set; }
+
     public override void OnUpdate(in TimeStep timeStep)
     {
         if (ConnectionStateLabel is null) return;
@@ -52,6 +55,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         if (StartImage is null) return;
         if (BackImage is null) return;
+
+        if (LeftStrickImage is null) return;
+        if (LeftStickTransform is null) return;
 
         var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
 
@@ -86,6 +92,10 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         BackImage.Sprite = controllerState.ButtonBack
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("448abad2-aec2-4c23-977c-7db72df81394"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("78b192ed-8121-4b89-9d20-9c3708e1a9b1"));
+
+        LeftStrickImage.Sprite = controllerState.ButtonLeftThumb
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("f785cc71-7078-44da-b5df-0d59927e60b7"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("6cbfa428-2af1-4333-bbb6-95f301b18d5d"));
     }
 }
 

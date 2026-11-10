@@ -17,6 +17,7 @@ public readonly record struct ControllerState
     public bool ButtonDPadRight => (Buttons & ControllerButtons.DPadRight) != ControllerButtons.None;
     public bool ButtonStart => (Buttons & ControllerButtons.Start) != ControllerButtons.None;
     public bool ButtonBack => (Buttons & ControllerButtons.Back) != ControllerButtons.None;
+    public bool ButtonLeftThumb => (Buttons & ControllerButtons.LeftThumb) != ControllerButtons.None;
     public bool ButtonA => (Buttons & ControllerButtons.A) != ControllerButtons.None;
     public bool ButtonB => (Buttons & ControllerButtons.B) != ControllerButtons.None;
     public bool ButtonX => (Buttons & ControllerButtons.X) != ControllerButtons.None;
