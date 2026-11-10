@@ -26,6 +26,9 @@ internal static class XInputController
         var controller = GetController(controllerIndex);
         var isConnected = controller.GetState(out var xInputState);
 
+        var leftTriggerNormalized = (double)xInputState.Gamepad.LeftTrigger / byte.MaxValue;
+        var rightTriggerNormalized = (double)xInputState.Gamepad.RightTrigger / byte.MaxValue;
+
         var leftThumbXNormalized = (double)xInputState.Gamepad.LeftThumbX / short.MaxValue;
         var leftThumbYNormalized = (double)xInputState.Gamepad.LeftThumbY / short.MaxValue;
 
@@ -38,8 +41,10 @@ internal static class XInputController
             IsConnected = isConnected,
             PacketNumber = xInputState.PacketNumber,
             Buttons = (ControllerButtons)xInputState.Gamepad.Buttons,
-            LeftThumbPosition = new Vector2(leftThumbXNormalized, leftThumbYNormalized),
-            RightThumbPosition = new Vector2(rightThumbXNormalized, rightThumbYNormalized)
+            LeftTrigger = leftTriggerNormalized,
+            RightTrigger = rightTriggerNormalized,
+            LeftThumb = new Vector2(leftThumbXNormalized, leftThumbYNormalized),
+            RightThumb = new Vector2(rightThumbXNormalized, rightThumbYNormalized)
         };
     }
 }

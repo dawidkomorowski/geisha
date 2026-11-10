@@ -124,6 +124,18 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var leftBumperImage = CreateImage(imageGroup, new Vector2(-200, 125));
             var rightBumperImage = CreateImage(imageGroup, new Vector2(200, 125));
 
+            var leftTriggerGroup = imageGroup.CreateChildEntity();
+            var leftTriggerTransform = leftTriggerGroup.CreateComponent<Transform2DComponent>();
+            leftTriggerTransform.Translation = new Vector2(-200, 175);
+            var leftTriggerHighImage = CreateImage(leftTriggerGroup, "a5376b3d-4fe0-4f58-9e94-9a09e6948627");
+            var leftTriggerLowImage = CreateImage(leftTriggerGroup, "c6f870e0-94fb-4135-a606-ad4274eda311");
+
+            var rightTriggerGroup = imageGroup.CreateChildEntity();
+            var rightTriggerTransform = rightTriggerGroup.CreateComponent<Transform2DComponent>();
+            rightTriggerTransform.Translation = new Vector2(200, 175);
+            var rightTriggerHighImage = CreateImage(rightTriggerGroup, "0ca74082-9e42-4a64-8ecd-58d3facc05ed");
+            var rightTriggerLowImage = CreateImage(rightTriggerGroup, "cfd9d3e9-2f04-4785-97d8-8835b448c8c3");
+
             // Behavior component setup
             var controllerStateEntity = Scene.CreateEntity();
             var controllerStateComponent = controllerStateEntity.CreateComponent<ControllerStateComponent>();
@@ -154,6 +166,12 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             controllerStateComponent.LeftBumperImage = leftBumperImage;
             controllerStateComponent.RightBumperImage = rightBumperImage;
+
+            controllerStateComponent.LeftTriggerHighImage = leftTriggerHighImage;
+            controllerStateComponent.LeftTriggerLowImage = leftTriggerLowImage;
+
+            controllerStateComponent.RightTriggerHighImage = rightTriggerHighImage;
+            controllerStateComponent.RightTriggerLowImage = rightTriggerLowImage;
         }
 
         private static TextRendererComponent CreateText(Entity parent, Vector2 position, string text, int fontSize)

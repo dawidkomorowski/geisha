@@ -12,8 +12,10 @@ public readonly record struct ControllerState
     public bool IsConnected { get; init; }
     public int PacketNumber { get; init; }
     public ControllerButtons Buttons { get; init; }
-    public Vector2 LeftThumbPosition { get; init; }
-    public Vector2 RightThumbPosition { get; init; }
+    public double LeftTrigger { get; init; }
+    public double RightTrigger { get; init; }
+    public Vector2 LeftThumb { get; init; }
+    public Vector2 RightThumb { get; init; }
 
     // TODO: Should the names be prefixed with Button? Or Maybe XPressed? Or something other?
     public bool ButtonDPadUp => (Buttons & ControllerButtons.DPadUp) != ControllerButtons.None;

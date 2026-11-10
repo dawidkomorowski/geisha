@@ -46,6 +46,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public SpriteRendererComponent? LeftBumperImage { get; set; }
     public SpriteRendererComponent? RightBumperImage { get; set; }
 
+    public SpriteRendererComponent? LeftTriggerHighImage { get; set; }
+    public SpriteRendererComponent? LeftTriggerLowImage { get; set; }
+
+    public SpriteRendererComponent? RightTriggerHighImage { get; set; }
+    public SpriteRendererComponent? RightTriggerLowImage { get; set; }
+
     public override void OnUpdate(in TimeStep timeStep)
     {
         if (ConnectionStateLabel is null) return;
@@ -74,6 +80,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         if (LeftBumperImage is null) return;
         if (RightBumperImage is null) return;
+
+        if (LeftTriggerHighImage is null) return;
+        if (LeftTriggerLowImage is null) return;
+
+        if (RightTriggerHighImage is null) return;
+        if (RightTriggerLowImage is null) return;
 
         var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
 
@@ -114,12 +126,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         LeftStrickImage.Sprite = controllerState.ButtonLeftThumb
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("f785cc71-7078-44da-b5df-0d59927e60b7"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("6cbfa428-2af1-4333-bbb6-95f301b18d5d"));
-        LeftStickTransform.Translation = controllerState.LeftThumbPosition * 25;
+        LeftStickTransform.Translation = controllerState.LeftThumb * 25;
 
         RightStickImage.Sprite = controllerState.ButtonRightThumb
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("8e9efdfd-201d-40fe-a47a-a4c0f1b9bac4"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("05dd403a-ab7a-41dd-98ea-e60f7fc8673b"));
-        RightStickTransform.Translation = controllerState.RightThumbPosition * 25;
+        RightStickTransform.Translation = controllerState.RightThumb * 25;
 
         LeftBumperImage.Sprite = controllerState.ButtonLeftShoulder
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("5f5e00ed-e738-4c05-82ff-d2f02b572678"))
@@ -128,6 +140,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         RightBumperImage.Sprite = controllerState.ButtonRightShoulder
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("a405c3be-9374-4295-aea8-afa00c822a1e"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("0913f7df-28a2-46f1-a950-3be2d40ec886"));
+
+        LeftTriggerHighImage.Opacity = controllerState.LeftTrigger;
+        LeftTriggerLowImage.Opacity = 1 - controllerState.LeftTrigger;
+
+        RightTriggerHighImage.Opacity = controllerState.RightTrigger;
+        RightTriggerLowImage.Opacity = 1 - controllerState.RightTrigger;
     }
 }
 
