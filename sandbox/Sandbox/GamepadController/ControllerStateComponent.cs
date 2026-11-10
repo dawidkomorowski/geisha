@@ -22,6 +22,8 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public TextRendererComponent? ConnectionStateLabel { get; set; }
     public TextRendererComponent? PacketNumberLabel { get; set; }
 
+    public SpriteRendererComponent? XboxGuideImage { get; set; }
+
     public SpriteRendererComponent? ButonAImage { get; set; }
     public SpriteRendererComponent? ButonBImage { get; set; }
     public SpriteRendererComponent? ButonXImage { get; set; }
@@ -46,6 +48,8 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (ConnectionStateLabel is null) return;
         if (PacketNumberLabel is null) return;
 
+        if (XboxGuideImage is null) return;
+
         if (ButonAImage is null) return;
         if (ButonBImage is null) return;
         if (ButonXImage is null) return;
@@ -69,6 +73,8 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         ConnectionStateLabel.Text = controllerState.IsConnected ? "Connected" : "Disconnected";
         PacketNumberLabel.Text = controllerState.PacketNumber.ToString();
+
+        XboxGuideImage.Opacity = controllerState.IsConnected ? 1.0 : 0.5;
 
         ButonAImage.Sprite = controllerState.ButtonA
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("ce9750b2-c9b3-4e4a-8bfa-4ff1f2ed5e65"))

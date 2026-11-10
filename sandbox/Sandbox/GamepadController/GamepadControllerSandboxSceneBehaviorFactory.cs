@@ -65,6 +65,8 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             // Gamepad images
             var imageGroup = Scene.CreateEntity();
 
+            var xboxGuideImage = CreateImage(imageGroup, new Vector2(0, 75), "1d1770d0-9a2f-4be6-b722-9af88e4b17c9");
+
             var abxyGroup = imageGroup.CreateChildEntity();
             var abxyGroupTransform = abxyGroup.CreateComponent<Transform2DComponent>();
             abxyGroupTransform.Translation = new Vector2(200, 0);
@@ -126,6 +128,8 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             controllerStateComponent.ConnectionStateLabel = connectionStateLabel;
             controllerStateComponent.PacketNumberLabel = packetNumberLabel;
 
+            controllerStateComponent.XboxGuideImage = xboxGuideImage;
+
             controllerStateComponent.ButonAImage = buttonAImage;
             controllerStateComponent.ButonBImage = buttonBImage;
             controllerStateComponent.ButonXImage = buttonXImage;
@@ -163,20 +167,22 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             return textRenderer;
         }
 
-        private static SpriteRendererComponent CreateImage(Entity parent, Vector2 position)
+        private SpriteRendererComponent CreateImage(Entity parent, Vector2 position) => CreateImage(parent, position, null);
+        private SpriteRendererComponent CreateImage(Entity parent, string assetId) => CreateImage(parent, Vector2.Zero, assetId);
+
+        private SpriteRendererComponent CreateImage(Entity parent, Vector2 position, string? assetId)
         {
             var entity = parent.CreateChildEntity();
             var transform = entity.CreateComponent<Transform2DComponent>();
             transform.Translation = position;
             var spriteRenderer = entity.CreateComponent<SpriteRendererComponent>();
-            return spriteRenderer;
-        }
 
-        private SpriteRendererComponent CreateImage(Entity parent, string assetId)
-        {
-            var image = CreateImage(parent, Vector2.Zero);
-            image.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse(assetId));
-            return image;
+            if (!string.IsNullOrEmpty(assetId))
+            {
+                spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetId.Parse(assetId));
+            }
+
+            return spriteRenderer;
         }
     }
 }
