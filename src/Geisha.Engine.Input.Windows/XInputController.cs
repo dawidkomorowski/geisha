@@ -30,7 +30,9 @@ internal static class XInputController
             Index = controllerIndex,
             IsConnected = isConnected,
             PacketNumber = xInputState.PacketNumber,
-            Buttons = (ControllerButtons)xInputState.Gamepad.Buttons
+            Buttons = (ControllerButtons)xInputState.Gamepad.Buttons,
+            LeftThumbX = (double)xInputState.Gamepad.LeftThumbX / short.MaxValue,
+            LeftThumbY = (double)xInputState.Gamepad.LeftThumbY / short.MaxValue
         };
     }
 }

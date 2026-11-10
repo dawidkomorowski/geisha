@@ -96,6 +96,8 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         LeftStrickImage.Sprite = controllerState.ButtonLeftThumb
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("f785cc71-7078-44da-b5df-0d59927e60b7"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("6cbfa428-2af1-4333-bbb6-95f301b18d5d"));
+
+        LeftStickTransform.Translation = controllerState.LeftThumbPosition * 25;
     }
 }
 

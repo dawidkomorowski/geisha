@@ -97,6 +97,12 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var leftStickRootTransform = leftStickRoot.CreateComponent<Transform2DComponent>();
             leftStickRootTransform.Translation = new Vector2(-200, 0);
 
+            var leftStickLimit = leftStickRoot.CreateChildEntity();
+            leftStickLimit.CreateComponent<Transform2DComponent>();
+            var leftStickLimitRenderer = leftStickLimit.CreateComponent<EllipseRendererComponent>();
+            leftStickLimitRenderer.Color = Color.White;
+            leftStickLimitRenderer.Radius = 50;
+
             var leftStickImage = CreateImage(leftStickRoot, Vector2.Zero);
             var leftStickTransform = leftStickImage.Entity.GetComponent<Transform2DComponent>();
 

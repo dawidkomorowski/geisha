@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Input.Backend;
+﻿using Geisha.Engine.Core.Math;
+
+namespace Geisha.Engine.Input.Backend;
 
 // TODO: Add documentation.
 // TODO: Should it be in Backend or in Input namespace?
@@ -9,6 +11,8 @@ public readonly record struct ControllerState
     public bool IsConnected { get; init; }
     public int PacketNumber { get; init; }
     public ControllerButtons Buttons { get; init; }
+    public double LeftThumbX { get; init; }
+    public double LeftThumbY { get; init; }
 
     // TODO: Should the names be prefixed with Button? Or Maybe XPressed? Or something other?
     public bool ButtonDPadUp => (Buttons & ControllerButtons.DPadUp) != ControllerButtons.None;
@@ -22,4 +26,6 @@ public readonly record struct ControllerState
     public bool ButtonB => (Buttons & ControllerButtons.B) != ControllerButtons.None;
     public bool ButtonX => (Buttons & ControllerButtons.X) != ControllerButtons.None;
     public bool ButtonY => (Buttons & ControllerButtons.Y) != ControllerButtons.None;
+
+    public Vector2 LeftThumbPosition => new Vector2(LeftThumbX, LeftThumbY);
 }
