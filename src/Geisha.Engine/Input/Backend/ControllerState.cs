@@ -10,6 +10,11 @@ public readonly record struct ControllerState
     public int PacketNumber { get; init; }
     public ControllerButtons Buttons { get; init; }
 
+    // TODO: Should the names be prefixed with Button? Or Maybe XPressed? Or something other?
+    public bool ButtonDPadUp => (Buttons & ControllerButtons.DPadUp) != ControllerButtons.None;
+    public bool ButtonDPadDown => (Buttons & ControllerButtons.DPadDown) != ControllerButtons.None;
+    public bool ButtonDPadLeft => (Buttons & ControllerButtons.DPadLeft) != ControllerButtons.None;
+    public bool ButtonDPadRight => (Buttons & ControllerButtons.DPadRight) != ControllerButtons.None;
     public bool ButtonA => (Buttons & ControllerButtons.A) != ControllerButtons.None;
     public bool ButtonB => (Buttons & ControllerButtons.B) != ControllerButtons.None;
     public bool ButtonX => (Buttons & ControllerButtons.X) != ControllerButtons.None;

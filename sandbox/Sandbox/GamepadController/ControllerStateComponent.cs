@@ -27,6 +27,11 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public SpriteRendererComponent? ButonXImage { get; set; }
     public SpriteRendererComponent? ButonYImage { get; set; }
 
+    public SpriteRendererComponent? DPadUpImage { get; set; }
+    public SpriteRendererComponent? DPadDownImage { get; set; }
+    public SpriteRendererComponent? DPadLeftImage { get; set; }
+    public SpriteRendererComponent? DPadRightImage { get; set; }
+
     public override void OnUpdate(in TimeStep timeStep)
     {
         if (ConnectionStateLabel is null) return;
@@ -36,6 +41,11 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (ButonBImage is null) return;
         if (ButonXImage is null) return;
         if (ButonYImage is null) return;
+
+        if (DPadUpImage is null) return;
+        if (DPadDownImage is null) return;
+        if (DPadLeftImage is null) return;
+        if (DPadRightImage is null) return;
 
         var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
 
@@ -57,6 +67,11 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         ButonYImage.Sprite = controllerState.ButtonY
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("1ae66fce-c0f9-474e-bddf-7718d24d219d"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("ef1ad0db-accb-4cf7-9612-faa854a17f2f"));
+
+        DPadUpImage.Visible = controllerState.ButtonDPadUp;
+        DPadDownImage.Visible = controllerState.ButtonDPadDown;
+        DPadLeftImage.Visible = controllerState.ButtonDPadLeft;
+        DPadRightImage.Visible = controllerState.ButtonDPadRight;
     }
 }
 
