@@ -1,6 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input.Backend;
+using SharpDX;
 using SharpDX.XInput;
 using Vibration = Geisha.Engine.Input.Backend.Vibration;
 
@@ -52,11 +53,25 @@ internal static class XInputController
     public static void SetVibration(ControllerIndex controllerIndex, Vibration vibration)
     {
         var controller = GetController(controllerIndex);
-        controller.SetVibration(new SharpDX.XInput.Vibration
+
+        try
         {
-            LeftMotorSpeed = ToXInputMotorSpeed(vibration.LeftMotorSpeed),
-            RightMotorSpeed = ToXInputMotorSpeed(vibration.RightMotorSpeed)
-        });
+            controller.SetVibration(new SharpDX.XInput.Vibration
+            {
+                LeftMotorSpeed = ToXInputMotorSpeed(vibration.LeftMotorSpeed),
+                RightMotorSpeed = ToXInputMotorSpeed(vibration.RightMotorSpeed)
+            });
+        }
+        catch (SharpDXException e)
+        {
+            // Workaround for SharpDX: ignore exception thrown when device is disconnected.
+            // When migrated to Silk.NET the return value will indicate failure without exception.
+            const int deviceDisconnected = unchecked((int)0x8007048F);
+            if (e.ResultCode.Code != deviceDisconnected)
+            {
+                throw;
+            }
+        }
     }
 
     private static double NormalizeXInputTrigger(byte value) => (double)value / byte.MaxValue;
