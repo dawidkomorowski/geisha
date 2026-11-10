@@ -38,6 +38,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public SpriteRendererComponent? LeftStrickImage { get; set; }
     public Transform2DComponent? LeftStickTransform { get; set; }
 
+    public SpriteRendererComponent? RightStickImage { get; set; }
+    public Transform2DComponent? RightStickTransform { get; set; }
+
     public override void OnUpdate(in TimeStep timeStep)
     {
         if (ConnectionStateLabel is null) return;
@@ -58,6 +61,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         if (LeftStrickImage is null) return;
         if (LeftStickTransform is null) return;
+
+        if (RightStickImage is null) return;
+        if (RightStickTransform is null) return;
 
         var controllerState = _inputBackend.GetControllerState(ControllerIndex.One);
 
@@ -96,8 +102,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         LeftStrickImage.Sprite = controllerState.ButtonLeftThumb
             ? _assetStore.GetAsset<Sprite>(AssetId.Parse("f785cc71-7078-44da-b5df-0d59927e60b7"))
             : _assetStore.GetAsset<Sprite>(AssetId.Parse("6cbfa428-2af1-4333-bbb6-95f301b18d5d"));
-
         LeftStickTransform.Translation = controllerState.LeftThumbPosition * 25;
+
+        RightStickImage.Sprite = controllerState.ButtonRightThumb
+            ? _assetStore.GetAsset<Sprite>(AssetId.Parse("8e9efdfd-201d-40fe-a47a-a4c0f1b9bac4"))
+            : _assetStore.GetAsset<Sprite>(AssetId.Parse("05dd403a-ab7a-41dd-98ea-e60f7fc8673b"));
+        RightStickTransform.Translation = controllerState.RightThumbPosition * 25;
     }
 }
 

@@ -11,8 +11,8 @@ public readonly record struct ControllerState
     public bool IsConnected { get; init; }
     public int PacketNumber { get; init; }
     public ControllerButtons Buttons { get; init; }
-    public double LeftThumbX { get; init; }
-    public double LeftThumbY { get; init; }
+    public Vector2 LeftThumbPosition { get; init; }
+    public Vector2 RightThumbPosition { get; init; }
 
     // TODO: Should the names be prefixed with Button? Or Maybe XPressed? Or something other?
     public bool ButtonDPadUp => (Buttons & ControllerButtons.DPadUp) != ControllerButtons.None;
@@ -22,10 +22,9 @@ public readonly record struct ControllerState
     public bool ButtonStart => (Buttons & ControllerButtons.Start) != ControllerButtons.None;
     public bool ButtonBack => (Buttons & ControllerButtons.Back) != ControllerButtons.None;
     public bool ButtonLeftThumb => (Buttons & ControllerButtons.LeftThumb) != ControllerButtons.None;
+    public bool ButtonRightThumb => (Buttons & ControllerButtons.RightThumb) != ControllerButtons.None;
     public bool ButtonA => (Buttons & ControllerButtons.A) != ControllerButtons.None;
     public bool ButtonB => (Buttons & ControllerButtons.B) != ControllerButtons.None;
     public bool ButtonX => (Buttons & ControllerButtons.X) != ControllerButtons.None;
     public bool ButtonY => (Buttons & ControllerButtons.Y) != ControllerButtons.None;
-
-    public Vector2 LeftThumbPosition => new Vector2(LeftThumbX, LeftThumbY);
 }

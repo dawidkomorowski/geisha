@@ -76,7 +76,7 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             var dPadGroup = imageGroup.CreateChildEntity();
             var dPadGroupTransform = dPadGroup.CreateComponent<Transform2DComponent>();
-            dPadGroupTransform.Translation = new Vector2(-150, -100);
+            dPadGroupTransform.Translation = new Vector2(-100, -100);
 
             var dPadBackgroundImage = CreateImage(dPadGroup, "cf503821-093f-4524-9b6f-ff0146baecb0");
             dPadBackgroundImage.OrderInLayer = -10;
@@ -106,6 +106,19 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var leftStickImage = CreateImage(leftStickRoot, Vector2.Zero);
             var leftStickTransform = leftStickImage.Entity.GetComponent<Transform2DComponent>();
 
+            var rightStickRoot = imageGroup.CreateChildEntity();
+            var rightStickRootTransform = rightStickRoot.CreateComponent<Transform2DComponent>();
+            rightStickRootTransform.Translation = new Vector2(100, -100);
+
+            var rightStickLimit = rightStickRoot.CreateChildEntity();
+            rightStickLimit.CreateComponent<Transform2DComponent>();
+            var rightStickLimitRenderer = rightStickLimit.CreateComponent<EllipseRendererComponent>();
+            rightStickLimitRenderer.Color = Color.White;
+            rightStickLimitRenderer.Radius = 50;
+
+            var rightStickImage = CreateImage(rightStickRoot, Vector2.Zero);
+            var rightStickTransform = rightStickImage.Entity.GetComponent<Transform2DComponent>();
+
             // Behavior component setup
             var controllerStateEntity = Scene.CreateEntity();
             var controllerStateComponent = controllerStateEntity.CreateComponent<ControllerStateComponent>();
@@ -128,6 +141,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             controllerStateComponent.LeftStrickImage = leftStickImage;
             controllerStateComponent.LeftStickTransform = leftStickTransform;
+
+            controllerStateComponent.RightStickImage = rightStickImage;
+            controllerStateComponent.RightStickTransform = rightStickTransform;
         }
 
         private static TextRendererComponent CreateText(Entity parent, Vector2 position, string text, int fontSize)

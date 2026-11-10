@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input.Backend;
 using SharpDX.XInput;
 
@@ -25,14 +26,20 @@ internal static class XInputController
         var controller = GetController(controllerIndex);
         var isConnected = controller.GetState(out var xInputState);
 
+        var leftThumbXNormalized = (double)xInputState.Gamepad.LeftThumbX / short.MaxValue;
+        var leftThumbYNormalized = (double)xInputState.Gamepad.LeftThumbY / short.MaxValue;
+
+        var rightThumbXNormalized = (double)xInputState.Gamepad.RightThumbX / short.MaxValue;
+        var rightThumbYNormalized = (double)xInputState.Gamepad.RightThumbY / short.MaxValue;
+
         return new ControllerState
         {
             Index = controllerIndex,
             IsConnected = isConnected,
             PacketNumber = xInputState.PacketNumber,
             Buttons = (ControllerButtons)xInputState.Gamepad.Buttons,
-            LeftThumbX = (double)xInputState.Gamepad.LeftThumbX / short.MaxValue,
-            LeftThumbY = (double)xInputState.Gamepad.LeftThumbY / short.MaxValue
+            LeftThumbPosition = new Vector2(leftThumbXNormalized, leftThumbYNormalized),
+            RightThumbPosition = new Vector2(rightThumbXNormalized, rightThumbYNormalized)
         };
     }
 }
