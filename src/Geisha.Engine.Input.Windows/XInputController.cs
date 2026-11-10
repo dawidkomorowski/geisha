@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input.Backend;
 using SharpDX.XInput;
+using Vibration = Geisha.Engine.Input.Backend.Vibration;
 
 namespace Geisha.Engine.Input.Windows;
 
@@ -26,14 +27,14 @@ internal static class XInputController
         var controller = GetController(controllerIndex);
         var isConnected = controller.GetState(out var xInputState);
 
-        var leftTriggerNormalized = (double)xInputState.Gamepad.LeftTrigger / byte.MaxValue;
-        var rightTriggerNormalized = (double)xInputState.Gamepad.RightTrigger / byte.MaxValue;
+        var leftTriggerNormalized = NormalizeXInputTrigger(xInputState.Gamepad.LeftTrigger);
+        var rightTriggerNormalized = NormalizeXInputTrigger(xInputState.Gamepad.RightTrigger);
 
-        var leftThumbXNormalized = (double)xInputState.Gamepad.LeftThumbX / short.MaxValue;
-        var leftThumbYNormalized = (double)xInputState.Gamepad.LeftThumbY / short.MaxValue;
+        var leftThumbXNormalized = NormalizeXInputThumb(xInputState.Gamepad.LeftThumbX);
+        var leftThumbYNormalized = NormalizeXInputThumb(xInputState.Gamepad.LeftThumbY);
 
-        var rightThumbXNormalized = (double)xInputState.Gamepad.RightThumbX / short.MaxValue;
-        var rightThumbYNormalized = (double)xInputState.Gamepad.RightThumbY / short.MaxValue;
+        var rightThumbXNormalized = NormalizeXInputThumb(xInputState.Gamepad.RightThumbX);
+        var rightThumbYNormalized = NormalizeXInputThumb(xInputState.Gamepad.RightThumbY);
 
         return new ControllerState
         {
@@ -47,4 +48,20 @@ internal static class XInputController
             RightThumb = new Vector2(rightThumbXNormalized, rightThumbYNormalized)
         };
     }
+
+    public static void SetVibration(ControllerIndex controllerIndex, Vibration vibration)
+    {
+        var controller = GetController(controllerIndex);
+        controller.SetVibration(new SharpDX.XInput.Vibration
+        {
+            LeftMotorSpeed = ToXInputMotorSpeed(vibration.LeftMotorSpeed),
+            RightMotorSpeed = ToXInputMotorSpeed(vibration.RightMotorSpeed)
+        });
+    }
+
+    private static double NormalizeXInputTrigger(byte value) => (double)value / byte.MaxValue;
+
+    private static double NormalizeXInputThumb(short value) => value >= 0 ? (double)value / short.MaxValue : (double)value / -short.MinValue;
+
+    private static ushort ToXInputMotorSpeed(double value) => (ushort)(Math.Clamp(value, 0d, 1d) * ushort.MaxValue);
 }

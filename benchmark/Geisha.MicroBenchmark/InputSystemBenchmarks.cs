@@ -225,5 +225,10 @@ public class InputSystemBenchmarks
         {
             throw new System.NotImplementedException();
         }
+
+        public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

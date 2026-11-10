@@ -31,4 +31,7 @@ public sealed class WindowsInputBackend : IInputBackend
 
     // TODO: Add documentation.
     public ControllerState GetControllerState(ControllerIndex controllerIndex) => XInputController.GetState(controllerIndex);
+
+    // TODO: Add documentation.
+    public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) => XInputController.SetVibration(controllerIndex, vibration);
 }

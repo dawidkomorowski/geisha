@@ -16,4 +16,7 @@ public interface IInputBackend
 
     // TODO: Add documentation.
     ControllerState GetControllerState(ControllerIndex controllerIndex);
+
+    // TODO: Add documentation.
+    void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration);
 }
