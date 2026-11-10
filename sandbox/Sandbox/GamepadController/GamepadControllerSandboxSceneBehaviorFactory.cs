@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Sandbox.Common;
@@ -61,6 +62,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             CreateText(labelGroup, new Vector2(0, -30), "Packet Number", 30);
             var packetNumberLabel = CreateText(labelGroup, new Vector2(350, -30), string.Empty, 30);
+
+            CreateText(labelGroup, new Vector2(0, -60), "Vibration [M]", 30);
+            var vibrationLabel = CreateText(labelGroup, new Vector2(350, -60), string.Empty, 30);
 
             // Gamepad images
             var imageGroup = Scene.CreateEntity();
@@ -138,10 +142,12 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
 
             // Behavior component setup
             var controllerStateEntity = Scene.CreateEntity();
+            controllerStateEntity.CreateComponent<InputComponent>();
             var controllerStateComponent = controllerStateEntity.CreateComponent<ControllerStateComponent>();
 
             controllerStateComponent.ConnectionStateLabel = connectionStateLabel;
             controllerStateComponent.PacketNumberLabel = packetNumberLabel;
+            controllerStateComponent.VibrationLabel = vibrationLabel;
 
             controllerStateComponent.XboxGuideImage = xboxGuideImage;
 

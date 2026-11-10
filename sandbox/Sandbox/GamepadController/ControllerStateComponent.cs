@@ -2,7 +2,10 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Backend;
+using Geisha.Engine.Input.Components;
+using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -13,6 +16,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     private readonly IInputBackend _inputBackend;
     private readonly IAssetStore _assetStore;
 
+    private InputComponent _inputComponent = null!;
+    private bool _vibrationEnabled = false;
+
     public ControllerStateComponent(Entity entity, IInputBackend inputBackend, IAssetStore assetStore) : base(entity)
     {
         _inputBackend = inputBackend;
@@ -21,6 +27,7 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
     public TextRendererComponent? ConnectionStateLabel { get; set; }
     public TextRendererComponent? PacketNumberLabel { get; set; }
+    public TextRendererComponent? VibrationLabel { get; set; }
 
     public SpriteRendererComponent? XboxGuideImage { get; set; }
 
@@ -52,10 +59,20 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public SpriteRendererComponent? RightTriggerHighImage { get; set; }
     public SpriteRendererComponent? RightTriggerLowImage { get; set; }
 
+    public override void OnStart()
+    {
+        _inputComponent = Entity.GetComponent<InputComponent>();
+        _inputComponent.InputMapping = InputMapping.CreateBuilder()
+            .MapAction("ToggleVibration", Key.M)
+            .Build();
+        _inputComponent.BindAction("ToggleVibration", () => { _vibrationEnabled = !_vibrationEnabled; });
+    }
+
     public override void OnUpdate(in TimeStep timeStep)
     {
         if (ConnectionStateLabel is null) return;
         if (PacketNumberLabel is null) return;
+        if (VibrationLabel is null) return;
 
         if (XboxGuideImage is null) return;
 
@@ -91,6 +108,7 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         ConnectionStateLabel.Text = controllerState.IsConnected ? "Connected" : "Disconnected";
         PacketNumberLabel.Text = controllerState.PacketNumber.ToString();
+        VibrationLabel.Text = _vibrationEnabled ? "Enabled [LT]/[RT]" : "Disabled";
 
         XboxGuideImage.Opacity = controllerState.IsConnected ? 1.0 : 0.5;
 
@@ -146,6 +164,22 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         RightTriggerHighImage.Opacity = controllerState.RightTrigger;
         RightTriggerLowImage.Opacity = 1 - controllerState.RightTrigger;
+
+        Vibration vibration;
+        if (_vibrationEnabled)
+        {
+            vibration = new Vibration
+            {
+                LeftMotorSpeed = controllerState.LeftTrigger,
+                RightMotorSpeed = controllerState.RightTrigger
+            };
+        }
+        else
+        {
+            vibration = new Vibration();
+        }
+
+        _inputBackend.SetControllerVibration(ControllerIndex.One, vibration);
     }
 }
 
