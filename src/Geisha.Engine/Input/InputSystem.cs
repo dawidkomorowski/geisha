@@ -7,9 +7,9 @@ using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 
-namespace Geisha.Engine.Input.Systems;
+namespace Geisha.Engine.Input;
 
-internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
+internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObserver
 {
     private readonly IInputProvider _inputProvider;
     private readonly List<InputComponent> _inputComponents = new();
@@ -18,6 +18,20 @@ internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     {
         _inputProvider = inputBackend.CreateInputProvider();
     }
+
+
+    #region Implementation of IInputSystem
+
+    // TODO: Implement and test.
+    public ControllerState GetControllerState(ControllerIndex controllerIndex) => throw new NotImplementedException();
+
+    // TODO: Implement and test.
+    public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
 
     #region Implementation of IInputGameLoopStep
 

@@ -4,7 +4,6 @@ using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Systems;
 
 namespace Geisha.Engine.Input;
 
