@@ -13,15 +13,15 @@ namespace Sandbox.GamepadController;
 
 internal sealed class ControllerStateComponent : BehaviorComponent
 {
-    private readonly IInputBackend _inputBackend;
+    private readonly IInputSystem _inputSystem;
     private readonly IAssetStore _assetStore;
 
     private InputComponent _inputComponent = null!;
     private bool _vibrationEnabled = false;
 
-    public ControllerStateComponent(Entity entity, IInputBackend inputBackend, IAssetStore assetStore) : base(entity)
+    public ControllerStateComponent(Entity entity, IInputSystem inputSystem, IInputBackend inputBackend, IAssetStore assetStore) : base(entity)
     {
-        _inputBackend = inputBackend;
+        _inputSystem = inputSystem;
         _assetStore = assetStore;
     }
 
@@ -185,14 +185,16 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
 internal sealed class ControllerStateComponentFactory : ComponentFactory<ControllerStateComponent>
 {
+    private readonly IInputSystem _inputSystem;
     private readonly IInputBackend _inputBackend;
     private readonly IAssetStore _assetStore;
 
-    public ControllerStateComponentFactory(IInputBackend inputBackend, IAssetStore assetStore)
+    public ControllerStateComponentFactory(IInputSystem inputSystem, IInputBackend inputBackend, IAssetStore assetStore)
     {
+        _inputSystem = inputSystem;
         _inputBackend = inputBackend;
         _assetStore = assetStore;
     }
 
-    protected override ControllerStateComponent CreateComponent(Entity entity) => new(entity, _inputBackend, _assetStore);
+    protected override ControllerStateComponent CreateComponent(Entity entity) => new(entity, _inputSystem, _inputBackend, _assetStore);
 }
