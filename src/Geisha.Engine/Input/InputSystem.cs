@@ -11,11 +11,13 @@ namespace Geisha.Engine.Input;
 
 internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObserver
 {
+    private readonly IInputBackend _inputBackend;
     private readonly IInputProvider _inputProvider;
     private readonly List<InputComponent> _inputComponents = new();
 
     public InputSystem(IInputBackend inputBackend)
     {
+        _inputBackend = inputBackend;
         _inputProvider = inputBackend.CreateInputProvider();
     }
 
@@ -23,13 +25,11 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
     #region Implementation of IInputSystem
 
     // TODO: Implement and test.
-    public ControllerState GetControllerState(ControllerIndex controllerIndex) => throw new NotImplementedException();
+    public ControllerState GetControllerState(ControllerIndex controllerIndex) => _inputBackend.GetControllerState(controllerIndex);
 
     // TODO: Implement and test.
-    public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration)
-    {
-        throw new NotImplementedException();
-    }
+    public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) =>
+        _inputBackend.SetControllerVibration(controllerIndex, vibration);
 
     #endregion
 

@@ -14,6 +14,7 @@ namespace Geisha.Engine.UnitTests.Input;
 [TestFixture]
 public class InputSystemTests
 {
+    private IInputBackend _inputBackend = null!;
     private IInputProvider _inputProvider = null!;
     private InputSystem _inputSystem = null!;
     private InputScene _inputScene = null!;
@@ -21,10 +22,10 @@ public class InputSystemTests
     [SetUp]
     public void SetUp()
     {
+        _inputBackend = Substitute.For<IInputBackend>();
         _inputProvider = Substitute.For<IInputProvider>();
-        var inputBackend = Substitute.For<IInputBackend>();
-        inputBackend.CreateInputProvider().Returns(_inputProvider);
-        _inputSystem = new InputSystem(inputBackend);
+        _inputBackend.CreateInputProvider().Returns(_inputProvider);
+        _inputSystem = new InputSystem(_inputBackend);
 
         _inputScene = new InputScene(_inputSystem);
     }
@@ -595,6 +596,48 @@ public class InputSystemTests
 
         Assert.That(lookRightState, Is.EqualTo(expectedLookRight));
         Assert.That(lookUpState, Is.EqualTo(expectedLookUp));
+    }
+
+    #endregion
+
+    #region Controller test cases
+
+    [TestCase(ControllerIndex.One)]
+    [TestCase(ControllerIndex.Two)]
+    [TestCase(ControllerIndex.Three)]
+    [TestCase(ControllerIndex.Four)]
+    public void GetControllerState_ShouldReturnInputBackendControllerState(ControllerIndex controllerIndex)
+    {
+        // Arrange
+        var controllerState = new ControllerState
+        {
+            PacketNumber = 123
+        };
+
+        _inputBackend.GetControllerState(controllerIndex).Returns(controllerState);
+
+        // Act
+        var actual = _inputSystem.GetControllerState(controllerIndex);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(controllerState));
+    }
+
+    [Test]
+    public void SetControllerVibration_ShouldSetControllerVibrationOnInputBackend()
+    {
+        // Arrange
+        var vibration = new Vibration
+        {
+            LeftMotorSpeed = 12.34,
+            RightMotorSpeed = 56.78
+        };
+
+        // Act
+        _inputSystem.SetControllerVibration(ControllerIndex.One, vibration);
+
+        // Assert
+        _inputBackend.Received(1).SetControllerVibration(ControllerIndex.One, vibration);
     }
 
     #endregion
