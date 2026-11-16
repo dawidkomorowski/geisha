@@ -12,23 +12,22 @@ internal static class XInputController
     {
         private static readonly TimeSpan ReconnectInterval = TimeSpan.FromSeconds(2);
         private readonly Stopwatch _reconnectTimer;
+        private bool _isConnected;
 
         public ControllerContext(UserIndex userIndex)
         {
             Controller = new Controller(userIndex);
-            IsConnected = true; // Initially true to poll the very first state before waiting for reconnect.
+            _isConnected = true; // Initially true to poll the very first state before waiting for reconnect.
             _reconnectTimer = Stopwatch.StartNew();
         }
 
         public Controller Controller { get; }
-        public bool IsConnected { get; private set; }
-
-        public bool WaitingForReconnect => !IsConnected && _reconnectTimer.Elapsed < ReconnectInterval;
+        public bool WaitingForReconnect => !_isConnected && _reconnectTimer.Elapsed < ReconnectInterval;
 
         public void UpdateConnectionStatus(bool isConnected)
         {
-            IsConnected = isConnected;
-            if (!IsConnected)
+            _isConnected = isConnected;
+            if (!_isConnected)
             {
                 _reconnectTimer.Restart();
             }
