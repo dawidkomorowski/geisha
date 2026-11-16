@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Geisha.Engine.Core.Math;
 using SharpDX;
 using SharpDX.XInput;
@@ -7,12 +8,40 @@ namespace Geisha.Engine.Input.Windows;
 
 internal static class XInputController
 {
-    private static readonly Controller Controller1 = new(UserIndex.One);
-    private static readonly Controller Controller2 = new(UserIndex.Two);
-    private static readonly Controller Controller3 = new(UserIndex.Three);
-    private static readonly Controller Controller4 = new(UserIndex.Four);
+    private sealed class ControllerContext
+    {
+        private static readonly TimeSpan ReconnectInterval = TimeSpan.FromSeconds(2);
+        private readonly Stopwatch _reconnectTimer;
 
-    private static Controller GetController(ControllerIndex controllerIndex) => controllerIndex switch
+        public ControllerContext(UserIndex userIndex)
+        {
+            Controller = new Controller(userIndex);
+            IsConnected = true; // Initially true to poll the very first state before waiting for reconnect.
+            _reconnectTimer = Stopwatch.StartNew();
+        }
+
+        public Controller Controller { get; }
+        public bool IsConnected { get; private set; }
+
+        public bool WaitingForReconnect => !IsConnected && _reconnectTimer.Elapsed < ReconnectInterval;
+
+        public void UpdateConnectionStatus(bool isConnected)
+        {
+            IsConnected = isConnected;
+            if (!IsConnected)
+            {
+                _reconnectTimer.Restart();
+            }
+        }
+    }
+
+
+    private static readonly ControllerContext Controller1 = new(UserIndex.One);
+    private static readonly ControllerContext Controller2 = new(UserIndex.Two);
+    private static readonly ControllerContext Controller3 = new(UserIndex.Three);
+    private static readonly ControllerContext Controller4 = new(UserIndex.Four);
+
+    private static ControllerContext GetControllerContext(ControllerIndex controllerIndex) => controllerIndex switch
     {
         ControllerIndex.One => Controller1,
         ControllerIndex.Two => Controller2,
@@ -23,8 +52,19 @@ internal static class XInputController
 
     public static ControllerState GetState(ControllerIndex controllerIndex)
     {
-        var controller = GetController(controllerIndex);
-        var isConnected = controller.GetState(out var xInputState);
+        var controllerContext = GetControllerContext(controllerIndex);
+
+        if (controllerContext.WaitingForReconnect)
+        {
+            return new ControllerState
+            {
+                Index = controllerIndex,
+                IsConnected = false
+            };
+        }
+
+        var isConnected = controllerContext.Controller.GetState(out var xInputState);
+        controllerContext.UpdateConnectionStatus(isConnected);
 
         var leftTriggerNormalized = NormalizeXInputTrigger(xInputState.Gamepad.LeftTrigger);
         var rightTriggerNormalized = NormalizeXInputTrigger(xInputState.Gamepad.RightTrigger);
@@ -50,18 +90,26 @@ internal static class XInputController
 
     public static void SetVibration(ControllerIndex controllerIndex, Vibration vibration)
     {
-        var controller = GetController(controllerIndex);
+        var controllerContext = GetControllerContext(controllerIndex);
+
+        if (controllerContext.WaitingForReconnect)
+        {
+            return;
+        }
 
         try
         {
-            controller.SetVibration(new SharpDX.XInput.Vibration
+            controllerContext.Controller.SetVibration(new SharpDX.XInput.Vibration
             {
                 LeftMotorSpeed = ToXInputMotorSpeed(vibration.LeftMotorSpeed),
                 RightMotorSpeed = ToXInputMotorSpeed(vibration.RightMotorSpeed)
             });
+            controllerContext.UpdateConnectionStatus(true);
         }
         catch (SharpDXException e)
         {
+            controllerContext.UpdateConnectionStatus(false);
+
             // Workaround for SharpDX: ignore exception thrown when device is disconnected.
             // When migrated to Silk.NET the return value will indicate failure without exception.
             const int deviceDisconnected = unchecked((int)0x8007048F);

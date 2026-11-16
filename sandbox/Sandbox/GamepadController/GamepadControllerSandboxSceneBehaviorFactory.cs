@@ -57,7 +57,7 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             var labelsTransform = labelGroup.CreateComponent<Transform2DComponent>();
             labelsTransform.Translation = new Vector2(-300, 400);
 
-            CreateText(labelGroup, new Vector2(0, 0), "Controller State", 30);
+            CreateText(labelGroup, new Vector2(0, 0), "Controller Status", 30);
             var connectionStateLabel = CreateText(labelGroup, new Vector2(350, 0), string.Empty, 30);
 
             CreateText(labelGroup, new Vector2(0, -30), "Packet Number", 30);

@@ -25,14 +25,12 @@ public interface IInputBackend
 
     // TODO: Should capture be primary backend API that captures all input devices or should it provide per device API
     //       and the Input System would decide whether to poll all devices or not?
-    //       In that case the Input System would be responsible for handling disconnected controller retry backoff (due to performance).
-    //       However, other backend implementation may not need similar retry backoff so that would be valid point to implement it in scope of the backend.
-    //       This would probably require documenting some reconnect timing guarantees - how long the delay can be if it is not configurable.
     //       Also, HardwareInput type is getting bigger with each new device being supported and the current implementation allocates per frame.
     //       If the HardwareInput is meant to nicely hold snapshot of direct input state of all devices for InputComponents then maybe it should
     //       be managed by Input System - Input System performs pooling of HardwareInput or explicitly mutates single instance (???) and it calls
     //       input backend only for per device state (lower level API)?
     // TODO: Rename to some better name than "capture"?
+    // TODO: Document reconnect interval.
     /// <summary>
     ///     Captures current state of input devices as instance of <see cref="HardwareInput" /> class.
     /// </summary>
