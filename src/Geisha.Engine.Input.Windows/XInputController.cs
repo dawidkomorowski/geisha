@@ -2,7 +2,6 @@
 using Geisha.Engine.Core.Math;
 using SharpDX;
 using SharpDX.XInput;
-using Vibration = Geisha.Engine.Input.Vibration;
 
 namespace Geisha.Engine.Input.Windows;
 
