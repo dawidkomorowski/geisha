@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Input.Backend;
+﻿namespace Geisha.Engine.Input;
 
 // TODO: Add documentation.
 public enum ControllerIndex

@@ -1,5 +1,3 @@
-using Geisha.Engine.Input.Backend;
-
 namespace Geisha.Engine.Input;
 
 // TODO: Add documentation.

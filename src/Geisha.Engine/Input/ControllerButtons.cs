@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Input.Backend;
+namespace Geisha.Engine.Input;
 
 // TODO: Add documentation.
 // TODO: Should it be named Controller Buttons or Gamepad buttons?

@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Input.Backend;
+﻿namespace Geisha.Engine.Input;
 
 // TODO: Add documentation.
 public readonly record struct Vibration
