@@ -14,7 +14,7 @@ public class InputSystemBenchmarks
 {
     private Scene _scene = null!;
     private InputSystem _inputSystem = null!;
-    private StubInputProvider _inputProvider = null!;
+    private StubInputBackend _inputBackend = null!;
 
     // Pre-computed input sequence covering all code paths: keyboard actions, mouse actions,
     // keyboard axes, mouse axes, multiple hardware actions per mapping, state transitions.
@@ -50,8 +50,8 @@ public class InputSystemBenchmarks
 
     private void InitializeInputSystem()
     {
-        _inputProvider = new StubInputProvider();
-        _inputSystem = new InputSystem(new StubInputBackend(_inputProvider));
+        _inputBackend = new StubInputBackend();
+        _inputSystem = new InputSystem(_inputBackend);
         _scene = TestSceneFactory.Create();
         _scene.AddObserver(_inputSystem);
     }
@@ -182,7 +182,7 @@ public class InputSystemBenchmarks
 
         // Process one frame with empty input to initialize action states (HasActionStatesInitialized = false path).
         // This is setup work and not part of the benchmark.
-        _inputProvider.CurrentInput = new HardwareInput(default, default);
+        _inputBackend.CurrentInput = new HardwareInput(default, default);
         _inputSystem.ProcessInput();
     }
 
@@ -198,36 +198,18 @@ public class InputSystemBenchmarks
         // Assuming 60 FPS this simulates 1h (3600 seconds) of input processing.
         for (var i = 0; i < 216_000; i++)
         {
-            _inputProvider.CurrentInput = InputSequence[i % InputSequence.Length];
+            _inputBackend.CurrentInput = InputSequence[i % InputSequence.Length];
             _inputSystem.ProcessInput();
         }
     }
 
-    private sealed class StubInputProvider : IInputProvider
-    {
-        public bool LockCursorPosition { get; set; }
-        public HardwareInput CurrentInput { get; set; } = HardwareInput.Empty;
-        public HardwareInput Capture() => CurrentInput;
-    }
-
     private sealed class StubInputBackend : IInputBackend
     {
-        private readonly StubInputProvider _inputProvider;
+        public HardwareInput CurrentInput { get; set; } = HardwareInput.Empty;
 
-        public StubInputBackend(StubInputProvider inputProvider)
-        {
-            _inputProvider = inputProvider;
-        }
-
-        public IInputProvider CreateInputProvider() => _inputProvider;
-        public ControllerState GetControllerState(ControllerIndex controllerIndex)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration)
-        {
-            throw new System.NotImplementedException();
-        }
+        public bool LockCursorPosition { get; set; }
+        public HardwareInput Capture() => CurrentInput;
+        public ControllerState GetControllerState(ControllerIndex controllerIndex) => throw new System.NotImplementedException();
+        public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) => throw new System.NotImplementedException();
     }
 }

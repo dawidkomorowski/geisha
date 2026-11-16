@@ -12,13 +12,11 @@ namespace Geisha.Engine.Input;
 internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObserver
 {
     private readonly IInputBackend _inputBackend;
-    private readonly IInputProvider _inputProvider;
     private readonly List<InputComponent> _inputComponents = new();
 
     public InputSystem(IInputBackend inputBackend)
     {
         _inputBackend = inputBackend;
-        _inputProvider = inputBackend.CreateInputProvider();
     }
 
 
@@ -37,7 +35,7 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
 
     public void ProcessInput()
     {
-        var hardwareInput = _inputProvider.Capture();
+        var hardwareInput = _inputBackend.Capture();
 
         foreach (var inputComponent in _inputComponents)
         {

@@ -15,7 +15,6 @@ namespace Geisha.Engine.UnitTests.Input;
 public class InputSystemTests
 {
     private IInputBackend _inputBackend = null!;
-    private IInputProvider _inputProvider = null!;
     private InputSystem _inputSystem = null!;
     private InputScene _inputScene = null!;
 
@@ -23,8 +22,6 @@ public class InputSystemTests
     public void SetUp()
     {
         _inputBackend = Substitute.For<IInputBackend>();
-        _inputProvider = Substitute.For<IInputProvider>();
-        _inputBackend.CreateInputProvider().Returns(_inputProvider);
         _inputSystem = new InputSystem(_inputBackend);
 
         _inputScene = new InputScene(_inputSystem);
@@ -65,10 +62,10 @@ public class InputSystemTests
 
         // Act
         // Initialize action states based on hardware input
-        _inputProvider.Capture().Returns(hardwareInput1);
+        _inputBackend.Capture().Returns(hardwareInput1);
         _inputSystem.ProcessInput();
 
-        _inputProvider.Capture().Returns(hardwareInput2);
+        _inputBackend.Capture().Returns(hardwareInput2);
         _inputSystem.ProcessInput();
 
         // Assert
@@ -106,16 +103,16 @@ public class InputSystemTests
         // Act
         for (var i = 0; i < 10; i++)
         {
-            _inputProvider.Capture().Returns(allFalseHardwareInput);
+            _inputBackend.Capture().Returns(allFalseHardwareInput);
             _inputSystem.ProcessInput();
 
-            _inputProvider.Capture().Returns(allTrueHardwareInput);
+            _inputBackend.Capture().Returns(allTrueHardwareInput);
             _inputSystem.ProcessInput();
 
-            _inputProvider.Capture().Returns(allTrueHardwareInput);
+            _inputBackend.Capture().Returns(allTrueHardwareInput);
             _inputSystem.ProcessInput();
 
-            _inputProvider.Capture().Returns(allFalseHardwareInput);
+            _inputBackend.Capture().Returns(allFalseHardwareInput);
             _inputSystem.ProcessInput();
         }
 
@@ -131,7 +128,7 @@ public class InputSystemTests
         _inputSystem.ProcessInput();
 
         // Assert
-        _inputProvider.Received(1).Capture();
+        _inputBackend.Received(1).Capture();
     }
 
     [Test]
@@ -143,7 +140,7 @@ public class InputSystemTests
         var inputComponentOfEntity3 = _inputScene.AddInput();
 
         var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -163,7 +160,7 @@ public class InputSystemTests
         var inputComponentOfEntity3 = _inputScene.AddInput();
 
         var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         inputComponentOfEntity1.Entity.RemoveComponent(inputComponentOfEntity1);
         inputComponentOfEntity3.Entity.RemoveComponent(inputComponentOfEntity3);
@@ -186,7 +183,7 @@ public class InputSystemTests
         var inputComponentOfEntity3 = _inputScene.AddInput();
 
         var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         inputComponentOfEntity1.Enabled = false;
         inputComponentOfEntity3.Enabled = false;
@@ -230,10 +227,10 @@ public class InputSystemTests
 
         // Act
         // Initialize action states based on hardware input
-        _inputProvider.Capture().Returns(hardwareInput1);
+        _inputBackend.Capture().Returns(hardwareInput1);
         _inputSystem.ProcessInput();
 
-        _inputProvider.Capture().Returns(hardwareInput2);
+        _inputBackend.Capture().Returns(hardwareInput2);
         _inputSystem.ProcessInput();
 
         // Assert
@@ -269,10 +266,10 @@ public class InputSystemTests
         });
 
         // Act
-        _inputProvider.Capture().Returns(allFalseHardwareInput);
+        _inputBackend.Capture().Returns(allFalseHardwareInput);
         _inputSystem.ProcessInput();
 
-        _inputProvider.Capture().Returns(allTrueHardwareInput);
+        _inputBackend.Capture().Returns(allTrueHardwareInput);
         _inputSystem.ProcessInput();
 
         // Assert
@@ -300,7 +297,7 @@ public class InputSystemTests
             Up = up,
             Space = space
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -331,7 +328,7 @@ public class InputSystemTests
             Left = left,
             Space = space
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -367,7 +364,7 @@ public class InputSystemTests
             Up = false,
             Space = false
         });
-        _inputProvider.Capture().Returns(initialHardwareInput);
+        _inputBackend.Capture().Returns(initialHardwareInput);
         _inputSystem.ProcessInput();
 
         var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
@@ -377,7 +374,7 @@ public class InputSystemTests
             Up = up,
             Space = space
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -425,7 +422,7 @@ public class InputSystemTests
             Left = left,
             Space = space
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -464,7 +461,7 @@ public class InputSystemTests
             XButton1 = x1,
             XButton2 = x2
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -489,7 +486,7 @@ public class InputSystemTests
         {
             PositionDelta = new Vector2(xPos, yPos)
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -532,7 +529,7 @@ public class InputSystemTests
             XButton1 = false,
             XButton2 = false
         });
-        _inputProvider.Capture().Returns(initialHardwareInput);
+        _inputBackend.Capture().Returns(initialHardwareInput);
         _inputSystem.ProcessInput();
 
         var hardwareInput = GetMouseInput(new MouseInputBuilder
@@ -543,7 +540,7 @@ public class InputSystemTests
             XButton1 = x1,
             XButton2 = x2
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -585,7 +582,7 @@ public class InputSystemTests
         {
             PositionDelta = new Vector2(xPos, yPos)
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -656,7 +653,7 @@ public class InputSystemTests
         {
             Space = true
         });
-        _inputProvider.Capture().Returns(hardwareInput);
+        _inputBackend.Capture().Returns(hardwareInput);
 
         // Act
         // Assert
