@@ -9,6 +9,8 @@
 /// </remarks>
 public interface IInputBackend
 {
+    // TODO: LockCursorPosition is based on calling Capture as it simply repositions the mouse.
+    //       Maybe it would make more sense to provide API for setting mouse position and implement the LockCursorPosition feature on the InputSystem level?
     // TODO: Expose in IInputSystem as an API for a game code?
     /// <summary>
     ///     Specifies whether to lock the cursor position at the center of the window client area. If <c>true</c> the
@@ -21,6 +23,13 @@ public interface IInputBackend
     /// </remarks>
     bool LockCursorPosition { get; set; }
 
+    // TODO: Should capture be primary backend API that captures all input devices or should it provide per device API
+    //       and the Input System would decide whether to poll all devices or not?
+    //       In that case the Input System would be responsible for handling disconnected controller retry backoff (due to performance).
+    //       Also, HardwareInput type is getting bigger with each new device being supported and the current implementation allocates per frame.
+    //       If the HardwareInput is meant to nicely hold snapshot of direct input state of all devices for InputComponents then maybe it should
+    //       be managed by Input System - Input System performs pooling of HardwareInput or explicitly mutates single instance (???) and it calls
+    //       input backend only for per device state (lower level API)?
     // TODO: Rename to some better name than "capture"?
     /// <summary>
     ///     Captures current state of input devices as instance of <see cref="HardwareInput" /> class.
