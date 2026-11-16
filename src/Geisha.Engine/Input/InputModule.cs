@@ -18,6 +18,10 @@ internal sealed class InputModule : Module
         builder.RegisterType<InputComponentFactory>().As<IComponentFactory>().SingleInstance();
 
         // Systems
-        builder.RegisterType<InputSystem>().As<IInputGameLoopStep>().As<ISceneObserver>().SingleInstance();
+        builder.RegisterType<InputSystem>()
+            .As<IInputSystem>()
+            .As<IInputGameLoopStep>()
+            .As<ISceneObserver>()
+            .SingleInstance();
     }
 }
