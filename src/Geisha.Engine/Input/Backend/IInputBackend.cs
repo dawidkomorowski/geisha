@@ -41,5 +41,6 @@ public interface IInputBackend
     ControllerState GetControllerState(ControllerIndex controllerIndex);
 
     // TODO: Add documentation.
+    // TODO: Document vibration command is lost when controller is disconnected.
     void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration);
 }

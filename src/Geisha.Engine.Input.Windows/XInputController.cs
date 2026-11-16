@@ -108,12 +108,14 @@ internal static class XInputController
         }
         catch (SharpDXException e)
         {
-            controllerContext.UpdateConnectionStatus(false);
-
             // Workaround for SharpDX: ignore exception thrown when device is disconnected.
             // When migrated to Silk.NET the return value will indicate failure without exception.
             const int deviceDisconnected = unchecked((int)0x8007048F);
-            if (e.ResultCode.Code != deviceDisconnected)
+            if (e.ResultCode.Code == deviceDisconnected)
+            {
+                controllerContext.UpdateConnectionStatus(false);
+            }
+            else
             {
                 throw;
             }
