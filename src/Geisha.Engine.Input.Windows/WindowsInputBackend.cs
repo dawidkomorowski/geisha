@@ -38,24 +38,20 @@ public sealed class WindowsInputBackend : IInputBackend
     // TODO: Add documentation.
     public HardwareInput Capture()
     {
-        var keyboardInput = CaptureKeyboardInput();
-        var mouseInput = CaptureMouseInput();
+        var keyboardInput = GetKeyboardInput();
+        var mouseInput = GetMouseInput();
         return new HardwareInput(keyboardInput, mouseInput);
     }
 
     // TODO: Add documentation.
-    public ControllerState GetControllerState(ControllerIndex controllerIndex) => XInputController.GetState(controllerIndex);
-
-    // TODO: Add documentation.
-    public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) => XInputController.SetVibration(controllerIndex, vibration);
-
-    private KeyboardInput CaptureKeyboardInput()
+    public KeyboardInput GetKeyboardInput()
     {
         NativeKeyboard.SetBuilderToCurrentState(_keyboardInputBuilder);
         return _keyboardInputBuilder.Build();
     }
 
-    private MouseInput CaptureMouseInput()
+    // TODO: Add documentation.
+    public MouseInput GetMouseInput()
     {
         _mouseInputBuilder.PositionDelta = _mouseInputBuilder.Position - _lastCapturedMousePosition;
         var mouseInput = _mouseInputBuilder.Build();
@@ -70,6 +66,12 @@ public sealed class WindowsInputBackend : IInputBackend
 
         return mouseInput;
     }
+
+    // TODO: Add documentation.
+    public ControllerState GetControllerState(ControllerIndex controllerIndex) => XInputController.GetState(controllerIndex);
+
+    // TODO: Add documentation.
+    public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) => XInputController.SetVibration(controllerIndex, vibration);
 
     private void SetMousePosition(Vector2 position)
     {

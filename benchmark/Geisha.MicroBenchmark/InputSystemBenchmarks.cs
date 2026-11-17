@@ -209,6 +209,8 @@ public class InputSystemBenchmarks
 
         public bool LockCursorPosition { get; set; }
         public HardwareInput Capture() => CurrentInput;
+        public KeyboardInput GetKeyboardInput() => CurrentInput.KeyboardInput;
+        public MouseInput GetMouseInput() => CurrentInput.MouseInput;
         public ControllerState GetControllerState(ControllerIndex controllerIndex) => throw new System.NotImplementedException();
         public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) => throw new System.NotImplementedException();
     }

@@ -23,14 +23,11 @@ public interface IInputBackend
     /// </remarks>
     bool LockCursorPosition { get; set; }
 
-    // TODO: Should capture be primary backend API that captures all input devices or should it provide per device API
-    //       and the Input System would decide whether to poll all devices or not?
-    //       Also, HardwareInput type is getting bigger with each new device being supported and the current implementation allocates per frame.
+    // TODO: Also, HardwareInput type is getting bigger with each new device being supported and the current implementation allocates per frame.
     //       If the HardwareInput is meant to nicely hold snapshot of direct input state of all devices for InputComponents then maybe it should
     //       be managed by Input System - Input System performs pooling of HardwareInput or explicitly mutates single instance (???) and it calls
     //       input backend only for per device state (lower level API)?
-    // TODO: Rename to some better name than "capture"?
-    // TODO: Document reconnect interval.
+    // TODO: Validate that Input System micro benchmarks still work correctly.
     /// <summary>
     ///     Captures current state of input devices as instance of <see cref="HardwareInput" /> class.
     /// </summary>
@@ -38,6 +35,13 @@ public interface IInputBackend
     HardwareInput Capture();
 
     // TODO: Add documentation.
+    KeyboardInput GetKeyboardInput();
+
+    // TODO: Add documentation.
+    MouseInput GetMouseInput();
+
+    // TODO: Add documentation.
+    // TODO: Document reconnect interval.
     ControllerState GetControllerState(ControllerIndex controllerIndex);
 
     // TODO: Add documentation.
