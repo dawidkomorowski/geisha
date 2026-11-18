@@ -159,7 +159,7 @@ public class InputSystemTests
     }
 
     [Test]
-    public void ProcessInput_ShouldCaptureHardwareInputOnce()
+    public void ProcessInput_ShouldReadHardwareInputOnce()
     {
         // Arrange
         MockEmptyInput();
@@ -695,11 +695,6 @@ public class InputSystemTests
     #endregion
 
     #region Helpers
-
-    private static HardwareInput GetMouseInput(MouseInputBuilder mouseInputBuilder)
-    {
-        return new HardwareInput(default, mouseInputBuilder.Build());
-    }
 
     private class InputScene
     {
