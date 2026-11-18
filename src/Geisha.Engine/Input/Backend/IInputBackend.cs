@@ -23,17 +23,11 @@ public interface IInputBackend
     /// </remarks>
     bool LockCursorPosition { get; set; }
 
-    // TODO: Also, HardwareInput type is getting bigger with each new device being supported and the current implementation allocates per frame.
+    // TODO: HardwareInput type is getting bigger with each new device being supported and the current implementation allocates per frame.
     //       If the HardwareInput is meant to nicely hold snapshot of direct input state of all devices for InputComponents then maybe it should
     //       be managed by Input System - Input System performs pooling of HardwareInput or explicitly mutates single instance (???) and it calls
     //       input backend only for per device state (lower level API)?
     // TODO: Validate that Input System micro benchmarks still work correctly.
-    /// <summary>
-    ///     Captures current state of input devices as instance of <see cref="HardwareInput" /> class.
-    /// </summary>
-    /// <returns><see cref="HardwareInput" /> instance that represents captured state of input devices.</returns>
-    HardwareInput Capture();
-
     // TODO: Add documentation.
     KeyboardInput GetKeyboardInput();
 

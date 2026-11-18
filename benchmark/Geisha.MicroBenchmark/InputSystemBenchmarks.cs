@@ -208,7 +208,6 @@ public class InputSystemBenchmarks
         public HardwareInput CurrentInput { get; set; } = HardwareInput.Empty;
 
         public bool LockCursorPosition { get; set; }
-        public HardwareInput Capture() => CurrentInput;
         public KeyboardInput GetKeyboardInput() => CurrentInput.KeyboardInput;
         public MouseInput GetMouseInput() => CurrentInput.MouseInput;
         public ControllerState GetControllerState(ControllerIndex controllerIndex) => throw new System.NotImplementedException();

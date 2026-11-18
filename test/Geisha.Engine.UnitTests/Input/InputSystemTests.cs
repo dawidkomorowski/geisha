@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -7,6 +8,8 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.TestUtils;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using NSubstitute.Extensions;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input;
@@ -22,9 +25,44 @@ public class InputSystemTests
     public void SetUp()
     {
         _inputBackend = Substitute.For<IInputBackend>();
-        _inputSystem = new InputSystem(_inputBackend);
+        _inputBackend.GetKeyboardInput().ThrowsForAnyArgs(
+            new InvalidOperationException("GetKeyboardInput() not configured. Use: _inputBackend.Configure().GetKeyboardInput().Returns(keyboardInput);")
+        );
+        _inputBackend.GetMouseInput().ThrowsForAnyArgs(
+            new InvalidOperationException("GetMouseInput() not configured. Use: _inputBackend.Configure().GetMouseInput().Returns(mouseInput);")
+        );
+        _inputBackend.GetControllerState(Arg.Any<ControllerIndex>()).ThrowsForAnyArgs(
+            new InvalidOperationException(
+                "GetControllerState() not configured. Use: _inputBackend.Configure().GetControllerState(controllerIndex).Returns(controllerState);")
+        );
 
+        _inputSystem = new InputSystem(_inputBackend);
         _inputScene = new InputScene(_inputSystem);
+    }
+
+    private void MockEmptyInput()
+    {
+        _inputBackend.Configure().GetKeyboardInput().Returns(new KeyboardInput());
+        _inputBackend.Configure().GetMouseInput().Returns(new MouseInput());
+    }
+
+    private void MockKeyboardInput(KeyboardInput keyboardInput)
+    {
+        _inputBackend.Configure().GetKeyboardInput().Returns(keyboardInput);
+        _inputBackend.Configure().GetMouseInput().Returns(new MouseInput());
+    }
+
+    private void MockMouseInput(MouseInput mouseInput)
+    {
+        _inputBackend.Configure().GetKeyboardInput().Returns(new KeyboardInput());
+        _inputBackend.Configure().GetMouseInput().Returns(mouseInput);
+    }
+
+    private void MockControllerState(ControllerIndex controllerIndex, ControllerState controllerState)
+    {
+        _inputBackend.Configure().GetKeyboardInput().Returns(new KeyboardInput());
+        _inputBackend.Configure().GetMouseInput().Returns(new MouseInput());
+        _inputBackend.Configure().GetControllerState(controllerIndex).Returns(controllerState);
     }
 
     #region Common test cases
@@ -39,33 +77,33 @@ public class InputSystemTests
         // Arrange
         _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
 
-        var hardwareInput1 = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput1 = new KeyboardInputBuilder
         {
             Up = false,
             Down = false,
             Right = first,
             Left = false,
             Space = false
-        });
+        }.Build();
 
-        var hardwareInput2 = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput2 = new KeyboardInputBuilder
         {
             Up = false,
             Down = false,
             Right = second,
             Left = false,
             Space = false
-        });
+        }.Build();
 
         var callCounter = 0;
         inputComponent.BindAction(moveRight.ActionName, () => { callCounter++; });
 
         // Act
         // Initialize action states based on hardware input
-        _inputBackend.Capture().Returns(hardwareInput1);
+        MockKeyboardInput(keyboardInput1);
         _inputSystem.ProcessInput();
 
-        _inputBackend.Capture().Returns(hardwareInput2);
+        MockKeyboardInput(keyboardInput2);
         _inputSystem.ProcessInput();
 
         // Assert
@@ -82,37 +120,37 @@ public class InputSystemTests
         var callCounter = 0;
         inputComponent.BindAxis(moveUp.AxisName, _ => { callCounter++; });
 
-        var allFalseHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var allFalseKeyboardInput = new KeyboardInputBuilder
         {
             Up = false,
             Down = false,
             Right = false,
             Left = false,
             Space = false
-        });
+        }.Build();
 
-        var allTrueHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var allTrueKeyboardInput = new KeyboardInputBuilder
         {
             Up = true,
             Down = true,
             Right = true,
             Left = true,
             Space = true
-        });
+        }.Build();
 
         // Act
         for (var i = 0; i < 10; i++)
         {
-            _inputBackend.Capture().Returns(allFalseHardwareInput);
+            MockKeyboardInput(allFalseKeyboardInput);
             _inputSystem.ProcessInput();
 
-            _inputBackend.Capture().Returns(allTrueHardwareInput);
+            MockKeyboardInput(allTrueKeyboardInput);
             _inputSystem.ProcessInput();
 
-            _inputBackend.Capture().Returns(allTrueHardwareInput);
+            MockKeyboardInput(allTrueKeyboardInput);
             _inputSystem.ProcessInput();
 
-            _inputBackend.Capture().Returns(allFalseHardwareInput);
+            MockKeyboardInput(allFalseKeyboardInput);
             _inputSystem.ProcessInput();
         }
 
@@ -124,11 +162,14 @@ public class InputSystemTests
     public void ProcessInput_ShouldCaptureHardwareInputOnce()
     {
         // Arrange
+        MockEmptyInput();
+
         // Act
         _inputSystem.ProcessInput();
 
         // Assert
-        _inputBackend.Received(1).Capture();
+        _inputBackend.Received(1).GetKeyboardInput();
+        _inputBackend.Received(1).GetMouseInput();
     }
 
     [Test]
@@ -139,16 +180,16 @@ public class InputSystemTests
         var inputComponentOfEntity2 = _inputScene.AddInput();
         var inputComponentOfEntity3 = _inputScene.AddInput();
 
-        var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
-        _inputBackend.Capture().Returns(hardwareInput);
+        var keyboardInput = new KeyboardInputBuilder { Up = true }.Build();
+        MockKeyboardInput(keyboardInput);
 
         // Act
         _inputSystem.ProcessInput();
 
         // Assert
-        Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
-        Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
-        Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
+        Assert.That(inputComponentOfEntity1.HardwareInput.KeyboardInput.Up, Is.True);
+        Assert.That(inputComponentOfEntity2.HardwareInput.KeyboardInput.Up, Is.True);
+        Assert.That(inputComponentOfEntity3.HardwareInput.KeyboardInput.Up, Is.True);
     }
 
     [Test]
@@ -159,8 +200,8 @@ public class InputSystemTests
         var inputComponentOfEntity2 = _inputScene.AddInput();
         var inputComponentOfEntity3 = _inputScene.AddInput();
 
-        var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
-        _inputBackend.Capture().Returns(hardwareInput);
+        var keyboardInput = new KeyboardInputBuilder { Up = true }.Build();
+        MockKeyboardInput(keyboardInput);
 
         inputComponentOfEntity1.Entity.RemoveComponent(inputComponentOfEntity1);
         inputComponentOfEntity3.Entity.RemoveComponent(inputComponentOfEntity3);
@@ -170,7 +211,7 @@ public class InputSystemTests
 
         // Assert
         Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(HardwareInput.Empty));
-        Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
+        Assert.That(inputComponentOfEntity2.HardwareInput.KeyboardInput.Up, Is.True);
         Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(HardwareInput.Empty));
     }
 
@@ -182,8 +223,8 @@ public class InputSystemTests
         var inputComponentOfEntity2 = _inputScene.AddInput();
         var inputComponentOfEntity3 = _inputScene.AddInput();
 
-        var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
-        _inputBackend.Capture().Returns(hardwareInput);
+        var keyboardInput = new KeyboardInputBuilder { Up = true }.Build();
+        MockKeyboardInput(keyboardInput);
 
         inputComponentOfEntity1.Enabled = false;
         inputComponentOfEntity3.Enabled = false;
@@ -193,7 +234,7 @@ public class InputSystemTests
 
         // Assert
         Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(HardwareInput.Empty));
-        Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
+        Assert.That(inputComponentOfEntity2.HardwareInput.KeyboardInput.Up, Is.True);
         Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(HardwareInput.Empty));
     }
 
@@ -203,23 +244,23 @@ public class InputSystemTests
         // Arrange
         _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
 
-        var hardwareInput1 = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput1 = new KeyboardInputBuilder
         {
             Up = false,
             Down = false,
             Right = false,
             Left = false,
             Space = false
-        });
+        }.Build();
 
-        var hardwareInput2 = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput2 = new KeyboardInputBuilder
         {
             Up = false,
             Down = false,
             Right = true,
             Left = false,
             Space = false
-        });
+        }.Build();
 
         var callCounter = 0;
         inputComponent.BindAction(moveRight.ActionName, () => { callCounter++; });
@@ -227,10 +268,10 @@ public class InputSystemTests
 
         // Act
         // Initialize action states based on hardware input
-        _inputBackend.Capture().Returns(hardwareInput1);
+        MockKeyboardInput(keyboardInput1);
         _inputSystem.ProcessInput();
 
-        _inputBackend.Capture().Returns(hardwareInput2);
+        MockKeyboardInput(keyboardInput2);
         _inputSystem.ProcessInput();
 
         // Assert
@@ -247,29 +288,29 @@ public class InputSystemTests
         inputComponent.BindAxis(moveUp.AxisName, _ => { callCounter++; });
         inputComponent.Enabled = false;
 
-        var allFalseHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var allFalseKeyboardInput = new KeyboardInputBuilder
         {
             Up = false,
             Down = false,
             Right = false,
             Left = false,
             Space = false
-        });
+        }.Build();
 
-        var allTrueHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var allTrueKeyboardInput = new KeyboardInputBuilder
         {
             Up = true,
             Down = true,
             Right = true,
             Left = true,
             Space = true
-        });
+        }.Build();
 
         // Act
-        _inputBackend.Capture().Returns(allFalseHardwareInput);
+        MockKeyboardInput(allFalseKeyboardInput);
         _inputSystem.ProcessInput();
 
-        _inputBackend.Capture().Returns(allTrueHardwareInput);
+        MockKeyboardInput(allTrueKeyboardInput);
         _inputSystem.ProcessInput();
 
         // Assert
@@ -284,20 +325,20 @@ public class InputSystemTests
     [TestCase(true, true, true, true, true, true, true)]
     [TestCase(true, false, true, false, true, false, true)]
     [TestCase(false, true, false, true, false, true, true)]
-    public void ProcessInput_Keyboard_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
+    public void ProcessInput_Keyboard_ShouldSetActionStatesAccordingToKeyboardInputAndInputMapping(bool right, bool left, bool up,
         bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
     {
         // Arrange
         _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
 
-        var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput = new KeyboardInputBuilder
         {
             Right = right,
             Left = left,
             Up = up,
             Space = space
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        }.Build();
+        MockKeyboardInput(keyboardInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -314,21 +355,21 @@ public class InputSystemTests
     [TestCase(false, true, false, true, false, -1, -1)]
     [TestCase(false, false, false, false, true, 5, 0)]
     [TestCase(true, false, false, false, true, 6, 0)]
-    public void ProcessInput_Keyboard_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+    public void ProcessInput_Keyboard_ShouldSetAxisStatesAccordingToKeyboardInputAndInputMapping(bool up, bool down, bool right,
         bool left, bool space, double expectedUp, double expectedRight)
     {
         // Arrange
         _inputScene.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
 
-        var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput = new KeyboardInputBuilder
         {
             Up = up,
             Down = down,
             Right = right,
             Left = left,
             Space = space
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        }.Build();
+        MockKeyboardInput(keyboardInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -342,7 +383,7 @@ public class InputSystemTests
     [TestCase(true, true, true, true, 1, 1, 1)]
     [TestCase(true, false, true, false, 1, 0, 1)]
     [TestCase(false, true, false, true, 0, 1, 1)]
-    public void ProcessInput_Keyboard_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
+    public void ProcessInput_Keyboard_ShouldCallActionBindingsAccordingToKeyboardInputAndInputMapping(bool right, bool left,
         bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
     {
         // Arrange
@@ -356,25 +397,25 @@ public class InputSystemTests
         inputComponent.BindAction(moveLeft.ActionName, () => { moveLeftCallCounter++; });
         inputComponent.BindAction(jump.ActionName, () => { jumpCallCounter++; });
 
-        // Initialize action states based on hardware input
-        var initialHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        // Initialize action states based on keyboard input
+        var initialKeyboardInput = new KeyboardInputBuilder
         {
             Right = false,
             Left = false,
             Up = false,
             Space = false
-        });
-        _inputBackend.Capture().Returns(initialHardwareInput);
+        }.Build();
+        MockKeyboardInput(initialKeyboardInput);
         _inputSystem.ProcessInput();
 
-        var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput = new KeyboardInputBuilder
         {
             Right = right,
             Left = left,
             Up = up,
             Space = space
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        }.Build();
+        MockKeyboardInput(keyboardInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -391,7 +432,7 @@ public class InputSystemTests
     [TestCase(false, true, false, true, false, -1, -1)]
     [TestCase(false, false, false, false, true, 5, 0)]
     [TestCase(true, false, false, false, true, 6, 0)]
-    public void ProcessInput_Keyboard_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+    public void ProcessInput_Keyboard_ShouldCallAxisBindingsAccordingToKeyboardInputAndInputMapping(bool up, bool down, bool right,
         bool left, bool space, double expectedUp, double expectedRight)
     {
         // Arrange
@@ -414,15 +455,15 @@ public class InputSystemTests
             moveRightState = value;
         });
 
-        var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+        var keyboardInput = new KeyboardInputBuilder
         {
             Up = up,
             Down = down,
             Right = right,
             Left = left,
             Space = space
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        }.Build();
+        MockKeyboardInput(keyboardInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -447,21 +488,21 @@ public class InputSystemTests
         true, false, true, true)]
     [TestCase(false, true, false, true, false,
         false, true, false, true)]
-    public void ProcessInput_Mouse_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
+    public void ProcessInput_Mouse_ShouldSetActionStatesAccordingToMouseInputAndInputMapping(bool left, bool middle, bool right,
         bool x1, bool x2, bool expectedFire, bool expectedZoom, bool expectedAltFire, bool expectedMelee)
     {
         // Arrange
         _inputScene.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
 
-        var hardwareInput = GetMouseInput(new MouseInputBuilder
+        var mouseInput = new MouseInputBuilder
         {
             LeftButton = left,
             MiddleButton = middle,
             RightButton = right,
             XButton1 = x1,
             XButton2 = x2
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        }.Build();
+        MockMouseInput(mouseInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -476,17 +517,14 @@ public class InputSystemTests
     [TestCase(0, 0, 0, 0)]
     [TestCase(5, 7, 5, -7)]
     [TestCase(-5, -7, -5, 7)]
-    public void ProcessInput_Mouse_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
+    public void ProcessInput_Mouse_ShouldSetAxisStatesAccordingToMouseInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
         double expectedLookUp)
     {
         // Arrange
         _inputScene.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
 
-        var hardwareInput = GetMouseInput(new MouseInputBuilder
-        {
-            PositionDelta = new Vector2(xPos, yPos)
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        var mouseInput = new MouseInputBuilder { PositionDelta = new Vector2(xPos, yPos) }.Build();
+        MockMouseInput(mouseInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -504,7 +542,7 @@ public class InputSystemTests
         1, 0, 1, 1)]
     [TestCase(false, true, false, true, false,
         0, 1, 0, 1)]
-    public void ProcessInput_Mouse_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
+    public void ProcessInput_Mouse_ShouldCallActionBindingsAccordingToMouseInputAndInputMapping(bool left, bool middle, bool right,
         bool x1, bool x2, int expectedFireCount, int expectedZoomCount, int expectedAltFireCount, int expectedMeleeCount)
     {
         // Arrange
@@ -520,27 +558,27 @@ public class InputSystemTests
         inputComponent.BindAction(altFire.ActionName, () => { altFireCallCounter++; });
         inputComponent.BindAction(melee.ActionName, () => { meleeCallCounter++; });
 
-        // Initialize action states based on hardware input
-        var initialHardwareInput = GetMouseInput(new MouseInputBuilder
+        // Initialize action states based on mouse input
+        var initialMouseInput = new MouseInputBuilder
         {
             LeftButton = false,
             MiddleButton = false,
             RightButton = false,
             XButton1 = false,
             XButton2 = false
-        });
-        _inputBackend.Capture().Returns(initialHardwareInput);
+        }.Build();
+        MockMouseInput(initialMouseInput);
         _inputSystem.ProcessInput();
 
-        var hardwareInput = GetMouseInput(new MouseInputBuilder
+        var mouseInput = new MouseInputBuilder
         {
             LeftButton = left,
             MiddleButton = middle,
             RightButton = right,
             XButton1 = x1,
             XButton2 = x2
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        }.Build();
+        MockMouseInput(mouseInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -555,7 +593,7 @@ public class InputSystemTests
     [TestCase(0, 0, 0, 0)]
     [TestCase(5, 7, 5, -7)]
     [TestCase(-5, -7, -5, 7)]
-    public void ProcessInput_Mouse_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
+    public void ProcessInput_Mouse_ShouldCallAxisBindingsAccordingToMouseInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
         double expectedLookUp)
     {
         // Arrange
@@ -578,11 +616,8 @@ public class InputSystemTests
             lookUpState = value;
         });
 
-        var hardwareInput = GetMouseInput(new MouseInputBuilder
-        {
-            PositionDelta = new Vector2(xPos, yPos)
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        var mouseInput = new MouseInputBuilder { PositionDelta = new Vector2(xPos, yPos) }.Build();
+        MockMouseInput(mouseInput);
 
         // Act
         _inputSystem.ProcessInput();
@@ -611,7 +646,7 @@ public class InputSystemTests
             PacketNumber = 123
         };
 
-        _inputBackend.GetControllerState(controllerIndex).Returns(controllerState);
+        MockControllerState(controllerIndex, controllerState);
 
         // Act
         var actual = _inputSystem.GetControllerState(controllerIndex);
@@ -649,11 +684,8 @@ public class InputSystemTests
 
         inputComponent.BindAction(jump.ActionName, () => { _inputScene.Scene.CreateEntity(); });
 
-        var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
-        {
-            Space = true
-        });
-        _inputBackend.Capture().Returns(hardwareInput);
+        var keyboardInput = new KeyboardInputBuilder { Space = true }.Build();
+        MockKeyboardInput(keyboardInput);
 
         // Act
         // Assert
@@ -663,11 +695,6 @@ public class InputSystemTests
     #endregion
 
     #region Helpers
-
-    private static HardwareInput GetKeyboardInput(KeyboardInputBuilder keyboardInputBuilder)
-    {
-        return new HardwareInput(keyboardInputBuilder.Build(), default);
-    }
 
     private static HardwareInput GetMouseInput(MouseInputBuilder mouseInputBuilder)
     {

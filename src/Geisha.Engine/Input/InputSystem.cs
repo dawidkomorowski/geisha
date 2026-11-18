@@ -35,7 +35,9 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
 
     public void ProcessInput()
     {
-        var hardwareInput = _inputBackend.Capture();
+        var keyboardInput = _inputBackend.GetKeyboardInput();
+        var mouseInput = _inputBackend.GetMouseInput();
+        var hardwareInput = new HardwareInput(keyboardInput, mouseInput);
 
         foreach (var inputComponent in _inputComponents)
         {

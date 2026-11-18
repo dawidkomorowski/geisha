@@ -34,15 +34,7 @@ public sealed class WindowsInputBackend : IInputBackend
 
     // TODO: Add documentation.
     public bool LockCursorPosition { get; set; }
-
-    // TODO: Add documentation.
-    public HardwareInput Capture()
-    {
-        var keyboardInput = GetKeyboardInput();
-        var mouseInput = GetMouseInput();
-        return new HardwareInput(keyboardInput, mouseInput);
-    }
-
+    
     // TODO: Add documentation.
     public KeyboardInput GetKeyboardInput()
     {
