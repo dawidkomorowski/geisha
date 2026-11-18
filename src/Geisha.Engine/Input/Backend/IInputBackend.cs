@@ -9,7 +9,7 @@
 /// </remarks>
 public interface IInputBackend
 {
-    // TODO: LockCursorPosition is based on calling Capture as it simply repositions the mouse.
+    // TODO: LockCursorPosition is based on calling GetMouseInput as it simply repositions the mouse.
     //       Maybe it would make more sense to provide API for setting mouse position and implement the LockCursorPosition feature on the InputSystem level?
     // TODO: Expose in IInputSystem as an API for a game code?
     /// <summary>
