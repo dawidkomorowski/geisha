@@ -15,6 +15,7 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     private readonly RenderForm _renderForm;
     private DisplayMode _displayMode = DisplayMode.Windowed;
     private bool _cursorVisible = true;
+    private CursorLockMode _cursorLockMode = CursorLockMode.None;
     private WindowState _windowState;
 
     /// <summary>
@@ -26,6 +27,11 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
 
         _renderForm = new RenderForm();
         _renderForm.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
+        _renderForm.ClientSizeChanged += RenderForm_ClientSizeChanged;
+        _renderForm.LocationChanged += RenderForm_LocationChanged;
+        _renderForm.GotFocus += RenderForm_GotFocus;
+        _renderForm.LostFocus += RenderForm_LostFocus;
 
         SaveWindowState();
     }
@@ -125,11 +131,30 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         }
     }
 
+    // TODO: Add documentation.
+    public CursorLockMode CursorLockMode
+    {
+        get => _cursorLockMode;
+        set
+        {
+            if (_cursorLockMode == value)
+            {
+                return;
+            }
+
+            _cursorLockMode = value;
+
+            HandleCursorConfinedMode();
+        }
+    }
+
     /// <inheritdoc />
     public void RunUpdateLoop(Func<bool> updateCallback)
     {
         RenderLoop.Run(_renderForm, () =>
         {
+            HandleCursorLockedMode();
+
             var shouldContinue = updateCallback();
             if (!shouldContinue) _renderForm.Close();
         });
@@ -140,6 +165,13 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     /// </summary>
     public void Dispose()
     {
+        NativeCursor.ReleaseCursorClip();
+
+        _renderForm.ClientSizeChanged -= RenderForm_ClientSizeChanged;
+        _renderForm.LocationChanged -= RenderForm_LocationChanged;
+        _renderForm.GotFocus -= RenderForm_GotFocus;
+        _renderForm.LostFocus -= RenderForm_LostFocus;
+
         _renderForm.Dispose();
     }
 
@@ -168,5 +200,48 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
         public FormWindowState State { get; init; }
         public System.Drawing.Size ClientSize { get; init; }
         public Point Location { get; init; }
+    }
+
+    private void HandleCursorLockedMode()
+    {
+        if (!_renderForm.Focused) return;
+
+        if (CursorLockMode is CursorLockMode.Locked)
+        {
+            var clientSize = _renderForm.ClientSize;
+            Cursor.Position = _renderForm.PointToScreen(new Point(clientSize.Width / 2, clientSize.Height / 2));
+        }
+    }
+
+    private void HandleCursorConfinedMode()
+    {
+        if (_cursorLockMode is CursorLockMode.Confined && _renderForm.Focused)
+        {
+            NativeCursor.ClipCursorToWindow(_renderForm);
+        }
+        else
+        {
+            NativeCursor.ReleaseCursorClip();
+        }
+    }
+
+    private void RenderForm_ClientSizeChanged(object? sender, EventArgs e)
+    {
+        HandleCursorConfinedMode();
+    }
+
+    private void RenderForm_LocationChanged(object? sender, EventArgs e)
+    {
+        HandleCursorConfinedMode();
+    }
+
+    private void RenderForm_GotFocus(object? sender, EventArgs e)
+    {
+        HandleCursorConfinedMode();
+    }
+
+    private void RenderForm_LostFocus(object? sender, EventArgs e)
+    {
+        HandleCursorConfinedMode();
     }
 }

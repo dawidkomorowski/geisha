@@ -47,6 +47,7 @@ public sealed class CommonEntityFactory
             .MapAction("Exit", Key.Escape)
             .MapAction("ToggleFullscreen", Key.F)
             .MapAction("ToggleCursorVisible", Key.C)
+            .MapAction("ToggleCursorMode", Key.L)
             .MapAction("ToggleVSync", Key.V)
             .MapAction("ToggleTripleBuffering", Key.B)
             .Build();
@@ -62,6 +63,16 @@ public sealed class CommonEntityFactory
             };
         });
         inputComponent.BindAction("ToggleCursorVisible", () => { _windowingSystem.CursorVisible = !_windowingSystem.CursorVisible; });
+        inputComponent.BindAction("ToggleCursorMode", () =>
+        {
+            _windowingSystem.CursorLockMode = _windowingSystem.CursorLockMode switch
+            {
+                CursorLockMode.None => CursorLockMode.Locked,
+                CursorLockMode.Locked => CursorLockMode.Confined,
+                CursorLockMode.Confined => CursorLockMode.None,
+                _ => throw new InvalidOperationException("Unsupported cursor mode.")
+            };
+        });
         inputComponent.BindAction("ToggleVSync", () => { _renderingSystem.VSyncEnabled = !_renderingSystem.VSyncEnabled; });
         inputComponent.BindAction("ToggleTripleBuffering", () =>
         {

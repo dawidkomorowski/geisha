@@ -18,10 +18,12 @@ internal sealed class WindowingSystem : IWindowingSystem, IWindowingGameLoopStep
 
         _windowClientSize = _windowingBackend.WindowClientSize;
         CursorVisible = _windowingBackend.CursorVisible;
+        CursorLockMode = _windowingBackend.CursorLockMode;
         DisplayMode = _windowingBackend.DisplayMode;
     }
 
     public bool CursorVisible { get; set; }
+    public CursorLockMode CursorLockMode { get; set; }
     public DisplayMode DisplayMode { get; set; }
 
     public void HandleWindowState()
@@ -29,6 +31,11 @@ internal sealed class WindowingSystem : IWindowingSystem, IWindowingGameLoopStep
         if (CursorVisible != _windowingBackend.CursorVisible)
         {
             _windowingBackend.CursorVisible = CursorVisible;
+        }
+
+        if (CursorLockMode != _windowingBackend.CursorLockMode)
+        {
+            _windowingBackend.CursorLockMode = CursorLockMode;
         }
 
         if (DisplayMode != _windowingBackend.DisplayMode)

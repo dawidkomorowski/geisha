@@ -32,6 +32,9 @@ public interface IWindowingBackend
     ///     Gets or sets a value indicating whether the cursor is visible.
     /// </summary>
     bool CursorVisible { get; set; }
+    
+    // TODO: Add documentation.
+    CursorLockMode CursorLockMode { get; set; }
 
     /// <summary>
     ///     Runs the window update loop.

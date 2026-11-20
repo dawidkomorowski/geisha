@@ -12,6 +12,8 @@ public interface IInputBackend
     // TODO: LockCursorPosition is based on calling GetMouseInput as it simply repositions the mouse.
     //       Maybe it would make more sense to provide API for setting mouse position and implement the LockCursorPosition feature on the InputSystem level?
     // TODO: Expose in IInputSystem as an API for a game code?
+    // TODO: CursorPosition looks like more a Windowing responsibility so it should be moved there.
+    //       Consider three modes: Free, Locked (keep at center), WindowBound (limit to window positions).
     /// <summary>
     ///     Specifies whether to lock the cursor position at the center of the window client area. If <c>true</c> the
     ///     cursor is successively moved to the center of the window client area; otherwise it is unlocked and can move

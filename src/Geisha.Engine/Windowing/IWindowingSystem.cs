@@ -13,6 +13,9 @@ public interface IWindowingSystem
     /// </summary>
     bool CursorVisible { get; set; }
 
+    // TODO: Add documentation.
+    CursorLockMode CursorLockMode { get; set; }
+
     /// <summary>
     ///     Gets or sets the window display mode.
     /// </summary>
