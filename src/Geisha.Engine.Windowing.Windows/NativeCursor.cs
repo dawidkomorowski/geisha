@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace Geisha.Engine.Windowing.Windows;
 
+// TODO: Inspect return values and log warn on failures.
 internal static class NativeCursor
 {
     public static void ClipCursorToWindow(Form window)
