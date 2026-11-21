@@ -75,6 +75,7 @@ public static class WindowsApplication
         using var renderingBackend = new DirectXRenderingBackend(windowingBackend.Window, DriverType.Hardware);
         using var audioBackend = new NAudioAudioBackend();
         var inputBackend = new WindowsInputBackend(windowingBackend.Window);
+        windowingBackend.CursorLockedCallback = inputBackend.OnCursorLockedCallback;
 
         renderingBackend.ResizeBuffersAfterVSyncChange = options.DirectX.ResizeBuffersAfterVSyncChange;
 

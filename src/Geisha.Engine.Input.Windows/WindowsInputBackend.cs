@@ -1,7 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
-using Geisha.Engine.Input.Backend;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Input.Backend;
 
 namespace Geisha.Engine.Input.Windows;
 
@@ -15,6 +15,7 @@ public sealed class WindowsInputBackend : IInputBackend
     private readonly KeyboardInputBuilder _keyboardInputBuilder = new();
     private readonly MouseInputBuilder _mouseInputBuilder = new();
     private Vector2 _lastCapturedMousePosition;
+    private bool _cursorLocked;
 
     /// <summary>
     ///     Creates new instance of <see cref="WindowsInputBackend" /> that handles input for specified <see cref="Form" />
@@ -33,9 +34,6 @@ public sealed class WindowsInputBackend : IInputBackend
     }
 
     // TODO: Add documentation.
-    public bool LockCursorPosition { get; set; }
-    
-    // TODO: Add documentation.
     public KeyboardInput GetKeyboardInput()
     {
         NativeKeyboard.SetBuilderToCurrentState(_keyboardInputBuilder);
@@ -45,16 +43,26 @@ public sealed class WindowsInputBackend : IInputBackend
     // TODO: Add documentation.
     public MouseInput GetMouseInput()
     {
+        if (_cursorLocked)
+        {
+            // TODO: Proper implementation to calculate mouse position delta, especially for locked cursor,
+            //       is to use RAW Input API that provides physical HID device packets with hardware delta.
+            //       This is only a workaround for current mouse handling based on Cursor/MouseMoveEvent API.
+            var clientSize = _form.ClientSize;
+            var windowCenter = new Point(clientSize.Width / 2, clientSize.Height / 2);
+            var screeMouseTarget = _form.PointToScreen(windowCenter);
+
+            var cursorPosition = _form.PointToClient(Cursor.Position);
+            Cursor.Position = screeMouseTarget;
+
+            _mouseInputBuilder.Position = new Vector2(cursorPosition.X, cursorPosition.Y);
+            _lastCapturedMousePosition = new Vector2(windowCenter.X, windowCenter.Y);
+        }
+
         _mouseInputBuilder.PositionDelta = _mouseInputBuilder.Position - _lastCapturedMousePosition;
         var mouseInput = _mouseInputBuilder.Build();
         _mouseInputBuilder.ScrollDelta = 0;
         _lastCapturedMousePosition = mouseInput.Position;
-
-        if (LockCursorPosition)
-        {
-            var clientSize = _form.ClientSize;
-            SetMousePosition(new Vector2(clientSize.Width / 2d, clientSize.Height / 2d));
-        }
 
         return mouseInput;
     }
@@ -65,13 +73,15 @@ public sealed class WindowsInputBackend : IInputBackend
     // TODO: Add documentation.
     public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) => XInputController.SetVibration(controllerIndex, vibration);
 
-    private void SetMousePosition(Vector2 position)
-    {
-        Cursor.Position = _form.PointToScreen(new Point((int)position.X, (int)position.Y));
-        _lastCapturedMousePosition = position;
-    }
-
     #region Event handlers
+
+    // TODO: Add documentation.
+    // TODO: Document it is current workaround for Locked mode and position delta.
+    public bool OnCursorLockedCallback(bool locked)
+    {
+        _cursorLocked = locked;
+        return true;
+    }
 
     private void FormOnKeyDown(object? sender, KeyEventArgs e)
     {

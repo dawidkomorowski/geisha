@@ -16,6 +16,7 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     private DisplayMode _displayMode = DisplayMode.Windowed;
     private bool _cursorVisible = true;
     private CursorLockMode _cursorLockMode = CursorLockMode.None;
+    private bool _cursorLockedHandledExternally;
     private WindowState _windowState;
 
     /// <summary>
@@ -40,6 +41,10 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     ///     Gets the WinForms window managed by this backend.
     /// </summary>
     public Form Window => _renderForm;
+
+    // TODO: Add documentation.
+    // TODO: Document it is current workaround for Locked mode and position delta.
+    public Func<bool, bool>? CursorLockedCallback;
 
     /// <inheritdoc />
     public string WindowTitle
@@ -144,6 +149,9 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
 
             _cursorLockMode = value;
 
+            var cursorLocked = _cursorLockMode is CursorLockMode.Locked;
+            _cursorLockedHandledExternally = CursorLockedCallback?.Invoke(cursorLocked) ?? false;
+
             HandleCursorConfinedMode();
         }
     }
@@ -206,10 +214,12 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     {
         if (!_renderForm.Focused) return;
 
-        if (CursorLockMode is CursorLockMode.Locked)
+        if (CursorLockMode is CursorLockMode.Locked && !_cursorLockedHandledExternally)
         {
             var clientSize = _renderForm.ClientSize;
-            Cursor.Position = _renderForm.PointToScreen(new Point(clientSize.Width / 2, clientSize.Height / 2));
+            var windowCenter = new Point(clientSize.Width / 2, clientSize.Height / 2);
+            var screeMouseTarget = _renderForm.PointToScreen(windowCenter);
+            Cursor.Position = screeMouseTarget;
         }
     }
 

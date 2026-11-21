@@ -5,6 +5,7 @@ using System.Windows.Forms;
 namespace Geisha.Engine.Windowing.Windows;
 
 // TODO: Inspect return values and log warn on failures.
+// TODO: Cursor.Clip seems to provide similar functionality - investigate.
 internal static class NativeCursor
 {
     public static void ClipCursorToWindow(Form window)
