@@ -251,7 +251,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.HardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
+            inputComponent.HardwareInput = new HardwareInput();
 
             // Act
             inputComponent.Enabled = false;
@@ -265,7 +265,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
+            var hardwareInput = new HardwareInput();
             inputComponent.HardwareInput = hardwareInput;
 
             // Act

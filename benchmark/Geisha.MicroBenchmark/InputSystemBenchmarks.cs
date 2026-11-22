@@ -25,26 +25,29 @@ public class InputSystemBenchmarks
         return new[]
         {
             // No input (all released)
-            new HardwareInput(default, default),
+            HardwareInput.Empty,
             // Right key pressed - triggers MoveRight action binding (false -> true transition)
-            new HardwareInput(new KeyboardInputBuilder { Right = true }.Build(), default),
+            new HardwareInput { KeyboardInput = new KeyboardInputBuilder { Right = true }.Build() },
             // Right key still held - no new action trigger (true -> true, no transition)
-            new HardwareInput(new KeyboardInputBuilder { Right = true }.Build(), default),
+            new HardwareInput { KeyboardInput = new KeyboardInputBuilder { Right = true }.Build() },
             // Left + Up keys pressed - triggers MoveLeft and Jump (via Up key, first hardware action)
-            new HardwareInput(new KeyboardInputBuilder { Left = true, Up = true }.Build(), default),
+            new HardwareInput { KeyboardInput = new KeyboardInputBuilder { Left = true, Up = true }.Build() },
             // Space key pressed - triggers Jump via Space (second hardware action in mapping)
-            new HardwareInput(new KeyboardInputBuilder { Space = true }.Build(), default),
+            new HardwareInput { KeyboardInput = new KeyboardInputBuilder { Space = true }.Build() },
             // Mouse fire + camera movement - triggers Fire action, produces LookX/LookY axis values
-            new HardwareInput(default, new MouseInputBuilder { LeftButton = true, PositionDelta = new Vector2(5, 3) }.Build()),
+            new HardwareInput { MouseInput = new MouseInputBuilder { LeftButton = true, PositionDelta = new Vector2(5, 3) }.Build() },
             // Mouse alt-fire + camera movement
-            new HardwareInput(default, new MouseInputBuilder { RightButton = true, PositionDelta = new Vector2(-3, 7) }.Build()),
+            new HardwareInput { MouseInput = new MouseInputBuilder { RightButton = true, PositionDelta = new Vector2(-3, 7) }.Build() },
             // Mouse zoom + melee (XButton1 triggers Melee via its first hardware action)
-            new HardwareInput(default, new MouseInputBuilder { MiddleButton = true, XButton1 = true }.Build()),
+            new HardwareInput { MouseInput = new MouseInputBuilder { MiddleButton = true, XButton1 = true }.Build() },
             // Combined keyboard + mouse: MoveRight, Jump, Fire, camera look
-            new HardwareInput(new KeyboardInputBuilder { Right = true, Up = true }.Build(),
-                new MouseInputBuilder { LeftButton = true, PositionDelta = new Vector2(2, -5) }.Build()),
+            new HardwareInput
+            {
+                KeyboardInput = new KeyboardInputBuilder { Right = true, Up = true }.Build(),
+                MouseInput = new MouseInputBuilder { LeftButton = true, PositionDelta = new Vector2(2, -5) }.Build()
+            },
             // All released
-            new HardwareInput(default, default),
+            HardwareInput.Empty,
         };
     }
 
@@ -182,7 +185,7 @@ public class InputSystemBenchmarks
 
         // Process one frame with empty input to initialize action states (HasActionStatesInitialized = false path).
         // This is setup work and not part of the benchmark.
-        _inputBackend.CurrentInput = new HardwareInput(default, default);
+        _inputBackend.CurrentInput = HardwareInput.Empty;
         _inputSystem.ProcessInput();
     }
 
