@@ -66,6 +66,9 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             CreateText(labelGroup, new Vector2(0, -60), "Vibration [M]", 30);
             var vibrationLabel = CreateText(labelGroup, new Vector2(350, -60), string.Empty, 30);
 
+            CreateText(labelGroup, new Vector2(0, -90), "Input Source [I]", 30);
+            var inputSourceLabel = CreateText(labelGroup, new Vector2(350, -90), string.Empty, 30);
+
             // Gamepad images
             var imageGroup = Scene.CreateEntity();
 
@@ -148,6 +151,7 @@ internal sealed class GamepadControllerSandboxSceneBehaviorFactory : ISceneBehav
             controllerStateComponent.ConnectionStateLabel = connectionStateLabel;
             controllerStateComponent.PacketNumberLabel = packetNumberLabel;
             controllerStateComponent.VibrationLabel = vibrationLabel;
+            controllerStateComponent.InputSourceLabel = inputSourceLabel;
 
             controllerStateComponent.XboxGuideImage = xboxGuideImage;
 

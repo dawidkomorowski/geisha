@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -18,6 +19,15 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     private InputComponent _inputComponent = null!;
     private bool _vibrationEnabled = false;
 
+    private enum ControllerInputSource
+    {
+        DirectInputSystem,
+        RawInputComponent,
+        MappedInputComponent
+    }
+
+    private ControllerInputSource _controllerInputSource = ControllerInputSource.DirectInputSystem;
+
     public ControllerStateComponent(Entity entity, IInputSystem inputSystem, IAssetStore assetStore) : base(entity)
     {
         _inputSystem = inputSystem;
@@ -27,6 +37,7 @@ internal sealed class ControllerStateComponent : BehaviorComponent
     public TextRendererComponent? ConnectionStateLabel { get; set; }
     public TextRendererComponent? PacketNumberLabel { get; set; }
     public TextRendererComponent? VibrationLabel { get; set; }
+    public TextRendererComponent? InputSourceLabel { get; set; }
 
     public SpriteRendererComponent? XboxGuideImage { get; set; }
 
@@ -63,8 +74,19 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         _inputComponent = Entity.GetComponent<InputComponent>();
         _inputComponent.InputMapping = InputMapping.CreateBuilder()
             .MapAction("ToggleVibration", Key.M)
+            .MapAction("ToggleInputSource", Key.I)
             .Build();
         _inputComponent.BindAction("ToggleVibration", () => { _vibrationEnabled = !_vibrationEnabled; });
+        _inputComponent.BindAction("ToggleInputSource", () =>
+        {
+            _controllerInputSource = _controllerInputSource switch
+            {
+                ControllerInputSource.DirectInputSystem => ControllerInputSource.RawInputComponent,
+                ControllerInputSource.RawInputComponent => ControllerInputSource.MappedInputComponent,
+                ControllerInputSource.MappedInputComponent => ControllerInputSource.DirectInputSystem,
+                _ => throw new InvalidOperationException("Invalid controller input source.")
+            };
+        });
     }
 
     public override void OnUpdate(in TimeStep timeStep)
@@ -72,6 +94,7 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (ConnectionStateLabel is null) return;
         if (PacketNumberLabel is null) return;
         if (VibrationLabel is null) return;
+        if (InputSourceLabel is null) return;
 
         if (XboxGuideImage is null) return;
 
@@ -103,11 +126,18 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         if (RightTriggerHighImage is null) return;
         if (RightTriggerLowImage is null) return;
 
-        var controllerState = _inputSystem.GetControllerState(ControllerIndex.One);
+        var controllerState = _controllerInputSource switch
+        {
+            ControllerInputSource.DirectInputSystem => _inputSystem.GetControllerState(ControllerIndex.One),
+            ControllerInputSource.RawInputComponent => _inputComponent.HardwareInput.Controller1,
+            ControllerInputSource.MappedInputComponent => throw new NotImplementedException("TODO"),
+            _ => throw new InvalidOperationException("Invalid controller input source.")
+        };
 
         ConnectionStateLabel.Text = controllerState.IsConnected ? "Connected" : "Disconnected";
         PacketNumberLabel.Text = controllerState.PacketNumber.ToString();
         VibrationLabel.Text = _vibrationEnabled ? "Enabled [LT]/[RT]" : "Disabled";
+        InputSourceLabel.Text = _controllerInputSource.ToString();
 
         XboxGuideImage.Opacity = controllerState.IsConnected ? 1.0 : 0.5;
 
