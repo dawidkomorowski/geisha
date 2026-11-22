@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Geisha.Engine.Input.Mapping;
+namespace Geisha.Engine.Input;
 
 /// <summary>
 ///     Builds <see cref="InputMapping" /> by mapping hardware input sources to logical actions and axes.

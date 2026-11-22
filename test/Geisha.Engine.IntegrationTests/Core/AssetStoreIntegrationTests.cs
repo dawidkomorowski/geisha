@@ -10,7 +10,6 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
-using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.IntegrationTestsData;

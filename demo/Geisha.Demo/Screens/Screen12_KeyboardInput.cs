@@ -6,7 +6,6 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
-using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 

@@ -1,7 +1,5 @@
 ﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
-using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NSubstitute;
 using NUnit.Framework;

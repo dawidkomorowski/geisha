@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Input.Assets.Serialization;
-using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Assets;
 

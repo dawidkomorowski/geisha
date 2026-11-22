@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Assets.Serialization;
 

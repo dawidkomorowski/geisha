@@ -3,7 +3,6 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Assets;
-using Geisha.Engine.Input.Components;
 
 namespace Geisha.Engine.Input;
 

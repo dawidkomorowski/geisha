@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
-using Geisha.Engine.Input.Mapping;
 
-namespace Geisha.Engine.Input.Components
+namespace Geisha.Engine.Input
 {
     /// <summary>
     ///     <see cref="InputComponent" /> gives an <see cref="Entity" /> capability to access user input both direct hardware

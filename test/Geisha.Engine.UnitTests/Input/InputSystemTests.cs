@@ -4,8 +4,6 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Backend;
-using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Mapping;
 using Geisha.TestUtils;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

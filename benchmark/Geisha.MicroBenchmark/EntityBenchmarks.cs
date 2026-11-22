@@ -4,7 +4,7 @@ using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Input.Components;
+using Geisha.Engine.Input;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;

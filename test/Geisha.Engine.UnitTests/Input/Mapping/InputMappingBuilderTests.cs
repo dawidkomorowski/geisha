@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine.Input;
-using Geisha.Engine.Input.Mapping;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input.Mapping;

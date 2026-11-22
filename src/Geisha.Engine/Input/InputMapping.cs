@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace Geisha.Engine.Input.Mapping;
+namespace Geisha.Engine.Input;
 
 /// <summary>
 ///     Defines mapping of hardware input sources to logical actions and axes.

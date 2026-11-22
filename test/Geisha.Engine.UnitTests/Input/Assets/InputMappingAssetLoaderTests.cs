@@ -7,7 +7,6 @@ using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
-using Geisha.Engine.Input.Mapping;
 using NSubstitute;
 using NUnit.Framework;
 

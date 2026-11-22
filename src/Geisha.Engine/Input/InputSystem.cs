@@ -4,8 +4,6 @@ using System.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
-using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input;
 

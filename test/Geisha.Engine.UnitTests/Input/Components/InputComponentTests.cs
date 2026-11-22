@@ -2,8 +2,6 @@
 using System.Collections.Immutable;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
-using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Mapping;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
