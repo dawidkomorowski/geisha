@@ -43,11 +43,14 @@ public sealed class WindowsInputBackend : IInputBackend
     // TODO: Add documentation.
     public MouseInput GetMouseInput()
     {
-        if (_cursorLocked)
+        if (_cursorLocked && _form.Focused)
         {
             // TODO: Proper implementation to calculate mouse position delta, especially for locked cursor,
             //       is to use RAW Input API that provides physical HID device packets with hardware delta.
             //       This is only a workaround for current mouse handling based on Cursor/MouseMoveEvent API.
+            // TODO: Rebaseline when entering locked mode to avoid a spurious initial delta.
+            // TODO: Rebaseline when leaving locked mode to exclude the last cursor warp.
+            // TODO: Rebaseline when the window center changes to avoid a spurious delta.
             var clientSize = _form.ClientSize;
             var windowCenter = new Point(clientSize.Width / 2, clientSize.Height / 2);
             var screeMouseTarget = _form.PointToScreen(windowCenter);
