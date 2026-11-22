@@ -19,12 +19,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
     private enum ControllerInputSource
     {
-        DirectInputSystem,
-        RawInputComponent,
-        MappedInputComponent
+        InputSystem,
+        InputComponent,
+        InputMapping
     }
 
-    private ControllerInputSource _controllerInputSource = ControllerInputSource.DirectInputSystem;
+    private ControllerInputSource _controllerInputSource = ControllerInputSource.InputSystem;
 
     public ControllerStateComponent(Entity entity, IInputSystem inputSystem, IAssetStore assetStore) : base(entity)
     {
@@ -73,15 +73,29 @@ internal sealed class ControllerStateComponent : BehaviorComponent
         _inputComponent.InputMapping = InputMapping.CreateBuilder()
             .MapAction("ToggleVibration", Key.M)
             .MapAction("ToggleInputSource", Key.I)
+            .MapAction("ControllerButton.A", ControllerIndex.One, ControllerButton.A)
+            .MapAction("ControllerButton.B", ControllerIndex.One, ControllerButton.B)
+            .MapAction("ControllerButton.X", ControllerIndex.One, ControllerButton.X)
+            .MapAction("ControllerButton.Y", ControllerIndex.One, ControllerButton.Y)
+            .MapAction("ControllerButton.DPadUp", ControllerIndex.One, ControllerButton.DPadUp)
+            .MapAction("ControllerButton.DPadDown", ControllerIndex.One, ControllerButton.DPadDown)
+            .MapAction("ControllerButton.DPadLeft", ControllerIndex.One, ControllerButton.DPadLeft)
+            .MapAction("ControllerButton.DPadRight", ControllerIndex.One, ControllerButton.DPadRight)
+            .MapAction("ControllerButton.Start", ControllerIndex.One, ControllerButton.Start)
+            .MapAction("ControllerButton.Back", ControllerIndex.One, ControllerButton.Back)
+            .MapAction("ControllerButton.LeftThumb", ControllerIndex.One, ControllerButton.LeftThumb)
+            .MapAction("ControllerButton.RightThumb", ControllerIndex.One, ControllerButton.RightThumb)
+            .MapAction("ControllerButton.LeftShoulder", ControllerIndex.One, ControllerButton.LeftShoulder)
+            .MapAction("ControllerButton.RightShoulder", ControllerIndex.One, ControllerButton.RightShoulder)
             .Build();
         _inputComponent.BindAction("ToggleVibration", () => { _vibrationEnabled = !_vibrationEnabled; });
         _inputComponent.BindAction("ToggleInputSource", () =>
         {
             _controllerInputSource = _controllerInputSource switch
             {
-                ControllerInputSource.DirectInputSystem => ControllerInputSource.RawInputComponent,
-                ControllerInputSource.RawInputComponent => ControllerInputSource.MappedInputComponent,
-                ControllerInputSource.MappedInputComponent => ControllerInputSource.DirectInputSystem,
+                ControllerInputSource.InputSystem => ControllerInputSource.InputComponent,
+                ControllerInputSource.InputComponent => ControllerInputSource.InputMapping,
+                ControllerInputSource.InputMapping => ControllerInputSource.InputSystem,
                 _ => throw new InvalidOperationException("Invalid controller input source.")
             };
         });
@@ -126,9 +140,9 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
         var controllerState = _controllerInputSource switch
         {
-            ControllerInputSource.DirectInputSystem => _inputSystem.GetControllerState(ControllerIndex.One),
-            ControllerInputSource.RawInputComponent => _inputComponent.HardwareInput.Controller1,
-            ControllerInputSource.MappedInputComponent => throw new NotImplementedException("TODO"),
+            ControllerInputSource.InputSystem => _inputSystem.GetControllerState(ControllerIndex.One),
+            ControllerInputSource.InputComponent => _inputComponent.HardwareInput.Controller1,
+            ControllerInputSource.InputMapping => GetControllerStateFromMappedInput(_inputComponent),
             _ => throw new InvalidOperationException("Invalid controller input source.")
         };
 
@@ -210,6 +224,33 @@ internal sealed class ControllerStateComponent : BehaviorComponent
 
             _inputSystem.SetControllerVibration(ControllerIndex.One, vibration);
         }
+    }
+
+    private static ControllerState GetControllerStateFromMappedInput(InputComponent inputComponent)
+    {
+        var buttons = ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.A") ? ControllerButtons.A : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.B") ? ControllerButtons.B : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.X") ? ControllerButtons.X : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.Y") ? ControllerButtons.Y : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.DPadUp") ? ControllerButtons.DPadUp : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.DPadDown") ? ControllerButtons.DPadDown : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.DPadLeft") ? ControllerButtons.DPadLeft : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.DPadRight") ? ControllerButtons.DPadRight : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.Start") ? ControllerButtons.Start : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.Back") ? ControllerButtons.Back : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.LeftThumb") ? ControllerButtons.LeftThumb : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.RightThumb") ? ControllerButtons.RightThumb : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.LeftShoulder") ? ControllerButtons.LeftShoulder : ControllerButtons.None;
+        buttons |= inputComponent.GetActionState("ControllerButton.RightShoulder") ? ControllerButtons.RightShoulder : ControllerButtons.None;
+
+        return new ControllerState
+        {
+            Index = ControllerIndex.One,
+            PacketNumber = inputComponent.HardwareInput.Controller1.PacketNumber,
+            IsConnected = inputComponent.HardwareInput.Controller1.IsConnected,
+            Buttons = buttons
+        };
     }
 }
 
