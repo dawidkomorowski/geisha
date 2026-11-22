@@ -30,6 +30,10 @@ public sealed class InputMappingBuilder
     /// <returns>This <see cref="InputMappingBuilder" /> instance.</returns>
     public InputMappingBuilder MapAction(string actionName, MouseButton mouseButton) => MapAction(actionName, InputSource.Create(mouseButton));
 
+    // TODO: Add documentation.
+    public InputMappingBuilder MapAction(string actionName, ControllerIndex controllerIndex, ControllerButton controllerButton) =>
+        MapAction(actionName, InputSource.Create(controllerIndex, controllerButton));
+
     /// <summary>
     ///     Maps specified keyboard key to logical axis with given scale.
     /// </summary>

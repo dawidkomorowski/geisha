@@ -13,6 +13,8 @@ public readonly record struct InputSource
     private readonly Key _keyboardKey;
     private readonly MouseButton _mouseButton;
     private readonly MouseAxis _mouseAxis;
+    private readonly ControllerIndex _controllerIndex;
+    private readonly ControllerButton _controllerButton;
 
     /// <summary>
     ///     Creates a new instance of <see cref="InputSource" /> representing the specified keyboard key.
@@ -35,11 +37,16 @@ public readonly record struct InputSource
     /// <returns><see cref="InputSource" /> representing the specified mouse axis.</returns>
     public static InputSource Create(MouseAxis mouseAxis) => new(mouseAxis);
 
+    // TODO: Add documentation.
+    public static InputSource Create(ControllerIndex controllerIndex, ControllerButton controllerButton) => new(controllerIndex, controllerButton);
+
     private InputSource(Key keyboardKey)
     {
         _keyboardKey = keyboardKey;
         _mouseButton = default;
         _mouseAxis = default;
+        _controllerIndex = default;
+        _controllerButton = default;
         Kind = InputKind.KeyboardKey;
     }
 
@@ -48,6 +55,8 @@ public readonly record struct InputSource
         _keyboardKey = default;
         _mouseButton = mouseButton;
         _mouseAxis = default;
+        _controllerIndex = default;
+        _controllerButton = default;
         Kind = InputKind.MouseButton;
     }
 
@@ -56,7 +65,19 @@ public readonly record struct InputSource
         _keyboardKey = default;
         _mouseButton = default;
         _mouseAxis = mouseAxis;
+        _controllerIndex = default;
+        _controllerButton = default;
         Kind = InputKind.MouseAxis;
+    }
+
+    private InputSource(ControllerIndex controllerIndex, ControllerButton controllerButton)
+    {
+        _keyboardKey = default;
+        _mouseButton = default;
+        _mouseAxis = default;
+        _controllerIndex = controllerIndex;
+        _controllerButton = controllerButton;
+        Kind = InputKind.ControllerButton;
     }
 
     /// <summary>
@@ -77,7 +98,10 @@ public readonly record struct InputSource
         /// <summary>
         ///     A mouse axis.
         /// </summary>
-        MouseAxis
+        MouseAxis,
+
+        // TODO: Add documentation.
+        ControllerButton
     }
 
     /// <summary>
@@ -112,6 +136,10 @@ public readonly record struct InputSource
     /// </exception>
     public MouseAxis AsMouseAxis() => Kind is InputKind.MouseAxis ? _mouseAxis : throw CreateInvalidInputKindException(Kind);
 
+    // TODO: Add documentation.
+    public (ControllerIndex Index, ControllerButton Button) AsControllerButton() =>
+        Kind is InputKind.ControllerButton ? (_controllerIndex, _controllerButton) : throw CreateInvalidInputKindException(Kind);
+
     /// <summary>
     ///     Custom <see cref="PrintMembers"/> for synthesized <see cref="ToString" />.
     /// </summary>
@@ -127,6 +155,9 @@ public readonly record struct InputSource
                 break;
             case InputKind.MouseAxis:
                 builder.Append($"{nameof(Kind)} = {Kind}, Axis = {_mouseAxis}");
+                break;
+            case InputKind.ControllerButton:
+                builder.Append($"{nameof(Kind)} = {Kind}, Index = {_controllerIndex}, Button = {_controllerButton}");
                 break;
             default:
                 throw new InvalidOperationException(); // TODO Convert to unreachable exception?

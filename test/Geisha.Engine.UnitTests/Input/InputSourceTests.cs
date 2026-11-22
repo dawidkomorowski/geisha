@@ -121,6 +121,48 @@ public class InputSourceTests
 
     #endregion
 
+    #region ControllerButton
+
+    [Test]
+    public void Create_ControllerButton_ShouldSetInputKindToControllerButton()
+    {
+        // Arrange
+        // Act
+        var inputSource = InputSource.Create(ControllerIndex.Four, ControllerButton.Start);
+
+        // Assert
+        Assert.That(inputSource.Kind, Is.EqualTo(InputSource.InputKind.ControllerButton));
+    }
+
+    [Test]
+    public void AsControllerButton_ShouldReturnControllerButton_WhenInputKindIsControllerButton()
+    {
+        // Arrange
+        const ControllerIndex index = ControllerIndex.Four;
+        const ControllerButton button = ControllerButton.Back;
+        var inputSource = InputSource.Create(index, button);
+
+        // Act
+        var controllerButton = inputSource.AsControllerButton();
+
+        // Assert
+        Assert.That(controllerButton.Index, Is.EqualTo(index));
+        Assert.That(controllerButton.Button, Is.EqualTo(button));
+    }
+
+    [Test]
+    public void AsControllerButton_ShouldThrowException_WhenInputKindIsNotControllerButton()
+    {
+        // Arrange
+        var inputSource = InputSource.Create(Key.Space);
+
+        // Act
+        // Assert
+        Assert.That(inputSource.AsControllerButton, Throws.InvalidOperationException);
+    }
+
+    #endregion
+
     #region Formatting members
 
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
@@ -130,7 +172,10 @@ public class InputSourceTests
         new TestCaseData(InputSource.Create(MouseButton.Left), "InputSource { Kind = MouseButton, Button = Left }")
             .SetName("MouseButton"),
         new TestCaseData(InputSource.Create(MouseAxis.X), "InputSource { Kind = MouseAxis, Axis = X }")
-            .SetName("MouseAxis")
+            .SetName("MouseAxis"),
+        new TestCaseData(InputSource.Create(ControllerIndex.Four, ControllerButton.Back),
+                "InputSource { Kind = ControllerButton, Index = Four, Button = Back }")
+            .SetName("ControllerButton")
     };
 
     [TestCaseSource(nameof(ToStringTestCases))]

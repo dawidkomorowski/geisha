@@ -61,6 +61,26 @@ public class InputMappingBuilderTests
     }
 
     [Test]
+    public void Build_One_ActionMapping_ControllerButton()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAction("Controller button action 1", ControllerIndex.Four, ControllerButton.Back);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings, Is.Empty);
+
+        Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Controller button action 1"));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(1));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
+    }
+
+    [Test]
     public void Build_Multiple_ActionMappings()
     {
         // Arrange
@@ -71,11 +91,13 @@ public class InputMappingBuilderTests
         builder.MapAction("Key action 2", Key.D2);
         builder.MapAction("Mouse button action 1", MouseButton.Left);
         builder.MapAction("Mouse button action 2", MouseButton.Right);
+        builder.MapAction("Controller button action 1", ControllerIndex.Four, ControllerButton.Start);
+        builder.MapAction("Controller button action 2", ControllerIndex.Four, ControllerButton.Back);
 
         var actual = builder.Build();
 
         // Assert
-        Assert.That(actual.ActionMappings, Has.Length.EqualTo(4));
+        Assert.That(actual.ActionMappings, Has.Length.EqualTo(6));
         Assert.That(actual.AxisMappings, Is.Empty);
 
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Key action 1"));
@@ -93,6 +115,14 @@ public class InputMappingBuilderTests
         Assert.That(actual.ActionMappings[3].ActionName, Is.EqualTo("Mouse button action 2"));
         Assert.That(actual.ActionMappings[3].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[3].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+
+        Assert.That(actual.ActionMappings[4].ActionName, Is.EqualTo("Controller button action 1"));
+        Assert.That(actual.ActionMappings[4].HardwareActions, Has.Length.EqualTo(1));
+        Assert.That(actual.ActionMappings[4].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Start)));
+
+        Assert.That(actual.ActionMappings[5].ActionName, Is.EqualTo("Controller button action 2"));
+        Assert.That(actual.ActionMappings[5].HardwareActions, Has.Length.EqualTo(1));
+        Assert.That(actual.ActionMappings[5].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
     }
 
     [Test]
@@ -106,6 +136,8 @@ public class InputMappingBuilderTests
         builder.MapAction("Action 1", Key.D2);
         builder.MapAction("Action 1", MouseButton.Left);
         builder.MapAction("Action 1", MouseButton.Right);
+        builder.MapAction("Action 1", ControllerIndex.Four, ControllerButton.Start);
+        builder.MapAction("Action 1", ControllerIndex.Four, ControllerButton.Back);
 
         var actual = builder.Build();
 
@@ -114,11 +146,13 @@ public class InputMappingBuilderTests
         Assert.That(actual.AxisMappings, Is.Empty);
 
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Action 1"));
-        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(4));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(6));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
         Assert.That(actual.ActionMappings[0].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(Key.D2)));
         Assert.That(actual.ActionMappings[0].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
         Assert.That(actual.ActionMappings[0].HardwareActions[3].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[4].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Start)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[5].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
     }
 
     [Test]
@@ -241,8 +275,10 @@ public class InputMappingBuilderTests
         // Act
         builder.MapAction("Action 1", Key.D1);
         builder.MapAction("Action 1", MouseButton.Left);
+        builder.MapAction("Action 1", ControllerIndex.Four, ControllerButton.Start);
         builder.MapAction("Action 2", Key.D2);
         builder.MapAction("Action 2", MouseButton.Right);
+        builder.MapAction("Action 2", ControllerIndex.Four, ControllerButton.Back);
 
         builder.MapAxis("Axis 1", Key.A, 1);
         builder.MapAxis("Axis 1", Key.D, -1);
@@ -256,14 +292,16 @@ public class InputMappingBuilderTests
         Assert.That(actual.AxisMappings, Has.Length.EqualTo(2));
 
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Action 1"));
-        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(2));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(3));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
         Assert.That(actual.ActionMappings[0].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Start)));
 
         Assert.That(actual.ActionMappings[1].ActionName, Is.EqualTo("Action 2"));
-        Assert.That(actual.ActionMappings[1].HardwareActions, Has.Length.EqualTo(2));
+        Assert.That(actual.ActionMappings[1].HardwareActions, Has.Length.EqualTo(3));
         Assert.That(actual.ActionMappings[1].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D2)));
         Assert.That(actual.ActionMappings[1].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
 
         Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Axis 1"));
         Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(2));
