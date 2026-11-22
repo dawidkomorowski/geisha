@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Immutable;
+using System.Linq;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
@@ -108,7 +108,7 @@ public class InputSystemTests
         int expectedCount)
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
+        _inputScene.AddInputWithKeyboardActionMapping(out var inputComponent, out var moveRight, out _, out _);
 
         var keyboardInput1 = new KeyboardInputBuilder
         {
@@ -148,7 +148,7 @@ public class InputSystemTests
     public void ProcessInput_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out _);
+        _inputScene.AddInputWithKeyboardAxisMapping(out var inputComponent, out var moveUp, out _);
 
         var callCounter = 0;
         inputComponent.BindAxis(moveUp.AxisName, _ => { callCounter++; });
@@ -294,7 +294,7 @@ public class InputSystemTests
     public void ProcessInput_ShouldNotCallActionBindings_WhenInputComponentIsDisabled()
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
+        _inputScene.AddInputWithKeyboardActionMapping(out var inputComponent, out var moveRight, out _, out _);
 
         var keyboardInput1 = new KeyboardInputBuilder
         {
@@ -334,7 +334,7 @@ public class InputSystemTests
     public void ProcessInput_ShouldNotCallAxisBindings_WhenInputComponentIsDisabled()
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out _);
+        _inputScene.AddInputWithKeyboardAxisMapping(out var inputComponent, out var moveUp, out _);
 
         var callCounter = 0;
         inputComponent.BindAxis(moveUp.AxisName, _ => { callCounter++; });
@@ -381,7 +381,7 @@ public class InputSystemTests
         bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+        _inputScene.AddInputWithKeyboardActionMapping(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
 
         var keyboardInput = new KeyboardInputBuilder
         {
@@ -411,7 +411,7 @@ public class InputSystemTests
         bool left, bool space, double expectedUp, double expectedRight)
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
+        _inputScene.AddInputWithKeyboardAxisMapping(out var inputComponent, out var moveUp, out var moveRight);
 
         var keyboardInput = new KeyboardInputBuilder
         {
@@ -439,7 +439,7 @@ public class InputSystemTests
         bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+        _inputScene.AddInputWithKeyboardActionMapping(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
 
         var moveRightCallCounter = 0;
         var moveLeftCallCounter = 0;
@@ -488,7 +488,7 @@ public class InputSystemTests
         bool left, bool space, double expectedUp, double expectedRight)
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
+        _inputScene.AddInputWithKeyboardAxisMapping(out var inputComponent, out var moveUp, out var moveRight);
 
         var moveUpCallCounter = 0;
         var moveRightCallCounter = 0;
@@ -544,7 +544,7 @@ public class InputSystemTests
         bool x1, bool x2, bool expectedFire, bool expectedZoom, bool expectedAltFire, bool expectedMelee)
     {
         // Arrange
-        _inputScene.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
+        _inputScene.AddInputWithMouseActionMapping(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
 
         var mouseInput = new MouseInputBuilder
         {
@@ -573,7 +573,7 @@ public class InputSystemTests
         double expectedLookUp)
     {
         // Arrange
-        _inputScene.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
+        _inputScene.AddInputWithMouseAxisMapping(out var inputComponent, out var lookRight, out var lookUp);
 
         var mouseInput = new MouseInputBuilder { PositionDelta = new Vector2(xPos, yPos) }.Build();
         MockMouseInput(mouseInput);
@@ -598,7 +598,7 @@ public class InputSystemTests
         bool x1, bool x2, int expectedFireCount, int expectedZoomCount, int expectedAltFireCount, int expectedMeleeCount)
     {
         // Arrange
-        _inputScene.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
+        _inputScene.AddInputWithMouseActionMapping(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
 
         var fireCallCounter = 0;
         var zoomCallCounter = 0;
@@ -649,7 +649,7 @@ public class InputSystemTests
         double expectedLookUp)
     {
         // Arrange
-        _inputScene.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
+        _inputScene.AddInputWithMouseAxisMapping(out var inputComponent, out var lookRight, out var lookUp);
 
         var lookRightCallCounter = 0;
         var lookUpCallCounter = 0;
@@ -732,7 +732,7 @@ public class InputSystemTests
     public void ProcessInput_ShouldNotThrowException_WhenEntityIsAddedInInputBindingFunction()
     {
         // Arrange
-        _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out _, out _, out var jump);
+        _inputScene.AddInputWithKeyboardActionMapping(out var inputComponent, out _, out _, out var jump);
 
         inputComponent.BindAction(jump.ActionName, () => { _inputScene.Scene.CreateEntity(); });
 
@@ -763,213 +763,88 @@ public class InputSystemTests
             return entity.CreateComponent<InputComponent>();
         }
 
-        public void AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
+        public void AddInputWithKeyboardActionMapping(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
             out ActionMapping jump)
         {
-            moveRight = new ActionMapping
-            {
-                ActionName = nameof(moveRight),
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(Key.Right)
-                    }
-                )
-            };
+            var inputMapping = InputMapping
+                .CreateBuilder()
+                .MapAction(nameof(moveRight), Key.Right)
+                .MapAction(nameof(moveLeft), Key.Left)
+                .MapAction(nameof(jump), Key.Up)
+                .MapAction(nameof(jump), Key.Space)
+                .Build();
 
-            moveLeft = new ActionMapping
-            {
-                ActionName = nameof(moveLeft),
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(Key.Left)
-                    }
-                )
-            };
-
-            jump = new ActionMapping
-            {
-                ActionName = nameof(jump),
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(Key.Up)
-                    },
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(Key.Space)
-                    }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(moveRight, moveLeft, jump)
-            };
+            moveRight = GetActionMapping(inputMapping, nameof(moveRight));
+            moveLeft = GetActionMapping(inputMapping, nameof(moveLeft));
+            jump = GetActionMapping(inputMapping, nameof(jump));
 
             var entity = Scene.CreateEntity();
             inputComponent = entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = inputMapping;
         }
 
-        public void AddInputWithSampleKeyboardAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
+        public void AddInputWithKeyboardAxisMapping(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
         {
-            moveUp = new AxisMapping
-            {
-                AxisName = nameof(moveUp),
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(Key.Up),
-                        Scale = 1.0
-                    },
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(Key.Down),
-                        Scale = -1.0
-                    },
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(Key.Space),
-                        Scale = 5.0
-                    }
-                )
-            };
+            var inputMapping = InputMapping
+                .CreateBuilder()
+                .MapAxis(nameof(moveUp), Key.Up, 1.0)
+                .MapAxis(nameof(moveUp), Key.Down, -1.0)
+                .MapAxis(nameof(moveUp), Key.Space, 5.0)
+                .MapAxis(nameof(moveRight), Key.Right, 1.0)
+                .MapAxis(nameof(moveRight), Key.Left, -1.0)
+                .Build();
 
-            moveRight = new AxisMapping
-            {
-                AxisName = nameof(moveRight),
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(Key.Right),
-                        Scale = 1.0
-                    },
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(Key.Left),
-                        Scale = -1.0
-                    }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                AxisMappings = ImmutableArray.Create(moveUp, moveRight)
-            };
+            moveUp = GetAxisMapping(inputMapping, nameof(moveUp));
+            moveRight = GetAxisMapping(inputMapping, nameof(moveRight));
 
             var entity = Scene.CreateEntity();
             inputComponent = entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = inputMapping;
         }
 
-        public void AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
+        public void AddInputWithMouseActionMapping(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
             out ActionMapping altFire, out ActionMapping melee)
         {
-            fire = new ActionMapping
-            {
-                ActionName = nameof(fire),
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(MouseButton.Left)
-                    }
-                )
-            };
+            var inputMapping = InputMapping
+                .CreateBuilder()
+                .MapAction(nameof(fire), MouseButton.Left)
+                .MapAction(nameof(zoom), MouseButton.Middle)
+                .MapAction(nameof(altFire), MouseButton.Right)
+                .MapAction(nameof(melee), MouseButton.XButton1)
+                .MapAction(nameof(melee), MouseButton.XButton2)
+                .Build();
 
-            zoom = new ActionMapping
-            {
-                ActionName = nameof(zoom),
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(MouseButton.Middle)
-                    }
-                )
-            };
-
-            altFire = new ActionMapping
-            {
-                ActionName = nameof(altFire),
-                HardwareActions = ImmutableArray.Create
-                (
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(MouseButton.Right)
-                    }
-                )
-            };
-
-            melee = new ActionMapping
-            {
-                ActionName = nameof(melee),
-                HardwareActions = ImmutableArray.Create(
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(MouseButton.XButton1)
-                    },
-                    new HardwareAction
-                    {
-                        InputSource = InputSource.Create(MouseButton.XButton2)
-                    }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                ActionMappings = ImmutableArray.Create(fire, zoom, altFire, melee)
-            };
+            fire = GetActionMapping(inputMapping, nameof(fire));
+            zoom = GetActionMapping(inputMapping, nameof(zoom));
+            altFire = GetActionMapping(inputMapping, nameof(altFire));
+            melee = GetActionMapping(inputMapping, nameof(melee));
 
             var entity = Scene.CreateEntity();
             inputComponent = entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = inputMapping;
         }
 
-        public void AddInputWithSampleMouseAxisMappings(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
+        public void AddInputWithMouseAxisMapping(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
         {
-            lookRight = new AxisMapping
-            {
-                AxisName = nameof(lookRight),
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(MouseAxis.X),
-                        Scale = 1.0
-                    }
-                )
-            };
+            var inputMapping = InputMapping
+                .CreateBuilder()
+                .MapAxis(nameof(lookRight), MouseAxis.X, 1.0)
+                .MapAxis(nameof(lookUp), MouseAxis.Y, 1.0)
+                .Build();
 
-            lookUp = new AxisMapping
-            {
-                AxisName = nameof(lookUp),
-                HardwareAxes = ImmutableArray.Create
-                (
-                    new HardwareAxis
-                    {
-                        InputSource = InputSource.Create(MouseAxis.Y),
-                        Scale = 1.0
-                    }
-                )
-            };
-
-            var inputMapping = new InputMapping
-            {
-                AxisMappings = ImmutableArray.Create(lookUp, lookRight)
-            };
+            lookRight = GetAxisMapping(inputMapping, nameof(lookRight));
+            lookUp = GetAxisMapping(inputMapping, nameof(lookUp));
 
             var entity = Scene.CreateEntity();
             inputComponent = entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = inputMapping;
         }
+
+        private static ActionMapping GetActionMapping(InputMapping inputMapping, string actionName)
+            => inputMapping.ActionMappings.Single(am => am.ActionName == actionName);
+
+        private static AxisMapping GetAxisMapping(InputMapping inputMapping, string axisName)
+            => inputMapping.AxisMappings.Single(am => am.AxisName == axisName);
     }
 
     #endregion
