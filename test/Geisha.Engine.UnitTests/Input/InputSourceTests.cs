@@ -163,6 +163,48 @@ public class InputSourceTests
 
     #endregion
 
+    #region ControllerAxis
+
+    [Test]
+    public void Create_ControllerAxis_ShouldSetInputKindToControllerAxis()
+    {
+        // Arrange
+        // Act
+        var inputSource = InputSource.Create(ControllerIndex.Four, ControllerAxis.RightTrigger);
+
+        // Assert
+        Assert.That(inputSource.Kind, Is.EqualTo(InputSource.InputKind.ControllerAxis));
+    }
+
+    [Test]
+    public void AsControllerAxis_ShouldReturnControllerAxis_WhenInputKindIsControllerAxis()
+    {
+        // Arrange
+        const ControllerIndex index = ControllerIndex.Four;
+        const ControllerAxis axis = ControllerAxis.RightTrigger;
+        var inputSource = InputSource.Create(index, axis);
+
+        // Act
+        var controllerAxis = inputSource.AsControllerAxis();
+
+        // Assert
+        Assert.That(controllerAxis.Index, Is.EqualTo(index));
+        Assert.That(controllerAxis.Axis, Is.EqualTo(axis));
+    }
+
+    [Test]
+    public void AsControllerAxis_ShouldThrowException_WhenInputKindIsNotControllerAxis()
+    {
+        // Arrange
+        var inputSource = InputSource.Create(Key.Space);
+
+        // Act
+        // Assert
+        Assert.That(inputSource.AsControllerAxis, Throws.InvalidOperationException);
+    }
+
+    #endregion
+
     #region Formatting members
 
     private static IEnumerable<TestCaseData> ToStringTestCases => new[]
@@ -175,7 +217,10 @@ public class InputSourceTests
             .SetName("MouseAxis"),
         new TestCaseData(InputSource.Create(ControllerIndex.Four, ControllerButton.Back),
                 "InputSource { Kind = ControllerButton, Index = Four, Button = Back }")
-            .SetName("ControllerButton")
+            .SetName("ControllerButton"),
+        new TestCaseData(InputSource.Create(ControllerIndex.Four, ControllerAxis.RightTrigger),
+                "InputSource { Kind = ControllerAxis, Index = Four, Axis = RightTrigger }")
+            .SetName("ControllerAxis")
     };
 
     [TestCaseSource(nameof(ToStringTestCases))]

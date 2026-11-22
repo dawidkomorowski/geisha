@@ -15,6 +15,7 @@ public readonly record struct InputSource
     private readonly MouseAxis _mouseAxis;
     private readonly ControllerIndex _controllerIndex;
     private readonly ControllerButton _controllerButton;
+    private readonly ControllerAxis _controllerAxis;
 
     /// <summary>
     ///     Creates a new instance of <see cref="InputSource" /> representing the specified keyboard key.
@@ -40,6 +41,9 @@ public readonly record struct InputSource
     // TODO: Add documentation.
     public static InputSource Create(ControllerIndex controllerIndex, ControllerButton controllerButton) => new(controllerIndex, controllerButton);
 
+    // TODO: Add documentation.
+    public static InputSource Create(ControllerIndex controllerIndex, ControllerAxis controllerAxis) => new(controllerIndex, controllerAxis);
+
     private InputSource(Key keyboardKey)
     {
         _keyboardKey = keyboardKey;
@@ -47,6 +51,7 @@ public readonly record struct InputSource
         _mouseAxis = default;
         _controllerIndex = default;
         _controllerButton = default;
+        _controllerAxis = default;
         Kind = InputKind.KeyboardKey;
     }
 
@@ -57,6 +62,7 @@ public readonly record struct InputSource
         _mouseAxis = default;
         _controllerIndex = default;
         _controllerButton = default;
+        _controllerAxis = default;
         Kind = InputKind.MouseButton;
     }
 
@@ -67,6 +73,7 @@ public readonly record struct InputSource
         _mouseAxis = mouseAxis;
         _controllerIndex = default;
         _controllerButton = default;
+        _controllerAxis = default;
         Kind = InputKind.MouseAxis;
     }
 
@@ -77,7 +84,19 @@ public readonly record struct InputSource
         _mouseAxis = default;
         _controllerIndex = controllerIndex;
         _controllerButton = controllerButton;
+        _controllerAxis = default;
         Kind = InputKind.ControllerButton;
+    }
+
+    private InputSource(ControllerIndex controllerIndex, ControllerAxis controllerAxis)
+    {
+        _keyboardKey = default;
+        _mouseButton = default;
+        _mouseAxis = default;
+        _controllerIndex = controllerIndex;
+        _controllerButton = default;
+        _controllerAxis = controllerAxis;
+        Kind = InputKind.ControllerAxis;
     }
 
     /// <summary>
@@ -101,7 +120,10 @@ public readonly record struct InputSource
         MouseAxis,
 
         // TODO: Add documentation.
-        ControllerButton
+        ControllerButton,
+
+        // TODO: Add documentation.
+        ControllerAxis
     }
 
     /// <summary>
@@ -137,8 +159,12 @@ public readonly record struct InputSource
     public MouseAxis AsMouseAxis() => Kind is InputKind.MouseAxis ? _mouseAxis : throw CreateInvalidInputKindException(Kind);
 
     // TODO: Add documentation.
-    public (ControllerIndex Index, ControllerButton Button) AsControllerButton() =>
-        Kind is InputKind.ControllerButton ? (_controllerIndex, _controllerButton) : throw CreateInvalidInputKindException(Kind);
+    public (ControllerIndex Index, ControllerButton Button) AsControllerButton()
+        => Kind is InputKind.ControllerButton ? (_controllerIndex, _controllerButton) : throw CreateInvalidInputKindException(Kind);
+
+    // TODO: Add documentation.
+    public (ControllerIndex Index, ControllerAxis Axis) AsControllerAxis()
+        => Kind is InputKind.ControllerAxis ? (_controllerIndex, _controllerAxis) : throw CreateInvalidInputKindException(Kind);
 
     /// <summary>
     ///     Custom <see cref="PrintMembers"/> for synthesized <see cref="ToString" />.
@@ -158,6 +184,9 @@ public readonly record struct InputSource
                 break;
             case InputKind.ControllerButton:
                 builder.Append($"{nameof(Kind)} = {Kind}, Index = {_controllerIndex}, Button = {_controllerButton}");
+                break;
+            case InputKind.ControllerAxis:
+                builder.Append($"{nameof(Kind)} = {Kind}, Index = {_controllerIndex}, Axis = {_controllerAxis}");
                 break;
             default:
                 throw new InvalidOperationException(); // TODO Convert to unreachable exception?
