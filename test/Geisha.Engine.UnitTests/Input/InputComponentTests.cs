@@ -5,7 +5,7 @@ using Geisha.Engine.Input;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Input.Components
+namespace Geisha.Engine.UnitTests.Input
 {
     [TestFixture]
     public class InputComponentTests

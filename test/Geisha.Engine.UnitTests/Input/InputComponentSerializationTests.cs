@@ -4,7 +4,7 @@ using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Input.Components
+namespace Geisha.Engine.UnitTests.Input
 {
     [TestFixture]
     public class InputComponentSerializationTests : ComponentSerializationTestsBase

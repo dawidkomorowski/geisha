@@ -1,7 +1,7 @@
 ﻿using Geisha.Engine.Input;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Input.Mapping;
+namespace Geisha.Engine.UnitTests.Input;
 
 [TestFixture]
 public class InputMappingBuilderTests
