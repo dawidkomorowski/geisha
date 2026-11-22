@@ -37,6 +37,11 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
     {
         var keyboardInput = _inputBackend.GetKeyboardInput();
         var mouseInput = _inputBackend.GetMouseInput();
+        var controllerState1 = _inputBackend.GetControllerState(ControllerIndex.One);
+        var controllerState2 = _inputBackend.GetControllerState(ControllerIndex.Two);
+        var controllerState3 = _inputBackend.GetControllerState(ControllerIndex.Three);
+        var controllerState4 = _inputBackend.GetControllerState(ControllerIndex.Four);
+
         var hardwareInput = new HardwareInput
         {
             KeyboardInput = keyboardInput,

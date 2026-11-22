@@ -40,28 +40,53 @@ public class InputSystemTests
         _inputScene = new InputScene(_inputSystem);
     }
 
-    private void MockEmptyInput()
+    private void MockEmptyKeyboardInputOnly()
     {
         _inputBackend.Configure().GetKeyboardInput().Returns(new KeyboardInput());
+    }
+
+    private void MockEmptyMouseInputOnly()
+    {
         _inputBackend.Configure().GetMouseInput().Returns(new MouseInput());
+    }
+
+    private void MockEmptyControllerStateOnly()
+    {
+        _inputBackend.Configure().GetControllerState(ControllerIndex.One)
+            .Returns(new ControllerState { Index = ControllerIndex.One });
+        _inputBackend.Configure().GetControllerState(ControllerIndex.Two)
+            .Returns(new ControllerState { Index = ControllerIndex.Two });
+        _inputBackend.Configure().GetControllerState(ControllerIndex.Three)
+            .Returns(new ControllerState { Index = ControllerIndex.Three });
+        _inputBackend.Configure().GetControllerState(ControllerIndex.Four)
+            .Returns(new ControllerState { Index = ControllerIndex.Four });
+    }
+
+    private void MockEmptyInput()
+    {
+        MockEmptyKeyboardInputOnly();
+        MockEmptyMouseInputOnly();
+        MockEmptyControllerStateOnly();
     }
 
     private void MockKeyboardInput(KeyboardInput keyboardInput)
     {
         _inputBackend.Configure().GetKeyboardInput().Returns(keyboardInput);
-        _inputBackend.Configure().GetMouseInput().Returns(new MouseInput());
+        MockEmptyMouseInputOnly();
+        MockEmptyControllerStateOnly();
     }
 
     private void MockMouseInput(MouseInput mouseInput)
     {
-        _inputBackend.Configure().GetKeyboardInput().Returns(new KeyboardInput());
+        MockEmptyKeyboardInputOnly();
         _inputBackend.Configure().GetMouseInput().Returns(mouseInput);
+        MockEmptyControllerStateOnly();
     }
 
     private void MockControllerState(ControllerIndex controllerIndex, ControllerState controllerState)
     {
-        _inputBackend.Configure().GetKeyboardInput().Returns(new KeyboardInput());
-        _inputBackend.Configure().GetMouseInput().Returns(new MouseInput());
+        MockEmptyKeyboardInputOnly();
+        MockEmptyMouseInputOnly();
         _inputBackend.Configure().GetControllerState(controllerIndex).Returns(controllerState);
     }
 
@@ -159,7 +184,7 @@ public class InputSystemTests
     }
 
     [Test]
-    public void ProcessInput_ShouldReadHardwareInputOnce()
+    public void ProcessInput_ShouldReadInputDevicesOnce()
     {
         // Arrange
         MockEmptyInput();
@@ -170,6 +195,10 @@ public class InputSystemTests
         // Assert
         _inputBackend.Received(1).GetKeyboardInput();
         _inputBackend.Received(1).GetMouseInput();
+        _inputBackend.Received(1).GetControllerState(ControllerIndex.One);
+        _inputBackend.Received(1).GetControllerState(ControllerIndex.Two);
+        _inputBackend.Received(1).GetControllerState(ControllerIndex.Three);
+        _inputBackend.Received(1).GetControllerState(ControllerIndex.Four);
     }
 
     [Test]
