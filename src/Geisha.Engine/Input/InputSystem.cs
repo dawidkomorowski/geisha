@@ -45,7 +45,11 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
         var hardwareInput = new HardwareInput
         {
             KeyboardInput = keyboardInput,
-            MouseInput = mouseInput
+            MouseInput = mouseInput,
+            Controller1 = controllerState1,
+            Controller2 = controllerState2,
+            Controller3 = controllerState3,
+            Controller4 = controllerState4
         };
 
         foreach (var inputComponent in _inputComponents)

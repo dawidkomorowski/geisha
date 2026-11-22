@@ -90,6 +90,16 @@ public class InputSystemTests
         _inputBackend.Configure().GetControllerState(controllerIndex).Returns(controllerState);
     }
 
+    private void MockInput(HardwareInput hardwareInput)
+    {
+        _inputBackend.Configure().GetKeyboardInput().Returns(hardwareInput.KeyboardInput);
+        _inputBackend.Configure().GetMouseInput().Returns(hardwareInput.MouseInput);
+        _inputBackend.Configure().GetControllerState(ControllerIndex.One).Returns(hardwareInput.Controller1);
+        _inputBackend.Configure().GetControllerState(ControllerIndex.Two).Returns(hardwareInput.Controller2);
+        _inputBackend.Configure().GetControllerState(ControllerIndex.Three).Returns(hardwareInput.Controller3);
+        _inputBackend.Configure().GetControllerState(ControllerIndex.Four).Returns(hardwareInput.Controller4);
+    }
+
     #region Common test cases
 
     [TestCase(false, false, 0)]
@@ -184,21 +194,36 @@ public class InputSystemTests
     }
 
     [Test]
-    public void ProcessInput_ShouldReadInputDevicesOnce()
+    public void ProcessInput_ShouldReadInputDevicesIntoHardwareInputSnapshot()
     {
         // Arrange
-        MockEmptyInput();
+        var inputComponent = _inputScene.AddInput();
+
+        MockInput(new HardwareInput
+        {
+            KeyboardInput = new KeyboardInputBuilder { Up = true }.Build(),
+            MouseInput = new MouseInputBuilder { Position = new Vector2(12, 34) }.Build(),
+            Controller1 = new ControllerState { Index = ControllerIndex.One, LeftThumb = new Vector2(1, 2) },
+            Controller2 = new ControllerState { Index = ControllerIndex.Two, LeftThumb = new Vector2(3, 4) },
+            Controller3 = new ControllerState { Index = ControllerIndex.Three, LeftThumb = new Vector2(5, 6) },
+            Controller4 = new ControllerState { Index = ControllerIndex.Four, LeftThumb = new Vector2(7, 8) }
+        });
 
         // Act
         _inputSystem.ProcessInput();
 
         // Assert
-        _inputBackend.Received(1).GetKeyboardInput();
-        _inputBackend.Received(1).GetMouseInput();
-        _inputBackend.Received(1).GetControllerState(ControllerIndex.One);
-        _inputBackend.Received(1).GetControllerState(ControllerIndex.Two);
-        _inputBackend.Received(1).GetControllerState(ControllerIndex.Three);
-        _inputBackend.Received(1).GetControllerState(ControllerIndex.Four);
+        var hardwareInput = inputComponent.HardwareInput;
+        Assert.That(hardwareInput.KeyboardInput.Up, Is.True);
+        Assert.That(hardwareInput.MouseInput.Position, Is.EqualTo(new Vector2(12, 34)));
+        Assert.That(hardwareInput.Controller1.Index, Is.EqualTo(ControllerIndex.One));
+        Assert.That(hardwareInput.Controller1.LeftThumb, Is.EqualTo(new Vector2(1, 2)));
+        Assert.That(hardwareInput.Controller2.Index, Is.EqualTo(ControllerIndex.Two));
+        Assert.That(hardwareInput.Controller2.LeftThumb, Is.EqualTo(new Vector2(3, 4)));
+        Assert.That(hardwareInput.Controller3.Index, Is.EqualTo(ControllerIndex.Three));
+        Assert.That(hardwareInput.Controller3.LeftThumb, Is.EqualTo(new Vector2(5, 6)));
+        Assert.That(hardwareInput.Controller4.Index, Is.EqualTo(ControllerIndex.Four));
+        Assert.That(hardwareInput.Controller4.LeftThumb, Is.EqualTo(new Vector2(7, 8)));
     }
 
     [Test]
