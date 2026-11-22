@@ -69,22 +69,19 @@ public class InputSystemTests
 
     private void MockKeyboardInput(KeyboardInput keyboardInput)
     {
+        MockEmptyInput();
         _inputBackend.Configure().GetKeyboardInput().Returns(keyboardInput);
-        MockEmptyMouseInputOnly();
-        MockEmptyControllerStateOnly();
     }
 
     private void MockMouseInput(MouseInput mouseInput)
     {
-        MockEmptyKeyboardInputOnly();
+        MockEmptyInput();
         _inputBackend.Configure().GetMouseInput().Returns(mouseInput);
-        MockEmptyControllerStateOnly();
     }
 
     private void MockControllerState(ControllerIndex controllerIndex, ControllerState controllerState)
     {
-        MockEmptyKeyboardInputOnly();
-        MockEmptyMouseInputOnly();
+        MockEmptyInput();
         _inputBackend.Configure().GetControllerState(controllerIndex).Returns(controllerState);
     }
 
@@ -724,6 +721,86 @@ public class InputSystemTests
         _inputBackend.Received(1).SetControllerVibration(ControllerIndex.One, vibration);
     }
 
+    [TestCase(false, false, false, false, false, false, false)]
+    [TestCase(true, true, true, true, true, true, true)]
+    [TestCase(true, false, true, false, true, false, true)]
+    [TestCase(false, true, false, true, false, true, true)]
+    public void ProcessInput_Controller_ShouldSetActionStatesAccordingToControllerStateAndInputMapping(bool dPadRight, bool dPadLeft, bool dPadUp,
+        bool buttonA, bool expectedRight, bool expectedLeft, bool expectedJump)
+    {
+        // Arrange
+        _inputScene.AddInputWithControllerActionMapping(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+
+        var buttons = ControllerButtons.None;
+        buttons |= dPadRight ? ControllerButtons.DPadRight : ControllerButtons.None;
+        buttons |= dPadLeft ? ControllerButtons.DPadLeft : ControllerButtons.None;
+        buttons |= dPadUp ? ControllerButtons.DPadUp : ControllerButtons.None;
+        buttons |= buttonA ? ControllerButtons.A : ControllerButtons.None;
+
+        var controllerState = new ControllerState
+        {
+            Index = ControllerIndex.One,
+            Buttons = buttons
+        };
+
+        MockControllerState(ControllerIndex.One, controllerState);
+
+        // Act
+        _inputSystem.ProcessInput();
+
+        // Assert
+        Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(expectedRight));
+        Assert.That(inputComponent.GetActionState(moveLeft.ActionName), Is.EqualTo(expectedLeft));
+        Assert.That(inputComponent.GetActionState(jump.ActionName), Is.EqualTo(expectedJump));
+    }
+
+    [TestCase(false, false, false, false, 0, 0, 0)]
+    [TestCase(true, true, true, true, 1, 1, 1)]
+    [TestCase(true, false, true, false, 1, 0, 1)]
+    [TestCase(false, true, false, true, 0, 1, 1)]
+    public void ProcessInput_Controller_ShouldCallActionBindingsAccordingToControllerStateAndInputMapping(bool dPadRight, bool dPadLeft,
+        bool dPadUp, bool buttonA, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
+    {
+        // Arrange
+        _inputScene.AddInputWithControllerActionMapping(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+
+        var moveRightCallCounter = 0;
+        var moveLeftCallCounter = 0;
+        var jumpCallCounter = 0;
+
+        inputComponent.BindAction(moveRight.ActionName, () => { moveRightCallCounter++; });
+        inputComponent.BindAction(moveLeft.ActionName, () => { moveLeftCallCounter++; });
+        inputComponent.BindAction(jump.ActionName, () => { jumpCallCounter++; });
+
+        // Initialize action states based on controller state
+        MockControllerState(ControllerIndex.One, new ControllerState());
+        _inputSystem.ProcessInput();
+
+        var buttons = ControllerButtons.None;
+        buttons |= dPadRight ? ControllerButtons.DPadRight : ControllerButtons.None;
+        buttons |= dPadLeft ? ControllerButtons.DPadLeft : ControllerButtons.None;
+        buttons |= dPadUp ? ControllerButtons.DPadUp : ControllerButtons.None;
+        buttons |= buttonA ? ControllerButtons.A : ControllerButtons.None;
+
+        var controllerState = new ControllerState
+        {
+            Index = ControllerIndex.One,
+            Buttons = buttons
+        };
+
+        MockControllerState(ControllerIndex.One, controllerState);
+
+        // Act
+        _inputSystem.ProcessInput();
+
+        // Assert
+        Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
+        Assert.That(moveLeftCallCounter, Is.EqualTo(expectedLeftCount));
+        Assert.That(jumpCallCounter, Is.EqualTo(expectedJumpCount));
+    }
+
+    // TODO: Add tests covering different controller index.
+
     #endregion
 
     #region Regression test cases
@@ -834,6 +911,26 @@ public class InputSystemTests
 
             lookRight = GetAxisMapping(inputMapping, nameof(lookRight));
             lookUp = GetAxisMapping(inputMapping, nameof(lookUp));
+
+            var entity = Scene.CreateEntity();
+            inputComponent = entity.CreateComponent<InputComponent>();
+            inputComponent.InputMapping = inputMapping;
+        }
+
+        public void AddInputWithControllerActionMapping(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
+            out ActionMapping jump)
+        {
+            var inputMapping = InputMapping
+                .CreateBuilder()
+                .MapAction(nameof(moveRight), ControllerIndex.One, ControllerButton.DPadRight)
+                .MapAction(nameof(moveLeft), ControllerIndex.One, ControllerButton.DPadLeft)
+                .MapAction(nameof(jump), ControllerIndex.One, ControllerButton.DPadUp)
+                .MapAction(nameof(jump), ControllerIndex.One, ControllerButton.A)
+                .Build();
+
+            moveRight = GetActionMapping(inputMapping, nameof(moveRight));
+            moveLeft = GetActionMapping(inputMapping, nameof(moveLeft));
+            jump = GetActionMapping(inputMapping, nameof(jump));
 
             var entity = Scene.CreateEntity();
             inputComponent = entity.CreateComponent<InputComponent>();

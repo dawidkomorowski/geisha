@@ -1,9 +1,9 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Input;
 
 // TODO: Add documentation.
-// TODO: Should it be in Backend or in Input namespace?
 // TODO: Other types use name "input" for similar state concept like KeyboardInput, MouseInput. Is it valid naming?
 // TODO: Should the naming be taken directly from XInput or be more generic/familiar e.g. Shoulder -> Bumper.
 public readonly record struct ControllerState
@@ -32,4 +32,23 @@ public readonly record struct ControllerState
     public bool ButtonB => (Buttons & ControllerButtons.B) != ControllerButtons.None;
     public bool ButtonX => (Buttons & ControllerButtons.X) != ControllerButtons.None;
     public bool ButtonY => (Buttons & ControllerButtons.Y) != ControllerButtons.None;
+
+    public bool this[ControllerButton button] => button switch
+    {
+        ControllerButton.DPadUp => ButtonDPadUp,
+        ControllerButton.DPadDown => ButtonDPadDown,
+        ControllerButton.DPadLeft => ButtonDPadLeft,
+        ControllerButton.DPadRight => ButtonDPadRight,
+        ControllerButton.Start => ButtonStart,
+        ControllerButton.Back => ButtonBack,
+        ControllerButton.LeftThumb => ButtonLeftThumb,
+        ControllerButton.RightThumb => ButtonRightThumb,
+        ControllerButton.LeftShoulder => ButtonLeftShoulder,
+        ControllerButton.RightShoulder => ButtonRightShoulder,
+        ControllerButton.A => ButtonA,
+        ControllerButton.B => ButtonB,
+        ControllerButton.X => ButtonX,
+        ControllerButton.Y => ButtonY,
+        _ => throw new ArgumentOutOfRangeException(nameof(button), button, null)
+    };
 }

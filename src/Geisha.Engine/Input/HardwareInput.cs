@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Input;
+﻿using System;
+
+namespace Geisha.Engine.Input;
 
 // TODO: Revisit documentation.
 /// <summary>
@@ -43,4 +45,14 @@ public sealed class HardwareInput
 
     // TODO: Add documentation.
     public ControllerState Controller4 { get; init; }
+
+    // TODO: Add documentation.
+    public ControllerState GetControllerState(ControllerIndex index) => index switch
+    {
+        ControllerIndex.One => Controller1,
+        ControllerIndex.Two => Controller2,
+        ControllerIndex.Three => Controller3,
+        ControllerIndex.Four => Controller4,
+        _ => throw new ArgumentOutOfRangeException(nameof(index), index, null)
+    };
 }

@@ -126,215 +126,109 @@ namespace Geisha.Engine.Input
         /// </summary>
         /// <param name="key">Key whose state is requested.</param>
         /// <returns>True, if key is pressed; otherwise false.</returns>
-        public bool this[Key key]
+        public bool this[Key key] => key switch
         {
-            get
-            {
-                switch (key)
-                {
-                    case Key.Backspace:
-                        return Backspace;
-                    case Key.Tab:
-                        return Tab;
-                    case Key.Enter:
-                        return Enter;
-                    case Key.LeftShift:
-                        return LeftShift;
-                    case Key.RightShift:
-                        return RightShift;
-                    case Key.LeftCtrl:
-                        return LeftCtrl;
-                    case Key.RightCtrl:
-                        return RightCtrl;
-                    case Key.LeftAlt:
-                        return LeftAlt;
-                    case Key.RightAlt:
-                        return RightAlt;
-                    case Key.Pause:
-                        return Pause;
-                    case Key.CapsLock:
-                        return CapsLock;
-                    case Key.Escape:
-                        return Escape;
-                    case Key.Space:
-                        return Space;
-                    case Key.PageUp:
-                        return PageUp;
-                    case Key.PageDown:
-                        return PageDown;
-                    case Key.End:
-                        return End;
-                    case Key.Home:
-                        return Home;
-                    case Key.Left:
-                        return Left;
-                    case Key.Up:
-                        return Up;
-                    case Key.Right:
-                        return Right;
-                    case Key.Down:
-                        return Down;
-                    case Key.Insert:
-                        return Insert;
-                    case Key.Delete:
-                        return Delete;
-                    case Key.D0:
-                        return D0;
-                    case Key.D1:
-                        return D1;
-                    case Key.D2:
-                        return D2;
-                    case Key.D3:
-                        return D3;
-                    case Key.D4:
-                        return D4;
-                    case Key.D5:
-                        return D5;
-                    case Key.D6:
-                        return D6;
-                    case Key.D7:
-                        return D7;
-                    case Key.D8:
-                        return D8;
-                    case Key.D9:
-                        return D9;
-                    case Key.A:
-                        return A;
-                    case Key.B:
-                        return B;
-                    case Key.C:
-                        return C;
-                    case Key.D:
-                        return D;
-                    case Key.E:
-                        return E;
-                    case Key.F:
-                        return F;
-                    case Key.G:
-                        return G;
-                    case Key.H:
-                        return H;
-                    case Key.I:
-                        return I;
-                    case Key.J:
-                        return J;
-                    case Key.K:
-                        return K;
-                    case Key.L:
-                        return L;
-                    case Key.M:
-                        return M;
-                    case Key.N:
-                        return N;
-                    case Key.O:
-                        return O;
-                    case Key.P:
-                        return P;
-                    case Key.Q:
-                        return Q;
-                    case Key.R:
-                        return R;
-                    case Key.S:
-                        return S;
-                    case Key.T:
-                        return T;
-                    case Key.U:
-                        return U;
-                    case Key.V:
-                        return V;
-                    case Key.W:
-                        return W;
-                    case Key.X:
-                        return X;
-                    case Key.Y:
-                        return Y;
-                    case Key.Z:
-                        return Z;
-                    case Key.NumPad0:
-                        return NumPad0;
-                    case Key.NumPad1:
-                        return NumPad1;
-                    case Key.NumPad2:
-                        return NumPad2;
-                    case Key.NumPad3:
-                        return NumPad3;
-                    case Key.NumPad4:
-                        return NumPad4;
-                    case Key.NumPad5:
-                        return NumPad5;
-                    case Key.NumPad6:
-                        return NumPad6;
-                    case Key.NumPad7:
-                        return NumPad7;
-                    case Key.NumPad8:
-                        return NumPad8;
-                    case Key.NumPad9:
-                        return NumPad9;
-                    case Key.Multiply:
-                        return Multiply;
-                    case Key.Add:
-                        return Add;
-                    case Key.Subtract:
-                        return Subtract;
-                    case Key.Decimal:
-                        return Decimal;
-                    case Key.Divide:
-                        return Divide;
-                    case Key.F1:
-                        return F1;
-                    case Key.F2:
-                        return F2;
-                    case Key.F3:
-                        return F3;
-                    case Key.F4:
-                        return F4;
-                    case Key.F5:
-                        return F5;
-                    case Key.F6:
-                        return F6;
-                    case Key.F7:
-                        return F7;
-                    case Key.F8:
-                        return F8;
-                    case Key.F9:
-                        return F9;
-                    case Key.F10:
-                        return F10;
-                    case Key.F11:
-                        return F11;
-                    case Key.F12:
-                        return F12;
-                    case Key.NumLock:
-                        return NumLock;
-                    case Key.ScrollLock:
-                        return ScrollLock;
-                    case Key.Semicolon:
-                        return Semicolon;
-                    case Key.EqualsSign:
-                        return EqualsSign;
-                    case Key.Comma:
-                        return Comma;
-                    case Key.Dash:
-                        return Dash;
-                    case Key.Period:
-                        return Period;
-                    case Key.Slash:
-                        return Slash;
-                    case Key.Tilde:
-                        return Tilde;
-                    case Key.OpenBrackets:
-                        return OpenBrackets;
-                    case Key.Backslash:
-                        return Backslash;
-                    case Key.CloseBrackets:
-                        return CloseBrackets;
-                    case Key.Quotes:
-                        return Quotes;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(key), key, null);
-                }
-            }
-        }
+            Key.Backspace => Backspace,
+            Key.Tab => Tab,
+            Key.Enter => Enter,
+            Key.LeftShift => LeftShift,
+            Key.RightShift => RightShift,
+            Key.LeftCtrl => LeftCtrl,
+            Key.RightCtrl => RightCtrl,
+            Key.LeftAlt => LeftAlt,
+            Key.RightAlt => RightAlt,
+            Key.Pause => Pause,
+            Key.CapsLock => CapsLock,
+            Key.Escape => Escape,
+            Key.Space => Space,
+            Key.PageUp => PageUp,
+            Key.PageDown => PageDown,
+            Key.End => End,
+            Key.Home => Home,
+            Key.Left => Left,
+            Key.Up => Up,
+            Key.Right => Right,
+            Key.Down => Down,
+            Key.Insert => Insert,
+            Key.Delete => Delete,
+            Key.D0 => D0,
+            Key.D1 => D1,
+            Key.D2 => D2,
+            Key.D3 => D3,
+            Key.D4 => D4,
+            Key.D5 => D5,
+            Key.D6 => D6,
+            Key.D7 => D7,
+            Key.D8 => D8,
+            Key.D9 => D9,
+            Key.A => A,
+            Key.B => B,
+            Key.C => C,
+            Key.D => D,
+            Key.E => E,
+            Key.F => F,
+            Key.G => G,
+            Key.H => H,
+            Key.I => I,
+            Key.J => J,
+            Key.K => K,
+            Key.L => L,
+            Key.M => M,
+            Key.N => N,
+            Key.O => O,
+            Key.P => P,
+            Key.Q => Q,
+            Key.R => R,
+            Key.S => S,
+            Key.T => T,
+            Key.U => U,
+            Key.V => V,
+            Key.W => W,
+            Key.X => X,
+            Key.Y => Y,
+            Key.Z => Z,
+            Key.NumPad0 => NumPad0,
+            Key.NumPad1 => NumPad1,
+            Key.NumPad2 => NumPad2,
+            Key.NumPad3 => NumPad3,
+            Key.NumPad4 => NumPad4,
+            Key.NumPad5 => NumPad5,
+            Key.NumPad6 => NumPad6,
+            Key.NumPad7 => NumPad7,
+            Key.NumPad8 => NumPad8,
+            Key.NumPad9 => NumPad9,
+            Key.Multiply => Multiply,
+            Key.Add => Add,
+            Key.Subtract => Subtract,
+            Key.Decimal => Decimal,
+            Key.Divide => Divide,
+            Key.F1 => F1,
+            Key.F2 => F2,
+            Key.F3 => F3,
+            Key.F4 => F4,
+            Key.F5 => F5,
+            Key.F6 => F6,
+            Key.F7 => F7,
+            Key.F8 => F8,
+            Key.F9 => F9,
+            Key.F10 => F10,
+            Key.F11 => F11,
+            Key.F12 => F12,
+            Key.NumLock => NumLock,
+            Key.ScrollLock => ScrollLock,
+            Key.Semicolon => Semicolon,
+            Key.EqualsSign => EqualsSign,
+            Key.Comma => Comma,
+            Key.Dash => Dash,
+            Key.Period => Period,
+            Key.Slash => Slash,
+            Key.Tilde => Tilde,
+            Key.OpenBrackets => OpenBrackets,
+            Key.Backslash => Backslash,
+            Key.CloseBrackets => CloseBrackets,
+            Key.Quotes => Quotes,
+            _ => throw new ArgumentOutOfRangeException(nameof(key), key, null)
+        };
 
         /// <summary>
         ///     State of the Backspace key. <c>true</c> indicates pressed state, while <c>false</c> indicates released state.
