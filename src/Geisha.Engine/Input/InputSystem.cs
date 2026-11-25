@@ -177,6 +177,7 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
                 var (index, button) = inputSource.AsControllerButton();
                 return hardwareInput.GetControllerState(index)[button];
             case InputSource.InputKind.MouseAxis:
+            case InputSource.InputKind.ControllerAxis:
             default:
                 throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}");
         }
@@ -215,17 +216,35 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
     private static double ComputeState(HardwareInput hardwareInput, HardwareAxis hardwareAxis)
     {
         var inputSource = hardwareAxis.InputSource;
-        return inputSource.Kind switch
+        switch (inputSource.Kind)
         {
-            InputSource.InputKind.KeyboardKey => BoolToDouble(hardwareInput.KeyboardInput[inputSource.AsKeyboardKey()]),
-            InputSource.InputKind.MouseAxis => inputSource.AsMouseAxis() switch
-            {
-                MouseAxis.X => hardwareInput.MouseInput.PositionDelta.X,
-                MouseAxis.Y => -hardwareInput.MouseInput.PositionDelta.Y,
-                _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
-            },
-            _ => throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}")
-        };
+            case InputSource.InputKind.KeyboardKey:
+                return BoolToDouble(hardwareInput.KeyboardInput[inputSource.AsKeyboardKey()]);
+            case InputSource.InputKind.MouseAxis:
+                return inputSource.AsMouseAxis() switch
+                {
+                    MouseAxis.X => hardwareInput.MouseInput.PositionDelta.X,
+                    MouseAxis.Y => -hardwareInput.MouseInput.PositionDelta.Y,
+                    _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
+                };
+            case InputSource.InputKind.ControllerAxis:
+                var (index, axis) = inputSource.AsControllerAxis();
+                var controllerState = hardwareInput.GetControllerState(index);
+                return axis switch
+                {
+                    ControllerAxis.LeftThumbX => controllerState.LeftThumb.X,
+                    ControllerAxis.LeftThumbY => controllerState.LeftThumb.Y,
+                    ControllerAxis.RightThumbX => controllerState.RightThumb.X,
+                    ControllerAxis.RightThumbY => controllerState.RightThumb.Y,
+                    ControllerAxis.LeftTrigger => controllerState.LeftTrigger,
+                    ControllerAxis.RightTrigger => controllerState.RightTrigger,
+                    _ => throw new InvalidOperationException() // TODO: Use unreachable exception?
+                };
+            case InputSource.InputKind.MouseButton:
+            case InputSource.InputKind.ControllerButton:
+            default:
+                throw new InvalidOperationException($"Unexpected {nameof(InputSource.InputKind)}: {inputSource.Kind}");
+        }
     }
 
     #endregion

@@ -754,6 +754,32 @@ public class InputSystemTests
         Assert.That(inputComponent.GetActionState(jump.ActionName), Is.EqualTo(expectedJump));
     }
 
+
+    [TestCase(0, 0, 0, 0)]
+    [TestCase(0.5, 0.7, 0.5, 0.7)]
+    [TestCase(-0.5, -0.7, -0.5, -0.7)]
+    public void ProcessInput_Controller_ShouldSetAxisStatesAccordingToControllerStateAndInputMapping(double xPos, double yPos, double expectedLookRight,
+        double expectedLookUp)
+    {
+        // Arrange
+        _inputScene.AddInputWithControllerAxisMapping(out var inputComponent, out var lookRight, out var lookUp);
+
+        var controllerState = new ControllerState
+        {
+            Index = ControllerIndex.One,
+            RightThumb = new Vector2(xPos, yPos)
+        };
+
+        MockControllerState(ControllerIndex.One, controllerState);
+
+        // Act
+        _inputSystem.ProcessInput();
+
+        // Assert
+        Assert.That(inputComponent.GetAxisState(lookRight.AxisName), Is.EqualTo(expectedLookRight));
+        Assert.That(inputComponent.GetAxisState(lookUp.AxisName), Is.EqualTo(expectedLookUp));
+    }
+
     [TestCase(false, false, false, false, 0, 0, 0)]
     [TestCase(true, true, true, true, 1, 1, 1)]
     [TestCase(true, false, true, false, 1, 0, 1)]
@@ -797,6 +823,51 @@ public class InputSystemTests
         Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
         Assert.That(moveLeftCallCounter, Is.EqualTo(expectedLeftCount));
         Assert.That(jumpCallCounter, Is.EqualTo(expectedJumpCount));
+    }
+
+    [TestCase(0, 0, 0, 0)]
+    [TestCase(0.5, 0.7, 0.5, 0.7)]
+    [TestCase(-0.5, -0.7, -0.5, -0.7)]
+    public void ProcessInput_Controller_ShouldCallAxisBindingsAccordingToControllerStateAndInputMapping(double xPos, double yPos, double expectedLookRight,
+        double expectedLookUp)
+    {
+        // Arrange
+        _inputScene.AddInputWithControllerAxisMapping(out var inputComponent, out var lookRight, out var lookUp);
+
+        var lookRightCallCounter = 0;
+        var lookUpCallCounter = 0;
+
+        var lookRightState = 0.0;
+        var lookUpState = 0.0;
+
+        inputComponent.BindAxis(lookRight.AxisName, value =>
+        {
+            lookRightCallCounter++;
+            lookRightState = value;
+        });
+        inputComponent.BindAxis(lookUp.AxisName, value =>
+        {
+            lookUpCallCounter++;
+            lookUpState = value;
+        });
+
+        var controllerState = new ControllerState
+        {
+            Index = ControllerIndex.One,
+            RightThumb = new Vector2(xPos, yPos)
+        };
+
+        MockControllerState(ControllerIndex.One, controllerState);
+
+        // Act
+        _inputSystem.ProcessInput();
+
+        // Assert
+        Assert.That(lookRightCallCounter, Is.EqualTo(1));
+        Assert.That(lookUpCallCounter, Is.EqualTo(1));
+
+        Assert.That(lookRightState, Is.EqualTo(expectedLookRight));
+        Assert.That(lookUpState, Is.EqualTo(expectedLookUp));
     }
 
     // TODO: Add tests covering different controller index.
@@ -931,6 +1002,22 @@ public class InputSystemTests
             moveRight = GetActionMapping(inputMapping, nameof(moveRight));
             moveLeft = GetActionMapping(inputMapping, nameof(moveLeft));
             jump = GetActionMapping(inputMapping, nameof(jump));
+
+            var entity = Scene.CreateEntity();
+            inputComponent = entity.CreateComponent<InputComponent>();
+            inputComponent.InputMapping = inputMapping;
+        }
+
+        public void AddInputWithControllerAxisMapping(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
+        {
+            var inputMapping = InputMapping
+                .CreateBuilder()
+                .MapAxis(nameof(lookRight), ControllerIndex.One, ControllerAxis.RightThumbX, 1.0)
+                .MapAxis(nameof(lookUp), ControllerIndex.One, ControllerAxis.RightThumbY, 1.0)
+                .Build();
+
+            lookRight = GetAxisMapping(inputMapping, nameof(lookRight));
+            lookUp = GetAxisMapping(inputMapping, nameof(lookUp));
 
             var entity = Scene.CreateEntity();
             inputComponent = entity.CreateComponent<InputComponent>();
