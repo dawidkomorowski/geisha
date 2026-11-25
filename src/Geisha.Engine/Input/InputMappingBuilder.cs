@@ -31,8 +31,8 @@ public sealed class InputMappingBuilder
     public InputMappingBuilder MapAction(string actionName, MouseButton mouseButton) => MapAction(actionName, InputSource.Create(mouseButton));
 
     // TODO: Add documentation.
-    public InputMappingBuilder MapAction(string actionName, ControllerIndex controllerIndex, ControllerButton controllerButton) =>
-        MapAction(actionName, InputSource.Create(controllerIndex, controllerButton));
+    public InputMappingBuilder MapAction(string actionName, ControllerIndex controllerIndex, ControllerButton controllerButton)
+        => MapAction(actionName, InputSource.Create(controllerIndex, controllerButton));
 
     /// <summary>
     ///     Maps specified keyboard key to logical axis with given scale.
@@ -51,6 +51,10 @@ public sealed class InputMappingBuilder
     /// <param name="scale">Scale applied to the mouse axis value when computing axis value.</param>
     /// <returns>This <see cref="InputMappingBuilder" /> instance.</returns>
     public InputMappingBuilder MapAxis(string axisName, MouseAxis mouseAxis, double scale) => MapAxis(axisName, InputSource.Create(mouseAxis), scale);
+
+    // TODO: Add documentation.
+    public InputMappingBuilder MapAxis(string axisName, ControllerIndex controllerIndex, ControllerAxis controllerAxis, double scale)
+        => MapAxis(axisName, InputSource.Create(controllerIndex, controllerAxis), scale);
 
     /// <summary>
     ///     Builds <see cref="InputMapping" /> from mappings defined in this builder.
