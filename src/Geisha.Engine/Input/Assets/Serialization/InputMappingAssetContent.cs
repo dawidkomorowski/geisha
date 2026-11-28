@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Geisha.Engine.Input.Assets.Serialization;
 
+// TODO: Include controller input mapping in serialization.
+
 /// <summary>
 ///     Defines input mapping asset content to be used to load <see cref="InputMapping" /> from a file into memory.
 /// </summary>
