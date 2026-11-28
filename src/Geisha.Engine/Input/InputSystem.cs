@@ -20,10 +20,8 @@ internal sealed class InputSystem : IInputSystem, IInputGameLoopStep, ISceneObse
 
     #region Implementation of IInputSystem
 
-    // TODO: Implement and test.
     public ControllerState GetControllerState(ControllerIndex controllerIndex) => _inputBackend.GetControllerState(controllerIndex);
 
-    // TODO: Implement and test.
     public void SetControllerVibration(ControllerIndex controllerIndex, Vibration vibration) =>
         _inputBackend.SetControllerVibration(controllerIndex, vibration);
 
