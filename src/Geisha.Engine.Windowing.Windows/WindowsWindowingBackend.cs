@@ -173,7 +173,7 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     /// </summary>
     public void Dispose()
     {
-        NativeCursor.ReleaseCursorClip();
+        ReleaseCursorClip();
 
         _renderForm.ClientSizeChanged -= RenderForm_ClientSizeChanged;
         _renderForm.LocationChanged -= RenderForm_LocationChanged;
@@ -227,11 +227,11 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     {
         if (_cursorLockMode is CursorLockMode.Confined && _renderForm.Focused)
         {
-            NativeCursor.ClipCursorToWindow(_renderForm);
+            ClipCursorToWindow(_renderForm);
         }
         else
         {
-            NativeCursor.ReleaseCursorClip();
+            ReleaseCursorClip();
         }
     }
 
@@ -253,5 +253,15 @@ public sealed class WindowsWindowingBackend : IWindowingBackend, IDisposable
     private void RenderForm_LostFocus(object? sender, EventArgs e)
     {
         HandleCursorConfinedMode();
+    }
+
+    private static void ClipCursorToWindow(Form window)
+    {
+        Cursor.Clip = window.RectangleToScreen(window.ClientRectangle);
+    }
+
+    private static void ReleaseCursorClip()
+    {
+        Cursor.Clip = Rectangle.Empty;
     }
 }
