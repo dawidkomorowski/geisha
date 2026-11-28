@@ -2,6 +2,7 @@
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
@@ -87,6 +88,12 @@ internal sealed class ControllerStateComponent : BehaviorComponent
             .MapAction("ControllerButton.RightThumb", ControllerIndex.One, ControllerButton.RightThumb)
             .MapAction("ControllerButton.LeftShoulder", ControllerIndex.One, ControllerButton.LeftShoulder)
             .MapAction("ControllerButton.RightShoulder", ControllerIndex.One, ControllerButton.RightShoulder)
+            .MapAxis("ControllerAxis.LeftThumbX", ControllerIndex.One, ControllerAxis.LeftThumbX, 1d)
+            .MapAxis("ControllerAxis.LeftThumbY", ControllerIndex.One, ControllerAxis.LeftThumbY, 1d)
+            .MapAxis("ControllerAxis.RightThumbX", ControllerIndex.One, ControllerAxis.RightThumbX, 1d)
+            .MapAxis("ControllerAxis.RightThumbY", ControllerIndex.One, ControllerAxis.RightThumbY, 1d)
+            .MapAxis("ControllerAxis.LeftTrigger", ControllerIndex.One, ControllerAxis.LeftTrigger, 1d)
+            .MapAxis("ControllerAxis.RightTrigger", ControllerIndex.One, ControllerAxis.RightTrigger, 1d)
             .Build();
         _inputComponent.BindAction("ToggleVibration", () => { _vibrationEnabled = !_vibrationEnabled; });
         _inputComponent.BindAction("ToggleInputSource", () =>
@@ -249,7 +256,11 @@ internal sealed class ControllerStateComponent : BehaviorComponent
             Index = ControllerIndex.One,
             PacketNumber = inputComponent.HardwareInput.Controller1.PacketNumber,
             IsConnected = inputComponent.HardwareInput.Controller1.IsConnected,
-            Buttons = buttons
+            Buttons = buttons,
+            LeftThumb = new Vector2(inputComponent.GetAxisState("ControllerAxis.LeftThumbX"), inputComponent.GetAxisState("ControllerAxis.LeftThumbY")),
+            RightThumb = new Vector2(inputComponent.GetAxisState("ControllerAxis.RightThumbX"), inputComponent.GetAxisState("ControllerAxis.RightThumbY")),
+            LeftTrigger = inputComponent.GetAxisState("ControllerAxis.LeftTrigger"),
+            RightTrigger = inputComponent.GetAxisState("ControllerAxis.RightTrigger")
         };
     }
 }
