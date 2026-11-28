@@ -38,6 +38,7 @@ public class InputMappingBuilderTests
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Key action 1"));
         Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.Zero);
     }
 
     [Test]
@@ -58,6 +59,7 @@ public class InputMappingBuilderTests
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Mouse button action 1"));
         Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.Zero);
     }
 
     [Test]
@@ -78,6 +80,28 @@ public class InputMappingBuilderTests
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Controller button action 1"));
         Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.Zero);
+    }
+
+    [Test]
+    public void Build_One_ActionMapping_ControllerAxis()
+    {
+        // Arrange
+        var builder = InputMapping.CreateBuilder();
+
+        // Act
+        builder.MapAction("Controller axis action 1", ControllerIndex.Four, ControllerAxis.RightTrigger, 0.5);
+
+        var actual = builder.Build();
+
+        // Assert
+        Assert.That(actual.ActionMappings, Has.Length.EqualTo(1));
+        Assert.That(actual.AxisMappings, Is.Empty);
+
+        Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Controller axis action 1"));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(1));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.RightTrigger)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.EqualTo(0.5));
     }
 
     [Test]
@@ -93,36 +117,54 @@ public class InputMappingBuilderTests
         builder.MapAction("Mouse button action 2", MouseButton.Right);
         builder.MapAction("Controller button action 1", ControllerIndex.Four, ControllerButton.Start);
         builder.MapAction("Controller button action 2", ControllerIndex.Four, ControllerButton.Back);
+        builder.MapAction("Controller axis action 1", ControllerIndex.Four, ControllerAxis.RightTrigger, 0.1);
+        builder.MapAction("Controller axis action 2", ControllerIndex.Four, ControllerAxis.LeftTrigger, 0.2);
 
         var actual = builder.Build();
 
         // Assert
-        Assert.That(actual.ActionMappings, Has.Length.EqualTo(6));
+        Assert.That(actual.ActionMappings, Has.Length.EqualTo(8));
         Assert.That(actual.AxisMappings, Is.Empty);
 
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Key action 1"));
         Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.Zero);
 
         Assert.That(actual.ActionMappings[1].ActionName, Is.EqualTo("Key action 2"));
         Assert.That(actual.ActionMappings[1].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[1].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D2)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[0].Threshold, Is.Zero);
 
         Assert.That(actual.ActionMappings[2].ActionName, Is.EqualTo("Mouse button action 1"));
         Assert.That(actual.ActionMappings[2].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[2].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
+        Assert.That(actual.ActionMappings[2].HardwareActions[0].Threshold, Is.Zero);
 
         Assert.That(actual.ActionMappings[3].ActionName, Is.EqualTo("Mouse button action 2"));
         Assert.That(actual.ActionMappings[3].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[3].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+        Assert.That(actual.ActionMappings[3].HardwareActions[0].Threshold, Is.Zero);
 
         Assert.That(actual.ActionMappings[4].ActionName, Is.EqualTo("Controller button action 1"));
         Assert.That(actual.ActionMappings[4].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[4].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Start)));
+        Assert.That(actual.ActionMappings[4].HardwareActions[0].Threshold, Is.Zero);
 
         Assert.That(actual.ActionMappings[5].ActionName, Is.EqualTo("Controller button action 2"));
         Assert.That(actual.ActionMappings[5].HardwareActions, Has.Length.EqualTo(1));
         Assert.That(actual.ActionMappings[5].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
+        Assert.That(actual.ActionMappings[5].HardwareActions[0].Threshold, Is.Zero);
+
+        Assert.That(actual.ActionMappings[6].ActionName, Is.EqualTo("Controller axis action 1"));
+        Assert.That(actual.ActionMappings[6].HardwareActions, Has.Length.EqualTo(1));
+        Assert.That(actual.ActionMappings[6].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.RightTrigger)));
+        Assert.That(actual.ActionMappings[6].HardwareActions[0].Threshold, Is.EqualTo(0.1));
+
+        Assert.That(actual.ActionMappings[7].ActionName, Is.EqualTo("Controller axis action 2"));
+        Assert.That(actual.ActionMappings[7].HardwareActions, Has.Length.EqualTo(1));
+        Assert.That(actual.ActionMappings[7].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.LeftTrigger)));
+        Assert.That(actual.ActionMappings[7].HardwareActions[0].Threshold, Is.EqualTo(0.2));
     }
 
     [Test]
@@ -138,6 +180,8 @@ public class InputMappingBuilderTests
         builder.MapAction("Action 1", MouseButton.Right);
         builder.MapAction("Action 1", ControllerIndex.Four, ControllerButton.Start);
         builder.MapAction("Action 1", ControllerIndex.Four, ControllerButton.Back);
+        builder.MapAction("Action 1", ControllerIndex.Four, ControllerAxis.RightTrigger, 0.1);
+        builder.MapAction("Action 1", ControllerIndex.Four, ControllerAxis.LeftTrigger, 0.2);
 
         var actual = builder.Build();
 
@@ -146,13 +190,23 @@ public class InputMappingBuilderTests
         Assert.That(actual.AxisMappings, Is.Empty);
 
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Action 1"));
-        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(6));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(8));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(Key.D2)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[1].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[2].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[3].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[3].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[4].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Start)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[4].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[5].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[5].Threshold, Is.Zero);
+        Assert.That(actual.ActionMappings[0].HardwareActions[6].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.RightTrigger)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[6].Threshold, Is.EqualTo(0.1));
+        Assert.That(actual.ActionMappings[0].HardwareActions[7].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.LeftTrigger)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[7].Threshold, Is.EqualTo(0.2));
     }
 
     [Test]
@@ -315,9 +369,11 @@ public class InputMappingBuilderTests
         builder.MapAction("Action 1", Key.D1);
         builder.MapAction("Action 1", MouseButton.Left);
         builder.MapAction("Action 1", ControllerIndex.Four, ControllerButton.Start);
+        builder.MapAction("Action 1", ControllerIndex.Four, ControllerAxis.RightTrigger, 0.1);
         builder.MapAction("Action 2", Key.D2);
         builder.MapAction("Action 2", MouseButton.Right);
         builder.MapAction("Action 2", ControllerIndex.Four, ControllerButton.Back);
+        builder.MapAction("Action 2", ControllerIndex.Four, ControllerAxis.LeftTrigger, 0.2);
 
         builder.MapAxis("Axis 1", Key.A, 1);
         builder.MapAxis("Axis 1", MouseAxis.X, 0.5);
@@ -333,16 +389,26 @@ public class InputMappingBuilderTests
         Assert.That(actual.AxisMappings, Has.Length.EqualTo(2));
 
         Assert.That(actual.ActionMappings[0].ActionName, Is.EqualTo("Action 1"));
-        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(3));
+        Assert.That(actual.ActionMappings[0].HardwareActions, Has.Length.EqualTo(4));
         Assert.That(actual.ActionMappings[0].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D1)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[0].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Left)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[1].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[0].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Start)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[2].Threshold, Is.Zero);
+        Assert.That(actual.ActionMappings[0].HardwareActions[3].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.RightTrigger)));
+        Assert.That(actual.ActionMappings[0].HardwareActions[3].Threshold, Is.EqualTo(0.1));
 
         Assert.That(actual.ActionMappings[1].ActionName, Is.EqualTo("Action 2"));
-        Assert.That(actual.ActionMappings[1].HardwareActions, Has.Length.EqualTo(3));
+        Assert.That(actual.ActionMappings[1].HardwareActions, Has.Length.EqualTo(4));
         Assert.That(actual.ActionMappings[1].HardwareActions[0].InputSource, Is.EqualTo(InputSource.Create(Key.D2)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[0].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[1].HardwareActions[1].InputSource, Is.EqualTo(InputSource.Create(MouseButton.Right)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[1].Threshold, Is.Zero);
         Assert.That(actual.ActionMappings[1].HardwareActions[2].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerButton.Back)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[2].Threshold, Is.Zero);
+        Assert.That(actual.ActionMappings[1].HardwareActions[3].InputSource, Is.EqualTo(InputSource.Create(ControllerIndex.Four, ControllerAxis.LeftTrigger)));
+        Assert.That(actual.ActionMappings[1].HardwareActions[3].Threshold, Is.EqualTo(0.2));
 
         Assert.That(actual.AxisMappings[0].AxisName, Is.EqualTo("Axis 1"));
         Assert.That(actual.AxisMappings[0].HardwareAxes, Has.Length.EqualTo(3));

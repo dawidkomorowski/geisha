@@ -20,7 +20,7 @@ public sealed class InputMappingBuilder
     /// <param name="actionName">Name of logical action.</param>
     /// <param name="key">Keyboard key that triggers the action.</param>
     /// <returns>This <see cref="InputMappingBuilder" /> instance.</returns>
-    public InputMappingBuilder MapAction(string actionName, Key key) => MapAction(actionName, InputSource.Create(key));
+    public InputMappingBuilder MapAction(string actionName, Key key) => MapAction(actionName, InputSource.Create(key), 0);
 
     /// <summary>
     ///     Maps specified mouse button to logical action.
@@ -28,11 +28,15 @@ public sealed class InputMappingBuilder
     /// <param name="actionName">Name of logical action.</param>
     /// <param name="mouseButton">Mouse button that triggers the action.</param>
     /// <returns>This <see cref="InputMappingBuilder" /> instance.</returns>
-    public InputMappingBuilder MapAction(string actionName, MouseButton mouseButton) => MapAction(actionName, InputSource.Create(mouseButton));
+    public InputMappingBuilder MapAction(string actionName, MouseButton mouseButton) => MapAction(actionName, InputSource.Create(mouseButton), 0);
 
     // TODO: Add documentation.
     public InputMappingBuilder MapAction(string actionName, ControllerIndex controllerIndex, ControllerButton controllerButton)
-        => MapAction(actionName, InputSource.Create(controllerIndex, controllerButton));
+        => MapAction(actionName, InputSource.Create(controllerIndex, controllerButton), 0);
+
+    // TODO: Add documentation.
+    public InputMappingBuilder MapAction(string actionName, ControllerIndex controllerIndex, ControllerAxis controllerAxis, double threshold)
+        => MapAction(actionName, InputSource.Create(controllerIndex, controllerAxis), threshold);
 
     /// <summary>
     ///     Maps specified keyboard key to logical axis with given scale.
@@ -91,7 +95,7 @@ public sealed class InputMappingBuilder
         };
     }
 
-    private InputMappingBuilder MapAction(string actionName, InputSource inputSource)
+    private InputMappingBuilder MapAction(string actionName, InputSource inputSource, double threshold)
     {
         if (!_actionMappings.TryGetValue(actionName, out var builder))
         {
@@ -99,7 +103,7 @@ public sealed class InputMappingBuilder
             _actionMappings.Add(actionName, builder);
         }
 
-        builder.Add(new HardwareAction { InputSource = inputSource });
+        builder.Add(new HardwareAction { InputSource = inputSource, Threshold = threshold });
 
         return this;
     }

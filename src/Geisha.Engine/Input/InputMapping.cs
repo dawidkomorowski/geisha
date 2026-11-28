@@ -67,6 +67,9 @@ public readonly record struct HardwareAction
     ///     Hardware input source this hardware action is based on.
     /// </summary>
     public InputSource InputSource { get; init; }
+
+    // TODO: Add documentation.
+    public double Threshold { get; init; }
 }
 
 /// <summary>
